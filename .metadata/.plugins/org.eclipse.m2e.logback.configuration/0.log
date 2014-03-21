@@ -1,0 +1,40 @@
+2014-03-22 02:23:32,304 [Worker-14] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: Crawl:CrawlHTMLUnit:0.0.1-SNAPSHOT @ C:\Users\rkapoor\Documents\GitHub\Crawlersforweb\CrawlHTMLUnit\pom.xml.
+2014-03-22 02:23:33,536 [Worker-14] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /CrawlHTMLUnit/src/main/java
+2014-03-22 02:23:33,538 [Worker-14] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /CrawlHTMLUnit/src/main/resources
+2014-03-22 02:23:33,539 [Worker-14] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /CrawlHTMLUnit/src/test/java
+2014-03-22 02:23:33,540 [Worker-14] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /CrawlHTMLUnit/src/test/resources
+2014-03-22 02:23:34,283 [Worker-12] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: Crawl:CrawlHTMLUnit:0.0.1-SNAPSHOT @ C:\Users\rkapoor\Documents\GitHub\Crawlersforweb\CrawlHTMLUnit\pom.xml.
+2014-03-22 02:23:38,150 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:23:38,192 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:23:38,195 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:23:38,198 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:00,406 [Worker-6] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: Crawl:CrawlHTMLUnit:0.0.1-SNAPSHOT @ C:\Users\rkapoor\Documents\GitHub\Crawlersforweb\CrawlHTMLUnit\pom.xml.
+2014-03-22 02:24:00,745 [Worker-6] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:00,752 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:00,753 [Worker-6] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:00,755 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:01,995 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:02,002 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:02,004 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:02,006 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:06,297 [main] INFO  o.e.m2e.actions.ExecutePomAction - Creating new launch configuration
+2014-03-22 02:24:12,661 [Worker-12] INFO  o.e.m.i.launch.MavenLaunchDelegate - C:\Users\rkapoor\Documents\GitHub\Crawlersforweb\CrawlHTMLUnit
+2014-03-22 02:24:12,662 [Worker-12] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn  -B validate
+2014-03-22 02:24:51,107 [Worker-2] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: Crawl:CrawlHTMLUnit:0.0.1-SNAPSHOT @ C:\Users\rkapoor\Documents\GitHub\Crawlersforweb\CrawlHTMLUnit\pom.xml.
+2014-03-22 02:24:51,388 [Worker-2] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
+2014-03-22 02:24:52,454 [New I/O client worker #1-1] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading http://repo.maven.apache.org/maven2/org/jsoup/jsoup/1.7.3/jsoup-1.7.3.pom
+2014-03-22 02:24:52,461 [New I/O client worker #1-1] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded http://repo.maven.apache.org/maven2/org/jsoup/jsoup/1.7.3/jsoup-1.7.3.pom
+2014-03-22 02:24:52,915 [Worker-2] INFO  c.n.h.c.p.n.NettyAsyncHttpProvider - Number of application's worked threads is 8
+2014-03-22 02:24:53,663 [New I/O client worker #2-1] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading http://repo.maven.apache.org/maven2/org/jsoup/jsoup/1.7.3/jsoup-1.7.3.jar
+2014-03-22 02:24:56,001 [main] INFO  o.e.m2e.actions.ExecutePomAction - Using existing launch configuration
+2014-03-22 02:24:56,008 [New I/O client worker #2-1] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded http://repo.maven.apache.org/maven2/org/jsoup/jsoup/1.7.3/jsoup-1.7.3.jar
+2014-03-22 02:24:56,888 [Worker-2] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:56,891 [Worker-2] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:56,893 [Worker-2] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:56,895 [Worker-2] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:57,006 [Worker-12] INFO  o.e.m.i.launch.MavenLaunchDelegate - C:\Users\rkapoor\Documents\GitHub\Crawlersforweb\CrawlHTMLUnit
+2014-03-22 02:24:57,006 [Worker-12] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn  -B validate
+2014-03-22 02:24:58,055 [Worker-3] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:58,059 [Worker-3] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2014-03-22 02:24:58,061 [Worker-3] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+2014-03-22 02:24:58,066 [Worker-3] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
