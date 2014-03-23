@@ -12,7 +12,8 @@ import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
- * @author rajat Crawls trip places from tripAdvisor Starting Link: Sample
+ * @author rajat 
+ * 	Crawls trip places from tripAdvisor
  *	mainLink: "http://www.tripadvisor.in/AllLocations-g297627-c2-Attractions-Karnataka.html"
  *	Sample ChildLink: "http://www.tripadvisor.in/AllLocations-g297628-c2-Attractions-Bangalore_Karnataka.html"
  *	Sample subChildLink:"http://www.tripadvisor.in/Attraction_Review-g297628-d325159-Reviews-Bull_Temple-Bangalore_Karnataka.html"
@@ -29,21 +30,17 @@ public class CrawlTripAdvisor {
 	@SuppressWarnings("unchecked")
 	public static void getDetails(URL url) throws Exception {
 		
-		List<String> Details = new ArrayList<String>();
-
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 		webClient.getOptions().setThrowExceptionOnScriptError(false);
 		WebRequest request = new WebRequest(url);
 
 		// Read the whole page
 		HtmlPage page = webClient.getPage(request);
-		// System.out.println(page.asText());
-
-		List<DomElement> placeArea1 = (List<DomElement>) page
+		List<DomElement> placeArea = (List<DomElement>) page
 				.getByXPath("//div[@id='HEADING_GROUP']");
 
 		// Get the Heading Group
-		DomElement headinggroup = placeArea1.get(0);
+		DomElement headinggroup = placeArea.get(0);
 
 		// Get the heading (name)
 		DomElement heading = headinggroup.getFirstElementChild();
@@ -51,12 +48,14 @@ public class CrawlTripAdvisor {
 
 		// Get the address and other details(if present) Element
 		DomElement detailsE = heading.getNextElementSibling();
+		
 		// Get the address element
 		DomElement addressE = detailsE.getFirstElementChild();
 		String address = addressE.asText().trim();
 
 		String phone = "unknown", ranktext = "unknown", rating = "unknown", numofreviews = "unknown", type = "unknown", fee = "unknown", duration = "unknown", description = "none";
 		Boolean isTravellersChoice = false, isCoE = false;
+		
 		// Get the other details element
 		DomElement otherE = addressE.getNextElementSibling();
 		Iterator<DomElement> othersI = otherE.getChildElements().iterator();
@@ -65,6 +64,7 @@ public class CrawlTripAdvisor {
 			// Getting the icon element
 			DomElement iconE = otherC.getFirstElementChild();
 			String classofIcon = iconE.getAttribute("class");
+			
 			// Checking whether it is a phone number
 			if (classofIcon.contains("greenPhone")) {
 				// Getting the element which contains the phone number
@@ -153,10 +153,8 @@ public class CrawlTripAdvisor {
 											.contains("toggle")) {
 										// It is a toggle type element
 										// Getting the complete description
-										DomElement descE = listdetailtypeE
-												.getFirstByXPath("//span[@class='onShow']");
-										description = descE.getTextContent()
-												.trim();
+										DomElement descE = listdetailtypeE.getFirstByXPath("//span[@class='onShow']");		
+										description = descE.getTextContent().trim();												
 									}
 								}
 							}
@@ -185,12 +183,6 @@ public class CrawlTripAdvisor {
 
 	@SuppressWarnings("unchecked")
 	public static ArrayList<URL> getMainLinks(URL url) throws Exception {
-		// URL url1 = new
-		// URL("http://www.tripadvisor.in/AllLocations-g293860-c2-Attractions-India.html");
-		// URL url1 = new
-		// URL("http://www.tripadvisor.in/AllLocations-g297627-c2-Attractions-Karnataka.html");
-		// URL url1 = new
-		// URL("http://www.tripadvisor.in/AllLocations-g297628-c2-Attractions-Bangalore_Karnataka.html");
 
 		ArrayList<URL> mainLinks = new ArrayList<URL>();
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
@@ -199,8 +191,7 @@ public class CrawlTripAdvisor {
 
 		// Read the whole page
 		HtmlPage page = webClient.getPage(request);
-		// System.out.println(page.asText());
-
+		
 		// List of main travel destinations is present in 'BODYCON' id
 		List<DomElement> linkArea = (List<DomElement>) page
 				.getByXPath("//div[@id='BODYCON']");
@@ -235,7 +226,6 @@ public class CrawlTripAdvisor {
 				// Avoids nullpointer Exception
 				if (urlElement != null) {
 					String appendUrl = urlElement.getAttribute("href");
-					//System.out.println("Mainlink: " + appendUrl);
 					mainLinks.add(new URL(baseUrl + appendUrl));
 					//break;// only for testing the flow in less time
 				}
@@ -251,8 +241,6 @@ public class CrawlTripAdvisor {
 
 	@SuppressWarnings("unchecked")
 	public static void getSubChildLinks(URL url) throws Exception {
-		// URL url = new
-		// URL("http://www.tripadvisor.in/AllLocations-g297628-c2-Attractions-Bangalore_Karnataka.html");
 
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 		webClient.getOptions().setThrowExceptionOnScriptError(false);
@@ -270,8 +258,7 @@ public class CrawlTripAdvisor {
 		Iterator<DomElement> toGetTableIterator = linkElement
 				.getChildElements().iterator();
 
-		// skip first 6 elements if there is no element of number of pages to
-		// reach the table
+		// skip first 6 elements if there is no element of number of pages to reach the table
 		// otherwise skip 7 elements
 		for (int i = 1; i <= 7; i++) {
 
@@ -287,8 +274,7 @@ public class CrawlTripAdvisor {
 				}
 				flag = 1;
 			}
-			if ((i == 6) && flag == 0)// if there is no element for number of
-										// pages then skip first 6 only
+			if ((i == 6) && flag == 0)// if there is no element for number of pages then skip first 6 only
 			{
 				break;
 			}
@@ -318,7 +304,6 @@ public class CrawlTripAdvisor {
 				if (urlElement != null) {
 					String appendUrl = urlElement.getAttribute("href");
 					subChildLinks.add(new URL(baseUrl + appendUrl));
-					//System.out.println("subchild: " + appendUrl);
 				}
 
 			}
@@ -327,8 +312,8 @@ public class CrawlTripAdvisor {
 	}
 
 	public static void getOtherSubChildLinks(URL url) throws Exception {
-		// get the list of urls which come from changing the page no of the ChildUrl
 		
+		// get the list of urls which come from changing the page number of the ChildUrl
 		List<URL> listChildUrl = PlacesUrlBuilder.trpAdvUrl(url, getNum());
 
 		// get the subchildUrl for the above list of childUrls
@@ -337,6 +322,7 @@ public class CrawlTripAdvisor {
 		}
 	}
 
+	//getter and setter for number of pages associated with a url
 	public static int getNum() {
 		return num;
 	}
@@ -373,6 +359,7 @@ public class CrawlTripAdvisor {
 		
 		for(int i=0;i<subChildLinks.size();i++)
 		{
+			//get the details for all subchildlinks
 			getDetails(subChildLinks.get(i));
 		}
 	}
