@@ -17,7 +17,7 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-public class fillIbiboform {
+public class crawlMusafir {
 
     @SuppressWarnings("unchecked")
 	@Test
@@ -203,7 +203,7 @@ public class fillIbiboform {
     }
 
     public static void main(String[] args) throws Exception {
-        fillIbiboform htmlUnit = new  fillIbiboform();
+        crawlMusafir htmlUnit = new  crawlMusafir();
         htmlUnit.submittingForm();
     }
 }
