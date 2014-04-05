@@ -12,11 +12,15 @@ import java.util.ArrayList;
 
 public class PlacesUrlBuilder {
 
-	public static ArrayList<URL> trpAdvUrl(URL url, int num) throws Exception {
+	public static ArrayList<DataUrl> trpAdvUrl(DataUrl url, int num) throws Exception {
 		int x = 0;
-		ArrayList<URL> urlList = new ArrayList<URL>();
+		ArrayList<DataUrl> urlList = new ArrayList<DataUrl>();
 
-		String URL = url.toString();
+		String URL = url.link.toString();
+		String state = url.state;
+		String country = url.country;
+		String city = url.city;
+		
 		int t = URL.indexOf("c2");
 
 		String s1 = URL.substring(0, t);
@@ -26,7 +30,13 @@ public class PlacesUrlBuilder {
 			x = x + 100;
 			String newUrl = s1 + "c2-o" + x + s2;
 			URL newurl = new URL(newUrl);
-			urlList.add(newurl);
+			DataUrl stUrl = new DataUrl();
+			stUrl.link = newurl;
+			stUrl.state = state;
+			stUrl.country = country;
+			stUrl.city = city;
+			
+			urlList.add(stUrl);
 		}
 		return urlList;
 	}
