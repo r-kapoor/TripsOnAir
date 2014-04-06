@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.StringTokenizer;
 
 
 
@@ -12,7 +13,7 @@ public class TransferData {
 
 	public static void main(String args[]) throws Exception{
 		//Declarations
-		Boolean cityExists = false, placeExists = false;
+		Boolean cityExists = false, placeExists = false, numExists = false, addNum = false;
 		Connection conn=ConnectMysql.MySqlConnection();
 
 		Statement statement = conn.createStatement();
@@ -24,6 +25,7 @@ public class TransferData {
 		String country = "India";
 		String name="Bull Temple";
 		String address= "Bugle Hill, Bull Temple Rd, Basavangudi, Bangalore, India";
+		String pincode = "120021";
 		String phone = "unknown";
 		String ranktext= "Ranked #24 of 181 attractions in Bangalore";
 		String rating= "4.0";
@@ -35,7 +37,7 @@ public class TransferData {
 		String Fee= "No";
 		String description= "Located in Basavanagudi, this temple (built by Kempegowda in the Dravidian style) contains a huge granite monolith of Nandi. The temple grounds also host the annual groundnut fair in November/December. The nearby Dodda Ganesha Temple and Bugle Rock Garden also can be visited.";
 		String photolink= "http://media-cdn.tripadvisor.com/media/photo-s/01/1f/a2/0b/bangalore.jpg";
-		String CityID="";
+		int CityID=-1;
 
 		//Inserting the City
 		//Checking if the City Exists in DB
@@ -46,7 +48,7 @@ public class TransferData {
 			{
 				//The same name city in same state and country exists
 				cityExists = true;
-				CityID = getCityR.getString("CityID");
+				CityID = getCityR.getInt("CityID");
 				if(getCityR.getInt(source)==1)
 				{
 					//Nothing to Merge as only state and country are available in TripAdvisor
@@ -68,7 +70,10 @@ public class TransferData {
 		if(!cityExists)
 		{
 			//Insert the data
-			statement.executeUpdate("INSERT INTO City(CityName,State,Country,TripAdvisor) VALUES('"+city+"','"+state+"','"+country+"',1);");
+			statement.executeUpdate("INSERT INTO City(CityName,State,Country,TripAdvisor) VALUES('"+city+"','"+state+"','"+country+"',1);",Statement.RETURN_GENERATED_KEYS);
+		    ResultSet rs = statement.getGeneratedKeys();
+		    rs.next();
+		    CityID = rs.getInt(1);
 		}
 		
 		
@@ -77,7 +82,7 @@ public class TransferData {
 		ResultSet getPlaceR = statement.executeQuery("SELECT * FROM Places WHERE Name='"+name+"';");
 		while(getPlaceR.next())
 		{
-			if(CityID.equals(getPlaceR.getString("CityID")))
+			if(CityID==getPlaceR.getInt("CityID"))
 			{
 				//The same name place in same city exists
 				placeExists = true;
@@ -87,12 +92,77 @@ public class TransferData {
 					 * Merge Logic For Crawl from Same Source Present Here
 					 * Then Update the tuple
 					 */
-					
+					//Doing nothing as the merge logic for same source not clear
 				}
 				else
 				{
+					//The tuple is from a different source. Merge the data
+					
+					String update = "UPDATE Places SET TripAdvisor = 1";
+					
+					//Appending the type to the existing type
+					type = getPlaceR.getString("Type") +","+ type;
+					
+					//Adding new address if old address doesn't contain digits
+					String addressOld = getPlaceR.getString("Address");
+					if(!addressOld.matches(".*\\d.*"))
+					{
+						if(address.matches(".*\\d.*"))
+						{
+							update = update + ", Address = "+address;
+						}
+					}
+					
+					//Adding Pincode if null
+					if(getPlaceR.getString("Pincode").isEmpty())
+					{
+						update = update +", Pincode = "+pincode;
+					}
+					
+					//Adding Phone Number if not same					 
+					String phoneOld = getPlaceR.getString("PhoneNo");
+					String phoneNum = phoneOld;
+					StringTokenizer stOld=new StringTokenizer(phoneOld, ",");
+					StringTokenizer stNew=new StringTokenizer(phone, ",");
+					while(stNew.hasMoreTokens())
+					{
+						String numNew = stNew.nextToken();
+						while(stOld.hasMoreTokens())
+						{
+							if(numNew.equals(stOld.nextToken()))
+							{
+								numExists = true;
+							}
+						}
+						if(!numExists)
+						{
+							phoneNum = phoneNum + "," + numNew;
+							addNum = true;
+						}
+						numExists = false;
+					}
+					if(addNum)
+					{
+						update = update + ", PhoneNo = "+ phoneNum;
+					}
+					
+					
+					String descOld = getPlaceR.getString("Description");
+					description = descOld + ":" + description;
+					update = update + ", Description = "+ description;
+					
+					double scoreOld = getPlaceR.getDouble("Score");
+					int scorenum = getPlaceR.getInt("Score");
+					if(scorenum!=0)
+					{
+						//score = (Integer.parseInt(rating)+ratingOld)/2;
+					}
+					
+					
+					
 					statement.executeUpdate("UPDATE City SET TripAdvisor = 1 WHERE CityID = "+getCityR.getString("CityID")+";");
 					break;
+					
 				}
 				//Merge the info already present
 				
