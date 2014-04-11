@@ -21,7 +21,7 @@ public class ConnectMysql{
 	        
 	        //for local testing, do port forwarding through rhc client and set the port below accordingly 	        
 	        Connection connection = DriverManager.getConnection(  
-	                    "jdbc:mysql://127.0.0.1:3306/Holiday", "adminzESTl5F", "duKiwg4kLMSV");
+	                    "jdbc:mysql://127.0.0.1:3307/Holiday", "adminzESTl5F", "duKiwg4kLMSV");
         
 	        //for openshift server 
 	         /*Connection connection = DriverManager.getConnection(  
