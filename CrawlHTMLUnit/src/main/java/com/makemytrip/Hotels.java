@@ -28,11 +28,12 @@ public class Hotels {
     	
     	//Declarations
     	int count=0;
+    	
     	final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
     	webClient.getOptions().setThrowExceptionOnScriptError(false);
     	
     	//Set the URL of the page
-    	URL url = new URL("http://hotel.makemytrip.com/makemytrip/site/hotels/search?city=BLR&country=IN&checkin=05242014&checkout=05262014&area=&roomStayQualifier=1e0e&type=&sortName=");
+    	URL url = new URL("http://hotel.makemytrip.com/makemytrip/site/hotels/detail?session_cId=1396807462390&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=The%20Infantry%20Hotel,Bangalore&region=&area=&roomStayQualifier=1e0e&hotelId=200701121818468835&i=19&p=1http://hotel.makemytrip.com/makemytrip/site/hotels/detail?session_cId=1396807462390&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=The%20Infantry%20Hotel,Bangalore&region=&area=&roomStayQualifier=1e0e&hotelId=200701121818468835&i=19&p=1http://hotel.makemytrip.com/makemytrip/site/hotels/detail?session_cId=1396807462390&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=The%20Infantry%20Hotel,Bangalore&region=&area=&roomStayQualifier=1e0e&hotelId=200701121818468835&i=19&p=1http://hotel.makemytrip.com/makemytrip/site/hotels/detail?session_cId=1396807462390&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=The%20Infantry%20Hotel,Bangalore&region=&area=&roomStayQualifier=1e0e&hotelId=200701121818468835&i=19&p=1http://hotel.makemytrip.com/makemytrip/site/hotels/detail?session_cId=1396807462390&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=The%20Infantry%20Hotel,Bangalore&region=&area=&roomStayQualifier=1e0e&hotelId=200701121818468835&i=19&p=1http://hotel.makemytrip.com/makemytrip/site/hotels/detail?session_cId=1396807462390&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=The%20Infantry%20Hotel,Bangalore&region=&area=&roomStayQualifier=1e0e&hotelId=200701121818468835&i=19&p=1");
         
         //Read the whole page
         final HtmlPage page = webClient.getPage(url);
@@ -40,7 +41,7 @@ public class Hotels {
         //Storing title of page
         String title = page.getTitleText();
         
-        System.out.println("Title:"+title);
+        //System.out.println("Title:"+title);
         
         //Getting the results
         //DomElement hotelresults = page.getElementById("results");
@@ -53,19 +54,24 @@ public class Hotels {
         	DomElement hotel = hoteliterator.next();
         	if(!hotel.getAttribute("class").matches(".*listing_section.*"))
         	{
+        		//System.out.println("test0");
         		continue;
         	}
         	DomElement hotelalldetails = hotel.getFirstElementChild();
         	DomElement hotelimg = hotelalldetails.getFirstElementChild();
         	DomElement imgurl = hotelimg.getFirstElementChild();
+        	//System.out.println("imgurl "+imgurl);
         	String imgsrc = imgurl.getAttribute("src");
+        	//System.out.println(imgsrc);
         	
         	DomElement hoteltextdetails = hotelimg.getNextElementSibling();
         	DomElement nonpricedetails = hoteltextdetails.getFirstElementChild();
         	DomElement nameandstar = nonpricedetails.getFirstElementChild();
         	DomElement nameE = nameandstar.getFirstElementChild();
         	String name = nameE.getAttribute("title");
+        	System.out.println(name);
         	String link = "http://hotel.makemytrip.com/" + nameE.getAttribute("href");
+        	System.out.println(link);
         	
         	String star="unknown";
         	DomElement starE = nameE.getNextElementSibling();
@@ -73,54 +79,32 @@ public class Hotels {
         	{
         		star = starE.getFirstElementChild().getAttribute("title");
         		star = star.substring(0, star.indexOf("star")).trim();
+        		//System.out.println(star);
         	}
+        	//String link = "http://hotel.makemytrip.com//makemytrip/site/hotels/detail?session_cId=1396870410441&city=BLR&country=IN&checkin=05242014&checkout=05262014&searchText=Bangalore,India&region=&area=&roomStayQualifier=1e0e&hotelId=20070125190711743&i=1&p=1";
+
+        }
         	
-        	URL hotelurl = new URL(link);
-        	
-        	HtmlPage hotelpage = webClient.getPage(hotelurl);
-        	
-        	DomElement completepage = hotelpage.getElementById("detailPageViaAjax");
-        	DomElement hotelhead = completepage.getFirstElementChild();
-        	System.out.println(hotelhead.getAttribute("class"));
-        	DomElement hotelheading = hotelhead.getFirstElementChild();
-        	System.out.println(hotelheading.getAttribute("class"));
-        	DomElement leftarea = hotelheading.getFirstElementChild();
-        	System.out.println(leftarea.getAttribute("class"));
-        	DomElement hotelname = leftarea.getFirstElementChild();
-        	DomElement addressE = hotelname.getElementsByTagName("p").get(0);
-        	String address = addressE.getTextContent().trim().replaceAll("\\s+", " ");
-        	
-        	DomElement rightarea = leftarea.getNextElementSibling();
-        	DomElement pricearea = rightarea.getFirstElementChild();
-        	DomElement priceE = pricearea.getFirstByXPath("//span[@class='price']");
-        	String price = priceE.getTextContent();
-        	
-        	DomElement ratingarea = rightarea.getNextElementSibling();
-        	DomElement tripadvisor = ratingarea.getFirstByXPath("//span[@class='triper_rate flL']");
-        	DomElement makemytrip = ratingarea.getFirstByXPath("//span[@class='triper_rate noBg green flL']");
-        	String tripadvisorrating = tripadvisor.asText();
-        	String makemytriprating = makemytrip.asText();
-        	
-        	DomElement services = completepage.getFirstByXPath("//div[@class='view_services clearFix']");
-        	Iterator<DomElement> allservices = services.getChildElements().iterator();
-        	String internet = "unknown", pool = "unknown", spa="unknown", restaurant = "unknown", transfers = "unknown", gym= "unknown", parking= "unknown", business= "unknown", temp1="", temp2="";
-        	for(int i=0;i<4;i++)
-        	{
-        		DomElement servtwo = allservices.next();
-        		DomElement serv1 = servtwo.getFirstElementChild();
-        		if(serv1.getFirstElementChild().getAttribute("class").matches(".*right.*"))
-        		{
-        			temp1 = "Yes";
-        		}
-        		else if(serv1.getFirstElementChild().getAttribute("class").matches(".*wrong.*"))
-        		{
-        			temp1 = "No";
-        		}
-        		DomElement serv2 = serv1.getNextElementSibling();
-        		if(serv2.getFirstElementChild().getAttribute("class").matches(".*right.*"))
-        		{
-        			temp2 = "Yes";
-        		}
+        			/*DomElement services = completepage.getFirstByXPath("//div[@class='view_services clearFix']");
+        			Iterator<DomElement> allservices = services.getChildElements().iterator();
+        			String internet = "unknown", pool = "unknown", spa="unknown", restaurant = "unknown", transfers = "unknown", gym= "unknown", parking= "unknown", business= "unknown", temp1="", temp2="";
+        			for(int i=0;i<4;i++)
+        			{
+        			DomElement servtwo = allservices.next();
+        			DomElement serv1 = servtwo.getFirstElementChild();
+        				if(serv1.getFirstElementChild().getAttribute("class").matches(".*right.*"))
+        				{
+        				temp1 = "Yes";
+        				}
+        				else if(serv1.getFirstElementChild().getAttribute("class").matches(".*wrong.*"))
+        				{
+        				temp1 = "No";
+        				}
+        				DomElement serv2 = serv1.getNextElementSibling();
+        				if(serv2.getFirstElementChild().getAttribute("class").matches(".*right.*"))
+        				{
+        				temp2 = "Yes";
+        				}
         		else if(serv2.getFirstElementChild().getAttribute("class").matches(".*wrong.*"))
         		{
         			temp2 = "No";
@@ -166,11 +150,11 @@ public class Hotels {
         		roomprice.add(roompriceE.asText());
         	}
         	
-        	System.out.println("\nHotel:"+count);
-        	System.out.println("Name:"+name);
-        	System.out.println("Img Src:"+imgsrc);
+        	//System.out.println("\nHotel:"+count);
+        	//System.out.println("Name:"+name);
+        	//System.out.println("Img Src:"+imgsrc);
         	System.out.println("Link:"+link);
-        	System.out.println("Star:"+star);
+        	//System.out.println("Star:"+star);
         	System.out.println("Address:"+address);
         	System.out.println("Price:"+price);
         	System.out.println("TripAdvisor Rating:"+tripadvisorrating);
@@ -191,17 +175,17 @@ public class Hotels {
         	if(count==4)
         	{
         		System.out.println("Success!!");
-        		break;
+        		//break;
         	}
         	
         }
-        
-
-        webClient.closeAllWindows();
-    }
+      }*/
+        //webClient.closeAllWindows();
+}
 
     public static void main(String[] args) throws Exception {
-        Hotels htmlUnit = new  Hotels();
-        htmlUnit.homePage();
+        //Hotels htmlUnit = new  Hotels();
+        //htmlUnit.homePage();
+        ExtractData.extractData();
     }
 }
