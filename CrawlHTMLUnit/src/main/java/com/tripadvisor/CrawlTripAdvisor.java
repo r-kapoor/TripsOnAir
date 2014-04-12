@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import GlobalClasses.HtmlUnitWebClient;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
@@ -22,29 +24,23 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * 
  */
 
-public class CrawlTripAdvisor {
+public class CrawlTripAdvisor extends HtmlUnitWebClient{
 
 	private static String baseUrl = "http://www.tripadvisor.in";
 	private static ArrayList<DataUrl> subChildLinks = new ArrayList<DataUrl>();
 	private static ArrayList<DataUrl> mainChildLinks = new ArrayList<DataUrl>();
 	private static ArrayList<DataUrl> otherChildLinks = new ArrayList<DataUrl>();
 	private static int num = 0;
-	private static String outputUrls ="";
 	private static String exceptionUrls = "";
-	private static String outputFileName ="target/tripAdvisor/tripAdvisorUrls.txt";
 	private static String exceptionFile = "target/tripAdvisor/exception.txt";
 
 	@SuppressWarnings("unchecked")
 	public static ArrayList<DataUrl> getMainLinks(DataUrl dtUrl) throws Exception {
 
 		ArrayList<DataUrl> mainLinks = new ArrayList<DataUrl>();
-		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
-		WebRequest request = new WebRequest(dtUrl.link);
-
 		// Read the whole page
-		HtmlPage page = webClient.getPage(request);
-		
+		HtmlPage page=WebClient(dtUrl.link);
+
 		// List of main travel destinations is present in 'BODYCON' id
 		List<DomElement> linkArea = (List<DomElement>) page
 				.getByXPath("//div[@id='BODYCON']");
@@ -102,10 +98,9 @@ public class CrawlTripAdvisor {
 				}
 			}catch(Exception e)
 			{
-				exceptionUrls+=dtUrl.link;
-				continue;
+				exceptionUrls+=dtUrl.link+"\n";
 			}
-			//break;// only for to test the flow in less time
+			break;// only for to test the flow in less time
 	}
 		return mainLinks;
 }
@@ -117,14 +112,9 @@ public class CrawlTripAdvisor {
 	@SuppressWarnings("unchecked")
 	public static void getSubChildLinks(DataUrl dtUrl) throws Exception {
 
-		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
-		WebRequest request = new WebRequest(dtUrl.link);
-		outputUrls=outputUrls+"ChildUrl: "+dtUrl.link+"\n";
-		//System.out.println("outputUrlsing: "+url);
-
+		try{
 		// Read the whole page
-		HtmlPage page = webClient.getPage(request);
+		HtmlPage page=WebClient(dtUrl.link);
 
 		// List of main travel destinations is present in 'BODYCON' id
 		List<DomElement> linkArea = (List<DomElement>) page
@@ -180,9 +170,7 @@ public class CrawlTripAdvisor {
 										dtLink.country = dtUrl.country;
 										dtLink.state = dtUrl.state;
 										dtLink.city = dtUrl.city;
-									otherChildLinks.add(dtLink);
-									//System.out.println("url1: "+otherChildurl);
-									outputUrls=outputUrls+"OtherChildUrl: "+otherChildurl+"\n";
+										otherChildLinks.add(dtLink);
 									}
 								}
 									
@@ -195,9 +183,7 @@ public class CrawlTripAdvisor {
 											dtlink.state = dtUrl.state;
 											dtlink.country = dtUrl.country;
 											dtlink.city = dtUrl.city;
-										subChildLinks.add(dtlink);
-										//System.out.println("url2: "+subChildUrl);
-										outputUrls=outputUrls+"subChildUrl: "+subChildUrl+"\n"+"country: "+dtUrl.country+","+" state: "+dtUrl.state+","+" city: "+dtUrl.city+"\n";
+											subChildLinks.add(dtlink);
 										}
 									}
 								
@@ -210,11 +196,14 @@ public class CrawlTripAdvisor {
 		}//end of try statement
 			catch(Exception e)
 			{
-				exceptionUrls+=dtUrl.link;
-				continue;
+				exceptionUrls+=dtUrl.link+"\n";
 			}
 		}
+	}catch(Exception e)
+	{
+		exceptionUrls+=dtUrl.link+"\n";
 	}
+}
 
 	public static void getOtherSubChildLinks(DataUrl url) throws Exception {
 		
@@ -237,7 +226,7 @@ public class CrawlTripAdvisor {
 	}
 	
 	public static void main(String[] args) throws Exception {
-/*
+
 		DataUrl dtUrl = new DataUrl();
 		URL url = new URL(
 				"http://www.tripadvisor.in/AllLocations-g293860-c2-Attractions-India.html");
@@ -249,16 +238,16 @@ public class CrawlTripAdvisor {
 		ArrayList<DataUrl> mainLinks = CrawlTripAdvisor.getMainLinks(dtUrl);
 		
 		for (int i = 0; i < mainLinks.size(); i++) {
-			ArrayList<DataUrl> ChildLinks = CrawlTripAdvisor
-					.getChildLinks(mainLinks.get(i));
+			ArrayList<DataUrl> ChildLinks = CrawlTripAdvisor.getChildLinks(mainLinks.get(i));
 
 			//store all the childlinks
 			for (int j = 0; j < ChildLinks.size(); j++) {
 				if(!(mainChildLinks.contains(ChildLinks.get(j)))){
 				mainChildLinks.add(ChildLinks.get(j));}
 			}
+			Thread.sleep(3000);
 		}
-		
+
 		for(int k=0;k<mainChildLinks.size();k++)
 		{
 			CrawlTripAdvisor.getSubChildLinks(mainChildLinks.get(k));
@@ -266,6 +255,7 @@ public class CrawlTripAdvisor {
 			getOtherSubChildLinks(mainChildLinks.get(k));
 			setNum(0);
 			}
+			Thread.sleep(3000);
 		}
 		
 		for(int k=0;k<otherChildLinks.size();k++)
@@ -274,30 +264,29 @@ public class CrawlTripAdvisor {
 			if(num!=0){
 			getOtherSubChildLinks(otherChildLinks.get(k));
 			}
+			Thread.sleep(3000);
 		}
-		
-		FileOutputStream out=new FileOutputStream(outputFileName);
-		@SuppressWarnings("resource")
-		PrintStream p=new PrintStream(out);
-		p.println(outputUrls);
+				
+		for(int i=0;i<subChildLinks.size();i++)
+		{
+			//get the details for all subchildlinks
+			ExtractData.getDetails(subChildLinks.get(i));
+			Thread.sleep(4000);
+		}
 		
 		FileOutputStream exception=new FileOutputStream(exceptionFile);
 		@SuppressWarnings("resource")
 		PrintStream e=new PrintStream(exception);
 		e.println(exceptionUrls);
-		*/
-		/*for(int i=0;i<subChildLinks.size();i++)
-		{
-			//get the details for all subchildlinks
-			getDetails(subChildLinks.get(i));
-		}*/
+		e.close();
 		
-		DataUrl du = new DataUrl();
-		URL url = new URL("http://www.tripadvisor.in/Attraction_Review-g297628-d325159-Reviews-Bull_Temple-Bangalore_Karnataka.html");
+		/*DataUrl du = new DataUrl();
+		URL url = new URL("http://www.tripadvisor.in/Attraction_Review-g503691-d523963-Reviews-Radhanagar_Beach-Havelock_Island_Andaman_and_Nicobar_Islands.html");
 		du.link= url;
 		du.country="test";
 		du.state="test";
 		du.city = "test";
-		ExtractData.getDetails(du);
+		ExtractData.getDetails(du);*/
+
 	}
 }	

@@ -1,17 +1,16 @@
 package com.tripadvisor;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
+import GlobalClasses.HtmlUnitWebClient;
+
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
+import com.dataTransferObject.*;
 
 /**
  * @author rahul
@@ -20,17 +19,16 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  */
 
 
-public class ExtractData {
+public class ExtractData extends HtmlUnitWebClient{
 
+	private static String exceptionFile = "target/tripAdvisor/exception.txt";
+	private static String exceptionUrls = "";
 	@SuppressWarnings("unchecked")
 	public static void getDetails(DataUrl url) throws Exception {
 		
-		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
-		WebRequest request = new WebRequest(url.link);
-
+		try{
 		// Read the whole page
-		HtmlPage page = webClient.getPage(request);
+		HtmlPage page=WebClient(url.link);
 		List<DomElement> placeArea = (List<DomElement>) page
 				.getByXPath("//div[@id='HEADING_GROUP']");
 
@@ -50,7 +48,7 @@ public class ExtractData {
 
 		String phone = "unknown", ranktext = "unknown", rating = "unknown", numofreviews = "unknown", type = "unknown", fee = "unknown", duration = "unknown", description = "none",photoLink="unknown";
 		Boolean isTravellersChoice = false, isCoE = false;
-		int durValue=0;
+		String durValue="";int durationV = -1;
 		
 		// Get the other details element
 		DomElement otherE = addressE.getNextElementSibling();
@@ -162,39 +160,47 @@ public class ExtractData {
 		}
 		
 		//Getting the Element for photo Links
-		DomElement photoArea = (DomElement) page.getByXPath("//div[@class='photo ']").get(0);
+		DomElement photoArea = (DomElement) page.getFirstByXPath("//div[@class='photo ']");
 		if((photoArea!=null)&&(photoArea.hasChildNodes()))
 		{
 			if(photoArea.getFirstElementChild().hasChildNodes())
-			{
-				DomElement photoE=photoArea.getFirstElementChild().getFirstElementChild();
-				if(photoE.getTagName().contains("div")&&(photoE.hasChildNodes()))
+			{	
+				DomElement photoE1=photoArea.getFirstElementChild();
+				if((photoE1!=null)&&(photoE1.hasChildNodes()))
 				{
-					photoLink=photoE.getFirstElementChild().getAttribute("src");
+					DomElement photoE2 = photoE1.getFirstElementChild();
+					if(photoE2.getTagName().contains("div")&&(photoE2.hasChildNodes()))
+					{
+						DomElement photoE3 =photoE2.getFirstElementChild();
+						if((photoE3!=null)&&(photoE3.hasChildNodes()))
+						{
+							photoLink=photoE3.getAttribute("src");
+						}
+					}
 				}
+				
 			}
 		}
 		
 		if(!(duration.equals("unknown"))){
 			@SuppressWarnings("resource")
 		Scanner in = new Scanner(duration).useDelimiter("[^0-9]+");
-		 durValue = in.nextInt();
+		durationV= in.nextInt();
+		 
 		}
-		
+		durValue +=durationV;
 		fee= fee.replace("Fee: ","");
 		type = type.replace("Type: ","");
-		description=description.split("\n")[1];
-		
-		if(!(ranktext.equals("unknown"))){
-		@SuppressWarnings("resource")
-		Scanner vl = new Scanner(ranktext).useDelimiter("[^0-9]+");
-		 int x = vl.nextInt();
-		 int y = vl.nextInt();
-		// System.out.println("x: "+x);
-		 //System.out.println("y: "+y);
+		String des[]=description.split("\n");
+		if(des.length>1)
+		{
+			description=des[1];
 		}
-		 
+ 
 		System.out.println("Name: " + name);
+		System.out.println("Country "+url.country);
+		System.out.println("City "+url.city);
+		System.out.println("State "+url.state);
 		System.out.println("Address: " + address);
 		System.out.println("Phone No.: " + phone);
 		System.out.println("Rank Text: " + ranktext);
@@ -208,28 +214,39 @@ public class ExtractData {
 		System.out.println("Fee: " + fee);
 		System.out.println("Description: " + description);
 		System.out.println("photolink: "+ photoLink);
-		
-		/*Statement statement=ConnectMysql.MySqlConnection();
-		int result = statement
-        .executeUpdate("INSERT INTO Places VALUES('"+type+"','test',3,'"+address+"',333031,'"+phone+"',3,'"+description+"',4,'value-10',123,234,0,1)WHERE EXISTS(SELECT * FROM Places WHERE Name = '"+name+"')");
-				/*while (resultSet.next()){
-						System.out.println("NAME:"  
-								+ resultSet.getString("NAME"));	            
-				}
-		/*int result = statement
-				.executeUpdate("INSERT INTO Flight VALUES('"+name+"',234)");
-		*/
-		/*int result = statement
-		        .executeUpdate("update Places set PlaceID = 3 where Name = "+name+"");
-		*/
-		//ResultSet result1 = statement.executeQuery("select CASE WHEN count(1) > 0 THEN 'true' ELSE 'false' END from Places where Name = '"+name+"'");
-		
-		//"IF EXISTS(SELECT FROM Places WHERE ID = -1 ) THEN select type from Places"
 
-//DELETE FROM dbo.DimDate WHERE ID = -1
-
-//ELSE*/
-		//System.out.println("result: "+result);
-		//ResultSet.
+		
+		TripAdvisorDto tripAdvisorDto = new TripAdvisorDto();
+		
+		tripAdvisorDto.setSource("TripAdvisor");
+		tripAdvisorDto.setCity(url.city.toUpperCase());
+		tripAdvisorDto.setState(url.state.toUpperCase());
+		tripAdvisorDto.setCountry(url.country.toUpperCase());
+		tripAdvisorDto.setName(name.toUpperCase());
+		tripAdvisorDto.setAddress(address);
+		//tripAdvisorDto.setPincode(pincode);
+		tripAdvisorDto.setPhone(phone);
+		tripAdvisorDto.setRanktext(ranktext);
+		tripAdvisorDto.setRating(rating);
+		tripAdvisorDto.setNumofreviews(numofreviews);
+		tripAdvisorDto.setIsCoE(isCoE);
+		tripAdvisorDto.setIsTravellersChoice(isTravellersChoice);
+		tripAdvisorDto.setType(type.toUpperCase());
+		tripAdvisorDto.setDurValue(durValue);
+		tripAdvisorDto.setDescription(description);
+		tripAdvisorDto.setPhotolink(photoLink);
+		tripAdvisorDto.setFee(fee);
+		
+		TransferData.transferData(tripAdvisorDto);
+		
+		}catch(Exception e){
+			exceptionUrls+=url.link+"\n";
+		}
+		
+		FileOutputStream exception=new FileOutputStream(exceptionFile);
+		@SuppressWarnings("resource")
+		PrintStream e=new PrintStream(exception);
+		e.println(exceptionUrls);
+		e.close();
 	}
 }

@@ -20,6 +20,7 @@ public class ExtractData extends HtmlUnitWebClient{
 	public static void getData()throws Exception
 	{
 		URL url = new URL("http://www.booking.com/hotel/in/krishna.en-us.html?sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-04-30;checkout=2014-05-01;ucfs=1;srfid=4049c11ea2b39a0da9255e13eea532ade552499dX43http://www.booking.com/hotel/in/krishna.en-us.html?sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-04-30;checkout=2014-05-01;ucfs=1;srfid=4049c11ea2b39a0da9255e13eea532ade552499dX43");
+		
 		HtmlPage page=WebClient(url);
 		
 		String Title="unknown",address="unknown",rating="unknown",desciption="unknown",checkIn="unknown",checkOut="unknown";

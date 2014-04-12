@@ -1,49 +1,48 @@
 package com.tripadvisor;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.StringTokenizer;
+import com.dataTransferObject.*;
 
-
+/**
+ * 
+ * @author rahul
+ * Send the data to the database
+ *
+ */
 
 public class TransferData {
 
-	public static void main(String args[]) throws Exception{
+	public static void transferData(TripAdvisorDto tripAdvisorDto) throws Exception{
+		
 		//Declarations
 		Boolean cityExists = false, placeExists = false, numExists = false, addNum = false;
 		Connection conn=ConnectMysql.MySqlConnection();
-
 		Statement statement = conn.createStatement();
-		
-		//Assuming the following data coming from crawling
-		String source="TripAdvisor"; //one of TripAdvisor or Ixigo
-		String city = "Bangalore";
-		String state = "Karnataka";
-		String country = "India";
-		String name="Bull Temple";
-		String address= "Bugle Hill, Bull Temple Rd, Basavangudi, Bangalore, India";
+
+		//Get the data from the data transfer object
+		String source= tripAdvisorDto.getSource(); //one of TripAdvisor or Ixigo
+		String city = tripAdvisorDto.getCity();
+		String state = tripAdvisorDto.getState();
+		String country = tripAdvisorDto.getCountry();
+		String name=tripAdvisorDto.getName();
+		String address= tripAdvisorDto.getAddress();
 		String pincode = "120021";
-		String phone = "";
-		String ranktext= "Ranked #24 of 181 attractions in Bangalore";
-		String rating= "4.0";
-		String numofreviews= "133";
-		Boolean isTravellersChoice=false;
-		Boolean isCoE = false;
-		String type = "Architectural Buildings, Religious Sites";
-		String durValue = "1";
-		String Fee= "Yes";
-		String description= "Located in Basavanagudi, this temple (built by Kempegowda in the Dravidian style) contains a huge granite monolith of Nandi. The temple grounds also host the annual groundnut fair in November/December. The nearby Dodda Ganesha Temple and Bugle Rock Garden also can be visited.";
-		String photolink= "http://media-cdn.tripadvisor.com/media/photo-s/01/1f/a2/0b/bangalore.jpg";
+		String phone = tripAdvisorDto.getPhone();
+		String ranktext= tripAdvisorDto.getRanktext();
+		String rating= tripAdvisorDto.getRating();
+		String numofreviews= tripAdvisorDto.getNumofreviews();
+		Boolean isTravellersChoice=tripAdvisorDto.getIsTravellersChoice();
+		Boolean isCoE = tripAdvisorDto.getIsCoE();
+		String type = tripAdvisorDto.getType();
+		String durValue = tripAdvisorDto.getDurValue();
+		String Fee= tripAdvisorDto.getFee();
+		String description= tripAdvisorDto.getDescription();
+		String photolink= tripAdvisorDto.getPhotolink();
 		int CityID=-1, PlaceID=-1;
 
-		city = city.toUpperCase();
-		state = state.toUpperCase();
-		country = country.toUpperCase();
-		name = name.toUpperCase();
-		type = type.toUpperCase();
 		//Inserting the City
 		//Checking if the City Exists in DB
 		ResultSet getCityR = statement.executeQuery("SELECT * FROM City WHERE CityName='"+city+"';");
