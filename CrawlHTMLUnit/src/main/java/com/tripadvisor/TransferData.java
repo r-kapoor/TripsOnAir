@@ -220,8 +220,8 @@ public class TransferData {
 					
 					
 					
-					System.out.println(update +" WHERE PlaceID = "+PlaceID+";");
-					//statement.executeUpdate(update +" WHERE PlaceID = "+getPlaceR.getString("PlaceID")+";");
+					//System.out.println(update +" WHERE PlaceID = "+PlaceID+";");
+					statement.executeUpdate(update +" WHERE PlaceID = "+PlaceID+";");
 					break;
 					
 				}

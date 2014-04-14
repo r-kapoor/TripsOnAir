@@ -46,7 +46,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		DomElement addressE = detailsE.getFirstElementChild();
 		String address = addressE.asText().trim();
 
-		String phone = "unknown", ranktext = "unknown", rating = "unknown", numofreviews = "unknown", type = "unknown", fee = "unknown", duration = "unknown", description = "none",photoLink="unknown";
+		String phone = "", ranktext = "", rating = "", numofreviews = "", type = "", fee = "", duration = "", description = "",photoLink="";
 		Boolean isTravellersChoice = false, isCoE = false;
 		String durValue="";int durationV = -1;
 		
@@ -196,12 +196,21 @@ public class ExtractData extends HtmlUnitWebClient{
 		{
 			description=des[1];
 		}
- 
+		
+		//Getting the country, state and city
+		String country = url.country;
+		String city = url.city;
+		String state = url.state;
+		
+		//Transforming the address by removing the city and country and getting pincode
+		TransformAddress transadd = new TransformAddress(address);
+		transadd.modifyAddress(city, country);
+		
 		System.out.println("Name: " + name);
-		System.out.println("Country "+url.country);
-		System.out.println("City "+url.city);
-		System.out.println("State "+url.state);
-		System.out.println("Address: " + address);
+		System.out.println("Country "+country);
+		System.out.println("City "+city);
+		System.out.println("State "+state);
+		System.out.println("Address: " + transadd.address);
 		System.out.println("Phone No.: " + phone);
 		System.out.println("Rank Text: " + ranktext);
 		System.out.println("Rating: " + rating);
@@ -219,12 +228,12 @@ public class ExtractData extends HtmlUnitWebClient{
 		TripAdvisorDto tripAdvisorDto = new TripAdvisorDto();
 		
 		tripAdvisorDto.setSource("TripAdvisor");
-		tripAdvisorDto.setCity(url.city.toUpperCase());
-		tripAdvisorDto.setState(url.state.toUpperCase());
-		tripAdvisorDto.setCountry(url.country.toUpperCase());
+		tripAdvisorDto.setCity(city.toUpperCase());
+		tripAdvisorDto.setState(state.toUpperCase());
+		tripAdvisorDto.setCountry(country.toUpperCase());
 		tripAdvisorDto.setName(name.toUpperCase());
-		tripAdvisorDto.setAddress(address);
-		//tripAdvisorDto.setPincode(pincode);
+		tripAdvisorDto.setAddress(transadd.address);
+		tripAdvisorDto.setPincode(transadd.pincode);
 		tripAdvisorDto.setPhone(phone);
 		tripAdvisorDto.setRanktext(ranktext);
 		tripAdvisorDto.setRating(rating);
