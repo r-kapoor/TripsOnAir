@@ -36,6 +36,8 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 
 	@SuppressWarnings("unchecked")
 	public static ArrayList<DataUrl> getMainLinks(DataUrl dtUrl) throws Exception {
+		
+		System.out.println("Enters getMainLinks");
 
 		ArrayList<DataUrl> mainLinks = new ArrayList<DataUrl>();
 		// Read the whole page
@@ -78,12 +80,15 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 				if (urlElement != null) {
 					DataUrl dt_Url = new DataUrl();
 					String appendUrl = urlElement.getAttribute("href");
+					
+					System.out.println("Found URL:"+appendUrl);
+					
 					String atrInstate = urlElement.asText();
 					String state = atrInstate.replace("Attractions in ","");
 					dt_Url.link = new URL(baseUrl + appendUrl);
 					dt_Url.country = dtUrl.country;
 					
-					if(dtUrl.state.equals("unknown")){
+					if(dtUrl.state.equals("")){
 						dt_Url.city = dtUrl.city;
 						dt_Url.state = state;
 					}
@@ -162,6 +167,9 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 								{
 									if(divE.getTagName().contains("a")){
 									String otherChildurl=divE.getAttribute("href");
+									
+									System.out.println("Found Child URL:"+otherChildurl);
+									
 									String atrIncity=divE.asText();
 									URL newOtherChildUrl=new URL(baseUrl + otherChildurl);
 									if(!(subChildLinks.contains(newOtherChildUrl))){
@@ -232,8 +240,8 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 				"http://www.tripadvisor.in/AllLocations-g293860-c2-Attractions-India.html");
 		dtUrl.link=url;
 		dtUrl.country = "India";
-		dtUrl.state = "unknown";
-		dtUrl.city = "unknown";
+		dtUrl.state = "";
+		dtUrl.city = "";
 		
 		ArrayList<DataUrl> mainLinks = CrawlTripAdvisor.getMainLinks(dtUrl);
 		
@@ -247,6 +255,8 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 			}
 			Thread.sleep(3000);
 		}
+		
+		System.out.println("Got all child links");
 
 		for(int k=0;k<mainChildLinks.size();k++)
 		{
@@ -266,7 +276,9 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 			}
 			Thread.sleep(3000);
 		}
-				
+		
+		System.out.println("Got all subchild links. Now getting the details");
+		
 		for(int i=0;i<subChildLinks.size();i++)
 		{
 			//get the details for all subchildlinks

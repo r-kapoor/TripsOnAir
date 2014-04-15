@@ -22,6 +22,8 @@ public class TransferData {
 		Connection conn=ConnectMysql.MySqlConnection();
 		Statement statement = conn.createStatement();
 
+		System.out.println("Getting the details from object");
+		
 		//Get the data from the data transfer object
 		String source= tripAdvisorDto.getSource(); //one of TripAdvisor or Ixigo
 		String city = tripAdvisorDto.getCity();
@@ -29,7 +31,7 @@ public class TransferData {
 		String country = tripAdvisorDto.getCountry();
 		String name=tripAdvisorDto.getName();
 		String address= tripAdvisorDto.getAddress();
-		String pincode = "120021";
+		String pincode = tripAdvisorDto.getPincode();
 		String phone = tripAdvisorDto.getPhone();
 		String ranktext= tripAdvisorDto.getRanktext();
 		String rating= tripAdvisorDto.getRating();
@@ -43,6 +45,8 @@ public class TransferData {
 		String photolink= tripAdvisorDto.getPhotolink();
 		int CityID=-1, PlaceID=-1;
 
+		System.out.println("Inserting to DB");
+		
 		//Inserting the City
 		//Checking if the City Exists in DB
 		ResultSet getCityR = statement.executeQuery("SELECT * FROM City WHERE CityName='"+city+"';");
@@ -80,6 +84,7 @@ public class TransferData {
 		    CityID = rs.getInt(1);
 		}
 		
+		System.out.println("City Inserted");
 		
 		//Inserting the Place
 		//Checking if the Place Exists in DB
@@ -276,6 +281,8 @@ public class TransferData {
 		    PlaceID = rs.getInt(1);
 		}
 		
+		System.out.println("Place Inserted");
+		
 		//Insert the Image URL
 		if(!photolink.isEmpty())
 		{
@@ -286,15 +293,19 @@ public class TransferData {
 			}
 		}
 		
+		System.out.println("Image URL Inserted");
+		
 		//Insert the Best Collection of Places
 		if(isCoE||isTravellersChoice)
 		{
 			ResultSet bestRS = statement.executeQuery("SELECT * FROM BestPlaces WHERE PlaceID="+PlaceID+";");
 			if(!bestRS.next())
 			{
-				statement.executeUpdate("INSERT INTO BestPlaces(PlaceID) VALUES("+PlaceID+";");
+				statement.executeUpdate("INSERT INTO BestPlaces(PlaceID) VALUES("+PlaceID+");");
 			}
 		}
+		
+		System.out.println("Best Place Inserted");
 		
 		//Insert the place charges
 		if(!Fee.isEmpty())
@@ -351,6 +362,8 @@ public class TransferData {
 			}
 		}
 		
+		System.out.println("Charges Inserted");
+		
 		//Insert the duration
 		if(!durValue.isEmpty())
 		{
@@ -376,6 +389,10 @@ public class TransferData {
 				}
 			}
 		}
+		
+		System.out.println("Durations Inserted");
+		
+		System.out.println("Insertions Complete");
 		
 		/*
 		String query = "SELECT * FROM Places;";
@@ -438,6 +455,6 @@ public class TransferData {
 			}
 		}
 		return scoreNew;
-	}			
+	}		
 			
 }

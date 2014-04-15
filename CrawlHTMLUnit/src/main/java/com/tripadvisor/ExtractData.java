@@ -28,16 +28,22 @@ public class ExtractData extends HtmlUnitWebClient{
 		
 		try{
 		// Read the whole page
+			
+		System.out.println("Getting details for link:"+url.link);
+		
 		HtmlPage page=WebClient(url.link);
 		List<DomElement> placeArea = (List<DomElement>) page
 				.getByXPath("//div[@id='HEADING_GROUP']");
 
+		
 		// Get the Heading Group
 		DomElement headinggroup = placeArea.get(0);
 
 		// Get the heading (name)
 		DomElement heading = headinggroup.getFirstElementChild();
 		String name = heading.getFirstElementChild().asText();
+		
+		System.out.println("Got name");
 
 		// Get the address and other details(if present) Element
 		DomElement detailsE = heading.getNextElementSibling();
@@ -46,6 +52,8 @@ public class ExtractData extends HtmlUnitWebClient{
 		DomElement addressE = detailsE.getFirstElementChild();
 		String address = addressE.asText().trim();
 
+		System.out.println("Got address");
+		
 		String phone = "", ranktext = "", rating = "", numofreviews = "", type = "", fee = "", duration = "", description = "",photoLink="";
 		Boolean isTravellersChoice = false, isCoE = false;
 		String durValue="";int durationV = -1;
@@ -65,6 +73,8 @@ public class ExtractData extends HtmlUnitWebClient{
 				DomElement phoneE = iconE.getNextElementSibling();
 				phone = phoneE.asText().trim();
 			}
+			
+			System.out.println("Getting other details");
 			// Other details can be got in the same manner. The website link is
 			// not spelt as it is so could not get it
 		}
@@ -106,6 +116,9 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 			// Checking if listing details
 			if (detailtype.contains("listing_details")) {
+				
+				System.out.println("Getting Listing Details");
+				
 				Iterator<DomElement> listdetailsI = detail.getChildElements()
 						.iterator();
 				while (listdetailsI.hasNext()) {
@@ -175,6 +188,8 @@ public class ExtractData extends HtmlUnitWebClient{
 						if((photoE3!=null)&&(photoE3.hasChildNodes()))
 						{
 							photoLink=photoE3.getAttribute("src");
+							
+							System.out.println("Got Photolink");
 						}
 					}
 				}
@@ -182,7 +197,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 		}
 		
-		if(!(duration.equals("unknown"))){
+		if(!(duration.equals(""))){
 			@SuppressWarnings("resource")
 		Scanner in = new Scanner(duration).useDelimiter("[^0-9]+");
 		durationV= in.nextInt();
@@ -206,6 +221,8 @@ public class ExtractData extends HtmlUnitWebClient{
 		TransformAddress transadd = new TransformAddress(address);
 		transadd.modifyAddress(city, country);
 		
+		System.out.println("Printing the details extracted");
+		
 		System.out.println("Name: " + name);
 		System.out.println("Country "+country);
 		System.out.println("City "+city);
@@ -224,6 +241,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("Description: " + description);
 		System.out.println("photolink: "+ photoLink);
 
+		System.out.println("Setting the details got");
 		
 		TripAdvisorDto tripAdvisorDto = new TripAdvisorDto();
 		
@@ -246,9 +264,15 @@ public class ExtractData extends HtmlUnitWebClient{
 		tripAdvisorDto.setPhotolink(photoLink);
 		tripAdvisorDto.setFee(fee);
 		
+		System.out.println("Starting Transferring the data to DB");
+		
 		TransferData.transferData(tripAdvisorDto);
 		
 		}catch(Exception e){
+			System.out.println("Exception Occured. Adding to exceptionUrls");
+			System.out.println(e);
+			System.out.println(e.getMessage());
+			System.out.println(e.getLocalizedMessage());
 			exceptionUrls+=url.link+"\n";
 		}
 		
