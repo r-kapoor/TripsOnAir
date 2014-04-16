@@ -23,6 +23,8 @@ public class ExtractData extends HtmlUnitWebClient{
 
 	private static String exceptionFile = "target/tripAdvisor/exception.txt";
 	private static String exceptionUrls = "";
+	private static String exceptionmsgFile = "target/tripAdvisor/exceptionmsg.txt";
+	private static String exceptionMsg = "";
 	@SuppressWarnings("unchecked")
 	public static void getDetails(DataUrl url) throws Exception {
 		
@@ -272,14 +274,19 @@ public class ExtractData extends HtmlUnitWebClient{
 			System.out.println("Exception Occured. Adding to exceptionUrls");
 			System.out.println(e);
 			System.out.println(e.getMessage());
-			System.out.println(e.getLocalizedMessage());
 			exceptionUrls+=url.link+"\n";
+			exceptionMsg+=e+"\n";
 		}
 		
 		FileOutputStream exception=new FileOutputStream(exceptionFile);
+		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
 		@SuppressWarnings("resource")
 		PrintStream e=new PrintStream(exception);
+		PrintStream e1=new PrintStream(exceptionmsg);
 		e.println(exceptionUrls);
+		e1.println(exceptionMsg);
 		e.close();
+		e1.close();
+		
 	}
 }

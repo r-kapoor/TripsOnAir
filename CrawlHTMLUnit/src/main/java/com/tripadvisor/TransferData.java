@@ -26,11 +26,11 @@ public class TransferData {
 		
 		//Get the data from the data transfer object
 		String source= tripAdvisorDto.getSource(); //one of TripAdvisor or Ixigo
-		String city = tripAdvisorDto.getCity();
-		String state = tripAdvisorDto.getState();
-		String country = tripAdvisorDto.getCountry();
-		String name=tripAdvisorDto.getName();
-		String address= tripAdvisorDto.getAddress();
+		String city = tripAdvisorDto.getCity().replaceAll("'", "''");
+		String state = tripAdvisorDto.getState().replaceAll("'", "''");
+		String country = tripAdvisorDto.getCountry().replaceAll("'", "''");
+		String name=tripAdvisorDto.getName().replaceAll("'", "''");
+		String address= tripAdvisorDto.getAddress().replaceAll("'", "''");
 		String pincode = tripAdvisorDto.getPincode();
 		String phone = tripAdvisorDto.getPhone();
 		String ranktext= tripAdvisorDto.getRanktext();
@@ -38,10 +38,10 @@ public class TransferData {
 		String numofreviews= tripAdvisorDto.getNumofreviews();
 		Boolean isTravellersChoice=tripAdvisorDto.getIsTravellersChoice();
 		Boolean isCoE = tripAdvisorDto.getIsCoE();
-		String type = tripAdvisorDto.getType();
+		String type = tripAdvisorDto.getType().replaceAll("'", "''");
 		String durValue = tripAdvisorDto.getDurValue();
 		String Fee= tripAdvisorDto.getFee();
-		String description= tripAdvisorDto.getDescription();
+		String description= tripAdvisorDto.getDescription().replaceAll("'", "''");
 		String photolink= tripAdvisorDto.getPhotolink();
 		int CityID=-1, PlaceID=-1;
 
@@ -223,7 +223,15 @@ public class TransferData {
 					}
 					update = update + ", Score = "+ score;
 					
-					
+					//Adding the Broad Category
+					if(!ranktext.isEmpty())
+					{
+						if(ranktext.matches("Ranked #\\d+ of \\d+ .* in.*"))
+						{
+							String broadCategory = ranktext.replaceAll("(Ranked #\\d+ of \\d+ )([a-zA-Z]*)( in.*)", "$2").toUpperCase();
+							update = update + ", Broad_Category ='" + broadCategory +"'";
+						}
+					}
 					
 					//System.out.println(update +" WHERE PlaceID = "+PlaceID+";");
 					statement.executeUpdate(update +" WHERE PlaceID = "+PlaceID+";");
@@ -274,6 +282,18 @@ public class TransferData {
 				insert = insert + ", Score, ScoreSources";
 				values = values + ", "+scoreNew+", 1";
 			}
+			
+			//Adding the Broad Category
+			if(!ranktext.isEmpty())
+			{
+				if(ranktext.matches("Ranked #\\d+ of \\d+ .* in.*"))
+				{
+					String broadCategory = ranktext.replaceAll("(Ranked #\\d+ of \\d+ )([a-zA-Z]*)( in.*)", "$2").toUpperCase();
+					insert = insert + ", Broad_Category";
+					values = values + ", '"+broadCategory+"'";
+				}
+			}
+			
 			//System.out.println(insert + values+");");
 			statement.executeUpdate(insert + values+");");
 		    ResultSet rs = statement.getGeneratedKeys();
@@ -416,7 +436,7 @@ public class TransferData {
 		int rank=-1, totalplaces = -1, numofreviewsI = -1;
 		double score1=-1, score2=-1, ratingD=-1, wt=-1, scoreNew=-1;
 		//Checking if ranktext is in proper format
-		if(ranktext.matches("Ranked #\\d+ of \\d+ attractions in.*"))
+		if(ranktext.matches("Ranked #\\d+ of \\d+ .* in.*"))
 		{
 			int pos = ranktext.indexOf('#');
 			int pos1 = ranktext.indexOf(' ',pos);
