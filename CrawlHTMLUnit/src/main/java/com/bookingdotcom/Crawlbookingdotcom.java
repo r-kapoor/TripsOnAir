@@ -1,5 +1,7 @@
 package com.bookingdotcom;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -13,15 +15,18 @@ import com.makemytrip.Hotels;
 /**
  * 
  * @author rajat
- * Sample MainLink : ""
+ * Sample MainLink : "http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-05;checkout=2014-05-07;"
  */
 
 public class Crawlbookingdotcom extends HtmlUnitWebClient {
 
-	private static int num =-1;
+	private static int num = -1;
 	private static int flag = 0;//to know loop enters first time in getMainLinks() method
 	private static String baseUrl = "http://www.booking.com";
 	private static ArrayList<URL> mainLinks = new ArrayList<URL>();
+	private static String mainUrls = "";
+	private static String mainUrlsFile = "ConfigFiles/bookingdotcom/priceCheckingUrls.txt";
+	
 	
 	public static void getMainLinks(URL url) throws Exception
 	{
@@ -71,7 +76,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 		}
 		
 		if(getFlag()==0){
-			getOtherPagesUrl(url.toString(),getNum());
+			//getOtherPagesUrl(url.toString(),getNum());
 		}
 	}
 	
@@ -108,15 +113,28 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 
 	public static void main(String args[])throws Exception
 	{
-		//getMainLinks();
-		//getOtherPagesUrl();
 		UrlBuilder.cityUrlBuilder();
 		
 		for(int j=0;j<mainLinks.size();j++)
 		{
-			ExtractData.getData(mainLinks.get(j));
-			//UrlBuilder.HotelUrlBuilder();
+			URL link = mainLinks.get(j);
+			//ExtractData.getData(link);
+			mainUrls+=link.toString()+"\n";
+			
 		}
-		//UrlBuilder.HotelUrlBuilder();
+		
+		FileOutputStream url=new FileOutputStream(mainUrlsFile);
+		@SuppressWarnings("resource")
+		PrintStream e=new PrintStream(url);
+		e.println(mainUrls);
+		e.close();
+		
+		/*for(int j=0;j<mainLinks.size();j++)
+		{
+			URL link = mainLinks.get(j);
+			ExtractData.getData(link);
+			//mainUrls+=link.toString()+"\n";
+			
+		}*/
 	}
 }

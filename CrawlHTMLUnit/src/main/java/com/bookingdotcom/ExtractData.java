@@ -1,5 +1,7 @@
 package com.bookingdotcom;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,11 +19,17 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ExtractData extends HtmlUnitWebClient{
 
+	private static String exceptionUrls = "";
+	private static String exceptionFile = "target/bookingdotcom/exception.txt";
+	private static String exceptionmsgFile = "target/bookingdotcom/exceptionmsg.txt";
+	private static String exceptionMsg = "";
+	
 	public static void getData(URL url)throws Exception
 	{
-		URL url1 = new URL("http://www.booking.com/hotel/in/hilton-garden-inn-new-delhi-saket.en-gb.html?aid=367912;label=dial-FM;sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-05-05;checkout=2014-05-06;ucfs=1;srfid=b41b64303289312c14ac80addd1920eaa773bc4eX11");
+		//URL url1 = new URL("http://www.booking.com/hotel/in/hilton-garden-inn-new-delhi-saket.en-gb.html?aid=367912;label=dial-FM;sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-05-05;checkout=2014-05-06;ucfs=1;srfid=b41b64303289312c14ac80addd1920eaa773bc4eX11");
 		
-		HtmlPage page=WebClient(url1);
+		try{
+		HtmlPage page=WebClient(url);
 		
 		String Title="unknown",address="unknown",rating="unknown",desciption="unknown",checkIn="unknown",checkOut="unknown";
 		String Bedroom="unknown",Outdoors="unknown",Activities="unknown",Living_Area="unknown",Media="unknown",Food="unknown",Internet="unknown",Parking="unknown",Services="unknown",General="unknown",Languages="unknown";
@@ -191,10 +199,30 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println(Languages);
 		System.out.println(checkIn);
 		System.out.println(checkOut);
+		}catch(Exception e)
+		{
+			System.out.println("Exception Occured. Adding to exceptionUrls");
+			System.out.println(e);
+			System.out.println(e.getMessage());
+			exceptionUrls+=url+"\n";
+			exceptionMsg+=e+"\n";
+		}
+		
+		FileOutputStream exception=new FileOutputStream(exceptionFile);
+		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
+		@SuppressWarnings("resource")
+		PrintStream e=new PrintStream(exception);
+		PrintStream e1=new PrintStream(exceptionmsg);
+		e.println(exceptionUrls);
+		e1.println(exceptionMsg);
+		e.close();
+		e1.close();
+		
 	}
 	
 	public static void getPrices(URL url) throws Exception
 	{
+		try{
 		HtmlPage page=WebClient(url);
 		
 		DomElement priceArea = page.getFirstByXPath("//tbody[@id='room_availability_container']");
@@ -261,11 +289,29 @@ public class ExtractData extends HtmlUnitWebClient{
 						String price = priceE1.asText().trim();
 						System.out.println("price "+price);
 						break;
-					}	
-				}//end of inner while loop
-			}
-		}//end of main while loop	
+						}	
+					}//end of inner while loop
+				}
+			}//end of main while loop	
+		}
+	}catch(Exception e)
+	{
+		System.out.println("Exception Occured. Adding to exceptionUrls");
+		System.out.println(e);
+		System.out.println(e.getMessage());
+		exceptionUrls+=url+"\n";
+		exceptionMsg+=e+"\n";
 	}
-}
-	
+
+		FileOutputStream exception=new FileOutputStream(exceptionFile);
+		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
+		@SuppressWarnings("resource")
+		PrintStream e=new PrintStream(exception);
+		PrintStream e1=new PrintStream(exceptionmsg);
+		e.println(exceptionUrls);
+		e1.println(exceptionMsg);
+		e.close();
+		e1.close();
+
+	}
 }
