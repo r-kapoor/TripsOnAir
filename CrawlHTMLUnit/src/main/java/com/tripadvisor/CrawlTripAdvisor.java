@@ -18,7 +18,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 /**
  *  @author rajat 
  * 	Crawls trip places from tripAdvisor
- *	mainLink: "http://www.tripadvisor.in/AllLocations-g297627-c2-Attractions-Karnataka.html"
+ *	Sample mainLink: "http://www.tripadvisor.in/AllLocations-g297627-c2-Attractions-Karnataka.html"
  *	Sample ChildLink: "http://www.tripadvisor.in/AllLocations-g297628-c2-Attractions-Bangalore_Karnataka.html"
  *	Sample subChildLink:"http://www.tripadvisor.in/Attraction_Review-g297628-d325159-Reviews-Bull_Temple-Bangalore_Karnataka.html"
  * 
@@ -105,7 +105,7 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 			{
 				exceptionUrls+=dtUrl.link+"\n";
 			}
-			break;// only for to test the flow in less time
+			//break;// only for to test the flow in less time
 	}
 		return mainLinks;
 }
@@ -192,6 +192,7 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 											dtlink.country = dtUrl.country;
 											dtlink.city = dtUrl.city;
 											subChildLinks.add(dtlink);
+											System.out.println("subchildlink "+newSubChildUrl);
 										}
 									}
 								
@@ -201,6 +202,12 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 					}
 				}
 			}
+			
+			if((linkE.getTagName().contains("h1")&&(linkE.asText().contains("Things"))))//Ignore things to do links
+			{
+				break;
+			}
+			
 		}//end of try statement
 			catch(Exception e)
 			{
@@ -293,12 +300,14 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 		e.close();
 		
 		/*DataUrl du = new DataUrl();
-		URL url = new URL("http://www.tripadvisor.in/Attraction_Review-g503691-d523963-Reviews-Radhanagar_Beach-Havelock_Island_Andaman_and_Nicobar_Islands.html");
+		URL url = new URL("http://www.tripadvisor.in/AllLocations-g306996-c2-Attractions-Canacona_Goa.html");
 		du.link= url;
 		du.country="test";
 		du.state="test";
 		du.city = "test";
-		ExtractData.getDetails(du);*/
+		//ExtractData.getDetails(du);
+		//getChildLinks(du);
+		getSubChildLinks(du);*/
 
 	}
 }	
