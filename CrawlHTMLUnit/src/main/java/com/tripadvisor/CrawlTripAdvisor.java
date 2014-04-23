@@ -98,7 +98,7 @@ public class CrawlTripAdvisor extends HtmlUnitWebClient{
 						dt_Url.state = dtUrl.state;
 					}
 					mainLinks.add(dt_Url);
-					break;// only to test the flow in less time
+					//break;// only to test the flow in less time
 					}
 				}
 			}catch(Exception e)
