@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import GlobalClasses.HtmlUnitWebClient;
+
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
@@ -23,19 +25,17 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  *
  */
 
-public class CrawlRedBus {
+public class CrawlRedBus extends HtmlUnitWebClient{
 
-	public void submittingForm() throws Exception {
-		
-		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
+	@SuppressWarnings("unchecked")
+	public void getCityLinks() throws Exception {
+
 		//Set the URL of the page
 		//URL url = new URL("http://www.redbus.in/bus-tickets/routes-directory");
 		URL url = new URL("http://www.redbus.in/bus-tickets/ahmedabad-directory.aspx");
-		WebRequest request = new WebRequest(url);
 	    
 		//Read the whole page
-		HtmlPage page = webClient.getPage(request);
+		HtmlPage page=WebClient(url);
 		//System.out.println(page.asText());
 		List<DomElement> routesElement = (List<DomElement>)page.getByXPath("//div[@id='ctl00_ctl00_ContentHolder_ContentHolder_divLinks']");
 		
@@ -56,19 +56,16 @@ public class CrawlRedBus {
 		}
 }
 	
+	@SuppressWarnings("unchecked")
 	public void getDetails() throws Exception{
 		
-		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
 		//Set the URL of the page
 		URL url = new URL("http://www.redbus.in/bus-tickets/ahmedabad-adipur.aspx");
-		WebRequest request = new WebRequest(url);
-	    
-		//Read the whole page
-		HtmlPage page = webClient.getPage(request);
-		//System.out.println(page.asText());
-		List<DomElement> routesElement = (List<DomElement>)page.getByXPath("//div[@class='W30 Form TRC P20']");
 		
+		//Read the whole page
+		HtmlPage page=WebClient(url);
+
+		List<DomElement> routesElement = (List<DomElement>)page.getByXPath("//div[@class='W30 Form TRC P20']");
 		
 		DomElement routesArea = routesElement.get(0);
 		List<DomElement> source =(List<DomElement>) routesArea.getFirstElementChild().getByXPath("//input[@id='DDLSource']");
@@ -109,7 +106,6 @@ public class CrawlRedBus {
 	
 	public static void main(String[] args) throws Exception {
 		 CrawlRedBus htmlUnit = new  CrawlRedBus();
-	        //htmlUnit.submittingForm();
 		 htmlUnit.getDetails();
 	    }
 }
