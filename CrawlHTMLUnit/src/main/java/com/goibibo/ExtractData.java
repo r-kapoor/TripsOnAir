@@ -31,7 +31,7 @@ public class ExtractData extends HtmlUnitWebClient{
     	DomElement flightDetails, flightData;
     	
     	//Set the URL of the page
-    	URL url = new URL("http://www.goibibo.com/flight-searchresult/#air-DEL-BLR-20140329--1-0-0-E");
+    	URL url = new URL("http://www.goibibo.com/flight-searchresult/#air-DEL-BLR-20140629--1-0-0-E");
 
     	HtmlPage page=WebClient(url);
 

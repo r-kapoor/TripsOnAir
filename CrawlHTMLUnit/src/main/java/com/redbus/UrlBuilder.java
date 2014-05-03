@@ -16,7 +16,7 @@ import java.util.Date;
 public class UrlBuilder {
 
 	private static String base = "http://www.redbus.in/Booking/SelectBus.aspx?";
-	public URL urlBuilder(String src,String srcId,String dest,String destId,String date) throws Exception
+	public URL urlBuilder(String srcId,String destId,String date) throws Exception
 	{
 		String newUrl = base+"fromCityId="+srcId+"&"+"toCityId="+destId+"&"+"doj="+date+"&busType=Any&opId=0";
 		System.out.println(newUrl);
