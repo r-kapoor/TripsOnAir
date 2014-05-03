@@ -143,7 +143,9 @@ public class CrawlResturants extends HtmlUnitWebClient{
 		}
 }
 
-	 public static void main(String[] args) throws Exception {	 
+	 public static void main(String[] args) throws Exception {	
+		 
+		 /*
 		 CrawlResturants.getCityLinks();
 		 
 		 System.out.println("Got all city Directory Links.Now get their resturants");
@@ -159,18 +161,20 @@ public class CrawlResturants extends HtmlUnitWebClient{
 			 Thread.sleep(5000);
 		 }
 		 
+		 */
+		 
 		//for testing
 		
-		 /*  URL url = new URL("http://www.zomato.com/bangalore/alto-vino-bengaluru-marriott-hotel-whitefield-whitefield");
+		   URL url = new URL("http://www.zomato.com/bangalore/alto-vino-bengaluru-marriott-hotel-whitefield-whitefield");
 		 	//URL url = new URL("http://www.zomato.com/bangalore/directory/restaurants-a-1");
 		    zmtURL zmtLink = new zmtURL();
 		 	zmtLink.country = "India";
-		 	zmtLink.city = "bangalore";
+		 	zmtLink.city = "Bangalore";
 		 	zmtLink.title = "alto-vino-bengaluru-marriott-hotel";
 		 	zmtLink.url = url;
 			ExtractData.getResturantData(zmtLink);
 		 	 //getResturantLink(zmtLink);
-		 	  */
+		 	  
 		 
 	}
 }
