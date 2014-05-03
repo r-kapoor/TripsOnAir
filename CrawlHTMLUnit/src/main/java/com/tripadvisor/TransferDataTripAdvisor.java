@@ -16,7 +16,7 @@ import com.dataTransferObject.*;
  *
  */
 
-public class TransferData {
+public class TransferDataTripAdvisor {
 
 	public static void transferData(TripAdvisorDto tripAdvisorDto) throws Exception{
 		
@@ -417,22 +417,6 @@ public class TransferData {
 		
 		System.out.println("Insertions Complete");
 		
-		/*
-		String query = "SELECT * FROM Places;";
-	
-		ResultSet result = statement.executeQuery(query);
-		if(result.next())
-		{
-			System.out.println(result.getString("Name"));
-		}
-		ResultSetMetaData meta = result.getMetaData();
-		System.out.println(meta.getColumnCount());
-		//System.out.println(result.getString("Name"));
-		//System.out.println(result.last());;
-		System.out.println(result.getRow());
-		*/
-	
-	
 	}
 
 	private static double generateScore(String ranktext, String rating,	String numofreviews) throws NumberFormatException {

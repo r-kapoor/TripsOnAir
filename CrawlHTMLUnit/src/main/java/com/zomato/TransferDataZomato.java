@@ -19,7 +19,7 @@ import com.dataTransferObject.*;
  *
  */
 
-public class TransferData {
+public class TransferDataZomato {
 
 	public static void transferData(ZomatoDto zomatoDto) throws Exception{
 		
@@ -119,7 +119,7 @@ public class TransferData {
 							while(cuisinest.hasMoreTokens())
 							{
 								String cuisinesS = cuisinest.nextToken().trim();
-								while(cuisinest.hasMoreTokens())
+								while(cuisinesOldt.hasMoreTokens())
 								{
 									String cuisinesOS = cuisinest.nextToken().trim();
 									if(!cuisinesS.equals(cuisinesOS))
@@ -186,6 +186,25 @@ public class TransferData {
 					if(costOld==null&&cost!=-1)
 					{
 						update = update + ", CostForTwo = "+ cost;
+					}
+					
+					//Setting Locality if not exists
+					String localityOld = getRestaurantR.getString("Locality");
+					if(localityOld==null&&!locality.isEmpty())
+					{
+						update = update + ", Locality = '" + locality +"'";
+					}
+					
+					//Updating the NumOfVotes
+					int numofvotesOld = getRestaurantR.getInt("NumOfVotes");
+					if(!numofvotes.isEmpty())
+					{
+						int votes = Integer.parseInt(numofvotes);
+						if(votes!=numofvotesOld)
+						{
+							update = update + ", NumOfVotes ="+votes;
+						}
+								
 					}
 					
 					//Setting nonveg if not exists
@@ -310,6 +329,18 @@ public class TransferData {
 				values = values + ", "+rating;
 			}
 			
+			if(!locality.isEmpty())
+			{
+				insert = insert + ", Locality";
+				values = values + ", '"+ locality +"'";
+			}
+			
+			if(!numofvotes.isEmpty())
+			{
+				insert = insert + ", NumOfVotes";
+				values = values + ", "+ numofvotes;
+			}
+			
 			if(!nonveg.isEmpty())
 			{
 				insert = insert + ", NonVeg";
@@ -404,29 +435,19 @@ public class TransferData {
 		//Inserting the restaurant timings
 		if(!openinghrs.isEmpty())
 		{
-			
+			TransformTimings tt = new TransformTimings();
+			tt.transform(openinghrs);
+			ResultSet durRS = statement.executeQuery("SELECT * FROM Restaurant_Timings where RestaurantID="+RestaurantID+";");
+			if(!durRS.next())
+			{
+				statement.executeUpdate("INSERT INTO Restaurant_Timings(RestaurantID, TimeStart, TimeEnd, Days) VALUES("+RestaurantID+",'"+tt.getTimeStart()+"','"+tt.getTimeEnd()+"','"+tt.getDays()+"');");
+			}
 		}
 		
 		
 		System.out.println("Durations Inserted");
 		
-		System.out.println("Insertions Complete");
-		
-		/*
-		String query = "SELECT * FROM Places;";
-	
-		ResultSet result = statement.executeQuery(query);
-		if(result.next())
-		{
-			System.out.println(result.getString("Name"));
-		}
-		ResultSetMetaData meta = result.getMetaData();
-		System.out.println(meta.getColumnCount());
-		//System.out.println(result.getString("Name"));
-		//System.out.println(result.last());;
-		System.out.println(result.getRow());
-		*/
-	
+		System.out.println("Insertions Complete");	
 	
 	}	
 			

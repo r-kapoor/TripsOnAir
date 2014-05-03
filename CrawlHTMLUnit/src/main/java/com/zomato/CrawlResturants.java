@@ -165,7 +165,7 @@ public class CrawlResturants extends HtmlUnitWebClient{
 		 
 		//for testing
 		
-		   URL url = new URL("http://www.zomato.com/bangalore/alto-vino-bengaluru-marriott-hotel-whitefield-whitefield");
+		   URL url = new URL("http://www.zomato.com/bangalore/abs-absolute-barbecues-marathahalli");
 		 	//URL url = new URL("http://www.zomato.com/bangalore/directory/restaurants-a-1");
 		    zmtURL zmtLink = new zmtURL();
 		 	zmtLink.country = "India";
