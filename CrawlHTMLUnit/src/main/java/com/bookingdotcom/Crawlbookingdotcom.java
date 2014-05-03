@@ -113,7 +113,10 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 
 	public static void main(String args[])throws Exception
 	{
-		UrlBuilder.cityUrlBuilder();
+		/*
+		 * Actual Code
+		 */
+		/*UrlBuilder.cityUrlBuilder();
 		
 		for(int j=0;j<mainLinks.size();j++)
 		{
@@ -123,11 +126,18 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 			
 		}
 		
+		
+		
 		FileOutputStream url=new FileOutputStream(mainUrlsFile);
 		@SuppressWarnings("resource")
 		PrintStream e=new PrintStream(url);
 		e.println(mainUrls);
 		e.close();
+		*/
+		
+		//For testing
+		URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-05;checkout=2014-05-07;");
+		ExtractData.getData(test);
 		
 		/*for(int j=0;j<mainLinks.size();j++)
 		{

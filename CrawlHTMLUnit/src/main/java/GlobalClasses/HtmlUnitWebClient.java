@@ -23,18 +23,18 @@ public class HtmlUnitWebClient {
 	// Read the whole page
 	HtmlPage page = webClient.getPage(request);
 	int i=webClient.waitForBackgroundJavaScriptStartingBefore(1000);
-	while (i > 1)
+	while (i > 3)
     {
         i = webClient.waitForBackgroundJavaScript(1000);
         //System.out.println("i "+i);
-        if (i == 1)
+        if (i == 3)
         {
             break;
         }
         synchronized (page) 
         {
             System.out.println("Loading the page.....");
-            page.wait(500);
+            page.wait(600);
         }
     }
 	return page;	

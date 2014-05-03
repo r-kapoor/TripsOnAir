@@ -175,9 +175,9 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 		}
 		
-		System.out.println(Title);
-		System.out.println(address);
-		System.out.println(rating);
+		System.out.println("Title="+Title);
+		System.out.println("address="+address);
+		System.out.println("rating="+rating);
 		for(int i=0;i<photoList.size();i++)
 		{
 			System.out.println(photoList.get(i));
@@ -185,20 +185,20 @@ public class ExtractData extends HtmlUnitWebClient{
 			
 		//getPrices(url);
 		
-		System.out.println(desciption);
-		System.out.println(Bedroom);
-		System.out.println(Outdoors);
-		System.out.println(Activities);
-		System.out.println(Living_Area);
-		System.out.println(Media);
-		System.out.println(Food);
-		System.out.println(Internet);
-		System.out.println(Parking);
-		System.out.println(Services);
-		System.out.println(General);
-		System.out.println(Languages);
-		System.out.println(checkIn);
-		System.out.println(checkOut);
+		System.out.println("desciption="+desciption);
+		System.out.println("Bedroom="+Bedroom);
+		System.out.println("Outdoors="+Outdoors);
+		System.out.println("Activities="+Activities);
+		System.out.println("Living_Area="+Living_Area);
+		System.out.println("Media="+Media);
+		System.out.println("Food="+Food);
+		System.out.println("Internet="+Internet);
+		System.out.println("Parking="+Parking);
+		System.out.println("Services="+Services);
+		System.out.println("General="+General);
+		System.out.println("Languages="+Languages);
+		System.out.println("checkIn="+checkIn);
+		System.out.println("checkOut="+checkOut);
 		}catch(Exception e)
 		{
 			System.out.println("Exception Occured. Adding to exceptionUrls");
