@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 import GlobalClasses.HtmlUnitWebClient;
 
+import com.dataTransferObject.TripAdvisorDto;
+import com.dataTransferObject.ZomatoDto;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
@@ -27,7 +29,8 @@ public class ExtractData extends HtmlUnitWebClient{
 	public static void getResturantData(zmtURL link) throws Exception
 	{
 		try{
-		String address="unknown",locality="unknown",phoneNo="unknown",highlights="",openingHours="unknown",cuisines="unknown",statistic="unknown";
+		String address="",locality="",phone="",highlights="",openingHours="",cuisines="",statistic="";
+		String homeDelivery = "", dineIn = "", nonveg = "", ac = "", bar = "";
 		ArrayList<URL> photoLink=new ArrayList<URL>();
 		String rating = "unknown";
 		int cost =-1;
@@ -71,7 +74,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			 {
 				 DomElement phoneE2 = phoneE1.getFirstElementChild();
 				 if((phoneE2!=null)&&(phoneE2.hasChildNodes())){
-						 phoneNo = phoneE2.asText();
+						 phone = phoneE2.asText();
 				 }
 			 }
 		 }
@@ -102,10 +105,51 @@ public class ExtractData extends HtmlUnitWebClient{
 								 String HL[]=infoE2.asText().split("\n");
 								 for(int i=1;i<HL.length;i++)
 								 {
+									 HL[i]=HL[i].trim();
+									 if(HL[i].contains("Home Delivery"))
+									 {
+										 if(HL[i].contains("No"))
+										 {
+											 homeDelivery = "no";
+										 }
+										 else
+										 {
+											 homeDelivery = "yes";
+										 }
+									 }
+									 if(HL[i].contains("Dine-In Available"))
+									 {
+										 dineIn = "yes";
+									 }
+									 if(HL[i].contains("Veg"))
+									 {
+										 if(HL[i].equals("Serves Non Veg"))
+										 {
+											 nonveg = "yes";
+										 }
+										 else if(HL[i].equals("Vegetarian Only"))
+										 {
+											 nonveg="no";											 
+										 }
+									 }
+									 if(HL[i].contains("Air Conditioned"))
+									 {
+										 ac="yes";
+									 }
+									 if(HL[i].contains("Bar"))
+									 {
+										 if(HL[i].equals("Bar Available"))
+										 {
+											 bar = "yes";
+										 }
+										 else if(HL[i].equals("Bar Not Available"))
+										 {
+											 bar = "no";
+										 }
+									 }
 									 highlights+=HL[i];
 								 }
 							 }
-							 
 							 if(infoLable1.contains("Cost"))
 							 {
 								 Scanner in = new Scanner(infoE2.asText().trim()).useDelimiter("[^0-9]+");
@@ -144,46 +188,71 @@ public class ExtractData extends HtmlUnitWebClient{
 
 			 }
 		 }
-				 //photo area
-				 if((photoArea!=null)&&(photoArea.hasChildNodes()))
-				 {
-					 Iterator<DomElement> photoIterator=photoArea.getChildElements().iterator();
-					 while(photoIterator.hasNext())
-					 {
-						 try{
-						 DomElement photoE2=photoIterator.next();
-						 if((photoE2!=null)&&(photoE2.hasChildNodes())&&(photoE2.getTagName().contains("a")))
-						 {
-							 DomElement photoE3=photoE2.getFirstElementChild();
-							 if((photoE3!=null)&&(photoE3.getTagName().contains("img")))
-							 {
-								 photoLink.add(new URL(photoE3.getAttribute("src")));
-							 }		 
-						 }	   
-						}catch(Exception e){
-							System.out.println("Exception occured");
-							System.out.println(e.getMessage());
-						}
-					}
-				 }
-		 
-		 System.out.println("link "+ link.url);
-		 System.out.println("Title "+link.title);
-		 System.out.println("Country "+link.country);
-		 System.out.println("City "+link.city);
-		 System.out.println("address: "+address);
-		 System.out.println("locality: "+locality);
-		 System.out.println("rating: "+rating);
-		 System.out.println("phoneNo "+phoneNo);
-		 System.out.println("hightlights: "+highlights);
-		 System.out.println("Cost "+cost);
-		 System.out.println("openingHours "+openingHours);
-		 System.out.println("cuisines "+cuisines);
-		 for(int k=0;k<photoLink.size();k++)
+		 //photo area
+		 if((photoArea!=null)&&(photoArea.hasChildNodes()))
 		 {
+			 Iterator<DomElement> photoIterator=photoArea.getChildElements().iterator();
+			 while(photoIterator.hasNext())
+			 {
+				 try{
+				 DomElement photoE2=photoIterator.next();
+				 if((photoE2!=null)&&(photoE2.hasChildNodes())&&(photoE2.getTagName().contains("a")))
+				 {
+					 DomElement photoE3=photoE2.getFirstElementChild();
+					 if((photoE3!=null)&&(photoE3.getTagName().contains("img")))
+					 {
+						 photoLink.add(new URL(photoE3.getAttribute("src")));
+					 }		 
+				 }	   
+				}catch(Exception e){
+					System.out.println("Exception occured");
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		
+		System.out.println("link "+ link.url);
+		System.out.println("Title "+link.title);
+		System.out.println("Country "+link.country);
+		System.out.println("City "+link.city);
+		System.out.println("address: "+address);
+		System.out.println("locality: "+locality);
+		System.out.println("rating: "+rating);
+		System.out.println("phoneNo "+phone);
+		System.out.println(homeDelivery+","+ dineIn+","+ nonveg+"," +ac+"," +bar);
+		System.out.println("Cost "+cost);
+		System.out.println("openingHours "+openingHours);
+		System.out.println("cuisines "+cuisines);
+		for(int k=0;k<photoLink.size();k++)
+		{
 			 System.out.println(photoLink.get(k));
-		 }
-		 
+		}
+		
+		String name = "";
+		String numofvotes = "";
+		
+		ZomatoDto zomatoDto = new ZomatoDto();
+		
+		zomatoDto.setSource("Zomato");
+		zomatoDto.setCity(link.city.toUpperCase());		
+		zomatoDto.setCountry(link.country.toUpperCase());
+		zomatoDto.setLocality(locality);
+		zomatoDto.setName(name.toUpperCase());
+		zomatoDto.setAddress(address);
+		zomatoDto.setPhone(phone);
+		zomatoDto.setRating(rating);
+		zomatoDto.setNumofvotes(numofvotes);
+		zomatoDto.setHomeDelivery(homeDelivery);
+		zomatoDto.setDineIn(dineIn);
+		zomatoDto.setNonveg(nonveg);
+		zomatoDto.setAc(ac);
+		zomatoDto.setBar(bar);
+		zomatoDto.setCost(cost);
+		zomatoDto.setOpeninghrs(openingHours);
+		zomatoDto.setCuisines(cuisines.toUpperCase());
+		zomatoDto.setPhotolink(photoLink);
+		
+		
 		}catch(Exception e){
 		
 			System.out.println("Exception Occured. Adding to exceptionUrls");

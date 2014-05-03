@@ -28,7 +28,7 @@ public class test {
 		String daytext = "("+dayrange+"|"+days+")";
 		String dayregex = "\\("+daytext+"(, "+daytext+")*"+"\\)";
 		String timeformat = timeformatxtoy+"|"+timeformat24hrs+"|"+dayclosed;
-		String timewithdays = "("+timeformat+") ("+dayregex+")";
+		String timewithdays = "("+timeformat+") ("+dayregex+")"+"|"+dayclosed;
 		String dayoutput="";
 		//System.out.println(dayregex);
 		//if(openingdays.matches(dayregex))
