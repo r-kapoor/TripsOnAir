@@ -1,5 +1,7 @@
 package com.redbus;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -24,17 +26,22 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ExtractData extends HtmlUnitWebClient{
 
+	private static String exceptionUrls = "";
+	private static String exceptionMsg = "";
+	private static String exceptionFile = "target/redbus/exception.txt";
+	private static String exceptionmsgFile = "target/redbus/exceptionmsg.txt";
+
 	@SuppressWarnings("unchecked")
-	public void getData() throws Exception {
+	public void getData(URL url) throws Exception {
 	
 		//set default value of variables
-		
+		try{
 		String busName="unknown",busType="unknown",depTime="unknown",arrTime="unknown",duration="unknown",rating="unknown",ratingText="unknown",fare="unknown";
 		
 		//Set the URL of the page
-		URL url = new URL("http://www.redbus.in/Booking/SelectBus.aspx?fromCityId=122&fromCityName=Bangalore&toCityId=124&toCityName=Hyderabad&doj=30-May-2014");
+		URL url1 = new URL("http://www.redbus.in/Booking/SelectBus.aspx?fromCityId=122&fromCityName=Bangalore&toCityId=124&toCityName=Hyderabad&doj=30-May-2014");
 		
-		HtmlPage page=WebClient(url);
+		HtmlPage page=WebClient(url1);
 
 		List <DomElement> routesList = (List<DomElement>)page.getByXPath("//div[@id='onwardTrip']");
 		DomElement routesElement=routesList.get(0).getFirstElementChild();
@@ -168,12 +175,28 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("ratingText: "+ratingText);
 		System.out.println("fare "+fare);
 		
+		}catch(Exception e){
+			
+			System.out.println("Exception Occured. Adding to exceptionUrls");
+			System.out.println(e);
+			System.out.println(e.getMessage());
+			exceptionUrls+=url+"\n";
+			exceptionMsg+=e+"\n";
+		}
 		
+		FileOutputStream exception=new FileOutputStream(exceptionFile);
+		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
+		PrintStream e=new PrintStream(exception);
+		PrintStream e1=new PrintStream(exceptionmsg);
+		e.println(exceptionUrls);
+		e1.println(exceptionMsg);
+		e.close();
+		e1.close();
 }
 	
 	public static void main(String[] args) throws Exception {
 		 ExtractData htmlUnit = new  ExtractData();
-	        htmlUnit.getData();
+	        //htmlUnit.getData();
 		 //htmlUnit.getDetails();
 	    }
 }

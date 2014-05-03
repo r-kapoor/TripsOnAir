@@ -26,7 +26,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  */
 
 public class CrawlRedBus extends HtmlUnitWebClient{
-
+	
+	private static int days = 100;
+	
 	@SuppressWarnings("unchecked")
 	public void getCityLinks() throws Exception {
 
@@ -56,44 +58,53 @@ public class CrawlRedBus extends HtmlUnitWebClient{
 		}
 }
 	
-	@SuppressWarnings("unchecked")
+	
 	public void getDetails() throws Exception{
 		
+		String sourceId="unknown",destId="unknown",sourceName="unknown",destName="unknown";
+		
 		//Set the URL of the page
-		URL url = new URL("http://www.redbus.in/bus-tickets/ahmedabad-adipur.aspx");
+		URL url = new URL("http://www.redbus.in/bus-tickets/ahmedabad-mumbai.aspx");
 		
 		//Read the whole page
 		HtmlPage page=WebClient(url);
 
-		List<DomElement> routesElement = (List<DomElement>)page.getByXPath("//div[@class='W30 Form TRC P20']");
 		
-		DomElement routesArea = routesElement.get(0);
-		List<DomElement> source =(List<DomElement>) routesArea.getFirstElementChild().getByXPath("//input[@id='DDLSource']");
-		List<DomElement> destination = (List<DomElement>)routesArea.getFirstElementChild().getNextElementSibling().getByXPath("//input[@id='DDLDestination']");
+		DomElement sourceE=page.getFirstByXPath("//input[@id='DDLSource']");
+		DomElement destE= page.getFirstByXPath("//input[@id='DDLDestination']");
 		
-		String sourceName=source.get(0).getAttribute("value");
-		String sourceId=source.get(0).getAttribute("name");
-		String destName=destination.get(0).getAttribute("value");
-		String destId = destination.get(0).getAttribute("name");
+		
+		if((sourceE!=null)&&(sourceE.hasAttribute("name")))
+		{
+			sourceId=sourceE.getAttribute("name");
+			sourceName=sourceE.getAttribute("value");
+		}
+		
+		if((destE!=null)&&(destE.hasAttribute("name")))
+		{
+			destId=destE.getAttribute("name");
+			destName=destE.getAttribute("value");
+		}
+		
+		if((sourceId!=null)&&(!sourceId.equals("unknown"))&&(destId!=null)&&(!destId.equals("unknown"))){
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			//get current date time with Date()
+			Date date = new Date();
+		
+			for(int i=0;i<days;i++)
+			{
+				date = addDays(date,1);
+				String appendDate = dateFormat.format(date);
+				UrlBuilder urlbuilder = new UrlBuilder();
+				URL orgUrl=urlbuilder.urlBuilder(sourceId,destId,appendDate);
+				URL revUrl=urlbuilder.urlBuilder(destId,sourceId,appendDate);
+			}
+		}
 		
 		System.out.println("value: "+sourceName);
 		System.out.println("value: "+sourceId);
 		System.out.println("value2:"+destName);
 		System.out.println("value2:"+destId);
-		
-		//call the urlBuilder
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		//get current date time with Date()
-		Date date = new Date();
-		
-		for(int i=0;i<100;i++)
-		{
-			date = addDays(date,1);
-			String appendDate = dateFormat.format(date);
-			UrlBuilder urlbuilder = new UrlBuilder();
-			URL orgUrl=urlbuilder.urlBuilder(sourceName, sourceId, destName, destId,appendDate);
-			URL revUrl=urlbuilder.urlBuilder(sourceName, destName,sourceId, destId,appendDate);
-		}
 	}
 	
 	public static Date addDays(Date date, int days)
