@@ -17,7 +17,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
  * @author rajat
- * Crawls the zomato resturants
+ * Crawls the zomato restaurants
  * Sample CityResturantsUrl:"http://www.zomato.com/bangalore/directory/restaurants-a-1"
  * Sample ResturantUrl:"http://www.zomato.com/bangalore/anjappar-koramangala"
  * Get the data from the ResturantUrl
@@ -173,8 +173,6 @@ public class CrawlResturants extends HtmlUnitWebClient{
 		 	zmtLink.title = "alto-vino-bengaluru-marriott-hotel";
 		 	zmtLink.url = url;
 			ExtractData.getResturantData(zmtLink);
-		 	 //getResturantLink(zmtLink);
-		 	  
-		 
+			
 	}
 }

@@ -268,7 +268,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		
 		System.out.println("Starting Transferring the data to DB");
 		
-		TransferData.transferData(tripAdvisorDto);
+		TransferDataTripAdvisor.transferData(tripAdvisorDto);
 		
 		}catch(Exception e){
 			System.out.println("Exception Occured. Adding to exceptionUrls");

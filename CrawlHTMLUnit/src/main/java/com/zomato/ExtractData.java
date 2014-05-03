@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import GlobalClasses.HtmlUnitWebClient;
 
-import com.dataTransferObject.TripAdvisorDto;
+
 import com.dataTransferObject.ZomatoDto;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -29,13 +29,17 @@ public class ExtractData extends HtmlUnitWebClient{
 	public static void getResturantData(zmtURL link) throws Exception
 	{
 		try{
-		String address="",locality="",phone="",highlights="",openingHours="",cuisines="",statistic="";
+		String address="",locality="",phone="",highlights="",openingHours="",cuisines="";
 		String homeDelivery = "", dineIn = "", nonveg = "", ac = "", bar = "";
 		ArrayList<URL> photoLink=new ArrayList<URL>();
-		String rating = "unknown";
+		String rating = "";
 		int cost =-1;
 		
+		System.out.println("Getting Data");
+		
 		HtmlPage page=WebClient(link.url);
+		
+		System.out.println("Extracting from the page");
 		
 		DomElement addressArea 	= 	page.getFirstByXPath("//div[@class='grid_14 column omega']");
 		DomElement ratingArea	= 	page.getFirstByXPath("//div[@class='res-rating pos-relative clearfix']");
@@ -252,6 +256,9 @@ public class ExtractData extends HtmlUnitWebClient{
 		zomatoDto.setCuisines(cuisines.toUpperCase());
 		zomatoDto.setPhotolink(photoLink);
 		
+		System.out.println("Starting Transferring the data to DB");
+		
+		TransferDataZomato.transferData(zomatoDto);
 		
 		}catch(Exception e){
 		
