@@ -44,7 +44,7 @@ public class crawlGoIbibo extends HtmlUnitWebClient{
 					   {
 						   String link = urlE.getAttribute("href");
 						   CityLinks.add(link);
-						   //System.out.println(link);
+						   System.out.println(link);
 					   }
 				   }
 			   }   

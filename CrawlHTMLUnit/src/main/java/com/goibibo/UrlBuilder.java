@@ -11,26 +11,27 @@ import java.util.Scanner;
 public class UrlBuilder {
 
 	private static String mappingFile = "ConfigFiles/goibibo/mapping.txt";
+	private static String AllLinksFile ="ConfigFiles/goibibo/links.txt";
 	//private static String baseUrl ="http://www.goibibo.com/flight-searchresult/#air-IXA-AGX-20140422--1-0-0-E";
 	private static HashMap<String,String>cityToCode = new HashMap<String,String>();
 	private static int days =60;
 	
-	public static void mainUrlBuilder()throws Exception
+	public static void mainUrlBuilder(String url)throws Exception
 	{
-		String url="/flights-schedule/delhi/agatti/";
+		//String url="/flights-schedule/delhi/agatti/";
 		String remove="/flights-schedule/";
 		String srcDest=url.substring(remove.length(), url.length()-1);
 		String srcCity= srcDest.substring(0, srcDest.indexOf("/"));
 		String destCity = srcDest.substring(srcDest.indexOf("/")+1, srcDest.length());
-		System.out.println(srcCity);
-		System.out.println(destCity);
+		//System.out.println(srcCity);
+		//System.out.println(destCity);
 		
 		cityToCode=mapping();
 		String srcCode = cityToCode.get(srcCity);
 		String destCode = cityToCode.get(destCity);
 		
-		System.out.println(srcCode);
-		System.out.println(destCode);
+		//System.out.println(srcCode);
+		//System.out.println(destCode);
 		
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -59,12 +60,12 @@ public class UrlBuilder {
 	{
 		HashMap<String,String>cityToID = new HashMap<String,String>();
 		Scanner in = new Scanner(new File(mappingFile));
-		System.out.println("test");
+		//System.out.println("test");
 		while(in.hasNext())
 		{
-			String test=in.next();
-			System.out.println(test);
-			String line[]=test.split(",");			
+			String cityID=in.next();
+			//System.out.println(test);
+			String line[]=cityID.split(",");			
 			cityToID.put(line[0],line[1]);
 		}	
 		return cityToID;
@@ -73,7 +74,11 @@ public class UrlBuilder {
 	
 	public static void main(String args[]) throws Exception
 	{
-		mainUrlBuilder();
+		Scanner in = new Scanner(new File(AllLinksFile));
+		
+		while(in.hasNext())
+		{
+			mainUrlBuilder(in.next());
+		}
 	}
-	
 }

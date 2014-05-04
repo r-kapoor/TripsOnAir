@@ -30,7 +30,7 @@ public class ExtractData extends HtmlUnitWebClient{
 	{
 		try{
 		String address="",locality="",phone="",highlights="",openingHours="",cuisines="";
-		String homeDelivery = "", dineIn = "", nonveg = "", ac = "", bar = "";
+		String homeDelivery = "", dineIn = "", nonveg = "", ac = "", bar = "",numofvotes="";
 		ArrayList<URL> photoLink=new ArrayList<URL>();
 		String rating = "";
 		int cost =-1;
@@ -64,10 +64,12 @@ public class ExtractData extends HtmlUnitWebClient{
 			 }
 		 }
 		 
-		//get the rating and value
+		//get the rating and no. of votes
 		 if((ratingArea!=null)&&(ratingArea.hasChildNodes()))
 		 {
 			 rating = ratingArea.getFirstElementChild().asText().trim();
+			 String votes=ratingArea.getLastElementChild().asText().trim();
+			 numofvotes = votes.replaceAll("\\D+","");
 		 }
 		 
 		 //get the phone no
@@ -226,6 +228,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("address: "+address);
 		System.out.println("locality: "+locality);
 		System.out.println("rating: "+rating);
+		System.out.println("votes: "+numofvotes);
 		System.out.println("phoneNo "+phone);
 		System.out.println(homeDelivery+","+ dineIn+","+ nonveg+"," +ac+"," +bar);
 		System.out.println("Cost "+cost);
@@ -235,9 +238,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		{
 			 System.out.println(photoLink.get(k));
 		}
-		
-		String numofvotes = "1181";
-		
+
 		ZomatoDto zomatoDto = new ZomatoDto();
 		
 		zomatoDto.setSource("Zomato");
