@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import GlobalClasses.HtmlUnitWebClient;
 
+import com.dataTransferObject.BookingdotComDto;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -31,7 +32,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		try{
 		HtmlPage page=WebClient(url);
 		
-		String Title="unknown",address="unknown",rating="unknown",desciption="unknown",checkIn="unknown",checkOut="unknown";
+		String Title="unknown",address="unknown",rating="unknown",description="unknown",checkIn="unknown",checkOut="unknown";
 		String Bedroom="unknown",Outdoors="unknown",Activities="unknown",Living_Area="unknown",Media="unknown",Food="unknown",Internet="unknown",Parking="unknown",Services="unknown",General="unknown",Languages="unknown";
 		ArrayList<URL> photoList = new ArrayList<URL>();
 		
@@ -79,7 +80,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		
 		DomElement desciptionArea = page.getFirstByXPath("//div[@id='summary']");
 		if(desciptionArea!=null){
-			desciption = desciptionArea.asText().trim();
+			description = desciptionArea.asText().trim();
 			
 		}
 		
@@ -175,6 +176,9 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 		}
 		
+		String city = "Delhi";
+		String country = "India";
+		String numofreviews = "100";
 		System.out.println("Title="+Title);
 		System.out.println("address="+address);
 		System.out.println("rating="+rating);
@@ -185,7 +189,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			
 		//getPrices(url);
 		
-		System.out.println("desciption="+desciption);
+		System.out.println("desciption="+description);
 		System.out.println("Bedroom="+Bedroom);
 		System.out.println("Outdoors="+Outdoors);
 		System.out.println("Activities="+Activities);
@@ -199,6 +203,24 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("Languages="+Languages);
 		System.out.println("checkIn="+checkIn);
 		System.out.println("checkOut="+checkOut);
+		
+		BookingdotComDto bookingdotcomDto = new BookingdotComDto();
+		
+		bookingdotcomDto.setSource("Bookingdotcom");
+		bookingdotcomDto.setName(Title);
+		bookingdotcomDto.setCity(city);
+		bookingdotcomDto.setCountry(country);
+		bookingdotcomDto.setAddress(address);
+		bookingdotcomDto.setRating(rating);
+		bookingdotcomDto.setNumofreviews(numofreviews);
+		bookingdotcomDto.setDescription(description);
+		bookingdotcomDto.setPhotoLink(photoList);
+		bookingdotcomDto.setCheckIn(checkIn);
+		bookingdotcomDto.setCheckOut(checkOut);
+		
+		
+		
+		
 		}catch(Exception e)
 		{
 			System.out.println("Exception Occured. Adding to exceptionUrls");

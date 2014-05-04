@@ -5,16 +5,38 @@ import java.util.ArrayList;
 
 public class BookingdotComDto {
 
+	public String source;
+	public String city;
+	public String country;
 	public String name;
 	public String address;
 	public String phoneNo;
 	public String rating;
+	public String numofreviews;
 	public String description;
 	public String checkIn;
 	public String checkOut;
 	public ArrayList<URL> photoLink;
 
 
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
 	public String getName() {
 		return name;
 	}
@@ -38,6 +60,12 @@ public class BookingdotComDto {
 	}
 	public void setRating(String rating) {
 		this.rating = rating;
+	}
+	public String getNumofreviews() {
+		return numofreviews;
+	}
+	public void setNumofreviews(String numofreviews) {
+		this.numofreviews = numofreviews;
 	}
 	public String getDescription() {
 		return description;
