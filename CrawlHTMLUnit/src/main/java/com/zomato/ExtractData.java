@@ -30,7 +30,7 @@ public class ExtractData extends HtmlUnitWebClient{
 	{
 		try{
 		String address="",locality="",phone="",highlights="",openingHours="",cuisines="";
-		String homeDelivery = "", dineIn = "", nonveg = "", ac = "", bar = "",numofvotes="";
+		String homeDelivery = "", dineIn = "", nonveg = "", ac = "", bar = "";
 		ArrayList<URL> photoLink=new ArrayList<URL>();
 		String rating = "";
 		int cost =-1;
@@ -69,7 +69,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		 {
 			 rating = ratingArea.getFirstElementChild().asText().trim();
 			 String votes=ratingArea.getLastElementChild().asText().trim();
-			 numofvotes = votes.replaceAll("\\D+","");
+			 //numofvotes = votes.replaceAll("\\D+","");
 		 }
 		 
 		 //get the phone no
@@ -171,8 +171,12 @@ public class ExtractData extends HtmlUnitWebClient{
 								 String infoLable2=infoE4.asText().trim();
 								 if(infoLable2.contains("Opening hours"))
 								 {
+									 System.out.println("Enters1");
 									 if(infoE3.getLastElementChild().getTagName().contains("span"))
-									 openingHours =infoE3.getLastElementChild().asText();
+									 {
+										 System.out.println("Enters2");
+										 openingHours =infoE3.getLastElementChild().asText();
+									 }
 								 }
 							 }
 							 
@@ -224,7 +228,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("address: "+address);
 		System.out.println("locality: "+locality);
 		System.out.println("rating: "+rating);
-		System.out.println("votes: "+numofvotes);
+		//System.out.println("votes: "+numofvotes);
 		System.out.println("phoneNo "+phone);
 		System.out.println(homeDelivery+","+ dineIn+","+ nonveg+"," +ac+"," +bar);
 		System.out.println("Cost "+cost);
@@ -235,7 +239,9 @@ public class ExtractData extends HtmlUnitWebClient{
 			 System.out.println(photoLink.get(k));
 		}
 		
+
 		String name = "";
+		String numofvotes = "1181";
 		
 		ZomatoDto zomatoDto = new ZomatoDto();
 		
@@ -243,7 +249,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		zomatoDto.setCity(link.city.toUpperCase());		
 		zomatoDto.setCountry(link.country.toUpperCase());
 		zomatoDto.setLocality(locality);
-		zomatoDto.setName(name.toUpperCase());
+		zomatoDto.setName(link.title.toUpperCase());
 		zomatoDto.setAddress(address);
 		zomatoDto.setPhone(phone);
 		zomatoDto.setRating(rating);

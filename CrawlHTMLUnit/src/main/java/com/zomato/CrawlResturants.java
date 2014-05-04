@@ -165,12 +165,12 @@ public class CrawlResturants extends HtmlUnitWebClient{
 		 
 		//for testing
 		
-		   URL url = new URL("http://www.zomato.com/bangalore/abs-absolute-barbecues-marathahalli");
+		   URL url = new URL("http://www.zomato.com/bangalore/the-13th-floor-mg-road");
 		 	//URL url = new URL("http://www.zomato.com/bangalore/directory/restaurants-a-1");
 		    zmtURL zmtLink = new zmtURL();
 		 	zmtLink.country = "India";
 		 	zmtLink.city = "Bangalore";
-		 	zmtLink.title = "alto-vino-bengaluru-marriott-hotel";
+		 	zmtLink.title = "The 13th Floor";
 		 	zmtLink.url = url;
 			ExtractData.getResturantData(zmtLink);
 			

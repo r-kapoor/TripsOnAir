@@ -22,10 +22,10 @@ public class HtmlUnitWebClient {
 	WebRequest request = new WebRequest(url);
 	// Read the whole page
 	HtmlPage page = webClient.getPage(request);
-	int i=webClient.waitForBackgroundJavaScriptStartingBefore(1000);
+	int i=webClient.waitForBackgroundJavaScriptStartingBefore(5000);
 	while (i > 3)
     {
-        i = webClient.waitForBackgroundJavaScript(1000);
+        i = webClient.waitForBackgroundJavaScript(5000);
         //System.out.println("i "+i);
         if (i == 3)
         {

@@ -1,33 +1,49 @@
 package com.zomato;
 
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TransformTimings {
-	private String TimeStart;
-	private String TimeEnd;
-	private String Days;
+	private int number;
+	private ArrayList<String> TimeStart;
+	private ArrayList<String> TimeEnd;
+	private ArrayList<String> Days;
 	
 	public TransformTimings()
 	{
-		TimeStart = "0";
-		TimeEnd = "0";
-		Days = "8";
+		number = 0;
+		this.TimeStart = new ArrayList<String>();
+		this.TimeEnd = new ArrayList<String>();
+		this.Days = new ArrayList<String>();
 	}
 
-	public String getTimeStart() {
-		return TimeStart;
+	public int getNumber() {
+		return number;
 	}
 
-	public String getTimeEnd() {
-		return TimeEnd;
+	public String getTimeStart(int index) {
+		return checkFormat(TimeStart.get(index));
 	}
 
-	public String getDays() {
-		return Days;
+	public String getTimeEnd(int index) {
+		return checkFormat(TimeEnd.get(index));
 	}
 
+	public String getDays(int index) {
+		return Days.get(index);
+	}
+
+	private String checkFormat(String time) {
+		// TODO Auto-generated method stub
+		if(time.indexOf(':')==-1)
+		{
+			time+=":00";
+		}
+		return time;
+	}
+	
 	public void transform(String openinghrs) {
 		// TODO Auto-generated method stub
 		
@@ -76,24 +92,30 @@ public class TransformTimings {
 		else if(openinghrs.matches(timewithdays))
 		{
 			extractFromTimewithDays(openinghrs, timeformatxtoy,
-					timeformat24hrs, days, dayrange, dayregex, timeformat);
+					timeformat24hrs, dayrange, dayrange, dayregex, timeformat, days);
 			System.out.println("Simple Time With Days:");
 		}
 		else if(openinghrs.matches(timewithdays+"(, "+timewithdays+")*"))
 		{
-			StringTokenizer openinghrsST = new StringTokenizer(openinghrs, "),");
+			StringTokenizer openinghrsST = new StringTokenizer(openinghrs, ",");
+			openinghrs = "";
 			while(openinghrsST.hasMoreTokens())
 			{
-				openinghrs = openinghrsST.nextToken().trim();
+				openinghrs += openinghrsST.nextToken().trim();
+				//System.out.println("input:"+openinghrs);
 				if(openinghrs.matches(dayclosed))
 				{
 					continue;
 				}
-				if(!openinghrs.endsWith(")"))
+				else if(openinghrs.matches(timewithdays))
 				{
-					openinghrs+=")";
+					extractFromTimewithDays(openinghrs, timeformatxtoy, timeformat24hrs, timewithdays, dayrange, dayregex, timeformat, days);
+					openinghrs = "";
 				}
-				extractFromTimewithDays(openinghrs, timeformatxtoy, timeformat24hrs, timewithdays, dayrange, dayregex, timeformat);
+				else
+				{
+					openinghrs+=", ";
+				}
 			}
 			System.out.println("Multi Time With Days");
 		}
@@ -103,15 +125,16 @@ public class TransformTimings {
 			String starttime = "0";
 			String endtime = "0";
 			dayoutput = "8";
-			this.TimeStart = starttime;
-			this.TimeEnd = endtime;
-			this.Days = dayoutput;
+			this.TimeStart.add(starttime);
+			this.TimeEnd.add(endtime);
+			this.Days.add(dayoutput);
+			this.number++;
 		}
 	}
 
 	private void extractFromTimewithDays(String openinghrs,
-			String timeformatxtoy, String timeformat24hrs, String days,
-			String dayrange, String dayregex, String timeformat)
+			String timeformatxtoy, String timeformat24hrs, String timewithdays,
+			String dayrange, String dayregex, String timeformat, String days)
 			throws NumberFormatException {
 		String dayoutput;
 		String timings = openinghrs.replaceAll("("+timeformat+")"+" "+dayregex,"$1" );
@@ -129,6 +152,7 @@ public class TransformTimings {
 			while(daysofrunST.hasMoreTokens())
 			{
 				daysofrun = daysofrunST.nextToken().trim();
+				//System.out.println("days:"+daysofrun);
 				dayoutput += getDayOutput(days, dayrange, daysofrun);
 			}
 			extractTimings(timings, timeformatxtoy, timeformat24hrs, dayoutput);
@@ -137,6 +161,8 @@ public class TransformTimings {
 
 	private static String getDayOutput(String days, String dayrange, String daysofrun) {
 		String dayoutput = "";
+		//System.out.println(":"+daysofrun+":");
+		//System.out.println(":"+days+":");
 		if(daysofrun.matches(dayrange))
 		{
 			int daystart = getDayInt(daysofrun.substring(0, daysofrun.indexOf('-')));
@@ -145,8 +171,10 @@ public class TransformTimings {
 		}
 		else if(daysofrun.matches(days))
 		{
+			//System.out.println("matches");
 			dayoutput = getDayInt(daysofrun)+"";
 		}
+		//System.out.println("out:"+dayoutput);
 		return dayoutput;
 	}
 
@@ -192,12 +220,13 @@ public class TransformTimings {
 			endtime = "0";
 			dayoutput = "0";
 		}
-		System.out.println("Start Time:"+starttime);
-		System.out.println("End Time:"+endtime);
-		System.out.println("Days:"+dayoutput);
-		this.TimeStart = starttime;
-		this.TimeEnd = endtime;
-		this.Days = dayoutput;
+		//System.out.println("Start Time1:"+starttime);
+		//System.out.println("End Time1:"+endtime);
+		//System.out.println("Days1:"+dayoutput);
+		this.TimeStart.add(starttime);
+		this.TimeEnd.add(endtime);
+		this.Days.add(dayoutput);
+		this.number++;
 	}
 
 	private static String convertPM(String time)
