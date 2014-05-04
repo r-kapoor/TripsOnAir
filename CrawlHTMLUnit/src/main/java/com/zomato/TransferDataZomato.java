@@ -63,21 +63,21 @@ public class TransferDataZomato {
 				//The same name city in same country exists
 				cityExists = true;
 				CityID = getCityR.getInt("CityID");
-				if(getCityR.getInt(source)==1)
-				{
+				//if(getCityR.getInt(source)==1)
+				//{
 					//Nothing to Merge
 					/*
 					 * Merge Logic For Crawl from Same Source Present Here
 					 * Then Update the tuple
 					 */
-				}
+				//}
 				//Merge the info already present
 			}
 		}
 		if(!cityExists)
 		{
 			//Insert the data
-			statement.executeUpdate("INSERT INTO City(CityName,State,Country) VALUES('"+city+"','TEMP','"+country+");",Statement.RETURN_GENERATED_KEYS);
+			statement.executeUpdate("INSERT INTO City(CityName,State,Country) VALUES('"+city+"','TEMP','"+country+"');",Statement.RETURN_GENERATED_KEYS);
 		    ResultSet rs = statement.getGeneratedKeys();
 		    rs.next();
 		    CityID = rs.getInt(1);
@@ -440,7 +440,12 @@ public class TransferDataZomato {
 			ResultSet durRS = statement.executeQuery("SELECT * FROM Restaurant_Timings where RestaurantID="+RestaurantID+";");
 			if(!durRS.next())
 			{
-				statement.executeUpdate("INSERT INTO Restaurant_Timings(RestaurantID, TimeStart, TimeEnd, Days) VALUES("+RestaurantID+",'"+tt.getTimeStart()+"','"+tt.getTimeEnd()+"','"+tt.getDays()+"');");
+				for(int i=0;i<tt.getNumber();i++)
+				{
+					System.out.println("i:"+i+" num:"+tt.getNumber());
+					System.out.println("INSERT INTO Restaurant_Timings(RestaurantID, TimeStart, TimeEnd, Days) VALUES("+RestaurantID+",'"+tt.getTimeStart(i)+"','"+tt.getTimeEnd(i)+"','"+tt.getDays(i)+"');");
+					statement.executeUpdate("INSERT INTO Restaurant_Timings(RestaurantID, TimeStart, TimeEnd, Days) VALUES("+RestaurantID+",'"+tt.getTimeStart(i)+"','"+tt.getTimeEnd(i)+"','"+tt.getDays(i)+"');");
+				}
 			}
 		}
 		

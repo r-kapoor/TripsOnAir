@@ -169,8 +169,12 @@ public class ExtractData extends HtmlUnitWebClient{
 								 String infoLable2=infoE4.asText().trim();
 								 if(infoLable2.contains("Opening hours"))
 								 {
+									 System.out.println("Enters1");
 									 if(infoE3.getLastElementChild().getTagName().contains("span"))
-									 openingHours =infoE3.getLastElementChild().asText();
+									 {
+										 System.out.println("Enters2");
+										 openingHours =infoE3.getLastElementChild().asText();
+									 }
 								 }
 							 }
 							 
@@ -232,8 +236,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			 System.out.println(photoLink.get(k));
 		}
 		
-		String name = "";
-		String numofvotes = "";
+		String numofvotes = "1181";
 		
 		ZomatoDto zomatoDto = new ZomatoDto();
 		
@@ -241,7 +244,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		zomatoDto.setCity(link.city.toUpperCase());		
 		zomatoDto.setCountry(link.country.toUpperCase());
 		zomatoDto.setLocality(locality);
-		zomatoDto.setName(name.toUpperCase());
+		zomatoDto.setName(link.title.toUpperCase());
 		zomatoDto.setAddress(address);
 		zomatoDto.setPhone(phone);
 		zomatoDto.setRating(rating);
