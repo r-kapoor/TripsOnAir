@@ -176,7 +176,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 		}
 		
-		String city = "Delhi";
+		String city = "New Delhi";
 		String country = "India";
 		String numofreviews = "100";
 		System.out.println("Title="+Title);
@@ -204,13 +204,22 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("checkIn="+checkIn);
 		System.out.println("checkOut="+checkOut);
 		
+		//Handling Pincode
+		String pincode = "";
+		if(address.matches(".*\\d{6} "+city))
+		{
+			pincode = address.replaceAll("(.*)(\\d{6})(.*)","$2");
+			address = address.replaceAll("(.*)(\\d{6})(.*)","$1$3");
+		}
+		
 		BookingdotComDto bookingdotcomDto = new BookingdotComDto();
 		
 		bookingdotcomDto.setSource("Bookingdotcom");
-		bookingdotcomDto.setName(Title);
-		bookingdotcomDto.setCity(city);
-		bookingdotcomDto.setCountry(country);
+		bookingdotcomDto.setName(Title.toUpperCase());
+		bookingdotcomDto.setCity(city.toUpperCase());
+		bookingdotcomDto.setCountry(country.toUpperCase());
 		bookingdotcomDto.setAddress(address);
+		bookingdotcomDto.setPincode(pincode);
 		bookingdotcomDto.setRating(rating);
 		bookingdotcomDto.setNumofreviews(numofreviews);
 		bookingdotcomDto.setDescription(description);
@@ -218,8 +227,10 @@ public class ExtractData extends HtmlUnitWebClient{
 		bookingdotcomDto.setCheckIn(checkIn);
 		bookingdotcomDto.setCheckOut(checkOut);
 		
+		System.out.println("Starting Transferring the data to DB");
 		
-		
+		TransferDataBookingdotcom.transferData(bookingdotcomDto);
+				
 		
 		}catch(Exception e)
 		{

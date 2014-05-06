@@ -188,6 +188,15 @@ public class TransferDataZomato {
 						update = update + ", CostForTwo = "+ cost;
 					}
 					
+					//Taking mean of the ratings
+					double ratingOld = getRestaurantR.getInt("Rating");
+					if(ratingOld!=-1)
+					{
+						double ratingD = Double.parseDouble(rating);
+						ratingD =(ratingD+ratingOld)/2;
+						update = update + ", Rating = "+ratingD;
+					}
+					
 					//Setting Locality if not exists
 					String localityOld = getRestaurantR.getString("Locality");
 					if(localityOld==null&&!locality.isEmpty())
@@ -412,7 +421,7 @@ public class TransferDataZomato {
 		    RestaurantID = rs.getInt(1);
 		}
 		
-		System.out.println("Place Inserted");
+		System.out.println("Restaurant Inserted");
 		
 		//Insert the Image URLs
 		if(!photolinks.isEmpty())

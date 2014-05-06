@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import GlobalClasses.ConnectMysql;
 
@@ -24,7 +23,7 @@ public class TransferDataBookingdotcom {
 	public static void transferData(BookingdotComDto bookingdotcomDto) throws Exception{
 		
 		//Declarations
-		Boolean cityExists = false, restaurantExists = false, numExists = false, addNum = false;
+		Boolean cityExists = false, hotelExists = false;
 		Connection conn=ConnectMysql.MySqlConnection();
 		Statement statement = conn.createStatement();
 
@@ -35,11 +34,15 @@ public class TransferDataBookingdotcom {
 		String country = bookingdotcomDto.getCountry().replaceAll("'", "''");
 		String name = bookingdotcomDto.getName().replaceAll("'", "''");
 		String address = bookingdotcomDto.getAddress().replaceAll("'", "''");
+		String pincode = bookingdotcomDto.getPincode();
 		String rating = bookingdotcomDto.getRating();
-		String numofvotes = bookingdotcomDto.getNumofreviews();
+		String numofreviews = bookingdotcomDto.getNumofreviews();
+		String description = bookingdotcomDto.getDescription().replaceAll("'", "''"); 
+		String checkin = bookingdotcomDto.getCheckIn();
+		String checkout = bookingdotcomDto.getCheckOut();
 		ArrayList<URL> photolinks = bookingdotcomDto.getPhotoLink();
 		
-		int CityID=-1, RestaurantID=-1;
+		int CityID=-1, HotelID=-1;
 
 		System.out.println("Inserting to DB");
 		
@@ -74,17 +77,40 @@ public class TransferDataBookingdotcom {
 		}
 		System.out.println("City Inserted");
 		
+		//Transforming the CheckIn and CheckOut
+		if(!checkin.isEmpty())
+		{
+			if(checkin.matches("From \\d+:\\d+ hours"))
+			{
+				checkin = checkin.replaceAll("(From )(\\d+:\\d+)( hours)", "$2");
+			}
+			else
+			{
+				checkin = "";
+			}
+		}
+		if(!checkout.isEmpty())
+		{
+			if(checkout.matches("Until \\d+:\\d+ hours"))
+			{
+				checkout = checkout.replaceAll("(Until )(\\d+:\\d+)( hours)", "$2");
+			}
+			else
+			{
+				checkout = "";
+			}
+		}
 		//Inserting the Hotel
 		//Checking if the Hotel Exists in DB
-		ResultSet getRestaurantR = statement.executeQuery("SELECT * FROM Restaurants WHERE Name='"+name+"';");
-		while(getRestaurantR.next())
+		ResultSet getHotelR = statement.executeQuery("SELECT * FROM Hotels WHERE Name='"+name+"';");
+		while(getHotelR.next())
 		{
-			if(CityID==getRestaurantR.getInt("CityID"))
+			if(CityID==getHotelR.getInt("CityID"))
 			{
-				RestaurantID=getRestaurantR.getInt("RestaurantID");
-				//The same name restaurant in same city exists
-				restaurantExists = true;
-				if(getRestaurantR.getInt(source)==1)
+				HotelID=getHotelR.getInt("HotelID");
+				//The same name hotel in same city exists
+				hotelExists = true;
+				if(getHotelR.getInt(source)==1)
 				{
 					/*
 					 * Merge Logic For Crawl from Same Source Present Here
@@ -95,36 +121,79 @@ public class TransferDataBookingdotcom {
 				else
 				{
 					//The tuple is from a different source. Merge the data
-					String update = "UPDATE Restaurants SET Zomato = 1";
+					String update = "UPDATE Hotels SET Bookingdotcom = 1";
 					
 					//Adding new address if old address doesn't contain digits
-					String addressOld = getRestaurantR.getString("Address");
+					String addressOld = getHotelR.getString("Address");
 					if(addressOld==null)
 					{
-						update = update + ", Address = "+address;
+						update = update + ", Address = '"+address+"'";
 					}
 					else if(!addressOld.matches(".*\\d.*"))
 					{
 						if(address.matches(".*\\d.*"))
 						{
-							update = update + ", Address = "+address;
+							update = update + ", Address = '"+address+"'";
 						}
 					}
 					
-					//Updating the NumOfVotes
-					int numofvotesOld = getRestaurantR.getInt("NumOfVotes");
-					if(!numofvotes.isEmpty())
+					//Adding pincode if not present
+					String pincodeOld = getHotelR.getString("Pincode");
+					if(pincodeOld==null)
 					{
-						int votes = Integer.parseInt(numofvotes);
-						if(votes!=numofvotesOld)
+						update = update + ", Pincode = '"+pincode+"'";
+					}
+					
+					//Taking mean of the ratings
+					double ratingOld = getHotelR.getInt("Rating");
+					if(ratingOld!=-1)
+					{
+						double ratingD = Double.parseDouble(rating);
+						ratingD =(ratingD+ratingOld)/2;
+						update = update + ", Rating = "+ratingD;
+					}
+					
+					//Appending the description separated by $
+					String descOld = getHotelR.getString("Description");
+					if(descOld!=null)
+					{
+						if(!descOld.contains(description))
 						{
-							update = update + ", NumOfVotes ="+votes;
+							description = descOld + "$" + description;
+							update = update + ", Description = '"+ description+"'";
+						}
+					}
+					else
+					{
+						update = update + ", Description = '"+ description+"'";
+					}
+					
+					//Updating the NumOfVotes
+					int numofreviewsOld = getHotelR.getInt("NumOfReviews");
+					if(!numofreviews.isEmpty())
+					{
+						int reviews = Integer.parseInt(numofreviews);
+						if(reviews!=numofreviewsOld)
+						{
+							update = update + ", NumOfReviews ="+reviews;
 						}
 								
 					}
 					
-					//System.out.println(update +" WHERE RestaurantID = "+RestaurantID+";");
-					statement.executeUpdate(update +" WHERE RestaurantID = "+RestaurantID+";");
+					//Setting CheckIn/Checkout if not exists
+					String checkinOld = getHotelR.getString("CheckIn");
+					if(checkinOld==null&&!checkin.isEmpty())
+					{
+						update = update + ", CheckIn = '" + checkin +"'";
+					}
+					String checkoutOld = getHotelR.getString("CheckOut");
+					if(checkoutOld==null&&!checkout.isEmpty())
+					{
+						update = update + ", CheckOut = '" + checkout +"'";
+					}
+					
+					//System.out.println(update +" WHERE HotelID = "+HotelID+";");
+					statement.executeUpdate(update +" WHERE HotelID = "+HotelID+";");
 					break;
 					
 				}
@@ -133,12 +202,12 @@ public class TransferDataBookingdotcom {
 			}
 			
 		}
-		if(!restaurantExists)
+		if(!hotelExists)
 		{
 			//Insert the data
-			String insert= "INSERT INTO Restaurants(";
+			String insert= "INSERT INTO Hotels(";
 			String values= ") VALUES(";
-			insert = insert + "Name, CityID, Zomato";
+			insert = insert + "Name, CityID, Bookingdotcom";
 			values = values + "'"+name+"', "+CityID+", 1";
 			
 			if(!address.isEmpty())
@@ -147,30 +216,57 @@ public class TransferDataBookingdotcom {
 				values = values + ", '"+address+"'";
 			}
 			
+			if(!pincode.isEmpty())
+			{
+				insert = insert + ", Pincode";
+				values = values + ", '"+pincode+"'";
+			}
+			
 			if(!rating.isEmpty())
 			{
-				if(rating.matches("\\d+\\.\\d+/\\d+"))
+				if(rating.matches("\\d+\\.\\d+")||rating.matches("\\d+"))
 				{
-					rating = rating.substring(0, rating.indexOf('/'));
+					insert = insert + ", Rating";
+					values = values + ", "+rating;
 				}
-				insert = insert + ", Rating";
-				values = values + ", "+rating;
+				else
+				{
+					insert = insert + ", Rating";
+					values = values + ", -1";
+				}
 			}
 			
-			if(!numofvotes.isEmpty())
+			if(!numofreviews.isEmpty())
 			{
-				insert = insert + ", NumOfVotes";
-				values = values + ", "+ numofvotes;
+				insert = insert + ", NumOfReviews";
+				values = values + ", "+ numofreviews;
 			}
 			
+			if(!description.isEmpty())
+			{
+				insert = insert + ", Description";
+				values = values + ", '"+ description +"'";
+			}
+			
+			if(!checkin.isEmpty())
+			{
+				insert = insert + ", CheckIn";
+				values = values + ", '"+ checkin +"'";
+			}
+			
+			if(!checkout.isEmpty())
+			{
+				insert = insert + ", CheckOut";
+				values = values + ", '"+ checkout +"'";
+			}
 			//System.out.println(insert + values+");");
 			statement.executeUpdate(insert + values+");");
 		    ResultSet rs = statement.getGeneratedKeys();
 		    rs.next();
-		    RestaurantID = rs.getInt(1);
+		    HotelID = rs.getInt(1);
 		}
 		
-		System.out.println("Place Inserted");
+		System.out.println("Hotel Inserted");
 		
 		//Insert the Image URLs
 		if(!photolinks.isEmpty())
@@ -180,18 +276,15 @@ public class TransferDataBookingdotcom {
 			while(photolinksI.hasNext())
 			{
 				photolink = photolinksI.next();
-				ResultSet imgRS = statement.executeQuery("SELECT * FROM Restaurant_Image WHERE ImgURL='"+photolink+"';");
+				ResultSet imgRS = statement.executeQuery("SELECT * FROM Hotel_Image WHERE ImgURL='"+photolink+"';");
 				if(!imgRS.next())
 				{
-					statement.executeUpdate("INSERT INTO Restaurant_Image(RestaurantID, ImgURL) VALUES("+RestaurantID+",'"+photolink+"');");
+					statement.executeUpdate("INSERT INTO Hotel_Image(HotelID, ImgURL) VALUES("+HotelID+",'"+photolink+"');");
 				}
 			}
 		}
 		
 		System.out.println("Image URLs Inserted");
-		
-		
-		System.out.println("Durations Inserted");
 		
 		System.out.println("Insertions Complete");	
 	

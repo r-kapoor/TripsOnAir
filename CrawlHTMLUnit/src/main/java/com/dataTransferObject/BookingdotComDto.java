@@ -10,6 +10,7 @@ public class BookingdotComDto {
 	public String country;
 	public String name;
 	public String address;
+	public String pincode;
 	public String phoneNo;
 	public String rating;
 	public String numofreviews;
@@ -48,6 +49,12 @@ public class BookingdotComDto {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public String getPincode() {
+		return pincode;
+	}
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
 	}
 	public String getPhoneNo() {
 		return phoneNo;
