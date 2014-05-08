@@ -25,6 +25,7 @@ bhavnagar,BHU
 cochin,COK
 coimbatore,CJB
 chandigarh,IXC
+calicut,CCJ
 dharamshala,DHM
 dehradun,DED
 dibrugarh,DIB
@@ -54,6 +55,7 @@ khajuraho,HJR
 khowai,IXN
 kolhapur,KLH
 kozhikode,CCJ
+kochi,COK
 kulu,KUU
 latur,LTU
 leh,IXL

@@ -22,16 +22,19 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class ExtractData extends HtmlUnitWebClient{
 
 	@Test
-    public void getData() throws Exception {
-    	
+    public static void getData() throws Exception {
+
+		long startTime = System.currentTimeMillis();
+		
     	//Declarations
     	int i=1, durationHrs, priceRs;
     	String title, data, departureTime, origin, duration, stops, arrivalTime, destination, airline, flightNumber, price;
     	String[] dataArray;
     	DomElement flightDetails, flightData;
+    	System.out.println("started Extracting Data");
     	
     	//Set the URL of the page
-    	URL url = new URL("http://www.goibibo.com/flight-searchresult/#air-DEL-BLR-20140629--1-0-0-E");
+    	URL url = new URL("http://www.goibibo.com/flight-searchresult/#air-DEL-BLR-20140531--1-0-0-E");
 
     	HtmlPage page=WebClient(url);
 
@@ -53,10 +56,10 @@ public class ExtractData extends HtmlUnitWebClient{
         {
         	//Get each row of flight details (ft_res_cls)
         	flightDetails = flightIterator.next();
-        	
+
         	//Get to ft_results
         	DomElement singleFlight = flightDetails.getFirstElementChild();
-        	
+
         	//Extract each detail according to the way it is stored
         	        	
         	//Extracting Departure Time and Place
@@ -94,7 +97,7 @@ public class ExtractData extends HtmlUnitWebClient{
             flightNumber = flightnumData.get(0).getTextContent().trim().replaceAll("\\s+", " ");
             
             //Extracting Price
-            flightData = flightData.getNextElementSibling();
+            flightData = flightData.getNextElementSibling().getNextElementSibling();
             price = flightData.getTextContent().trim().replaceAll("\\s+", " ").split("\\s+")[0];
             priceRs = Integer.parseInt(price.replaceAll("[^0-9]",""));
             
@@ -115,7 +118,9 @@ public class ExtractData extends HtmlUnitWebClient{
         }
         
         //webClient.closeAllWindows();
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - startTime;
+		System.out.println("totalTime "+totalTime);
     }
-
 	
 }
