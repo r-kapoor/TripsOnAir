@@ -64,6 +64,8 @@ public class crawlGoIbibo extends HtmlUnitWebClient{
 
     public static void main(String[] args) throws Exception {
         //crawlGoIbibo htmlUnit = new  crawlGoIbibo();
+    	
+    	/*
     	ArrayList<String> CityLinks = new ArrayList<String>();
     	ArrayList<String> CityFlightLinks = new ArrayList<String>();
     	String AllCityFlightLinks = "";
@@ -84,10 +86,13 @@ public class crawlGoIbibo extends HtmlUnitWebClient{
     		Thread.sleep(3000);
     	}
     	
+    	
     	FileOutputStream links=new FileOutputStream(AllLinksFile);
 		PrintStream e=new PrintStream(links);
 		e.println(AllCityFlightLinks);
 		e.close();
+		*/
+    	ExtractData.getData();
 
     }
 }

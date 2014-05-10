@@ -137,7 +137,8 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 		
 		//For testing
 		URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-05;checkout=2014-05-07;");
-		ExtractData.getData(test);
+		//ExtractData.getData(test);
+		ExtractData.getPrices(test);
 		
 		/*for(int j=0;j<mainLinks.size();j++)
 		{
