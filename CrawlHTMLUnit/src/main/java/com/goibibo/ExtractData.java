@@ -19,7 +19,7 @@ import com.zomato.TransferDataZomato;
 
 
 /**
- * 
+ * Extracts the data from the goibibo links
  * @author rahul
  *
  */
