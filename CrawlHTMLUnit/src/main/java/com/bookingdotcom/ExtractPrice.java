@@ -38,8 +38,7 @@ public class ExtractPrice {
 			Thread.sleep(3000);
 		}
 	}
-	
-	
+
 	public static void main(String args[]) throws Exception
 	{
 		getPrice();

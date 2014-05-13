@@ -27,13 +27,14 @@ public class ExtractData extends HtmlUnitWebClient{
 	
 	public static void getData(URL url)throws Exception
 	{
-		//URL url1 = new URL("http://www.booking.com/hotel/in/hilton-garden-inn-new-delhi-saket.en-gb.html?aid=367912;label=dial-FM;sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-05-05;checkout=2014-05-06;ucfs=1;srfid=b41b64303289312c14ac80addd1920eaa773bc4eX11");
+		//URL url1 = new URL("http://www.booking.com/hotel/in/hilton-garden-inn-new-delhi-saket.en-gb.html?aid=367912;label=dial-FM;sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-05-10;checkout=2014-05-11;ucfs=1;srfid=b41b64303289312c14ac80addd1920eaa773bc4eX11");
 		
 		try{
 		HtmlPage page=WebClient(url);
 		
 		String Title="unknown",address="unknown",rating="unknown",description="unknown",checkIn="unknown",checkOut="unknown";
 		String Bedroom="unknown",Outdoors="unknown",Activities="unknown",Living_Area="unknown",Media="unknown",Food="unknown",Internet="unknown",Parking="unknown",Services="unknown",General="unknown",Languages="unknown";
+		String numofreviews="";
 		ArrayList<URL> photoList = new ArrayList<URL>();
 		
 		DomElement dataArea = page.getFirstByXPath("//div[@id='wrap-hotelpage-top']");
@@ -63,6 +64,13 @@ public class ExtractData extends HtmlUnitWebClient{
 		{
 			rating = ratingArea.getFirstChild().asText().trim();
 		}
+		
+		DomElement reviewsArea = page.getFirstByXPath("//strong[@class='count']");
+		if((reviewsArea!=null)&&(reviewsArea.hasChildNodes()))
+		{
+			numofreviews =reviewsArea.asText().trim();
+		}
+		
 		
 		DomElement photosArea = page.getFirstByXPath("//div[@id='photos_distinct']");
 		if((photosArea!=null)&&(photosArea.hasChildNodes())){
@@ -178,10 +186,10 @@ public class ExtractData extends HtmlUnitWebClient{
 		
 		String city = "New Delhi";
 		String country = "India";
-		String numofreviews = "100";
 		System.out.println("Title="+Title);
 		System.out.println("address="+address);
 		System.out.println("rating="+rating);
+		System.out.println("numofReviews "+numofreviews);
 		for(int i=0;i<photoList.size();i++)
 		{
 			System.out.println(photoList.get(i));
@@ -302,7 +310,7 @@ public class ExtractData extends HtmlUnitWebClient{
 											String roomType=typeE.asText().trim();
 											System.out.println("roomType "+roomType);
 										}
-										
+
 										if((typeE!=null)&&(typeE.getTagName().contains("span"))&&(typeE.hasChildNodes()))
 										{
 											Iterator<DomElement> typeEItr=typeE.getChildElements().iterator();
@@ -317,14 +325,17 @@ public class ExtractData extends HtmlUnitWebClient{
 							}
 						}	
 					}//end of room type if
-					
-					if((priceE1!=null)&&(priceE1.hasChildNodes())&&((priceE1.getAttribute("class").contains("roomMultiRoomPrice bb smart_deal"))||(priceE1.getAttribute("class").contains("roomMultiRoomPrice bb")))&&(priceE1.hasChildNodes())){
-						String price = priceE1.asText().trim();
+				}//end of inner while loop
+			}
+
+					if((priceE!=null)&&(priceE.hasChildNodes())&&((priceE.getAttribute("class").contains("room_loop_counter1"))||(priceE.getAttribute("class").contains("room_loop_counter2"))||(priceE.getAttribute("class").contains("room_loop_counter3"))||(priceE.getAttribute("class").contains("room_loop_counter4")||(priceE.getAttribute("class").contains("room_loop_counter5"))))){
+						DomElement priceE1=priceE.getLastElementChild();
+						if((priceE1!=null)&&(priceE1.hasChildNodes())&&((priceE1.getAttribute("class").contains("roomMultiRoomPrice bb smart_deal"))||(priceE1.getAttribute("class").contains("roomMultiRoomPrice bb")))&&(priceE1.hasChildNodes())){
+						String price = priceE1.getFirstElementChild().getFirstElementChild().getLastElementChild().asText().trim();
 						System.out.println("price "+price);
-						break;
-						}	
-					}//end of inner while loop
-				}
+						//break;
+						}
+					}
 			}//end of main while loop	
 		}
 	}catch(Exception e)

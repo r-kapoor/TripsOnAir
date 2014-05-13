@@ -26,15 +26,21 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class CrawlResturants extends HtmlUnitWebClient{
 	
 	private static ArrayList<zmtURL> cityRestsUrls= new ArrayList<zmtURL>();
-	private static ArrayList<zmtURL> ResturantUrls = new ArrayList<zmtURL>();
+	//private static ArrayList<zmtURL> RestaurantUrls = new ArrayList<zmtURL>();
 	private static String exceptionUrls = "";
 	private static String exceptionMsg = "";
+	private static String restaurantLinks= "";
 	private static String exceptionFile = "target/zomato/exception.txt";
 	private static String exceptionmsgFile = "target/zomato/exceptionmsg.txt";
+	private static String AllLinksFile = "ConfigFiles/zomato/restaurantLinks.txt";
+	
 
 	@SuppressWarnings("unchecked")
 	public static void getResturantLink(zmtURL zmturl) throws Exception {
 		
+		FileOutputStream links=new FileOutputStream(AllLinksFile,true);
+		PrintStream linkStream=new PrintStream(links);
+
 		try{
 		HtmlPage page=WebClient(zmturl.url);
 
@@ -64,14 +70,8 @@ public class CrawlResturants extends HtmlUnitWebClient{
 							DomElement resturantE3=resturantE2.getFirstElementChild();
 							String link=resturantE3.getAttribute("href");
 							String title = resturantE3.asText().trim();
-							URL urlToResturant = new URL(link);
-							zmtURL zmtLink = new zmtURL();
-							zmtLink.url = urlToResturant;
-							zmtLink.title = title;
-							zmtLink.city =zmturl.city;
-							zmtLink.country = zmturl.country;
-							System.out.println("ResturantLink "+zmtLink.url);
-							ResturantUrls.add(zmtLink);
+							linkStream.append(zmturl.country+"&&&"+zmturl.city+"&&&"+title+"&&&"+link+"\n");
+							System.out.println("link "+link);
 						}
 					}
 				}
@@ -106,9 +106,7 @@ public class CrawlResturants extends HtmlUnitWebClient{
 			
 			@SuppressWarnings("unchecked")
 			DomElement cityE = page.getFirstByXPath("//div[@class='left country_city_list country-1']");
-			
 			if((cityE!=null)&&(cityE.hasChildNodes())){
-			
 			Iterator<DomElement> cityIterator=cityE.getChildElements().iterator();
 
 			while(cityIterator.hasNext())
@@ -138,41 +136,42 @@ public class CrawlResturants extends HtmlUnitWebClient{
 					exceptionUrls+=firstURL+"\n";
 					exceptionMsg+=e+"\n";	
 				}
-		 		Thread.sleep(5000);
+		 		Thread.sleep(10000);
 			}
 		}
 }
 
-	 public static void main(String[] args) throws Exception {	
+	 public static void main(String[] args) throws Exception {
 		 
-		 /*
-		 CrawlResturants.getCityLinks();
-		 
+		 CrawlResturants.getCityLinks(); 
 		 System.out.println("Got all city Directory Links.Now get their resturants");
+		 
+		 //Initialize the file so that no links would be there before appending the file
+		 FileOutputStream links=new FileOutputStream(AllLinksFile);
+		 PrintStream e=new PrintStream(links);
+		 e.println("");
+		 e.close();
+ 
+		 //Jugaad for the data
+		 /* for(int j=1;j<=3;j++)
+		 {
+			 URL newURL=new URL("http://www.zomato.com/hyderabad/directory/restaurants-a-"+j);
+	 			zmtURL zmtLink = new zmtURL();
+	 			zmtLink.country = "India";
+	 			zmtLink.city = "Hyderabad";
+	 			zmtLink.title = "unknown";
+	 			zmtLink.url = newURL;
+	 			getResturantLink(zmtLink);
+				Thread.sleep(10000);
+		 }*/
+
 		 for(int i=0;i<cityRestsUrls.size();i++)
 		 {
 			 getResturantLink(cityRestsUrls.get(i));
-			 Thread.sleep(5000);
+			 Thread.sleep(10000);
 		 }
-		 System.out.println("Got all resturants links.Now extract data");
-		 for(int i=0;i<ResturantUrls.size();i++)
-		 {
-			 ExtractData.getResturantData(ResturantUrls.get(i));
-			 Thread.sleep(5000);
-		 }
-		 
-		 */
-		 
-		//for testing
+		 System.out.println("Got all resturants links.Printing in the file");
+ 
 		
-		   URL url = new URL("http://www.zomato.com/bangalore/the-13th-floor-mg-road");
-		 	//URL url = new URL("http://www.zomato.com/bangalore/directory/restaurants-a-1");
-		    zmtURL zmtLink = new zmtURL();
-		 	zmtLink.country = "India";
-		 	zmtLink.city = "Bangalore";
-		 	zmtLink.title = "The 13th Floor";
-		 	zmtLink.url = url;
-			ExtractData.getResturantData(zmtLink);
-			
 	}
 }
