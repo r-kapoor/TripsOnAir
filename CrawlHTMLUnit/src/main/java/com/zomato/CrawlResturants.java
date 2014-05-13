@@ -173,5 +173,17 @@ public class CrawlResturants extends HtmlUnitWebClient{
 		 System.out.println("Got all resturants links.Printing in the file");
  
 		
+<<<<<<< HEAD
+=======
+		   URL url = new URL("http://www.zomato.com/hyderabad/anmol-bawarchi-s-r-nagar");
+		 	//URL url = new URL("http://www.zomato.com/bangalore/directory/restaurants-a-1");
+		    zmtURL zmtLink = new zmtURL();
+		 	zmtLink.country = "India";
+		 	zmtLink.city = "Hyderabad";
+		 	zmtLink.title = "Anmol Bawarchi";
+		 	zmtLink.url = url;
+			ExtractData.getResturantData(zmtLink);
+			
+>>>>>>> f117a3ab94dd6d107f3f2dcbf7cfa3135530510f
 	}
 }

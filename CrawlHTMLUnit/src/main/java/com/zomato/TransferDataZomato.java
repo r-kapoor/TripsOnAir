@@ -333,9 +333,9 @@ public class TransferDataZomato {
 				if(rating.matches("\\d+\\.\\d+/\\d+"))
 				{
 					rating = rating.substring(0, rating.indexOf('/'));
+					insert = insert + ", Rating";
+					values = values + ", "+rating;
 				}
-				insert = insert + ", Rating";
-				values = values + ", "+rating;
 			}
 			
 			if(!locality.isEmpty())
@@ -414,7 +414,7 @@ public class TransferDataZomato {
 					values = values + ", "+0;
 				}
 			}
-			//System.out.println(insert + values+");");
+			System.out.println(insert + values+");");
 			statement.executeUpdate(insert + values+");");
 		    ResultSet rs = statement.getGeneratedKeys();
 		    rs.next();

@@ -3,11 +3,15 @@ package com.redbus;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 
+import GlobalClasses.ConnectMysql;
 import GlobalClasses.HtmlUnitWebClient;
 
+import com.dataTransferObject.RedBusDto;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
@@ -36,7 +40,12 @@ public class ExtractData extends HtmlUnitWebClient{
 	
 		//set default value of variables
 		try{
-		String busName="unknown",busType="unknown",depTime="unknown",arrTime="unknown",duration="unknown",rating="unknown",ratingText="unknown",fare="unknown";
+			
+			//Setting the connections
+			Connection conn=ConnectMysql.MySqlConnection();
+			Statement statement = conn.createStatement();
+			
+		String operatorName="unknown",busType="unknown",departureTime="unknown",arrivalTime="unknown",duration="unknown",rating="unknown",ratingText="unknown",fare="unknown";
 		
 		//Set the URL of the page
 		URL url1 = new URL("http://www.redbus.in/Booking/SelectBus.aspx?fromCityId=122&fromCityName=Bangalore&toCityId=124&toCityName=Hyderabad&doj=30-May-2014");
@@ -48,132 +57,153 @@ public class ExtractData extends HtmlUnitWebClient{
 		
 		if((routesElement!=null)&&(routesElement.hasChildNodes())){
 
-		Iterable<DomElement> routesChildElements =routesElement.getChildElements();
-		Iterator<DomElement> routesIterator = routesChildElements.iterator();
-	
-		//iterate over ul childs
-		while(routesIterator.hasNext()){
-		
-		DomElement routesChildE=routesIterator.next();//li
-		
-			
-		if((routesChildE!=null)&&(routesChildE.hasChildNodes())){
-			
-			DomElement busItem=routesChildE.getFirstElementChild();//class=busItem clearfix
-			
-			if((busItem!=null)&&(busItem.hasChildNodes())){
-			
-			Iterator<DomElement> busItemItr = busItem.getChildElements().iterator();
-			
-			while(busItemItr.hasNext())//Iterate over busItem
-			{
-				DomElement Item=busItemItr.next();
-				
-				if((Item!=null))
-				{
-					String divClass=Item.getAttribute("class");
-					
-					if(divClass.contains("detailsBlock busDataBlock")&&(Item.hasChildNodes()))
-					{
-						//System.out.println("test "+Item.asText());
-						//BUS Details
-						Iterator<DomElement> detailsItr =Item.getChildElements().iterator();
-						while(detailsItr.hasNext())
+			Iterable<DomElement> routesChildElements =routesElement.getChildElements();
+			Iterator<DomElement> routesIterator = routesChildElements.iterator();
+
+			//iterate over ul childs
+			while(routesIterator.hasNext()){
+
+				DomElement routesChildE=routesIterator.next();//li
+
+
+				if((routesChildE!=null)&&(routesChildE.hasChildNodes())){
+
+					DomElement busItem=routesChildE.getFirstElementChild();//class=busItem clearfix
+
+					if((busItem!=null)&&(busItem.hasChildNodes())){
+
+						Iterator<DomElement> busItemItr = busItem.getChildElements().iterator();
+
+						while(busItemItr.hasNext())//Iterate over busItem
 						{
-							DomElement detailsE=detailsItr.next();
-							if((detailsE!=null))
+							DomElement Item=busItemItr.next();
+
+							if((Item!=null))
 							{
-								String detailsClass=detailsE.getAttribute("class");
-								
-								if(detailsClass.contains("BusName"))
+								String divClass=Item.getAttribute("class");
+
+								if(divClass.contains("detailsBlock busDataBlock")&&(Item.hasChildNodes()))
 								{
-									busName=detailsE.asText().trim();	
-								}
-								
-								if(detailsClass.contains("BusType"))
-								{
-									busType=detailsE.asText();	
-								}
-							}
-						}
-					}
-					
-					else if(divClass.contains("timeBlock busDataBlock"))
-					{
-						//Timing						
-						if(Item.hasChildNodes())
-						{
-							Iterator<DomElement> timeItr=  Item.getChildElements().iterator();
-							while(timeItr.hasNext())
-							{
-								DomElement timeE=timeItr.next();//div
-								if((timeE!=null)&&(timeE.hasChildNodes()))
-								{
-									Iterator<DomElement> timeTypeItr=timeE.getChildElements().iterator();
-									while(timeTypeItr.hasNext())
+									//System.out.println("test "+Item.asXml());
+									//BUS Details
+									Iterator<DomElement> detailsItr =Item.getChildElements().iterator();
+									while(detailsItr.hasNext())
 									{
-										DomElement timeTypeE= timeTypeItr.next();
-										
-										if((timeTypeE!=null))
+										DomElement detailsE=detailsItr.next();
+										if((detailsE!=null))
 										{
-											String type=timeTypeE.getAttribute("class");
-											if(type.contains("DepartureTime"))
+											//System.out.println("details:"+detailsE.asXml());
+											String detailsClass=detailsE.getAttribute("class");
+
+											if(detailsClass.contains("BusName"))
 											{
-												depTime=timeTypeE.asText();
-												break;
+												operatorName=detailsE.asText().trim();	
 											}
 
-											if(type.contains("ArrivalTime"))
+											if(detailsClass.contains("BusType"))
 											{
-												arrTime=timeTypeE.asText();
-												break;
+												busType=detailsE.asText();	
 											}
-											
-											if(type.contains("Duration"))
+										}
+									}
+								}
+
+								else if(divClass.contains("timeBlock busDataBlock"))
+								{
+									//Timing						
+									if(Item.hasChildNodes())
+									{
+										Iterator<DomElement> timeItr=  Item.getChildElements().iterator();
+										while(timeItr.hasNext())
+										{
+											DomElement timeE=timeItr.next();//div
+											if((timeE!=null)&&(timeE.hasChildNodes()))
 											{
-												duration=timeTypeE.asText();
-												break;
+												Iterator<DomElement> timeTypeItr=timeE.getChildElements().iterator();
+												while(timeTypeItr.hasNext())
+												{
+													DomElement timeTypeE= timeTypeItr.next();
+
+													if((timeTypeE!=null))
+													{
+														String type=timeTypeE.getAttribute("class");
+														if(type.contains("DepartureTime"))
+														{
+															departureTime=timeTypeE.asText();
+															break;
+														}
+
+														if(type.contains("ArrivalTime"))
+														{
+															arrivalTime=timeTypeE.asText();
+															break;
+														}
+
+														if(type.contains("Duration"))
+														{
+															duration=timeTypeE.asText();
+															break;
+														}
+													}
+												}
 											}
+										}
+									}
+								}
+
+								else if(divClass.contains("ratingsBlock busDataBlock"))
+								{
+									//ratingsBlock
+									if(Item.hasChildNodes()){
+										rating = Item.getFirstElementChild().getAttribute("title");
+										ratingText = Item.asText().trim();
+									}
+								}
+
+								else if(divClass.contains("fareBlock busDataBlock"))
+								{
+									if((Item.hasChildNodes())){
+										DomElement fareE= Item.getFirstElementChild();//.asText();
+										if((fareE!=null)&&(fareE.getTagName().contains("span"))&&(fareE.getAttribute("class").contains("fareSpan"))){
+											fare=fareE.asText().trim();
 										}
 									}
 								}
 							}
 						}
 					}
-					
-					else if(divClass.contains("ratingsBlock busDataBlock"))
-					{
-						//ratingsBlock
-						if(Item.hasChildNodes()){
-						rating = Item.getFirstElementChild().getAttribute("title");
-						ratingText = Item.asText().trim();
-						}
-					}
-					
-					else if(divClass.contains("fareBlock busDataBlock"))
-					{
-						if((Item.hasChildNodes())){
-							DomElement fareE= Item.getFirstElementChild();//.asText();
-							if((fareE!=null)&&(fareE.getTagName().contains("span"))&&(fareE.getAttribute("class").contains("fareSpan"))){
-								fare=fareE.asText().trim();
-							}
-						}
-					}
 				}
+				System.out.println("\nname "+operatorName);
+				System.out.println("type "+busType);//there is an issue with type
+				System.out.println("depTime: "+departureTime);
+				System.out.println("arrTime: "+arrivalTime);
+				System.out.println("duration: "+duration);
+				System.out.println("rating "+rating);
+				System.out.println("ratingText: "+ratingText);
+				System.out.println("fare "+fare);
+				
+				String origin = "Bangalore";
+				String destination = "Hyderabad";
+				String departureDate = "2014-02-24";//YYYY-MM-DD
+				
+				RedBusDto redBusDto = new RedBusDto();
+
+				redBusDto.setOperatorName(operatorName.toUpperCase());
+				redBusDto.setBusType(busType.toUpperCase());
+				redBusDto.setDepartureTime(departureTime);
+				redBusDto.setArrivalTime(arrivalTime);
+				redBusDto.setDuration(duration);
+				redBusDto.setRating(rating);
+				redBusDto.setRatingText(ratingText);
+				redBusDto.setFare(fare);
+				redBusDto.setOrigin(origin.toUpperCase());
+				redBusDto.setDestination(destination.toUpperCase());
+				redBusDto.setDepartureDate(departureDate);
+				
+				TransferDataRedBus.transferData(redBusDto, statement);
+
 			}
-		}
-	}
-}
-}//end of first if
-		
-		System.out.println("name "+busName);
-		System.out.println("type "+busType);//there is an issue with type
-		System.out.println("depTime: "+depTime);
-		System.out.println("arrTime: "+arrTime);
-		System.out.println("duration: "+duration);
-		System.out.println("rating "+rating);
-		System.out.println("ratingText: "+ratingText);
-		System.out.println("fare "+fare);
+		}//end of first if
 		
 		}catch(Exception e){
 			
@@ -196,7 +226,7 @@ public class ExtractData extends HtmlUnitWebClient{
 	
 	public static void main(String[] args) throws Exception {
 		 ExtractData htmlUnit = new  ExtractData();
-	        //htmlUnit.getData();
+	     htmlUnit.getData(new URL("http://www.redbus.in/Booking/SelectBus.aspx?fromCityId=122&fromCityName=Bangalore&toCityId=124&toCityName=Hyderabad&doj=30-May-2014"));
 		 //htmlUnit.getDetails();
 	    }
 }

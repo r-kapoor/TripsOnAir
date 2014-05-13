@@ -1,20 +1,25 @@
 package com.goibibo;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Iterator;
 
 import org.junit.Test;
 
+import GlobalClasses.ConnectMysql;
 import GlobalClasses.HtmlUnitWebClient;
 
+import com.dataTransferObject.GoibiboDto;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.zomato.TransferDataZomato;
 
 
 /**
- * 
+ * Extracts the data from the goibibo links
  * @author rahul
  *
  */
@@ -25,6 +30,10 @@ public class ExtractData extends HtmlUnitWebClient{
     public static void getData() throws Exception {
 
 		long startTime = System.currentTimeMillis();
+		
+		//Setting the connections
+		Connection conn=ConnectMysql.MySqlConnection();
+		Statement statement = conn.createStatement();
 		
     	//Declarations
     	int i=1, durationHrs, priceRs;
@@ -101,6 +110,10 @@ public class ExtractData extends HtmlUnitWebClient{
             price = flightData.getTextContent().trim().replaceAll("\\s+", " ").split("\\s+")[0];
             priceRs = Integer.parseInt(price.replaceAll("[^0-9]",""));
             
+            String origincountry = "India", destinationcountry = "India";
+            String departureDate = "2014-06-01";//YYYY-MM-DD
+            String classofTravel = "Economy";
+            
             //Printing All
             System.out.println("\nFlight:"+i); 
             System.out.println("Start Time:"+departureTime);
@@ -113,6 +126,27 @@ public class ExtractData extends HtmlUnitWebClient{
             System.out.println("Flight No.:" + flightNumber);
             System.out.println("Price:" + price);
             System.out.println("Price in Rs:" + priceRs);
+            
+            GoibiboDto goibiboDto = new GoibiboDto();
+            
+            goibiboDto.setSource("Goibibo");
+            goibiboDto.setDepartureTime(departureTime);
+            goibiboDto.setDepartureDate(departureDate);
+            goibiboDto.setOrigin(origin.toUpperCase());
+            goibiboDto.setOrigincountry(origincountry.toUpperCase());
+            goibiboDto.setDuration(duration);
+            goibiboDto.setStops(stops);
+            goibiboDto.setArrivalTime(arrivalTime);
+            goibiboDto.setDestination(destination.toUpperCase());
+            goibiboDto.setDestinationcountry(destinationcountry.toUpperCase());
+            goibiboDto.setAirline(airline.toUpperCase());
+            goibiboDto.setFlightNumber(flightNumber);
+            goibiboDto.setPrice(price);
+            goibiboDto.setClassofTravel(classofTravel);
+            
+            System.out.println("Starting Transferring the data to DB");
+    		
+    		TransferDataGoibibo.transferData(goibiboDto, statement);
             
             i++;
         }

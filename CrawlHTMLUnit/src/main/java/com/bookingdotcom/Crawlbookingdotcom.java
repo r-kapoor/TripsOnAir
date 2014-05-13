@@ -143,7 +143,12 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 		*/
 		
 		//For testing
-		URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-16;checkout=2014-05-17;");
+
+		//URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-16;checkout=2014-05-17;");
+
+		URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-05;checkout=2014-05-07;");
+		//ExtractData.getData(test);
+
 		ExtractData.getPrices(test);
 		
 		/*URL test1= new URL("http://www.booking.com/searchresults.html?src=index&nflt=&ss_raw=delhi&error_url=http%3A%2F%2Fwww.booking.com%2Findex.en-gb.html%3Fsid%3Debe7d62a1bd79af153bc686482db1ed3%3Bdcid%3D4%3B&dcid=4&lang=en-gb&sid=ebe7d62a1bd79af153bc686482db1ed3&si=ai%2Cco%2Cci%2Cre%2Cdi&ss=New+Delhi%2C+Delhi+NCR%2C+India&checkin_monthday=12&checkin_year_month=2014-6&checkout_monthday=13&checkout_year_month=2014-6&interval_of_time=any&flex_checkin_year_month=any&no_rooms=1&group_adults=2&group_children=0&dest_type=city&dest_id=-2106102&ac_pageview_id=153c4d7352b00060&ac_position=0&ac_suggestion_list_length=5");
