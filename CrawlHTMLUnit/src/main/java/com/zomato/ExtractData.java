@@ -1,20 +1,16 @@
 package com.zomato;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
 
 import GlobalClasses.HtmlUnitWebClient;
 
-
 import com.dataTransferObject.ZomatoDto;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -24,7 +20,8 @@ public class ExtractData extends HtmlUnitWebClient{
 	private static String exceptionMsg = "";
 	private static String exceptionFile = "target/zomato/exception.txt";
 	private static String exceptionmsgFile = "target/zomato/exceptionmsg.txt";
-
+	private static String AllLinksFile = "ConfigFiles/zomato/restaurantLinks.txt";
+	
 	@SuppressWarnings("resource")
 	public static void getResturantData(zmtURL link) throws Exception
 	{
@@ -171,11 +168,14 @@ public class ExtractData extends HtmlUnitWebClient{
 								 String infoLable2=infoE4.asText().trim();
 								 if(infoLable2.contains("Opening hours"))
 								 {
-									 System.out.println("Enters1");
-									 if(infoE3.getLastElementChild().getTagName().contains("span"))
+									 Iterator<DomElement> timeItr =infoE3.getChildElements().iterator();
+									 while(timeItr.hasNext())
 									 {
-										 System.out.println("Enters2");
-										 openingHours =infoE3.getLastElementChild().asText();
+										DomElement timeE= timeItr.next();
+										if((timeE.getTagName().contains("span")&&(timeE.getAttribute("class").contains("res-info-timings"))))
+										{
+											openingHours =timeE.asText().trim();
+										}		
 									 }
 								 }
 							 }
@@ -281,5 +281,35 @@ public class ExtractData extends HtmlUnitWebClient{
 		e1.println(exceptionMsg);
 		e.close();
 		e1.close();	
+	}
+	
+	public static void main(String args[])throws Exception
+	{
+		Scanner inLink = new Scanner(new File(AllLinksFile));
+		inLink.useDelimiter("\n");
+		
+		while(inLink.hasNext())
+		{
+			String link=inLink.next();
+			String zmtLink[]=link.split("&&&");
+			zmtURL zmturl = new zmtURL();
+			zmturl.country = zmtLink[0] ;
+			zmturl.city  =   zmtLink[1];
+			zmturl.title =   zmtLink[2];
+			zmturl.url = new URL(zmtLink[3]);
+			
+			getResturantData(zmturl);
+			Thread.sleep(10000);
+		}
+		
+		//for testing
+		
+		 /*  URL url = new URL("http://www.zomato.com/bangalore/adupadi-indiranagar");
+		    zmtURL zmtLink = new zmtURL();
+		 	zmtLink.country = "India";
+		 	zmtLink.city = "Bangalore";
+		 	zmtLink.title = "The 13th Floor";
+		 	zmtLink.url = url;
+			getResturantData(zmtLink);*/
 	}
 }
