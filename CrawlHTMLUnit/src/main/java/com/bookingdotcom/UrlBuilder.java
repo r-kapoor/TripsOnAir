@@ -1,6 +1,7 @@
 package com.bookingdotcom;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,7 +19,8 @@ import java.util.Scanner;
 public class UrlBuilder {
 
 	private static String cityBase = "http://www.booking.com/searchresults.en-us.html?";
-	private static String cityIdFile = "ConfigFiles/bookingdotcom/CityId.txt";
+	//private static String cityIdFile = "ConfigFiles/bookingdotcom/CityId.txt";
+	private static String cityIdFile = "ConfigFiles/bookingdotcom/test.txt";
 	
 	public static ArrayList<URL> HotelUrlBuilder(String url)throws Exception
 	{
@@ -57,14 +59,36 @@ public class UrlBuilder {
 			{
 				String cityId=in.next();
 				//System.out.println(cityId);
+				String city = cityId.substring(0,cityId.indexOf(","));
 				String Id = cityId.substring(cityId.indexOf(",")+1,cityId.length());
-				String newUrl = cityBase+"checkin_year_month_monthday="+checkInDate+";"+"checkout_year_month_monthday="+checkOutDate+";"+"city=-"+Id; 
+				String newUrl = cityBase+"checkin_year_month_monthday="+checkInDate+";"+"checkout_year_month_monthday="+checkOutDate+";"+"city=-"+Id+";"+"rows=20"; 
 				System.out.println("cityUrl "+newUrl);
-				Crawlbookingdotcom.getMainLinks(new URL(newUrl));
+				BKDCURL bookingUrl= new BKDCURL();
+				bookingUrl.country="India";
+				bookingUrl.city=city;
+				bookingUrl.link=new URL(newUrl);
+				bookingUrl.locality="unknown";
+				Crawlbookingdotcom.getMainLinks(bookingUrl);
 				Thread.sleep(4000);
 				//break; //only to check flow in less time
 			}
 	}
+	
+	public static URL updateUrl(String url) throws Exception
+	{
+		String base = url.substring(0,url.indexOf("?")+1);
+		 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		   
+		   //get current date time with Date()
+		   Date checkinDate = new Date();
+		   Date checkoutDate = addDays(checkinDate,1);
+		   String checkInDate = dateFormat.format(checkinDate);
+		   String chkoutDate = dateFormat.format(checkoutDate);
+		   String newUrl =base+"checkin="+checkInDate+";"+"checkout="+chkoutDate;
+		   
+		   return(new URL(newUrl));
+	}
+	
 	
 	public static Date addDays(Date date, int days)
     {

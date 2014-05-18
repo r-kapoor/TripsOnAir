@@ -1,10 +1,12 @@
 package com.bookingdotcom;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import GlobalClasses.HtmlUnitWebClient;
 
@@ -24,13 +26,14 @@ public class ExtractData extends HtmlUnitWebClient{
 	private static String exceptionFile = "target/bookingdotcom/exception.txt";
 	private static String exceptionmsgFile = "target/bookingdotcom/exceptionmsg.txt";
 	private static String exceptionMsg = "";
+	private static String linksFile="ConfigFiles/bookingdotcom/PriceCheckingUrls.txt";
 	
-	public static void getData(URL url)throws Exception
+	public static void getData(BKDCURL bkdcUrl)throws Exception
 	{
 		//URL url1 = new URL("http://www.booking.com/hotel/in/hilton-garden-inn-new-delhi-saket.en-gb.html?aid=367912;label=dial-FM;sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-05-10;checkout=2014-05-11;ucfs=1;srfid=b41b64303289312c14ac80addd1920eaa773bc4eX11");
 		
 		try{
-		HtmlPage page=WebClient(url);
+		HtmlPage page=WebClient(bkdcUrl.link);
 		
 		String Title="unknown",address="unknown",rating="unknown",description="unknown",checkIn="unknown",checkOut="unknown";
 		String Bedroom="unknown",Outdoors="unknown",Activities="unknown",Living_Area="unknown",Media="unknown",Food="unknown",Internet="unknown",Parking="unknown",Services="unknown",General="unknown",Languages="unknown";
@@ -184,8 +187,9 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 		}
 		
-		String city = "New Delhi";
-		String country = "India";
+		String city = bkdcUrl.city;
+		String country = bkdcUrl.country;
+		String locality = bkdcUrl.locality;
 		System.out.println("Title="+Title);
 		System.out.println("address="+address);
 		System.out.println("rating="+rating);
@@ -245,7 +249,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			System.out.println("Exception Occured. Adding to exceptionUrls");
 			System.out.println(e);
 			System.out.println(e.getMessage());
-			exceptionUrls+=url+"\n";
+			exceptionUrls+=bkdcUrl.country+"&&&"+bkdcUrl.city+"&&&"+bkdcUrl.locality+"&&&"+bkdcUrl.link+"\n";
 			exceptionMsg+=e+"\n";
 		}
 		
@@ -358,4 +362,35 @@ public class ExtractData extends HtmlUnitWebClient{
 		e1.close();
 
 	}
+	
+	public static void main(String args[])throws Exception
+	{
+		Scanner in = new Scanner(new File(linksFile));
+		in.useDelimiter("\n");
+		
+		while(in.hasNext())
+		{
+			String bkdcurl=in.next();
+			if(bkdcurl.indexOf("&&&")!=-1)
+			{
+			String parts[]=bkdcurl.split("&&&");
+			String country=parts[0];
+			String city = parts[1];
+			String locality = parts[2];
+			String link = parts[3];
+			//System.out.println(country+city+locality+link);
+
+			//now extract the data with updated link
+			BKDCURL bookingLink = new BKDCURL();
+			bookingLink.country=country;
+			bookingLink.city=city;
+			bookingLink.locality=locality;
+			bookingLink.link=UrlBuilder.updateUrl(link);//update for current date.Otherwise link might have expired
+			
+			//System.out.println(bookingLink.link);
+			ExtractData.getData(bookingLink);
+			
+			}	
+		}	
+	}	
 }
