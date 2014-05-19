@@ -45,7 +45,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			Connection conn=ConnectMysql.MySqlConnection();
 			Statement statement = conn.createStatement();
 			
-		String operatorName="unknown",busType="unknown",departureTime="unknown",arrivalTime="unknown",duration="unknown",rating="unknown",ratingText="unknown",fare="unknown";
+		String operatorName="",busType="",departureTime="",arrivalTime="",duration="",rating="",ratingText="",fare="";
 		
 		//Set the URL of the page
 		URL url1 = new URL("http://www.redbus.in/Booking/SelectBus.aspx?fromCityId=122&fromCityName=Bangalore&toCityId=124&toCityName=Hyderabad&doj=30-May-2014");
@@ -185,9 +185,11 @@ public class ExtractData extends HtmlUnitWebClient{
 				String origin = "Bangalore";
 				String destination = "Hyderabad";
 				String departureDate = "2014-02-24";//YYYY-MM-DD
+				String source = "RedBus";
 				
 				RedBusDto redBusDto = new RedBusDto();
-
+				
+				redBusDto.setSource(source);
 				redBusDto.setOperatorName(operatorName.toUpperCase());
 				redBusDto.setBusType(busType.toUpperCase());
 				redBusDto.setDepartureTime(departureTime);

@@ -56,7 +56,10 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 		departureTime = transformTimings(departureTime);
 		arrivalTime = transformTimings(arrivalTime);
 		
-		int OriginCityID=-1, DestinationID=-1, FlightID=-1;
+		//Transforming duration
+		duration = transformDuration(duration);
+		
+		int OriginCityID=-1, DestinationID=-1, BusID=-1;
 
 		System.out.println("Inserting to DB");
 		
@@ -118,152 +121,159 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 		System.out.println("City Inserted");
 		
 		
-//		//Inserting the Flight
-//		//Checking if the Flight Exists in DB
-//		ResultSet getFlightR = statement.executeQuery("SELECT * FROM Flight WHERE OriginCityID="+OriginCityID+
-//				" AND DestinationID = "+DestinationID+
-//				" AND DepartureDate = '"+departuredate+"'"+
-//				" AND DepartureTime = '"+departuretime+"'"+
-//				" AND ArrivalTime = '"+arrivaltime+"';");
-//		while(getFlightR.next())
-//		{
-//			FlightID=getFlightR.getInt("FlightID");
-//			//The same name restaurant in same city exists
-//			flightExists = true;
-//			if(getFlightR.getInt(source)==1)
-//			{
-//				/*
-//				 * Merge Logic For Crawl from Same Source Present Here
-//				 * Then Update the tuple
-//				 */
-//				//Updating the price of the flight
-//				int priceOld = getFlightR.getInt("Price");
-//				if(priceOld!=priceRs)
-//				{
-//					String update = "UPDATE Flight SET Price = "+priceRs+" WHERE FlightID = "+FlightID+";";
-//					statement.executeUpdate(update);
-//					break;
-//				}
-//			}
-//			else
-//			{
-//				//The tuple is from a different source. Merge the data
-//				String update = "UPDATE Flight SET Goibibo = 1";
-//				
-//				//Updating the price
-//				int priceOld = getFlightR.getInt("Price");
-//				if(priceOld!=priceRs)
-//				{
-//					update = update +", Price = "+priceRs;
-//				}
-//				
-//				//System.out.println(update +" WHERE RestaurantID = "+RestaurantID+";");
-//				statement.executeUpdate(update +" WHERE FlightID = "+FlightID+";");
-//				break;
-//			}
-//			
-//		}
-//		if(!flightExists)
-//		{
-//			//Insert the data
-//			String insert= "INSERT INTO Flight(";
-//			String values= ") VALUES(";
-//			insert = insert + "OriginCityID, DestinationID, ClassofTravel, Price, Goibibo";
-//			values = values + OriginCityID+", "+DestinationID+", '"+classofTravel+"', "+priceRs+", 1";
-//			
-//			//Inserting Departure Date
-//			insert = insert + ", DepartureDate";
-//			if(departuredate.matches("\\d+-\\d+-\\d+"))
-//			{
-//				values = values + ", '"+departuredate+"'";
-//			}
-//			else
-//			{
-//				values = values + ", '1000-01-01'";	
-//			}
-//			
-//			//Inserting Departure Time
-//			insert = insert + ", DepartureTime";
-//			if(departuretime.matches("\\d+:\\d+"))
-//			{
-//				values = values + ", '"+departuretime+"'";				
-//			}
-//			else
-//			{
-//				values = values + ", '23:59:59'";
-//			}
-//			
-//			//Inserting whether flight lands next day
-//			if(nextday == 1)
-//			{
-//				insert = insert + ", NextDay";
-//				values = values + ", 1";
-//			}
-//			
-//			//Inserting Arrival Time
-//			insert = insert + ", ArrivalTime";
-//			if(arrivaltime.matches("\\d+:\\d+"))
-//			{
-//				values = values + ", '"+arrivaltime+"'";				
-//			}
-//			else
-//			{
-//				values = values + ", '23:59:59'";
-//			}
-//			
-//			//Inserting stop/hop information
-//			if(!stops.isEmpty())
-//			{
-//				if(!stops.equals("Nonstop"))
-//				{
-//					if(stops.contains("stop"))
-//					{
-//						int stopnum = Integer.parseInt(stops.replaceAll("[^0-9]",""));
-//						insert = insert + ", Stops";
-//						values = values + ", "+stopnum;
-//					}
-//					else if(stops.contains("hop"))
-//					{
-//						int hopnum = Integer.parseInt(stops.replaceAll("[^0-9]",""));
-//						insert = insert + ", Hops";
-//						values = values + ", "+hopnum;
-//					}
-//				}
-//			}
-//			
-//			//System.out.println(insert + values+");");
-//			statement.executeUpdate(insert + values+");");
-//		    ResultSet rs = statement.getGeneratedKeys();
-//		    rs.next();
-//		    FlightID = rs.getInt(1);
-//		}
-//		
-//		System.out.println("Flight Inserted");
-//		
-//		//Insert the Flight Details
-//		ResultSet flightRS = statement.executeQuery("SELECT * FROM Flight_Number WHERE FlightID="+FlightID+";");
-//		if(!flightRS.next())
-//		{
-//			ResultSet flightDetailsRS = statement.executeQuery("SELECT * FROM Flight_Details WHERE FlightNumber='"+flightnumber+"';");
-//			if(flightDetailsRS.next())
-//			{
-//				int FlightNumberID = flightDetailsRS.getInt("FlightNumberID");
-//				statement.executeUpdate("INSERT INTO Flight_Number(FlightID, FlightNumberID) VALUES("+FlightID+", "+FlightNumberID+");");
-//			}
-//			else
-//			{
-//				statement.executeUpdate("INSERT INTO Flight_Details(Airline, FlightNumber) VALUES('"+airline+"', '"+flightnumber+"');", Statement.RETURN_GENERATED_KEYS);
-//				ResultSet rs = statement.getGeneratedKeys();
-//				rs.next();
-//				int FlightNumberID = rs.getInt(1);
-//				statement.executeUpdate("INSERT INTO Flight_Number(FlightID, FlightNumberID) VALUES("+FlightID+", "+FlightNumberID+");");
-//			}
-//		}
-//		System.out.println("Airline Inserted");
-//		
-//		System.out.println("Insertions Complete");	
+		//Inserting the Bus
+		//Checking if the Bus Exists in DB
+		ResultSet getBusR = statement.executeQuery("SELECT * FROM Bus WHERE OriginCityID="+OriginCityID+
+				" AND DestinationID = "+DestinationID+
+				" AND DepartureDate = '"+departureDate+"'"+
+				" AND DepartureTime = '"+departureTime+"'"+
+				" AND ArrivalTime = '"+arrivalTime+"'"+
+				" AND Operator = '"+operatorName+"';");
+		while(getBusR.next())
+		{
+			BusID=getBusR.getInt("BusID");
+			//The same name bus service between the same cities exists
+			busExists = true;
+			if(getBusR.getInt(source)==1)
+			{
+				/*
+				 * Merge Logic For Crawl from Same Source Present Here
+				 * Then Update the tuple
+				 */
+				//Updating the Price of the Bus
+				int priceOld = getBusR.getInt("Price");
+				if(priceOld!=priceRs)
+				{
+					String update = "UPDATE Bus SET Price = "+priceRs+" WHERE BusID = "+BusID+";";
+					statement.executeUpdate(update);
+					break;
+				}
+			}
+			else
+			{
+				//The tuple is from a different source. Merge the data
+				String update = "UPDATE Bus SET RedBus = 1";
+				
+				//Updating the price
+				int priceOld = getBusR.getInt("Price");
+				if(priceOld!=priceRs)
+				{
+					update = update +", Price = "+priceRs;
+				}
+				
+				//System.out.println(update +" WHERE RestaurantID = "+RestaurantID+";");
+				statement.executeUpdate(update +" WHERE BusID = "+BusID+";");
+				break;
+			}
+			
+		}
+		if(!busExists)
+		{
+			//Insert the data
+			String insert= "INSERT INTO Bus(";
+			String values= ") VALUES(";
+			insert = insert + "OriginCityID, DestinationID, Operator, Price, RedBus";
+			values = values + OriginCityID+", "+DestinationID+", '"+operatorName+"', "+priceRs+", 1";
+			
+			//Inserting Departure Date
+			insert = insert + ", DepartureDate";
+			if(departureDate.matches("\\d+-\\d+-\\d+"))
+			{
+				values = values + ", '"+departureDate+"'";
+			}
+			else
+			{
+				values = values + ", '1000-01-01'";	
+			}
+			
+			//Inserting Departure Time
+			insert = insert + ", DepartureTime";
+			if(departureTime.matches("\\d+:\\d+"))
+			{
+				values = values + ", '"+departureTime+"'";				
+			}
+			else
+			{
+				values = values + ", '23:59:59'";
+			}
+			
+			//Inserting Arrival Time
+			insert = insert + ", ArrivalTime";
+			if(arrivalTime.matches("\\d+:\\d+"))
+			{
+				values = values + ", '"+arrivalTime+"'";				
+			}
+			else
+			{
+				values = values + ", '23:59:59'";
+			}
+			
+			//Inserting the duration
+			insert = insert + ", Duration";
+			if(!duration.isEmpty())
+			{
+				values = values + ", '"+duration+"'";
+			}
+			else
+			{
+				values = values + ", '23:59:59'";
+			}
+			
+			//Inserting the rating
+			if(!rating.isEmpty())
+			{
+				if(rating.matches("\\d+\\.\\d+/\\d+")||(rating.matches("\\d+/\\d+")))
+				{
+					rating = rating.substring(0, rating.indexOf('/'));
+					insert = insert + ", Rating";
+					values = values + ", "+rating;
+				}
+			}
+			
+			//Inserting the NumofReviews
+			if(!ratingtext.isEmpty())
+			{
+				insert = insert + ", NumofReviews";
+				if(ratingtext.matches("No Ratings[\\s\\S]*"))
+				{
+					values = values + ", 0";
+				}
+				else if(ratingtext.matches("\\d+ Ratings[\\s\\S]*"))
+				{
+					values = values + ", "+ratingtext.replaceAll("[^0-9]","");
+				}
+				else
+				{
+					values = values + ", -1";
+				}
+			}
+			
+			System.out.println(insert + values+");");
+			statement.executeUpdate(insert + values+");");
+		    ResultSet rs = statement.getGeneratedKeys();
+		    rs.next();
+		    BusID = rs.getInt(1);
+		}
+		
+		System.out.println("Bus Inserted");
+		
+		//There is not enough data crawled to be inserted in the table Bus_Boardings
+		System.out.println("Insertions Complete");	
 		
 	}
+
+private static String transformDuration(String duration) {
+	// TODO Auto-generated method stub
+	if(duration.matches("\\d+:\\d+.*"))
+	{
+		duration = duration.replaceAll("(\\d+:\\d+)(.*)", "$1");
+	}
+	else
+	{
+		duration = "23:59:59";
+	}
+	return duration;
+}
 
 private static String transformTimings(String time) {
 	// TODO Auto-generated method stub
