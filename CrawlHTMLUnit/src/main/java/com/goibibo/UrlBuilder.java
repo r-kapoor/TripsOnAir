@@ -3,6 +3,7 @@ package com.goibibo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,9 +16,10 @@ public class UrlBuilder {
 	private static String mappingFile = "ConfigFiles/goibibo/mapping.txt";
 	private static String AllLinksFile ="ConfigFiles/goibibo/links.txt";
 	private static String exceptionFile= "target/goibibo/exception.txt";
-	//private static String baseUrl ="http://www.goibibo.com/flight-searchresult/#air-IXA-AGX-20140422--1-0-0-E";
+	private static String exceptionMsgFile = "target/goibibo/exceptionmsg.txt";
+	private static String testingLinksFile = "ConfigFiles/goibibo/testingLinks.txt";
 	private static HashMap<String,String>cityToCode = new HashMap<String,String>();
-	private static int days =60;
+	private static int days =30;
 	private static int count =0;
 	
 	public static void mainUrlBuilder(String url)throws Exception
@@ -32,17 +34,28 @@ public class UrlBuilder {
 		String destCode = cityToCode.get(destCity);
 		
 		if((srcCode!=null)&&(destCode!=null)){
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		DateFormat dateFormat1 = new SimpleDateFormat("yyyyMMdd");
+		DateFormat dateFormat2 = new SimpleDateFormat("YYYY-MM-dd");
 		//get current date time with Date()
 	   	Date date = new Date();
 	   	
 	   	for(int i=0;i<days;i++)
 	   	{
-	   		String appendDate = dateFormat.format(date);
+	   		String appendDate = dateFormat1.format(date);
+	   		// make an economy url
 	   		String newUrl = "http://www.goibibo.com/flight-searchresult/#air-"+srcCode+"-"+destCode+"-"+appendDate+"--1-0-0-E";
 	   		System.out.println(newUrl);
-	   		//getPrice(new URL(newUrl));
+	   		
+	   		GoibiboUrl goUrl= new GoibiboUrl();
+	   		goUrl.OriginCountry="India";
+	   		goUrl.DestinationCountry="India";
+	   		goUrl.departureDate=dateFormat2.format(date);
+	   		goUrl.classofTravel="Economy";
+	   		goUrl.link = new URL(newUrl);
+	   		//extract the data from the url generated
+	   		ExtractData.getData(goUrl);
 	   		date = addDays(date,1);
+	   		Thread.sleep(10000);
 	   		count++;
 	   	}
 		}
@@ -91,21 +104,20 @@ public class UrlBuilder {
 	
 	public static void main(String args[]) throws Exception
 	{
-		/*Scanner in = new Scanner(new File(AllLinksFile));
-		
+		//Scanner in = new Scanner(new File(AllLinksFile));
+		Scanner in = new Scanner(new File(testingLinksFile));
 		//Initialize the exception file so as to remove the older written contents
 		FileOutputStream newException=new FileOutputStream(exceptionFile);
+		FileOutputStream ExceptionMessage = new FileOutputStream(exceptionMsgFile);
 		@SuppressWarnings("resource")
 		PrintStream e=new PrintStream(newException);
-		e.print("");
-		
+		PrintStream emsg = new PrintStream(ExceptionMessage);
+		e.print("");emsg.print("");
+
 		while(in.hasNext())
 		{
 			mainUrlBuilder(in.next());
 		}
-		System.out.println("count "+count);*/
-		ExtractData.getData();
-
-		
+		System.out.println("count "+count);
 	}
 }

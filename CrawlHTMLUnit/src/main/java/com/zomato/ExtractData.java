@@ -269,7 +269,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			System.out.println("Exception Occured. Adding to exceptionUrls");
 			System.out.println(e);
 			System.out.println(e.getMessage());
-			exceptionUrls+=link.url+"\n";
+			exceptionUrls+=link.country+"&&&"+link.city+"&&&"+link.title+"&&&"+link.url+"\n";
 			exceptionMsg+=e+"\n";
 		}
 		

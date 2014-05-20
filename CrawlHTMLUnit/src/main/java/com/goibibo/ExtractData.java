@@ -1,5 +1,7 @@
 package com.goibibo;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.Statement;
@@ -26,9 +28,14 @@ import com.zomato.TransferDataZomato;
 
 public class ExtractData extends HtmlUnitWebClient{
 
+	private static String exceptionFile= "target/goibibo/exception.txt";
+	private static String exceptionMessageFile="target/goibibo/exceptionmsg.txt";
+	
 	@Test
-    public static void getData() throws Exception {
+    public static void getData(GoibiboUrl goibiboUrl) throws Exception {
 
+		try{
+		
 		long startTime = System.currentTimeMillis();
 		
 		//Setting the connections
@@ -43,9 +50,9 @@ public class ExtractData extends HtmlUnitWebClient{
     	System.out.println("started Extracting Data");
     	
     	//Set the URL of the page
-    	URL url = new URL("http://www.goibibo.com/flight-searchresult/#air-DEL-BLR-20140531--1-0-0-E");
+    	//URL url = new URL("http://www.goibibo.com/flight-searchresult/#air-DEL-BLR-20140531--1-0-0-E");
 
-    	HtmlPage page=WebClient(url);
+    	HtmlPage page=WebClient(goibiboUrl.link);
 
         //Storing title of page
         title = page.getTitleText();
@@ -110,9 +117,9 @@ public class ExtractData extends HtmlUnitWebClient{
             price = flightData.getTextContent().trim().replaceAll("\\s+", " ").split("\\s+")[0];
             priceRs = Integer.parseInt(price.replaceAll("[^0-9]",""));
             
-            String origincountry = "India", destinationcountry = "India";
-            String departureDate = "2014-06-01";//YYYY-MM-DD
-            String classofTravel = "Economy";
+            String origincountry = goibiboUrl.OriginCountry, destinationcountry = goibiboUrl.DestinationCountry;
+            String departureDate = goibiboUrl.departureDate;//YYYY-MM-DD
+            String classofTravel = goibiboUrl.classofTravel;
             
             //Printing All
             System.out.println("\nFlight:"+i); 
@@ -155,6 +162,22 @@ public class ExtractData extends HtmlUnitWebClient{
 		long endTime   = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
 		System.out.println("totalTime "+totalTime);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception Occured. Adding to exceptionUrls");
+			System.out.println(e);
+			System.out.println(e.getMessage());
+			FileOutputStream exception=new FileOutputStream(exceptionFile,true);
+			FileOutputStream exceptionMessage=new FileOutputStream(exceptionMessageFile,true);
+			@SuppressWarnings("resource")
+			PrintStream exceptionStream=new PrintStream(exception);
+			PrintStream exceptionMsgStream=new PrintStream(exceptionMessage);
+			exceptionStream.append(goibiboUrl.OriginCountry+"&&&"+goibiboUrl.DestinationCountry+"&&&"+goibiboUrl.departureDate+"&&&"+goibiboUrl.classofTravel+"&&&"+goibiboUrl.link+"\n");
+			exceptionMsgStream.append(e+"\n");
+			
+		}
+		
+		
     }
-	
 }

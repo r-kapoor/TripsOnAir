@@ -1,0 +1,2 @@
+/flights-schedule/hyderabad/bangalore/
+/flights-schedule/hyderabad/chennai/
