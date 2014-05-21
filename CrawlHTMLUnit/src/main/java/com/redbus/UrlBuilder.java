@@ -23,4 +23,5 @@ public class UrlBuilder {
 		URL url = new URL(newUrl);
 		return url;
 	}
+	
 }
