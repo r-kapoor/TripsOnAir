@@ -3,6 +3,7 @@ package com.bookingdotcom;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 import GlobalClasses.HtmlUnitWebClient;
 
 import com.dataTransferObject.BookingdotComDto;
+import com.dataTransferObject.BookingdotComPriceDto;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -268,88 +270,132 @@ public class ExtractData extends HtmlUnitWebClient{
 	public static void getPrices(URL url) throws Exception
 	{
 		try{
-		HtmlPage page=WebClient(url);
-		
-		DomElement priceArea = page.getFirstByXPath("//tbody[@id='room_availability_container']");
-		
-		if((priceArea!=null)&&(priceArea.hasChildNodes()))
-		{
-			Iterator<DomElement> priceItr= priceArea.getChildElements().iterator();
-			while(priceItr.hasNext())
+			
+			ArrayList<String> roomTypeList = new ArrayList<String>();
+			ArrayList<Integer> numberofSubtypesList = new ArrayList<Integer>();
+			ArrayList<String> conditionsList = new ArrayList<String>();
+			ArrayList<String> maxCapacityList = new ArrayList<String>();
+			ArrayList<String> priceList = new ArrayList<String>();
+			
+			HtmlPage page=WebClient(url);
+
+			DomElement priceArea = page.getFirstByXPath("//tbody[@id='room_availability_container']");
+
+			if((priceArea!=null)&&(priceArea.hasChildNodes()))
 			{
-				DomElement priceE=priceItr.next();
-				if((priceE.hasAttribute("class"))&&((priceE.getAttribute("class").contains("room_loop_counter1 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter2 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter3 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter4 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter5 maintr")))&&(priceE.hasChildNodes()))
+				Iterator<DomElement> priceItr= priceArea.getChildElements().iterator();
+				while(priceItr.hasNext())
 				{
-					Iterator<DomElement> priceEItr=priceE.getChildElements().iterator();
-					while(priceEItr.hasNext()){
-						DomElement priceE1 = priceEItr.next();
-					if((priceE1!=null)&&(priceE1.hasChildNodes())&&(priceE1.getAttribute("class").contains("roomType"))&&(priceE1.hasChildNodes()))
+					DomElement priceE=priceItr.next();
+					if((priceE.hasAttribute("class"))&&((priceE.getAttribute("class").contains("room_loop_counter1 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter2 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter3 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter4 maintr"))||(priceE.getAttribute("class").contains("room_loop_counter5 maintr")))&&(priceE.hasChildNodes()))
 					{
-						DomElement priceE2=priceE1.getLastElementChild();
-						if((priceE2!=null)&&(priceE2.hasChildNodes()))
-						{
-							Iterator<DomElement> roomItr =priceE2.getChildElements().iterator();
-							
-							while(roomItr.hasNext())
+						Iterator<DomElement> priceEItr=priceE.getChildElements().iterator();
+						while(priceEItr.hasNext()){
+							DomElement priceE1 = priceEItr.next();
+							if((priceE1!=null)&&(priceE1.hasChildNodes())&&(priceE1.getAttribute("class").contains("roomType"))&&(priceE1.hasChildNodes()))
 							{
-								DomElement roomE=roomItr.next();
-								if((roomE.getTagName().contains("a")&&(roomE.hasChildNodes())))
+								DomElement priceE2=priceE1.getLastElementChild();
+								if((priceE2!=null)&&(priceE2.hasChildNodes()))
 								{
-									DomElement roomPicE=roomE.getFirstElementChild();
-									if(roomPicE.getTagName().contains("img"))
+									Iterator<DomElement> roomItr =priceE2.getChildElements().iterator();
+
+									while(roomItr.hasNext())
 									{
-										String src = roomPicE.getAttribute("src");
-										System.out.println("src "+src);
-									}
-								}
-								
-								if((roomE.getTagName().contains("span")&&(roomE.hasChildNodes())))
-								{
-									Iterator<DomElement> typeItr=roomE.getChildElements().iterator();
-									while(typeItr.hasNext())
-									{
-										DomElement typeE = typeItr.next();
-										if((typeE!=null)&&(typeE.getTagName().contains("a")))
+										DomElement roomE=roomItr.next();
+										if((roomE.getTagName().contains("a")&&(roomE.hasChildNodes())))
 										{
-											String roomType=typeE.asText().trim();
-											System.out.println("roomType "+roomType);
+											DomElement roomPicE=roomE.getFirstElementChild();
+											if(roomPicE.getTagName().contains("img"))
+											{
+												String src = roomPicE.getAttribute("src");
+												System.out.println("src "+src);
+											}
 										}
 
-										if((typeE!=null)&&(typeE.getTagName().contains("span"))&&(typeE.hasChildNodes()))
+										if((roomE.getTagName().contains("span")&&(roomE.hasChildNodes())))
 										{
-											Iterator<DomElement> typeEItr=typeE.getChildElements().iterator();
-											while(typeEItr.hasNext())
+											Iterator<DomElement> typeItr=roomE.getChildElements().iterator();
+											while(typeItr.hasNext())
 											{
-												String facility=typeEItr.next().asText().trim();
-												System.out.println("facility "+facility);
-											}	
-										}	
-									}
-								}
-							}
-						}	
-					}//end of room type if
-				}//end of inner while loop
-			}
+												DomElement typeE = typeItr.next();
+												if((typeE!=null)&&(typeE.getTagName().equals("a")))
+												{
+													String roomType=typeE.asText().trim();
+													System.out.println("roomType "+roomType);
+													roomTypeList.add(roomType);
+												}
 
-					if((priceE!=null)&&(priceE.hasChildNodes())&&((priceE.getAttribute("class").contains("room_loop_counter1"))||(priceE.getAttribute("class").contains("room_loop_counter2"))||(priceE.getAttribute("class").contains("room_loop_counter3"))||(priceE.getAttribute("class").contains("room_loop_counter4")||(priceE.getAttribute("class").contains("room_loop_counter5"))))){
-						DomElement priceE1=priceE.getLastElementChild();
-						if((priceE1!=null)&&(priceE1.hasChildNodes())&&((priceE1.getAttribute("class").contains("roomMultiRoomPrice bb smart_deal"))||(priceE1.getAttribute("class").contains("roomMultiRoomPrice bb")))&&(priceE1.hasChildNodes())){
-						String price = priceE1.getFirstElementChild().getFirstElementChild().getLastElementChild().asText().trim();
-						System.out.println("price "+price);
-						//break;
-						}
+												if((typeE!=null)&&(typeE.getTagName().contains("span"))&&(typeE.hasChildNodes()))
+												{
+													Iterator<DomElement> typeEItr=typeE.getChildElements().iterator();
+													while(typeEItr.hasNext())
+													{
+														String facility=typeEItr.next().asText().trim();
+														System.out.println("facility "+facility);
+													}	
+												}	
+											}
+										}
+									}
+								}	
+							}//end of room type if
+						}//end of inner while loop
 					}
-			}//end of main while loop	
+
+					int numberofSubtypes = 0;
+					
+					if((priceE!=null)&&(priceE.hasChildNodes())&&((priceE.getAttribute("class").contains("room_loop_counter1"))
+							||(priceE.getAttribute("class").contains("room_loop_counter2"))
+							||(priceE.getAttribute("class").contains("room_loop_counter3"))
+							||(priceE.getAttribute("class").contains("room_loop_counter4")||(priceE.getAttribute("class").contains("room_loop_counter5"))))){
+						
+						DomElement priceE1=priceE.getLastElementChild();
+						if((priceE1!=null)
+								&&(priceE1.hasChildNodes())
+								&&((priceE1.getAttribute("class").contains("roomMultiRoomPrice bb smart_deal"))
+										||(priceE1.getAttribute("class").contains("roomMultiRoomPrice bb"))
+										||(priceE1.getAttribute("class").contains("roomMultiRoomPrice")))&&(priceE1.hasChildNodes())){
+							numberofSubtypes++;
+							String price = priceE1.getFirstElementChild().getFirstElementChild().getLastElementChild().asText().trim();
+							System.out.println("price "+price);
+							priceList.add(price);
+							//break;
+						}
+						numberofSubtypesList.add(numberofSubtypes);
+					}
+				}//end of main while loop	
+			}
+			
+			String source = "bookingdotcom";
+			String city = "New Delhi";
+			String country = "India";
+			String name = "The Leela Palace New Delhi";
+			String checkinDate = "2014-05-30";
+			String checkoutDate = "2014-05-31";
+			
+			BookingdotComPriceDto bookingdotcompriceDto = new BookingdotComPriceDto();
+			
+			bookingdotcompriceDto.setSource(source);
+			bookingdotcompriceDto.setCity(city);
+			bookingdotcompriceDto.setCountry(country);
+			bookingdotcompriceDto.setName(name);
+			bookingdotcompriceDto.setRoomType(roomTypeList);
+			bookingdotcompriceDto.setNumberofSubtypes(numberofSubtypesList);
+			bookingdotcompriceDto.setPrice(priceList);
+			bookingdotcompriceDto.setConditions(conditionsList);
+			bookingdotcompriceDto.setMaxCapacity(maxCapacityList);
+			bookingdotcompriceDto.setCheckinDate(checkinDate);
+			bookingdotcompriceDto.setCheckinDate(checkoutDate);
+			
 		}
-	}catch(Exception e)
-	{
-		System.out.println("Exception Occured. Adding to exceptionUrls");
-		System.out.println(e);
-		System.out.println(e.getMessage());
-		exceptionUrls+=url+"\n";
-		exceptionMsg+=e+"\n";
-	}
+		catch(Exception e)
+		{
+			System.out.println("Exception Occured. Adding to exceptionUrls");
+			System.out.println(e);
+			System.out.println(e.getMessage());
+			exceptionUrls+=url+"\n";
+			exceptionMsg+=e+"\n";
+		}
 
 		FileOutputStream exception=new FileOutputStream(exceptionFile);
 		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
