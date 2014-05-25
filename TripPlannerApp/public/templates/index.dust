@@ -1,5 +1,13 @@
-{>"layouts/master" /}
+<!DOCTYPE html>
+<html>
 
-{<body}
-    <h1>{@pre type="content" key="greeting"/}</h1>
-{/body}
+<head>
+{>"layouts/global/header" /}
+</head>
+
+<body>
+{>"layouts/master/input1" /}
+</body>
+
+{>"layouts/global/footer" /}
+</html>
