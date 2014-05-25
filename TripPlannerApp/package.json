@@ -1,0 +1,35 @@
+{
+  "name": "tripplannerapp",
+  "version": "0.1.0",
+  "description": "plan customized trip",
+  "author": "Rahul and Rajat",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "adaro": "^0.1.5",
+    "dustjs-helpers": "^1.1.1",
+    "dustjs-linkedin": "^2.0.3",
+    "express": "~3.4.4",
+    "kraken-js": "^0.7.0",
+    "less": "^1.6.1",
+    "makara": "^0.3.4",
+    "nconf": "^0.6.8",
+    "requirejs": "^2.1.11"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.1",
+    "grunt-config-dir": "^0.3.2",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-jshint": "^0.6.4",
+    "grunt-contrib-less": "^0.9.0",
+    "grunt-contrib-requirejs": "^0.4.3",
+    "grunt-copy-to": "0.0.10",
+    "grunt-dustjs": "^1.2.0",
+    "grunt-mocha-cli": "^1.5.0",
+    "mocha": "^1.17.0",
+    "supertest": "^0.8.2"
+  }
+}

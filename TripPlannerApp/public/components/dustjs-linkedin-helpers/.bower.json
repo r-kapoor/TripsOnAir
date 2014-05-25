@@ -1,0 +1,15 @@
+{
+  "name": "dustjs-linkedin-helpers",
+  "homepage": "https://github.com/linkedin/dustjs-helpers",
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "f80a22b166369f5168c8a22d2817e6aba79e97ae"
+  },
+  "_source": "git://github.com/linkedin/dustjs-helpers.git",
+  "_target": "1.1.1",
+  "_originalSource": "dustjs-linkedin-helpers",
+  "_direct": true
+}
