@@ -1,3 +1,7 @@
+/**
+ * @author rajat
+ */
+
 $(document).ready(function(){
  
     var counter = 2;
