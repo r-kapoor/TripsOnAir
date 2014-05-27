@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+{>"layouts/global/header" /}
+</head>
+
+<body>
+{>"layouts/master/input1" /}
+</body>
+
+{>"layouts/global/footer" /}
+</html>

@@ -1,0 +1,22 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="js/addDestination.js"></script>
+<script src="js/input2.js"></script>
+
+<div id='TextBoxesGroup'>
+
+	<div id="TextBoxDiv1">
+		<label>Origin : </label><input type='textbox' id='origin' >
+	</div>
+	
+	<div id="TextBoxDiv1">
+		<label>Destination #1 : </label><input type='textbox' id='textbox1' >
+	</div>
+</div>
+<button id='submit'>Submit</button>
+<input type='button' value='Add a destination' id='addButton'>
+<input type='button' value='Remove destination' id='close'>
+<input type='button' value='Get destination value' id='getButtonValue'>
+ </br>
+ <a href="javascript:void()">Or Let us choose your destinations</a>
+ 
+<div id="input2"></div>
