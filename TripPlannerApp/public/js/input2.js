@@ -4,6 +4,7 @@
 
 $(document).ready(function(){
 	var count = 1;
+	var csrf = {_csrf};
 	
 	$("#submit").click(function () {
 		 
@@ -15,10 +16,12 @@ $(document).ready(function(){
 		 var input2Div = $(document.createElement('div'))
 	     .attr("id", 'input');
  
-		 input2Div.after().html('<form action="">'
+		 input2Div.after().html('<form method="POST" action="places">'
 				 +'Tell us Your Taste</br>'
 				 +'<input type="checkbox" name="placetype" value="adventure">Adventure<br>'
-				 +'<input type="checkbox" name="placetype" value="religious">Religious' 
+				 +'<input type="checkbox" name="placetype" value="religious">Religious'
+				 +'<input type="visible" name="_csrf" value="'+csrf+'">'
+                 +'<input type="submit" value="Save">'
 				 +'</select>'
 				 +'</form>'
 				 +'<form action="">'+ 'Tell us where your Budget lies'

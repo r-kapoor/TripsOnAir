@@ -17,7 +17,8 @@
     "less": "^1.6.1",
     "makara": "^0.3.4",
     "nconf": "^0.6.8",
-    "requirejs": "^2.1.11"
+    "requirejs": "^2.1.11",
+    "mysql":"^2.3.1"	
   },
   "devDependencies": {
     "grunt": "^0.4.1",
@@ -30,6 +31,7 @@
     "grunt-dustjs": "^1.2.0",
     "grunt-mocha-cli": "^1.5.0",
     "mocha": "^1.17.0",
-    "supertest": "^0.8.2"
+    "supertest": "^0.8.2",
+    "mysql":"^2.3.1"
   }
 }

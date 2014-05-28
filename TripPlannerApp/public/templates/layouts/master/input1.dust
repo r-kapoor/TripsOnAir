@@ -17,6 +17,5 @@
 <input type='button' value='Remove destination' id='close'>
 <input type='button' value='Get destination value' id='getButtonValue'>
  </br>
- <a href="javascript:void()">Or Let us choose your destinations</a>
- 
+ <a id='test'>Or Let us choose your destinations</a>
 <div id="input2"></div>
