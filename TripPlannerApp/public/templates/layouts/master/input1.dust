@@ -1,6 +1,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/addDestination.js"></script>
 <script src="js/input2.js"></script>
+<script> var csrf_token = '{_csrf}'; </script>
 
 <div id='TextBoxesGroup'>
 

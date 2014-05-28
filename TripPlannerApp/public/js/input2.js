@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 	var count = 1;
-	var csrf = {_csrf};
+	//var csrf = {_csrf};
 	
 	$("#submit").click(function () {
 		 
@@ -17,10 +17,10 @@ $(document).ready(function(){
 	     .attr("id", 'input');
  
 		 input2Div.after().html('<form method="POST" action="places">'
-				 +'Tell us Your Taste</br>'
+				 +'Tell us Your Taste<br>'
 				 +'<input type="checkbox" name="placetype" value="adventure">Adventure<br>'
 				 +'<input type="checkbox" name="placetype" value="religious">Religious'
-				 +'<input type="visible" name="_csrf" value="'+csrf+'">'
+				 +'<input type="visible" name="_csrf" value="'+csrf_token+'">'
                  +'<input type="submit" value="Save">'
 				 +'</select>'
 				 +'</form>'
