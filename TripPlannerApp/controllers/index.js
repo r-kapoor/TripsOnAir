@@ -15,8 +15,8 @@ module.exports = function (app) {
         
     });
 
-    /*app.get('/test',function(req,res){
-    	res.render('index',model);
+    app.get('/test',function(req,res){
+    	res.render('test',model);
     	console.log("testing");
-    });*/
+    });
 };

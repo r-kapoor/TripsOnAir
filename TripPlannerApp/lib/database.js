@@ -1,6 +1,9 @@
 /**
  * @author rajat
  */
+
+function conn()
+{
 var mysql = require('mysql');
  
 var connection = mysql.createConnection(
@@ -12,8 +15,12 @@ var connection = mysql.createConnection(
       database : 'Holiday',
     }
 );
- 
-connection.connect();
+
+return connection;
+}
+module.exports.conn = conn;
+
+/*conn.connect();
 
 var queryString = 'SELECT * FROM Places';
 
@@ -29,4 +36,4 @@ connection.query(queryString, function(err, rows, fields) {
     }
 });
  
-connection.end();
+connection.end();*/
