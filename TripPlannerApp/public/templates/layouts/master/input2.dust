@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+
+<h3>Tell us Your Taste</h3>
+<form method="POST" action="places">
+<input type="checkbox" name="placetype" value="adventure">Adventure
+<input type="checkbox" name="placetype" value="religious">Religious
+<input type="checkbox" name="placetype" value="hill_station">Hill Station
+<input type="checkbox" name="placetype" value="romantic">Romantic
+<input type="checkbox" name="placetype" value="wild_life">Wild Life
+<input type="checkbox" name="placetype" value="beaches">Beaches
+<input type="checkbox" name="placetype" value="historic">Historical Places
+</form>
+</br>
+<form action=""> Tell us where your Budget lies
+<select name="budget">
+<option value="five">0-5000</option>
+<option value="ten">5000-10000</option>
+<option value="thirty">10000-30000</option>
+<option value="fifty">30000-50000</option>
+<option value="high">more than 50000</option>
+</select>
+</br>
+</br>
+<input type="hidden" name="_csrf" value={_csrf}">
+<input type="submit" value="submit">
+</form>
+
+
+</body>
+</html>

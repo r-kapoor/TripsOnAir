@@ -1,0 +1,50 @@
+<style type="text/css">
+.bs-example{
+	font-family: sans-serif;
+	position: relative;
+	margin: 100px;
+}
+.typeahead, .tt-query, .tt-hint {
+	border: 2px solid #CCCCCC;
+	border-radius: 8px;
+	font-size: 12px;
+	height: 15px;
+	line-height: 15px;
+	outline: medium none;
+	padding: 8px 12px;
+	width: 200px;
+}
+.typeahead {
+	background-color: #FFFFFF;
+}
+.typeahead:focus {
+	border: 2px solid #0097CF;
+}
+.tt-query {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+	color: #999999;
+}
+.tt-dropdown-menu {
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	margin-top: 12px;
+	padding: 8px 0;
+	width: 222px;
+}
+.tt-suggestion {
+	font-size: 12px;
+	line-height: 12px;
+	padding: 3px 20px;
+}
+.tt-suggestion.tt-is-under-cursor {
+	background-color: #0097CF;
+	color: #FFFFFF;
+}
+.tt-suggestion p {
+	margin: 0;
+}
+</style>

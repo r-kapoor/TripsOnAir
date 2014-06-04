@@ -1,22 +1,52 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/addDestination.js"></script>
 <script src="js/input2.js"></script>
+<script src="js/distCal.js"></script>
 <script> var csrf_token = '{_csrf}'; </script>
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script  type="text/javascript" src="../js/typeahead.min.js"></script>
+<link rel="stylesheet" href="css/input1.css"/>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
+<script type="text/javascript">
+$(document).ready(function(){
+	$('input.typeahead').typeahead({
+		name: 'origin',
+		local: ['Ahmedabad', 'Bangalore', 'Chennai', 'Chandigarh', 'New Delhi NCR', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai']
+	});
+});  
+</script>
+
+<script>
+  $(function() {
+    $( "#startdate,#enddate" ).datepicker();
+  });
+  </script>
+
+<body onload="initialize()">   
 <div id='TextBoxesGroup'>
-
+<table>
+<tr>
 	<div id="TextBoxDiv1">
-		<label>Origin : </label><input type='textbox' id='origin' >
+		<td ><label>Origin : </label></td>
+		<td><input type='text' class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>
+		
 	</div>
-	
+</tr>
+<tr>	
 	<div id="TextBoxDiv1">
-		<label>Destination #1 : </label><input type='textbox' id='textbox1' >
+		<td><label>Destination #1 : </label></td>
+		<td><input type='text' class="typeahead tt-query" id='textbox1' onchange="calcRoute()"></td>
 	</div>
+</tr>
+</table>
 </div>
-<button id='submit'>Submit</button>
 <input type='button' value='Add a destination' id='addButton'>
 <input type='button' value='Remove destination' id='close'>
-<input type='button' value='Get destination value' id='getButtonValue'>
- </br>
- <a id='test'>Or Let us choose your destinations</a>
+
+<p>Start Date: <input type="text" id="startdate">End Date: <input type="text" id="enddate" onchange="setRanges()"></p>
 <div id="input2"></div>
+</body>
