@@ -17,7 +17,7 @@ $(document).ready(function(){
 	     .attr("id", 'TextBoxDiv' + counter);
  
 	newTextBoxDiv.after().html('<label>Destination #'+ counter + ' : </label>' +
-	      '<input type="text" name="textbox' + counter + 
+	      '<input type="text" class="typeahead tt-query" name="textbox' + counter + 
 	      '" id="textbox' + counter + '" value="" >');
  
 	newTextBoxDiv.appendTo("#TextBoxesGroup");

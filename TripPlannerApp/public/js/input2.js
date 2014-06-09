@@ -2,7 +2,41 @@
  * @author rajat
  */
 
-$(document).ready(function(){
+function createQueryString(){
+	var origin = document.getElementById("origin").value;
+	var destination = document.getElementById("textbox1").value;
+	var query="origin="+origin+"&"+"destination="+destination;
+	return query;
+}
+
+function setRanges(){
+
+	var query = createQueryString();
+	var xmlhttp;
+	
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+		  console.log("in ready state");
+		  document.getElementById("input2").innerHTML=xmlhttp.responseText;
+	    }
+	  }
+		xmlhttp.open("GET","/range?"+query,true);
+		xmlhttp.send();
+};
+
+
+/*$(document).ready(function(){
 	var count = 1;
 	//var csrf = {_csrf};
 	
@@ -37,4 +71,4 @@ $(document).ready(function(){
 		 input2Div.appendTo("#input2");
 			count++;
 	 });
-});
+});*/
