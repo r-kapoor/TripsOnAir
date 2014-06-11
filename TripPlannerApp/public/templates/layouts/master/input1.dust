@@ -26,24 +26,29 @@ $(document).ready(function(){
  
  
 <div id = 'invalid'></div> 
+
 <div id='TextBoxesGroup'>
-<table>
-<tr>
+<table id="inptable">
 	<div id="TextBoxDiv1">
-		<td ><label>Origin : </label></td>
-		<td><input type='text' class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>
-		
+		<tr>	
+			<td ><label>Origin : </label></td>
+			<td><input type='text' value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>	
+		</tr>
 	</div>
-</tr>
-<tr>	
+	
 	<div id="TextBoxDiv1">
-		<td><label>Destination #1 : </label></td>
-		<td><input type='text' class="typeahead tt-query" id='textbox1'></td>
+		<tr>
+			<td><label>Destination #1 : </label></td>
+			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
+			<td></td>
+			<td><a id="addButton" href="#" return false;">Add</a></td>
+		</tr>
 	</div>
-</tr>
+
 </table>
 </div>
-<input type='button' value='Add a destination' id='addButton'>
+
+
 <input type='button' value='Remove destination' id='close'>
 
 <p>Start Date: <input type="text" id="startdate">End Date: <input type="text" id="enddate" onchange="geolocation()"></p>
