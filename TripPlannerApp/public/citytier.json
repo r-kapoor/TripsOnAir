@@ -11,6 +11,10 @@
     {
         "city": "Mumbai",
         "tier": "1"
+    },
+    {
+    	"city": "Hyderabad",
+    	"tier": "1"
     }
     ]
 }

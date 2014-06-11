@@ -27,7 +27,8 @@ function geolocation()
 				var destLong=data.results[0].geometry.location.lng;
 				var dist=distance(orgLat,orgLong,destLat,destLong,"K");
 				//alert(dist);
-				var budget =budgetCalc(origin,destination,dist,numofDays);
+				budgetCalc(origin,destination,dist,numofDays,function(budget){
+				console.log("budget "+budget);
 				//var budget = 7000;
 
 				//first make all enable
@@ -58,6 +59,7 @@ function geolocation()
 
 				//display the other inputs
 				document.getElementById("input2").removeAttribute("style");
+				});//end budgetCalc
 			});
 
 		});
@@ -99,7 +101,7 @@ function distance(orgLat, orgLong, destLat, destLong, unit) {
 	//alert(d);
 }
 
-function budgetCalc(origin,destination,dist,numofDays)
+function budgetCalc(origin,destination,dist,numofDays,display)
 {
 	var fare=0;
 	var avgSpeed = 60;//kmph
@@ -110,14 +112,14 @@ function budgetCalc(origin,destination,dist,numofDays)
 
 	if((nFlgtTime*100)/totalTime>=50)
 	{
-		if(dist<2000)
+		if(dist<1500)
 		{
 			fare+=7000;
 		}
 		else
 		{
 			fare+=10000;
-		}		
+		}
 	}
 	else
 	{		
@@ -133,38 +135,40 @@ function budgetCalc(origin,destination,dist,numofDays)
 
 	//Now calculate approx. acco and food fare according to the destination city
 
-	fare = updateFare(destination, fare, function(tier, fare){
+	updateFare(destination, fare,display, function(tier, fare){
+
 		switch(tier){
-		case 1:
+		case "1":
 			fare+=numofDays*1500;
 			break;
-		case 2:
+		case "2":
 			fare+=numofDays*1000;
 			break;
-		case 3:	
+		case "3":	
 			fare+=numofDays*750;
 			break;
 		}
-		console.log(fare);
+		console.log("fare1 "+fare);
 		return fare;
 	});
-	console.log(fare);
-	return fare;
+	//console.log("fare2 "+fare);
+	//return fare;
 }
 
-function updateFare(city, fare, calculateFare)
+function updateFare(city, fare,display, calculateFare)
 {
 	var citytier = $.getJSON( "citytier.json");
 	citytier.done(function(data) {
 		console.log( "second success" );
 		console.log(data);
 		console.log(city);
-		fare = calculateFare(3, fare);
+		//fare = calculateFare(3, fare);
 		$.each(data.cities, function(key,value) {
 			if(value.city==city) {
-				console.log(value.tier);
+				//console.log("tier"+value.tier);
 				fare = calculateFare(value.tier, fare);
-				returnFare(fare);
+				display(fare);
+				//return(fare);
 			}
 		});
 	});
