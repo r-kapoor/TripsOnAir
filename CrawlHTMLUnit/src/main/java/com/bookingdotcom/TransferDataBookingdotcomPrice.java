@@ -1,12 +1,30 @@
 package com.bookingdotcom;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.security.PrivilegedExceptionAction;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.Ref;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Map;
 
 import GlobalClasses.ConnectMysql;
 
@@ -27,10 +45,11 @@ public class TransferDataBookingdotcomPrice {
 		Boolean cityExists = false, hotelExists = false;
 		Connection conn=ConnectMysql.MySqlConnection();
 		Statement statement = conn.createStatement();
+		Statement statement1 = conn.createStatement();
 
 		System.out.println("Getting the details from object");
 		//Get the data from the data transfer object
-		String source = bookingdotcompriceDto.getSource();
+		//String source = bookingdotcompriceDto.getSource();
 		String city = bookingdotcompriceDto.getCity().replaceAll("'", "''");
 		String country = bookingdotcompriceDto.getCountry().replaceAll("'", "''");
 		String name = bookingdotcompriceDto.getName().replaceAll("'", "''");
@@ -38,9 +57,11 @@ public class TransferDataBookingdotcomPrice {
 		ArrayList<Integer> numberofSubtypesList = bookingdotcompriceDto.getNumberofSubtypes();
 		ArrayList<String> priceList = bookingdotcompriceDto.getPrice();
 		ArrayList<String> conditionsList = bookingdotcompriceDto.getConditions();
-		ArrayList<String> maxCapacityList = bookingdotcompriceDto.getMaxCapacity();
+		ArrayList<Integer> maxCapacityList = bookingdotcompriceDto.getMaxCapacity();
 		String checkinDate = bookingdotcompriceDto.getCheckinDate();
 		String checkoutDate = bookingdotcompriceDto.getCheckoutDate();
+		
+		System.out.println(checkoutDate);
 		
 		
 		int CityID=-1, HotelID=-1;
@@ -115,6 +136,7 @@ public class TransferDataBookingdotcomPrice {
 		int RoomID = -1;
 		int counter = 0;
 		//Getting the hotel rooms for this Hotel
+		System.out.println("SELECT * FROM Hotel_Rooms WHERE HotelID="+HotelID+";");
 		ResultSet getHotelRoomRS = statement.executeQuery("SELECT * FROM Hotel_Rooms WHERE HotelID="+HotelID+";");
 		Iterator<String> roomTypeI = roomTypeList.iterator();
 		Iterator<Integer> numberofSubtypesI = numberofSubtypesList.iterator();
@@ -125,55 +147,104 @@ public class TransferDataBookingdotcomPrice {
 			int numberofSubtypes = numberofSubtypesI.next();
 			roomtypeExists = false;
 			RoomID = -1;
-			ResultSet RSCopy = getHotelRoomRS;
 			//Checking whether the roomtype exists or not
-			while(RSCopy.next())
+			System.out.println("top:"+getHotelRoomRS.isClosed());
+			while(getHotelRoomRS.next())
 			{
-				String roomtypeOld = RSCopy.getString("RoomType");
+				String roomtypeOld = getHotelRoomRS.getString("RoomType");
 				if(roomtypeNew.equals(roomtypeOld))
 				{
-					RoomID = RSCopy.getInt("RoomID");
+					RoomID = getHotelRoomRS.getInt("RoomID");
 					roomtypeExists = true;
 					break;
 				}
 			}
+			System.out.println("top1:"+getHotelRoomRS.isClosed());
+			getHotelRoomRS.beforeFirst();
+			System.out.println("top2:"+getHotelRoomRS.isClosed());
 			//If the roomtype doesn't exist then insert the roomtype
 			if(!roomtypeExists)
 			{
 				//Need to insert the roomtype
-				statement.executeUpdate("INSERT INTO Hotel_Rooms(HotelID, RoomType) VALUES("+HotelID+", '"+roomtypeNew, Statement.RETURN_GENERATED_KEYS);
-				ResultSet rs = statement.getGeneratedKeys();
-				RoomID = rs.getInt("RoomID");
+				System.out.println("INSERT INTO Hotel_Rooms(HotelID, RoomType) VALUES("+HotelID+", '"+roomtypeNew+"');");
+				statement1.executeUpdate("INSERT INTO Hotel_Rooms(HotelID, RoomType) VALUES("+HotelID+", '"+roomtypeNew+"');", Statement.RETURN_GENERATED_KEYS);
+				ResultSet rs = statement1.getGeneratedKeys();
+				RoomID = rs.getInt(1);
 			}
 			//RoomID contains the roomID value
-			//Getting the Hotel Prices for 
-			ResultSet getHotelPriceRS = statement.executeQuery("SELECT * FROM Hotel_Prices WHERE RoomID="+RoomID+" AND CheckInDate='"+checkinDate+"' AND CheckOutDate='"+checkoutDate+"';");
+			//Getting the Hotel Prices for the RoomID and dates
+			System.out.println("SELECT * FROM Hotel_Prices WHERE RoomID="+RoomID+" AND CheckInDate='"+checkinDate+"' AND CheckOutDate='"+checkoutDate+"';");
+			ResultSet getHotelPriceRS = statement1.executeQuery("SELECT * FROM Hotel_Prices WHERE RoomID="+RoomID+" AND CheckInDate='"+checkinDate+"' AND CheckOutDate='"+checkoutDate+"';");
+			//Setting the availability as 0 for it to be updated
+			System.out.println("1");
+			if(getHotelPriceRS.next())
+			{
+				System.out.println("11");
+				System.out.println("UPDATE Hotel_Prices SET Availability = "+0+" WHERE RoomID = "+RoomID+", CheckInDate = '"+checkinDate+"'AND CheckOutDate = '"+checkoutDate+"';");
+				statement1.executeUpdate("UPDATE Hotel_Prices SET Availability = "+0+
+						" WHERE RoomID = "+RoomID+
+						", CheckInDate = '"+checkinDate+
+						"' AND CheckOutDate = '"+checkoutDate+
+						"';");
+				System.out.println("2");
+			}
+			System.out.println(getHotelPriceRS.isClosed());
+			getHotelPriceRS.beforeFirst();
+			System.out.println(getHotelPriceRS.isClosed());
+			System.out.println(numberofSubtypes);
+			//Iterating through the different types for the same roomID
 			for(int i=0;i<numberofSubtypes;i++)
 			{
-				String conditionsNew = conditionsList.get(counter+i);
-				String maxCapacityNew = maxCapacityList.get(counter+i);
+				//Getting the conditions, maxcapacity, availability and price
+				System.out.println("3");
+				String conditionsNew = conditionsList.get(counter+i).toUpperCase();
+				int maxCapacityNew = maxCapacityList.get(counter+i);
 				String priceText = priceList.get(counter+i);
 				int availabilityNew = extractAvailability(priceText);
 				int priceNew = extractPrice(priceText);
-				ResultSet RSCopy1 = getHotelPriceRS;
-				while(RSCopy1.next())
+				boolean insertnew = true;
+				System.out.println("4");
+				while(getHotelPriceRS.next())
 				{
-					String conditionsOld = RSCopy1.getString("Conditions");
-					String maxCapacityOld = RSCopy1.getString("MaxCapacity");
-					if(conditionsOld.equals(conditionsNew)&&maxCapacityOld.equals(maxCapacityNew))
+					String conditionsOld = getHotelPriceRS.getString("Conditions");
+					int maxCapacityOld = getHotelPriceRS.getInt("MaxCapacity");
+					if(conditionsOld.equals(conditionsNew)&&maxCapacityOld==maxCapacityNew)
 					{
-						boolean update = false;
-						int priceOld = RSCopy1.getInt("Price");
-						int availabilityOld = RSCopy1.getInt("Availability");
+						insertnew = false;
+						int priceOld = getHotelPriceRS.getInt("Price");
+						int availabilityOld = getHotelPriceRS.getInt("Availability");
 						if(priceNew!=priceOld||availabilityNew!=availabilityOld)
 						{
-							update = true;
+							System.out.println("UPDATE Hotel_Prices SET Price ="+priceNew+", Availability = "+availabilityNew+
+									" WHERE RoomID = "+RoomID+
+									", CheckInDate = '"+checkinDate+
+									"', CheckOutDate = '"+checkoutDate+
+									"', Conditions = '"+conditionsNew+
+									"'AND MaxCapacity = "+maxCapacityNew+
+									";");
+							statement1.executeUpdate("UPDATE Hotel_Prices SET Price ="+priceNew+", Availability = "+availabilityNew+
+									" WHERE RoomID = "+RoomID+
+									", CheckInDate = '"+checkinDate+
+									"', CheckOutDate = '"+checkoutDate+
+									"', Conditions = '"+conditionsNew+
+									"'AND MaxCapacity = "+maxCapacityNew+
+									";");
 						}
 					}
+					System.out.println("5");
 				}
+				getHotelPriceRS.beforeFirst();
+				if(insertnew)
+				{
+					System.out.println("INSERT INTO Hotel_Prices(RoomID, Conditions, MaxCapacity, Availability, Price, CheckInDate, CheckOutDate) VALUES("+RoomID+", '"+conditionsNew+"', "+maxCapacityNew+", "+availabilityNew+", "+priceNew+", '"+checkinDate+"', '"+checkoutDate+"');");
+					statement1.executeUpdate("INSERT INTO Hotel_Prices(RoomID, Conditions, MaxCapacity, Availability, Price, CheckInDate, CheckOutDate) VALUES("+RoomID+", '"+conditionsNew+"', "+maxCapacityNew+", "+availabilityNew+", "+priceNew+", '"+checkinDate+"', '"+checkoutDate+"');");
+				}
+				System.out.println("6");
 			}
-				
+			System.out.println("end");
 		}
+		
+		System.out.println("Hotel Prices Inserted");
 		
 		System.out.println("Insertions Complete");	
 	

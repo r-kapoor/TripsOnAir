@@ -11,7 +11,7 @@ public class BookingdotComPriceDto {
 	private ArrayList<String> roomType;
 	private ArrayList<Integer> numberofSubtypes;
 	private ArrayList<String> conditions;
-	private ArrayList<String> maxCapacity;
+	private ArrayList<Integer> maxCapacity;
 	private ArrayList<String> price;
 	private String checkinDate;
 	private String checkoutDate;
@@ -46,6 +46,12 @@ public class BookingdotComPriceDto {
 	public void setConditions(ArrayList<String> conditions) {
 		this.conditions = conditions;
 	}
+	public ArrayList<Integer> getMaxCapacity() {
+		return maxCapacity;
+	}
+	public void setMaxCapacity(ArrayList<Integer> maxCapacity) {
+		this.maxCapacity = maxCapacity;
+	}
 	public ArrayList<String> getRoomType() {
 		return roomType;
 	}
@@ -57,12 +63,6 @@ public class BookingdotComPriceDto {
 	}
 	public void setNumberofSubtypes(ArrayList<Integer> numberofSubtypes) {
 		this.numberofSubtypes = numberofSubtypes;
-	}
-	public ArrayList<String> getMaxCapacity() {
-		return maxCapacity;
-	}
-	public void setMaxCapacity(ArrayList<String> maxCapacity) {
-		this.maxCapacity = maxCapacity;
 	}
 	public ArrayList<String> getPrice() {
 		return price;

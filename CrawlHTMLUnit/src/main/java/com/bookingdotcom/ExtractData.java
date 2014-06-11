@@ -274,7 +274,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			ArrayList<String> roomTypeList = new ArrayList<String>();
 			ArrayList<Integer> numberofSubtypesList = new ArrayList<Integer>();
 			ArrayList<String> conditionsList = new ArrayList<String>();
-			ArrayList<String> maxCapacityList = new ArrayList<String>();
+			ArrayList<Integer> maxCapacityList = new ArrayList<Integer>();
 			ArrayList<String> priceList = new ArrayList<String>();
 			
 			HtmlPage page=WebClient(url);
@@ -366,7 +366,9 @@ public class ExtractData extends HtmlUnitWebClient{
 				}//end of main while loop	
 			}
 			
-			String source = "bookingdotcom";
+			System.out.println("x");
+			
+			String source = "Bookingdotcom";
 			String city = "New Delhi";
 			String country = "India";
 			String name = "The Leela Palace New Delhi";
@@ -376,16 +378,20 @@ public class ExtractData extends HtmlUnitWebClient{
 			BookingdotComPriceDto bookingdotcompriceDto = new BookingdotComPriceDto();
 			
 			bookingdotcompriceDto.setSource(source);
-			bookingdotcompriceDto.setCity(city);
-			bookingdotcompriceDto.setCountry(country);
-			bookingdotcompriceDto.setName(name);
+			bookingdotcompriceDto.setCity(city.toUpperCase());
+			bookingdotcompriceDto.setCountry(country.toUpperCase());
+			bookingdotcompriceDto.setName(name.toUpperCase());
 			bookingdotcompriceDto.setRoomType(roomTypeList);
 			bookingdotcompriceDto.setNumberofSubtypes(numberofSubtypesList);
 			bookingdotcompriceDto.setPrice(priceList);
 			bookingdotcompriceDto.setConditions(conditionsList);
 			bookingdotcompriceDto.setMaxCapacity(maxCapacityList);
 			bookingdotcompriceDto.setCheckinDate(checkinDate);
-			bookingdotcompriceDto.setCheckinDate(checkoutDate);
+			bookingdotcompriceDto.setCheckoutDate(checkoutDate);
+			
+			System.out.println(checkoutDate);
+			
+			TransferDataBookingdotcomPrice.transferData(bookingdotcompriceDto);
 			
 		}
 		catch(Exception e)
