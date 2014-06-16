@@ -1,7 +1,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/addDestination.js"></script>
 <script src="js/algo1.js"></script>
-<script> var csrf_token = '{_csrf}'; </script>
+<script src="js/suggestDestination.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -23,34 +23,70 @@ $(document).ready(function(){
     $( "#startdate,#enddate" ).datepicker();
   });
   </script>
- 
+
+<script>
+	function choose()
+	{
+		if(document.getElementById("textbox1").disabled)
+		{
+			document.getElementById("textbox1").disabled=false;
+		}
+		
+		else
+		{
+			document.getElementById("textbox1").disabled=true;
+		}
+	}
+</script> 
  
 <div id = 'invalid'></div> 
 
-<div id='TextBoxesGroup'>
-<table id="inptable">
-	<div id="TextBoxDiv1">
-		<tr>	
+<table id="inptable1">
+		<tr id="TextBoxDiv">	
 			<td ><label>Origin : </label></td>
 			<td><input type='text' value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>	
 		</tr>
-	</div>
-	
-	<div id="TextBoxDiv1">
-		<tr>
+		<tr id="TextBoxDiv1">
 			<td><label>Destination #1 : </label></td>
 			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
 			<td></td>
-			<td><a id="addButton" href="#" return false;">Add</a></td>
+			<td><div id="addButton" style="cursor:pointer" >Add</div></td>
 		</tr>
-	</div>
-
+		<tr id="TextBoxDiv2" style="display: none">
+			<td><label>Destination #2 : </label></td>
+			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
+			<td></td>
+			<td><div id="close" style="cursor:pointer">Remove</div></td>
+		</tr>
+		<tr id="TextBoxDiv3" style="display: none">
+			<td><label>Destination #3 : </label></td>
+			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
+			<td></td>
+			<td><div id="close1" style="cursor:pointer" >Remove</div></td>
+		</tr>
+		<tr id="TextBoxDiv4" style="display: none">
+			<td><label>Destination #4 : </label></td>
+			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
+			<td></td>
+			<td><div id="close2" style="cursor:pointer" >Remove</div></td>
+		</tr>
+		<tr id="TextBoxDiv5" style="display: none">
+			<td><label>Destination #5 : </label></td>
+			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
+			<td></td>
+			<td><div id="close3" style="cursor:pointer" >Remove</div></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+			<form>
+			<input type="checkbox" name="" value="" onclick="choose()"> OR Let us choose your destinations<br>
+			</form></td>
+		</tr>
 </table>
-</div>
-
-
-<input type='button' value='Remove destination' id='close'>
 
 <p>Start Date: <input type="text" id="startdate">End Date: <input type="text" id="enddate" onchange="geolocation()"></p>
 
 {>"layouts/master/input2" /}
+
+<div id="suggestedDest"></div>

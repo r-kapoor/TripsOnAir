@@ -10,8 +10,10 @@ function geolocation()
 	var destination=document.getElementById("textbox1").value;
 	var startDate=document.getElementById("startdate").value;
 	var endDate=document.getElementById("enddate").value;
-
-	if((origin!="")&&(destination!="")&&(startDate!="")&&(endDate!=""))
+	var bool=document.getElementById("textbox1").disabled;
+	//console.log(bool);
+	
+	if((origin!="")&&(startDate!="")&&(endDate!="")&&(destination!="")&&(!bool)&&(origin!="Enter a city")&&(destination!="Enter a city"))
 	{
 		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true";
 		var destinationLocation ="http://maps.googleapis.com/maps/api/geocode/json?address="+destination+"&sensor=true"; 
@@ -32,9 +34,9 @@ function geolocation()
 				//var budget = 7000;
 
 				//first make all enable
-				document.getElementById("range").options[1].enabled=true;
-				document.getElementById("range").options[2].enabled=true;
-				document.getElementById("range").options[3].enabled=true;
+				document.getElementById("range").options[1].disabled=false;
+				document.getElementById("range").options[2].disabled=false;
+				document.getElementById("range").options[3].disabled=false;
 
 
 				if(budget<5000)
@@ -57,6 +59,10 @@ function geolocation()
 					document.getElementById("range").options[3].disabled=true;
 				}
 
+				if(bool)
+				{
+					
+				}
 				//display the other inputs
 				document.getElementById("input2").removeAttribute("style");
 				});//end budgetCalc
@@ -64,6 +70,15 @@ function geolocation()
 
 		});
 	}
+	else if((origin!="")&&(startDate!="")&&(endDate!="")&&(bool)&&(origin!="Enter a city"))
+	{
+		// $('#inp2form').attr('action', 'test');
+		//$('#inp2form').removeAttr( "action" );
+		//$('#inp2form').attr('onsubmit', 'suggestDest()');
+		document.getElementById("input2").removeAttribute("style");
+		//console.log("testing");
+	}
+	
 	else
 	{
 		document.getElementById("invalid").innerHTML ="Please enter valid inputs";
