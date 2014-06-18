@@ -9,16 +9,16 @@
 <div id="input2" style="display: none">
 <h3>Tell us Your Taste</h3>
 <form id="inp2form" method="POST" action="places">
-<form id="category">
-<input type="checkbox" name="placetype" value="adventure">Adventure
-<input type="checkbox" name="placetype" value="religious">Religious
-<input type="checkbox" name="placetype" value="hill_station">Hill Station
-<input type="checkbox" name="placetype" value="romantic">Romantic
-<input type="checkbox" name="placetype" value="wild_life">Wild Life
-<input type="checkbox" name="placetype" value="beaches">Beaches
-<input type="checkbox" name="placetype" value="historic">Historical Places
-</br>
+<form>
+<input type="checkbox" name="category" value="ADVENTURE">Adventure
+<input type="checkbox" name="category" value="RELIGIOUS">Religious
+<input type="checkbox" name="category" value="HILL STATION">Hill Station
+<input type="checkbox" name="category" value="ROMANTIC">Romantic
+<input type="checkbox" name="category" value="WILD LIFE">Wild Life
+<input type="checkbox" name="category" value="BEACHES">Beaches
+<input type="checkbox" name="category" value="HISTORICAL PLACES">Historical Places
 </form>
+</br>
 
 <h3>Tell us your Budget</h3>
 <form>

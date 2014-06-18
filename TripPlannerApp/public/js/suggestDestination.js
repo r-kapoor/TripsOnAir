@@ -12,12 +12,12 @@ function createQueryString(){
 	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24); 
 	//var taste = document.getElementById().value;
 	var budget = document.getElementById("range").value;
-	var tastes = document.getElementById("category");
+	var tastes = document.getElementsByName('category');
 	var userTastes = "";
 	for (var i=0, n=tastes.length;i<n;i++) {
 	  if (tastes[i].checked) 
 	  {
-		 userTastes += ","+tastes[i].value;
+		 userTastes += tastes[i].value+",";
 	  }
 	}
 	//if (val) val = val.substring(1);
