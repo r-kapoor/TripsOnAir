@@ -10,19 +10,17 @@ function createQueryString(){
 	var startDate = document.getElementById("startdate").value;
 	var endDate = document.getElementById("enddate").value;
 	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24); 
-	//var taste = document.getElementById().value;
 	var budget = document.getElementById("range").value;
 	var tastes = document.getElementsByName('category');
-	var userTastes = "";
+	var userTastes=[];var j=0;
 	for (var i=0, n=tastes.length;i<n;i++) {
 	  if (tastes[i].checked) 
 	  {
-		 userTastes += tastes[i].value+",";
+		 userTastes[j] = tastes[i].value;
+		 j++;
 	  }
 	}
-	//if (val) val = val.substring(1);
 	var query="origin="+origin+"&"+"numDays="+numDays+"&"+"taste="+userTastes+"&"+"budget="+budget;
-	console.log("test "+query);
 	return query;
 }
 

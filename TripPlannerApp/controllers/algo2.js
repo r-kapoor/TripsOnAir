@@ -14,19 +14,13 @@ module.exports=function (app){
 		var numDays = req.param('numDays');
 		var taste = req.param('taste');
 		var budget = req.param('budget');
-		console.log("origin "+origin);
-		console.log("numDays "+numDays);
-		console.log("taste "+taste);
-		console.log("budget "+budget);
-		
+
 		/**
 		 * write algo 2
 		 */
-
-		var category = 'HILL STATION';
 		var start = 0;
-		var batchsize = 50;
-		getCity.getCityList(conn, category, start, batchsize);		
+		var batchsize = 30;
+		getCity.getCityList(conn, taste, start, batchsize);		
 		
 		model.layout = 'test';
 		res.render('index', model);
