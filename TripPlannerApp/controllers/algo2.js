@@ -2,6 +2,7 @@
 
 var conn = require('../lib/database');
 var IndexModel = require('../models/index');
+var getCity = require('../lib/getCities');
 
 module.exports=function (app){
 
@@ -22,6 +23,11 @@ module.exports=function (app){
 		 * write algo 2
 		 */
 
+		var category = 'HILL STATION';
+		var start = 0;
+		var batchsize = 50;
+		getCity.getCityList(conn, category, start, batchsize);		
+		
 		model.layout = 'test';
 		res.render('index', model);
 		//console.log("testing"+test);
