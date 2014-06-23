@@ -26,7 +26,7 @@ function createQueryString(){
 
 function suggestDest()
 {
-	console.log("In suggest");
+	//console.log("In suggest");
 	var xmlhttp;
 	var query = createQueryString();
 

@@ -1,0 +1,12 @@
+<div>
+
+            <ul>
+                {#cityList}
+                    <li>
+                            <h3>{.CityName}</h3>
+                    </li>
+                {:else}
+                    <li>There are no possible destination</li>
+                {/cityList}
+            </ul>
+        </div>

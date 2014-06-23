@@ -3,6 +3,7 @@
 var conn = require('../lib/database');
 var IndexModel = require('../models/index');
 var getCity = require('../lib/getCities');
+var getRange= require('../lib/getRange');
 
 module.exports=function (app){
 
@@ -15,16 +16,19 @@ module.exports=function (app){
 		var taste = req.param('taste');
 		var budget = req.param('budget');
 
-		/**
-		 * write algo 2
-		 */
+		getRange.getRange(budget,numDays,function(range){
+		//console.log("range "+range);
 		var start = 0;
-		var batchsize = 30;
-		getCity.getCityList(conn, taste, start, batchsize);		
-		
-		model.layout = 'test';
-		res.render('index', model);
-		//console.log("testing"+test);
+		var batchsize = 10;
+		getCity.getCityList(conn,origin,taste,range, start, batchsize,function(city){
 
+		 var model =
+          {
+              cityList: city
+          };
+
+		res.render('city', model);
+			});
+		});
 	});
 }

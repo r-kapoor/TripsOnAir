@@ -18,16 +18,18 @@ function geolocation()
 		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true";
 		var destinationLocation ="http://maps.googleapis.com/maps/api/geocode/json?address="+destination+"&sensor=true"; 
 		var diff = Math.abs(new Date(endDate)-new Date(startDate));
-		var numofDays=diff/(1000*60*60*24)+1;//+1 for including end date
+		var numofDays=diff/(1000*60*60*24);
 
 		$.getJSON(originLocation, function(data){
 			var orgLat = data.results[0].geometry.location.lat;
 			var orgLong =data.results[0].geometry.location.lng;
-
+			//console.log(orgLat,orgLong);
+			
 			$.getJSON(destinationLocation, function(data){
 				var destLat= data.results[0].geometry.location.lat;
 				var destLong=data.results[0].geometry.location.lng;
 				var dist=distance(orgLat,orgLong,destLat,destLong,"K");
+				console.log("dist "+dist);
 				//alert(dist);
 				budgetCalc(origin,destination,dist,numofDays,function(budget){
 				console.log("budget "+budget);
