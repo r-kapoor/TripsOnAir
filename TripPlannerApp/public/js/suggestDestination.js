@@ -68,3 +68,49 @@ function suggestDest()
 		xmlhttp.open("GET","/suggestDest?"+query,true);
 		xmlhttp.send();
 }
+
+
+function suggestGroups()
+{
+	var xmlhttp;
+	var query = createQueryString();
+	var Sender = window.event.srcElement;
+	if(Sender.id=="dest")
+	{
+		query=query+"&next=0";
+	}
+	else
+	{
+		query=query+"&next=1";
+	}
+
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
+	    {
+		  if(Sender.id=="dest"){ 
+			  	//var scrollDown = document.createElement('script');
+			  	//scrollDown.setAttribute('src','js/scroll.js');
+			  	//document.head.appendChild(scrollDown);
+			  	document.getElementById("suggestedDest").innerHTML=xmlhttp.responseText;
+		   }
+		  else
+			  {
+			  	var div = document.createElement('div');
+			  	div.innerHTML=xmlhttp.responseText;
+			  	document.getElementById("suggestGroup").appendChild(div);
+			  }
+	    }
+	  }
+		xmlhttp.open("GET","/suggestGroups",true);
+		xmlhttp.send();
+}

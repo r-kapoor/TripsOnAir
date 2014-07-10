@@ -1,9 +1,9 @@
-	<div> 
+	<div>
             <ul>
-                {#CityList}
+                {#GroupList}
                     <li>
                             <h3>{.Name}</h3>
                     </li>
-                {/CityList}
+                {/GroupList}
             </ul>
      </div>

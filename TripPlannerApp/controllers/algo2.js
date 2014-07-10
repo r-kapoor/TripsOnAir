@@ -3,6 +3,7 @@
 var conn = require('../lib/database');
 var IndexModel = require('../models/index');
 var getCity = require('../lib/getCities');
+var getGroup = require('../lib/getGroups');
 var getRange= require('../lib/getRange');
 
 module.exports=function (app){
@@ -30,15 +31,30 @@ module.exports=function (app){
 		//console.log("range "+range);
 		var start = req.session.start;
 		var batchsize = 5;
-		getCity.getCityList(conn,origin,taste,range, start, batchsize,function(city){
-
+		getCity.getCityList(conn,origin,taste,range, start, batchsize,function(City){
+		console.log("in city list");		
 		 var model =
           {
-              cityList: city
+              CityList: City
           };
 
 		res.render('city', model);
 			});
+
+	
 		});
+	});
+	
+	app.get('/suggestGroups',function(req,res)
+	{
+		
+		getGroup.getGroupList(conn,function(Group){
+		var model =
+	      {
+			 GroupList: Group
+	      };
+
+			res.render('group', model);
+				});
 	});
 }

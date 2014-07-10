@@ -14,7 +14,7 @@
 $(document).ready(function(){
 	$('input.typeahead').typeahead({
 		name: 'origin',
-		local: ['Ahmedabad', 'Bangalore', 'Chennai', 'Chandigarh', 'New Delhi', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai']
+		local: ['Ahmedabad', 'Bangalore','Goa','Chennai', 'Chandigarh', 'New Delhi', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai','Katra','Patnitop','Jammu','Phalagam','Srinagar','Dharamshala','Haridwar','Rishikesh','Gulmarg','Dalhousie','Amritsar','Leh','Manali','Kargil']
 	});
 });  
 </script>
@@ -42,7 +42,7 @@ $(document).ready(function(){
  
 <div id = 'invalid'></div> 
 
-<table id="inptable1">
+<table id="inptable">
 		<tr id="TextBoxDiv">	
 			<td ><label>Origin : </label></td>
 			<td><input type='text' value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>	
@@ -53,30 +53,7 @@ $(document).ready(function(){
 			<td></td>
 			<td><div id="addButton" style="cursor:pointer" >Add</div></td>
 		</tr>
-		<tr id="TextBoxDiv2" style="display: none">
-			<td><label>Destination #2 : </label></td>
-			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
-			<td></td>
-			<td><div id="close" style="cursor:pointer">Remove</div></td>
-		</tr>
-		<tr id="TextBoxDiv3" style="display: none">
-			<td><label>Destination #3 : </label></td>
-			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
-			<td></td>
-			<td><div id="close1" style="cursor:pointer" >Remove</div></td>
-		</tr>
-		<tr id="TextBoxDiv4" style="display: none">
-			<td><label>Destination #4 : </label></td>
-			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
-			<td></td>
-			<td><div id="close2" style="cursor:pointer" >Remove</div></td>
-		</tr>
-		<tr id="TextBoxDiv5" style="display: none">
-			<td><label>Destination #5 : </label></td>
-			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
-			<td></td>
-			<td><div id="close3" style="cursor:pointer" >Remove</div></td>
-		</tr>
+
 		<tr>
 			<td></td>
 			<td>
@@ -91,3 +68,4 @@ $(document).ready(function(){
 {>"layouts/master/input2" /}
 
 <div id="suggestedDest"></div>
+<div id="suggestGroup"><div>

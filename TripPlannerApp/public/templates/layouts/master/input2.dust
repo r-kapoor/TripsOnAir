@@ -35,7 +35,7 @@
 <!--<input type="submit" value="submit">-->
 </form>
 </form>
-<button id="dest" type="button" onclick="suggestDest()">submit</button>
+<button id="dest" type="button" onclick="suggestDest();suggestGroups();">submit</button>
 </div>
 
 </body>

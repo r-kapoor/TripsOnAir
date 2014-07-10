@@ -55,7 +55,21 @@ $(document).ready(function(){
 									+ '</tr>'
 									+ '</div>'
 									+'</table>');*/
-	document.getElementById("TextBoxDiv"+counter).removeAttribute("style");					
+	
+	/*var table = document.getElementById("inptable");
+	
+	// Create an empty <tr> element and add it to the 1st position of the table:
+	var row = table.insertRow(counter);
+
+	// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+
+	// Add some text to the new cells:
+	cell1.innerHTML = "<label>Destination #2 : </label>";
+	cell2.innerHTML = '<input type="text" class="typeahead tt-query" id="textbox">';*/
+	
+	//document.getElementById("TextBoxDiv"+counter).removeAttribute("style");					
 		counter++;
      });
  
