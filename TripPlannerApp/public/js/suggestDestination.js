@@ -4,7 +4,6 @@
  * frontend interact with backend using ajax call
  */
 
-
 function createQueryString(){
 	var origin = document.getElementById("origin").value;
 	var startDate = document.getElementById("startdate").value;
@@ -51,24 +50,20 @@ function suggestDest()
 	  {
 	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
 	    {
-		  if(Sender.id=="dest"){ 
+			  if(Sender.id=="dest"){
 			  	var scrollDown = document.createElement('script');
 			  	scrollDown.setAttribute('src','js/scroll.js');
 			  	document.head.appendChild(scrollDown);
-			  	document.getElementById("suggestedDest").innerHTML=xmlhttp.responseText;
-		   }
-		  else
-			  {
-			  	var div = document.createElement('div');
-			  	div.innerHTML=xmlhttp.responseText;
-			  	document.getElementById("suggestedDest").appendChild(div);
-			  }
+			  	//document.getElementById("suggestedDest").innerHTML="";
+			  }  	
+			  var div = document.createElement('div');
+			  div.innerHTML=xmlhttp.responseText;
+			  document.getElementById("suggestedDest").appendChild(div);
 	    }
 	  }
 		xmlhttp.open("GET","/suggestDest?"+query,true);
 		xmlhttp.send();
 }
-
 
 function suggestGroups()
 {
@@ -97,18 +92,15 @@ function suggestGroups()
 	  {
 	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
 	    {
-		  if(Sender.id=="dest"){ 
-			  	//var scrollDown = document.createElement('script');
-			  	//scrollDown.setAttribute('src','js/scroll.js');
-			  	//document.head.appendChild(scrollDown);
-			  	document.getElementById("suggestedDest").innerHTML=xmlhttp.responseText;
-		   }
-		  else
-			  {
-			  	var div = document.createElement('div');
-			  	div.innerHTML=xmlhttp.responseText;
-			  	document.getElementById("suggestGroup").appendChild(div);
-			  }
+		  if(Sender.id=="dest"){
+			  	var scrollDown = document.createElement('script');
+			  	scrollDown.setAttribute('src','js/scroll.js');
+			  	document.head.appendChild(scrollDown);
+			  	//document.getElementById("suggestedDest").innerHTML="";
+			  }  	
+			  var div = document.createElement('div');
+			  div.innerHTML=xmlhttp.responseText;
+			  document.getElementById("suggestedDest").appendChild(div);
 	    }
 	  }
 		xmlhttp.open("GET","/suggestGroups",true);

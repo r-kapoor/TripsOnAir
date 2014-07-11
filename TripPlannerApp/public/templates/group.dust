@@ -2,7 +2,7 @@
             <ul>
                 {#GroupList}
                     <li>
-                            <h3>{.Name}</h3>
+                            <h3>{.GroupName}</h3>
                     </li>
                 {/GroupList}
             </ul>
