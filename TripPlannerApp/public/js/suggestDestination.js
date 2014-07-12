@@ -4,6 +4,7 @@
  * frontend interact with backend using ajax call
  */
 
+
 function createQueryString(){
 	var origin = document.getElementById("origin").value;
 	var startDate = document.getElementById("startdate").value;
@@ -55,10 +56,12 @@ function suggestDest()
 			  	scrollDown.setAttribute('src','js/scroll.js');
 			  	document.head.appendChild(scrollDown);
 			  	//document.getElementById("suggestedDest").innerHTML="";
-			  }  	
+			  }
 			  var div = document.createElement('div');
 			  div.innerHTML=xmlhttp.responseText;
 			  document.getElementById("suggestedDest").appendChild(div);
+			  $(window).data('ajaxready', true);
+			 //console.log("test "+ document.getElementById("suggestedDest").appendChild(div));
 	    }
 	  }
 		xmlhttp.open("GET","/suggestDest?"+query,true);
