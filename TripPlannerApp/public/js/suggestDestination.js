@@ -55,14 +55,29 @@ function suggestDest()
 			  	scrollDown.setAttribute('src','js/scroll.js');
 			  	document.head.appendChild(scrollDown);
 			  	//document.getElementById("suggestedDest").innerHTML="";
-			  }  	
-			  var div = document.createElement('div');
-			  div.innerHTML=xmlhttp.responseText;
-			  document.getElementById("suggestedDest").appendChild(div);
+			  }
+			  
+			  makediv(xmlhttp.responseText,appendResults);
+			  //console.log(div.text);
+			  //alert(div.text);
+			  //document.getElementById("suggestedDest").appendChild(div);
+			  //document.getElementById("suggestedDest").appendChild(document.createElement('div').innerHTML=xmlhttp.responseText);
 	    }
 	  }
 		xmlhttp.open("GET","/suggestDest?"+query,true);
 		xmlhttp.send();
+}
+
+function makediv(response,callback)
+{
+	var div = document.createElement('div');
+	div.innerHTML=response;
+	callback(div);
+}
+
+function appendResults(responseDiv)
+{
+	document.getElementById("suggestedDest").appendChild(responseDiv);
 }
 
 function suggestGroups()
@@ -97,10 +112,11 @@ function suggestGroups()
 			  	scrollDown.setAttribute('src','js/scroll.js');
 			  	document.head.appendChild(scrollDown);
 			  	//document.getElementById("suggestedDest").innerHTML="";
-			  }  	
-			  var div = document.createElement('div');
-			  div.innerHTML=xmlhttp.responseText;
-			  document.getElementById("suggestedDest").appendChild(div);
+			  }
+			  makediv(xmlhttp.responseText,appendResults);
+			  //var div = document.createElement('div');
+			  //div.innerHTML=xmlhttp.responseText;
+			  //document.getElementById("suggestedDest").appendChild(div);
 	    }
 	  }
 		xmlhttp.open("GET","/suggestGroups",true);

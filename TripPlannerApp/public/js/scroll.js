@@ -1,5 +1,6 @@
 $(window).scroll(function () {
         if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-            suggestDest();
+            console.log('Called');
+			suggestDest();
         }
     });
