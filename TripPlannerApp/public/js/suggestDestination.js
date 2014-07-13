@@ -4,6 +4,15 @@
  * frontend interact with backend using ajax call
  */
 
+var batch=0;
+
+function onSubmit(){
+	
+	batch=0;
+	document.getElementById("suggestedDest").innerHTML="";
+	suggestDest();
+	suggestGroups();
+}
 
 function createQueryString(){
 	var origin = document.getElementById("origin").value;
@@ -31,11 +40,13 @@ function suggestDest()
 	var Sender = window.event.srcElement;
 	if(Sender.id=="dest")
 	{
-		query=query+"&next=0";
+		query=query+"&next="+batch;
+		batch+=5;
 	}
 	else
 	{
-		query=query+"&next=1";
+		query=query+"&next="+batch;
+		batch+=5;
 	}
 
 	if (window.XMLHttpRequest)
