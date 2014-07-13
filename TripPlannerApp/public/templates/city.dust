@@ -2,7 +2,7 @@
             <ul>
                 {#CityList}
                     <li>
-                            <h3>{.CityName}</h3>
+                            <h3><div class="destination" id="{.CityName}" style="cursor:pointer" >{.CityName}</div></h3>
                     </li>
                 {/CityList}
             </ul>

@@ -68,8 +68,16 @@ function suggestDest()
 			  	document.head.appendChild(scrollDown);
 			  	//document.getElementById("suggestedDest").innerHTML="";
 			  }
+
+			  //makediv(xmlhttp.responseText,appendResults);
+			  //console.log(div.text);
+			  //alert(div.text);
+			  //document.getElementById("suggestedDest").appendChild(div);
+			  //document.getElementById("suggestedDest").appendChild(document.createElement('div').innerHTML=xmlhttp.responseText);
 			  var div = document.createElement('div');
 			  div.innerHTML=xmlhttp.responseText;
+			  //div.id="destinationAdded";
+			  //div.style="cursor:pointer";
 			  document.getElementById("suggestedDest").appendChild(div);
 			  $(window).data('ajaxready', true);
 			 //console.log("test "+ document.getElementById("suggestedDest").appendChild(div));
@@ -77,6 +85,18 @@ function suggestDest()
 	  }
 		xmlhttp.open("GET","/suggestDest?"+query,true);
 		xmlhttp.send();
+}
+
+function makediv(response,callback)
+{
+	var div = document.createElement('div');
+	div.innerHTML=response;
+	callback(div);
+}
+
+function appendResults(responseDiv)
+{
+	document.getElementById("suggestedDest").appendChild(responseDiv);
 }
 
 function suggestGroups()
@@ -111,10 +131,11 @@ function suggestGroups()
 			  	scrollDown.setAttribute('src','js/scroll.js');
 			  	document.head.appendChild(scrollDown);
 			  	//document.getElementById("suggestedDest").innerHTML="";
-			  }  	
-			  var div = document.createElement('div');
-			  div.innerHTML=xmlhttp.responseText;
-			  document.getElementById("suggestedDest").appendChild(div);
+			  }
+			  makediv(xmlhttp.responseText,appendResults);
+			  //var div = document.createElement('div');
+			  //div.innerHTML=xmlhttp.responseText;
+			  //document.getElementById("suggestedDest").appendChild(div);
 	    }
 	  }
 		xmlhttp.open("GET","/suggestGroups",true);

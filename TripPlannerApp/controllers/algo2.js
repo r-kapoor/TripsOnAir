@@ -32,7 +32,8 @@ module.exports=function (app){
 		var start=parseInt(req.param('next'));
 		console.log("next "+start);
 		getCity.getCityList(conn,origin,taste,range, start, batchsize,function(City){		
-		 var model =
+
+		var model =
           {
               CityList: City
           };
