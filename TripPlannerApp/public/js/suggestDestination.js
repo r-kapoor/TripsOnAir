@@ -65,6 +65,8 @@ function suggestDest()
 			  //document.getElementById("suggestedDest").appendChild(document.createElement('div').innerHTML=xmlhttp.responseText);
 			  var div = document.createElement('div');
 			  div.innerHTML=xmlhttp.responseText;
+			  //div.id="destinationAdded";
+			  //div.style="cursor:pointer";
 			  document.getElementById("suggestedDest").appendChild(div);
 			  $(window).data('ajaxready', true);
 			 //console.log("test "+ document.getElementById("suggestedDest").appendChild(div));

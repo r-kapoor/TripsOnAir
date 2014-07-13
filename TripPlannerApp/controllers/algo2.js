@@ -31,7 +31,7 @@ module.exports=function (app){
 		//console.log("range "+range);
 		var start = req.session.start;
 		var batchsize = 5;
-		getCity.getCityList(conn,origin,taste,range, start, batchsize,function(City){		
+		getCity.getCityList(conn,origin,taste,range, start, batchsize,function(City){
 		 var model =
           {
               CityList: City
