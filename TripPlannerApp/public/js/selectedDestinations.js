@@ -1,14 +1,26 @@
 $(document).ready(function(){
  
-    var counter = 2;
-	console.log('print');
+    var counter = 1;
     $(".destination").click(function () {
- console.log('enters');
-	var id = $(this).attr('id');
-     alert("City:"+id);
+	var city = $(this).attr('id');
+	console.log(city);
+	console.log(counter);
+	if(counter==1)
+	{
+		var div = document.createElement('div');
+		div.innerHTML='YOUR SELECTED DESTINATIONS:';
+		div.id="selected-top";
+		document.getElementById("selectedDest").appendChild(div);
+	}
 	if(counter>5){
-            alert("Only 10 Destination allow");
+            alert("Only 5 Destination allow");
             return false;
+	}
+	else{
+		var div = document.createElement('div');
+		div.innerHTML=city;
+		div.id=city;
+		document.getElementById("selectedDest").appendChild(div);
 	}
 	counter++;
      });

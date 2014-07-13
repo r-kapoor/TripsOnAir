@@ -55,6 +55,10 @@ function suggestDest()
 			  	var scrollDown = document.createElement('script');
 			  	scrollDown.setAttribute('src','js/scroll.js');
 			  	document.head.appendChild(scrollDown);
+				
+				var suggestDestination = document.createElement('script');
+			  	suggestDestination.setAttribute('src','js/selectedDestinations.js');
+			  	document.head.appendChild(suggestDestination);
 			  	//document.getElementById("suggestedDest").innerHTML="";
 			  }
 

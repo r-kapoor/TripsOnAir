@@ -68,4 +68,5 @@ $(document).ready(function(){
 
 {>"layouts/master/input2" /}
 
+<div id="selectedDest"></div>
 <div id="suggestedDest"></div>
