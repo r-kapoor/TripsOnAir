@@ -1,8 +1,7 @@
-$(document).ready(function(){
- 
-    var counter = 1;
-    $(".destination").click(function () {
-	var city = $(this).attr('id');
+     var counter = 1;
+    //$(".destination").click(function () {
+	$("#suggestedDest").on("click",".destination",function () {
+    var city = $(this).attr('id');
 	console.log(city);
 	console.log(counter);
 	if(counter==1)
@@ -32,4 +31,3 @@ $(document).ready(function(){
     	 console.log(counter);
     	 counter--;
      });
-  });

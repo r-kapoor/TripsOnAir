@@ -10,8 +10,9 @@ function onSubmit(){
 	
 	batch=0;
 	document.getElementById("suggestedDest").innerHTML="";
+	$(window).data('ajaxready', false);
 	suggestDest();
-	suggestGroups();
+	//suggestGroups();
 }
 
 function createQueryString(){
