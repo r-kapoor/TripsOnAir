@@ -3,7 +3,7 @@
  * 
  */
 
-function getCityList(conn,origin,category,range,start,batchsize,callback) {
+function getCityList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
 	var connection=conn.conn();
 	connection.connect();
 	var subQuery='';
@@ -13,7 +13,7 @@ function getCityList(conn,origin,category,range,start,batchsize,callback) {
 		subQuery+='(Category like "' +category[i]+ '%") OR ';
 	}
 	subQuery+='(Category like "' +category[category.length-1]+ '%")';
-	var queryString='SELECT CityName, ( 6371 * acos( cos( radians(28.635308) ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians(77.22496) ) + sin( radians(28.635308) ) * sin( radians( Latitude ) ) ) ) AS distance FROM City WHERE '+subQuery+' HAVING distance < '+range+' ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
+	var queryString='SELECT CityName, ( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) ) AS distance FROM City WHERE '+subQuery+' HAVING distance < '+range+' ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
 	
 	connection.query(queryString, function(err, rows, fields) {
 		if (err)

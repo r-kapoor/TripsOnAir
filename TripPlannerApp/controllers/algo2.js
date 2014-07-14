@@ -17,7 +17,8 @@ module.exports=function (app){
 
 	app.get('/suggestDest',function(req,res)
 	{
-		var origin=req.param('origin');
+		var orgLat=req.param('orgLat');
+		var orgLong=req.param('orgLong');
 		var numDays = req.param('numDays');
 		var taste = req.param('taste');
 		var budget = req.param('budget');
@@ -25,7 +26,7 @@ module.exports=function (app){
 		var start=parseInt(req.param('next'));
 		//Get the range of travel according to user budget and number of days
 		getRange.getRange(budget,numDays,function(range){
-			getCity.getCityList(conn,origin,taste,range, start, batchsize,function(City){		
+			getCity.getCityList(conn,orgLat,orgLong,taste,range, start, batchsize,function(City){		
 			var model =
 	          {
 	              CityList: City
@@ -37,14 +38,15 @@ module.exports=function (app){
 	
 	app.get('/suggestGroups',function(req,res)
 	{
-		var origin=req.param('origin');
+		var orgLat=req.param('orgLat');
+		var orgLong=req.param('orgLong');
 		var numDays = req.param('numDays');
 		var taste = req.param('taste');
 		var budget = req.param('budget');
 		var batchsize = 5;
 		var start=parseInt(req.param('next'));
 		getRange.getRange(budget,numDays,function(range){
-			getGroup.getGroupList(conn,taste,range,start,batchsize,function(Group){
+			getGroup.getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,function(Group){
 			var model =
 		      {
 				 GroupList: Group

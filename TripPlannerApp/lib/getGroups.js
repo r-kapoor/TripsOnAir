@@ -4,7 +4,7 @@
  */
 
 
-function getGroupList(conn,category,range,start,batchsize,callback) {
+function getGroupList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
 
 	var connection=conn.conn();
 	connection.connect();
@@ -15,8 +15,8 @@ function getGroupList(conn,category,range,start,batchsize,callback) {
 		subQuery+='(GroupCategory like "' +category[i]+ '%") OR ';
 	}
 	subQuery+='(GroupCategory like "' +category[category.length-1]+ '%")';
-	var queryString='SELECT GroupName, (( 6371 * acos( cos( radians(28.635308) ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians(77.22496) ) + sin( radians(28.635308) ) * sin( radians( Latitude ) ) ) )+DistFactor) AS distance FROM Groups WHERE '+subQuery+' HAVING distance < '+range+' ORDER BY GroupRating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
-	
+	var queryString='SELECT GroupName, (( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) )+DistFactor) AS distance FROM Groups WHERE '+subQuery+' HAVING distance < '+range+' ORDER BY GroupRating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
+
 	connection.query(queryString, function(err, rows, fields) {
 		if (err)
 		{
