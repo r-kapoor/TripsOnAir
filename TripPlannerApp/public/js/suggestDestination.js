@@ -4,15 +4,16 @@
  * frontend interact with backend using ajax call
  */
 
-var batch=0;
+var cityBatch=0;
+var groupBatch=0;
+var flag=0;//Either changes do by done by suggestDest() or suggestGroups()
 
 function onSubmit(){
-	
-	batch=0;
+	cityBatch=0;groupBatch=0;
 	document.getElementById("suggestedDest").innerHTML="";
-	$(window).data('ajaxready', false);
+	$(window).data('ajaxready', false);//to avoid scroll call
 	suggestDest();
-	//suggestGroups();
+	suggestGroups();
 }
 
 function createQueryString(){
@@ -39,16 +40,8 @@ function suggestDest()
 	var xmlhttp;
 	var query = createQueryString();
 	var Sender = window.event.srcElement;
-	if(Sender.id=="dest")
-	{
-		query=query+"&next="+batch;
-		batch+=5;
-	}
-	else
-	{
-		query=query+"&next="+batch;
-		batch+=5;
-	}
+	query=query+"&next="+cityBatch;
+	cityBatch+=5;
 
 	if (window.XMLHttpRequest)
 	  {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -61,31 +54,15 @@ function suggestDest()
 
 	xmlhttp.onreadystatechange=function()
 	  {
-	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
-	    {
-			  if(Sender.id=="dest"){
-			  	var scrollDown = document.createElement('script');
-			  	scrollDown.setAttribute('src','js/scroll.js');
-			  	document.head.appendChild(scrollDown);
-				
-				var suggestDestination = document.createElement('script');
-			  	suggestDestination.setAttribute('src','js/selectedDestinations.js');
-			  	document.head.appendChild(suggestDestination);
-			  	//document.getElementById("suggestedDest").innerHTML="";
+		if(xmlhttp.readyState==4 && xmlhttp.status==200)
+	    	{
+			  if((Sender.id=="dest")&&(flag==0)){
+				  createScript('scroll');
+				  createScript('selectedDestinations');
+				  flag=1;  	
 			  }
-
-			  //makediv(xmlhttp.responseText,appendResults);
-			  //console.log(div.text);
-			  //alert(div.text);
-			  //document.getElementById("suggestedDest").appendChild(div);
-			  //document.getElementById("suggestedDest").appendChild(document.createElement('div').innerHTML=xmlhttp.responseText);
-			  var div = document.createElement('div');
-			  div.innerHTML=xmlhttp.responseText;
-			  //div.id="destinationAdded";
-			  //div.style="cursor:pointer";
-			  document.getElementById("suggestedDest").appendChild(div);
+			  makediv(xmlhttp.responseText,appendResults);
 			  $(window).data('ajaxready', true);
-			 //console.log("test "+ document.getElementById("suggestedDest").appendChild(div));
 	    }
 	  }
 		xmlhttp.open("GET","/suggestDest?"+query,true);
@@ -99,6 +76,13 @@ function makediv(response,callback)
 	callback(div);
 }
 
+function createScript(attribute)
+{
+	var Element = document.createElement('script');
+	Element.setAttribute('src','js/'+attribute+'.js');
+  	document.head.appendChild(Element);
+	
+}
 function appendResults(responseDiv)
 {
 	document.getElementById("suggestedDest").appendChild(responseDiv);
@@ -109,14 +93,8 @@ function suggestGroups()
 	var xmlhttp;
 	var query = createQueryString();
 	var Sender = window.event.srcElement;
-	if(Sender.id=="dest")
-	{
-		query=query+"&next=0";
-	}
-	else
-	{
-		query=query+"&next=1";
-	}
+	query=query+"&next="+groupBatch;
+	groupBatch+=5;
 
 	if (window.XMLHttpRequest)
 	  {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -131,18 +109,15 @@ function suggestGroups()
 	  {
 	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
 	    {
-		  if(Sender.id=="dest"){
-			  	var scrollDown = document.createElement('script');
-			  	scrollDown.setAttribute('src','js/scroll.js');
-			  	document.head.appendChild(scrollDown);
-			  	//document.getElementById("suggestedDest").innerHTML="";
+		  if((Sender.id=="dest")&&(flag==0)){
+			    createScript('scroll');
+			    createScript('selectedDestinations');
+			  	flag=1;
 			  }
 			  makediv(xmlhttp.responseText,appendResults);
-			  //var div = document.createElement('div');
-			  //div.innerHTML=xmlhttp.responseText;
-			  //document.getElementById("suggestedDest").appendChild(div);
+			  $(window).data('ajaxready', true);
 	    }
 	  }
-		xmlhttp.open("GET","/suggestGroups",true);
+		xmlhttp.open("GET","/suggestGroups?"+query,true);
 		xmlhttp.send();
 }
