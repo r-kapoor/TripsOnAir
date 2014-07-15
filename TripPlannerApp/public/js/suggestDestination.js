@@ -4,92 +4,76 @@
  * frontend interact with backend using ajax call
  */
 
-var batch=0;
+var cityBatch=0;
+var groupBatch=0;
+var flag=0;//To be done once when submit is clicked
 
 function onSubmit(){
-	
-	batch=0;
+	cityBatch=0;groupBatch=0;
 	document.getElementById("suggestedDest").innerHTML="";
-	$(window).data('ajaxready', false);
+	$(window).data('ajaxready', false);//to avoid scroll call
 	suggestDest();
-	//suggestGroups();
+	suggestGroups();
+	if(flag==0)
+	{
+		createScript('scroll');
+		createScript('selectedDestinations');
+	}
+	flag=1;
 }
 
-function createQueryString(){
+function createQueryString(callback){
 	var origin = document.getElementById("origin").value;
+	var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true";
 	var startDate = document.getElementById("startdate").value;
 	var endDate = document.getElementById("enddate").value;
 	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24); 
 	var budget = document.getElementById("range").value;
 	var tastes = document.getElementsByName('category');
 	var userTastes=[];var j=0;
-	for (var i=0, n=tastes.length;i<n;i++) {
-	  if (tastes[i].checked) 
-	  {
-		 userTastes[j] = tastes[i].value;
-		 j++;
-	  }
-	}
-	var query="origin="+origin+"&"+"numDays="+numDays+"&"+"taste="+userTastes+"&"+"budget="+budget;
-	return query;
+	$.getJSON(originLocation, function(data){
+		var orgLat = data.results[0].geometry.location.lat;
+		var orgLong =data.results[0].geometry.location.lng;
+		for (var i=0, n=tastes.length;i<n;i++) {
+		  if (tastes[i].checked) 
+		  {
+			 userTastes[j] = tastes[i].value;
+			 j++;
+		  }
+		}
+		var query="orgLat="+orgLat+"&"+"orgLong="+orgLong+"&"+"numDays="+numDays+"&"+"taste="+userTastes+"&"+"budget="+budget;
+		callback(query);
+	});
 }
 
-function suggestDest()
-{
-	var xmlhttp;
-	var query = createQueryString();
-	var Sender = window.event.srcElement;
-	if(Sender.id=="dest")
-	{
-		query=query+"&next="+batch;
-		batch+=5;
-	}
-	else
-	{
-		query=query+"&next="+batch;
-		batch+=5;
-	}
+function suggestDest(){
+	
+	createQueryString(function(query){
+		var xmlhttp;
+		var Sender = window.event.srcElement;
+		query=query+"&next="+cityBatch;
+		cityBatch+=5;
+	
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
 
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-		xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
-	    {
-			  if(Sender.id=="dest"){
-			  	var scrollDown = document.createElement('script');
-			  	scrollDown.setAttribute('src','js/scroll.js');
-			  	document.head.appendChild(scrollDown);
-				
-				var suggestDestination = document.createElement('script');
-			  	suggestDestination.setAttribute('src','js/selectedDestinations.js');
-			  	document.head.appendChild(suggestDestination);
-			  	//document.getElementById("suggestedDest").innerHTML="";
-			  }
-
-			  //makediv(xmlhttp.responseText,appendResults);
-			  //console.log(div.text);
-			  //alert(div.text);
-			  //document.getElementById("suggestedDest").appendChild(div);
-			  //document.getElementById("suggestedDest").appendChild(document.createElement('div').innerHTML=xmlhttp.responseText);
-			  var div = document.createElement('div');
-			  div.innerHTML=xmlhttp.responseText;
-			  //div.id="destinationAdded";
-			  //div.style="cursor:pointer";
-			  document.getElementById("suggestedDest").appendChild(div);
-			  $(window).data('ajaxready', true);
-			 //console.log("test "+ document.getElementById("suggestedDest").appendChild(div));
-	    }
-	  }
-		xmlhttp.open("GET","/suggestDest?"+query,true);
-		xmlhttp.send();
+		xmlhttp.onreadystatechange=function()
+		  {
+			if(xmlhttp.readyState==4 && xmlhttp.status==200)
+		    	{
+				  makediv(xmlhttp.responseText,appendResults);
+				  $(window).data('ajaxready', true);
+		    }
+		  }
+			xmlhttp.open("GET","/suggestDest?"+query,true);
+			xmlhttp.send();
+	});
 }
 
 function makediv(response,callback)
@@ -99,6 +83,12 @@ function makediv(response,callback)
 	callback(div);
 }
 
+function createScript(attribute)
+{
+	var Element = document.createElement('script');
+	Element.setAttribute('src','js/'+attribute+'.js');
+  	document.head.appendChild(Element);
+}
 function appendResults(responseDiv)
 {
 	document.getElementById("suggestedDest").appendChild(responseDiv);
@@ -106,43 +96,30 @@ function appendResults(responseDiv)
 
 function suggestGroups()
 {
-	var xmlhttp;
-	var query = createQueryString();
-	var Sender = window.event.srcElement;
-	if(Sender.id=="dest")
-	{
-		query=query+"&next=0";
-	}
-	else
-	{
-		query=query+"&next=1";
-	}
-
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-		xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if(xmlhttp.readyState==4 && xmlhttp.status==200)
-	    {
-		  if(Sender.id=="dest"){
-			  	var scrollDown = document.createElement('script');
-			  	scrollDown.setAttribute('src','js/scroll.js');
-			  	document.head.appendChild(scrollDown);
-			  	//document.getElementById("suggestedDest").innerHTML="";
-			  }
-			  makediv(xmlhttp.responseText,appendResults);
-			  //var div = document.createElement('div');
-			  //div.innerHTML=xmlhttp.responseText;
-			  //document.getElementById("suggestedDest").appendChild(div);
-	    }
-	  }
-		xmlhttp.open("GET","/suggestGroups",true);
-		xmlhttp.send();
+	createQueryString(function(query){
+		var xmlhttp;
+		var Sender = window.event.srcElement;
+		query=query+"&next="+groupBatch;
+		groupBatch+=5;
+	
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+	
+		xmlhttp.onreadystatechange=function()
+		  {
+		  if(xmlhttp.readyState==4 && xmlhttp.status==200)
+		    {
+				  makediv(xmlhttp.responseText,appendResults);
+				  $(window).data('ajaxready', true);
+		    }
+		  }
+			xmlhttp.open("GET","/suggestGroups?"+query,true);
+			xmlhttp.send();
+		});
 }

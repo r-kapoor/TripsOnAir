@@ -20,8 +20,11 @@ $(document).ready(function(){
 </script>
 
 <script>
+var dateToday = new Date();
   $(function() {
-    $( "#startdate,#enddate" ).datepicker();
+    $( "#startdate,#enddate" ).datepicker({
+        minDate: dateToday
+    });
   });
   </script>
 
