@@ -4,6 +4,9 @@
     var city = $(this).attr('id');
 	console.log(city);
 	console.log(countofselections);
+	document.getElementById(city).className="destination-selected";
+	document.getElementById(city).style.cursor="initial";
+	document.getElementById(city).style.color="red";
 	if(countofselections==0)
 	{
 		var div = document.createElement('div');
@@ -11,7 +14,7 @@
 		div.id="selected-top";
 		document.getElementById("selectedDest").appendChild(div);
 	}
-	if(countofselections>5){
+	if(countofselections>=5){
             alert("Only 5 Destination allow");
             return false;
 	}
@@ -37,6 +40,9 @@
 		var city = cityIn($(this).attr('id'));
 		console.log('cancel:'+city);
 		document.getElementById("selects-"+city).remove();
+		document.getElementById(city).className="destination";
+		document.getElementById(city).style.cursor="pointer";
+		document.getElementById(city).style.color="black";
 		countofselections--;
 		if(countofselections==0)
 		{
