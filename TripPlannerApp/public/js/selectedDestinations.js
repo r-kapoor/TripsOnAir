@@ -1,33 +1,49 @@
-     var counter = 1;
+    var countofselections = 0;
     //$(".destination").click(function () {
 	$("#suggestedDest").on("click",".destination",function () {
     var city = $(this).attr('id');
 	console.log(city);
-	console.log(counter);
-	if(counter==1)
+	console.log(countofselections);
+	if(countofselections==0)
 	{
 		var div = document.createElement('div');
 		div.innerHTML='YOUR SELECTED DESTINATIONS:';
 		div.id="selected-top";
 		document.getElementById("selectedDest").appendChild(div);
 	}
-	if(counter>5){
+	if(countofselections>5){
             alert("Only 5 Destination allow");
             return false;
 	}
 	else{
-		var div = document.createElement('div');
-		div.innerHTML=city;
-		div.id=city;
-		document.getElementById("selectedDest").appendChild(div);
+		var tableDes= document.createElement('tr');
+		tableDes.id="selects-"+city;
+		document.getElementById("selectedDest").appendChild(tableDes);
+		var cityselected = document.createElement('td');
+		cityselected.innerHTML=city;
+		cityselected.id="selected-"+city;
+		document.getElementById(tableDes.id).appendChild(cityselected);
+		var canceldiv = document.createElement('td');
+		canceldiv.innerHTML='Cancel';
+		canceldiv.id='Cancel-'+city;
+		canceldiv.className='cancel';
+		canceldiv.style.cursor="pointer";
+		document.getElementById(tableDes.id).appendChild(canceldiv);
+		countofselections++;
 	}
-	counter++;
      });
  
-     $("#destinationRemoved").click(function () {
-    	 var att=document.createAttribute("style");
-    	 att.value="display: none";
-    	 document.getElementById("TextBoxDiv"+counter).setAttributeNode(att);
-    	 console.log(counter);
-    	 counter--;
+	$("#selectedDest").on("click",".cancel",function () {
+		var city = cityIn($(this).attr('id'));
+		console.log('cancel:'+city);
+		document.getElementById("selects-"+city).remove();
+		countofselections--;
+		if(countofselections==0)
+		{
+			document.getElementById("selected-top").remove();
+		}
      });
+
+	 function cityIn(id){
+		return id.substring(id.indexOf('-')+1);
+	}
