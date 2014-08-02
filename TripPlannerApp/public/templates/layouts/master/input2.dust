@@ -27,7 +27,7 @@
 			<option value="10000">5000-10000</option>
 			<option value="30000">10000-30000</option>
 			<option value="50000">30000-50000</option>
-			<option value="high">more than 50000</option>
+			<option value="100000">more than 50000</option>
 			</select>
 			</br>
 			</br>

@@ -71,4 +71,4 @@ var dateToday = new Date();
 {>"layouts/master/input2" /}
 
 <div id="selectedDest"></div>
-<div id="suggestedDest"></div>
+<div id="suggestedDest" class="cities"></div>

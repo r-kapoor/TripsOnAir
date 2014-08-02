@@ -1,9 +1,8 @@
-	<div> 
-            <ul>
+           <div id="values" orgLat="{orgLat}" orgLong="{orgLong}" range="{range}"></div>
+           <ul>
                 {#CityList}
                     <li>
-                            <h3><div class="destination" id="{.CityName}" style="cursor:pointer" >{.CityName}</div></h3>
+                            <h3><div class="destination" id="{.CityName}" lat="{.Latitude}" long="{.Longitude}" fact="0" style="cursor:pointer" >{.CityName}</div></h3>
                     </li>
                 {/CityList}
             </ul>
-     </div> 

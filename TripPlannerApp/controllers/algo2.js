@@ -29,7 +29,10 @@ module.exports=function (app){
 			getCity.getCityList(conn,orgLat,orgLong,taste,range, start, batchsize,function(City){		
 			var model =
 	          {
-	              CityList: City
+	              CityList: City,
+	              orgLat: orgLat,
+	              orgLong:orgLong,
+	              range:range
 	          };
 		res.render('city', model);
 			});

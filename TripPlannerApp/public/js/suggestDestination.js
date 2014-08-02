@@ -16,8 +16,8 @@ function onSubmit(){
 	suggestGroups();
 	if(flag==0)
 	{
+		createScript('algo3');
 		createScript('scroll');
-		createScript('selectedDestinations');
 	}
 	flag=1;
 }
@@ -47,7 +47,7 @@ function createQueryString(callback){
 }
 
 function suggestDest(){
-	
+
 	createQueryString(function(query){
 		var xmlhttp;
 		var Sender = window.event.srcElement;
@@ -68,6 +68,7 @@ function suggestDest(){
 			if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		    	{
 				  makediv(xmlhttp.responseText,appendResults);
+				  afterScroll(function(){});
 				  $(window).data('ajaxready', true);
 		    }
 		  }
@@ -94,8 +95,8 @@ function appendResults(responseDiv)
 	document.getElementById("suggestedDest").appendChild(responseDiv);
 }
 
-function suggestGroups()
-{
+function suggestGroups(){
+
 	createQueryString(function(query){
 		var xmlhttp;
 		var Sender = window.event.srcElement;
