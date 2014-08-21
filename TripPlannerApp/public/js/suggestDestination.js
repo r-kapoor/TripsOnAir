@@ -83,21 +83,23 @@ function suggestDest(){
 		
 		query=query+"&next="+cityBatch;
 		cityBatch+=5;
-		var tableContent = '';
+		var i=0;
+		var tableContent ='';
 		$.getJSON( '/suggestDest?'+query, function(data ) {
 	        // For each item in our JSON, add a table row and cells to the content string
 	        $.each(data, function(){
-	            tableContent += '<tr>';
-	            tableContent += '<td>' + this.CityName + '</td>';
-	            console.log("test "+CityList);
-	            console.log("testData "+data);
+	        	tableContent ='';
+	        	tableContent += '<tr>';
+	            tableContent += '<td>' + data.CityList[i].CityName + '</td>';
 	            tableContent += '</tr>';
+	            console.log("i "+i);
+	            makediv(tableContent,appendResults);
+	            i++;
 	        });
-	        makediv(tableContent,appendResults);
+	       
 		});
 	});
 }
-
 
 function makediv(response,callback)
 {
