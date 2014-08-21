@@ -34,7 +34,8 @@ module.exports=function (app){
 	              orgLong:orgLong,
 	              range:range
 	          };
-		res.render('city', model);
+		//res.render('city', model);
+			res.json(model);
 			});
 		});
 	});

@@ -16,7 +16,7 @@ function onSubmit(){
 	suggestGroups();
 	if(flag==0)
 	{
-		createScript('algo3');
+		createScript('selectedDestinations');
 		createScript('scroll');
 	}
 	flag=1;
@@ -46,7 +46,7 @@ function createQueryString(callback){
 	});
 }
 
-function suggestDest(){
+/*function suggestDest(){
 
 	createQueryString(function(query){
 		var xmlhttp;
@@ -75,7 +75,29 @@ function suggestDest(){
 			xmlhttp.open("GET","/suggestDest?"+query,true);
 			xmlhttp.send();
 	});
+}*/
+
+function suggestDest(){
+	
+	createQueryString(function(query){
+		
+		query=query+"&next="+cityBatch;
+		cityBatch+=5;
+		var tableContent = '';
+		$.getJSON( '/suggestDest?'+query, function(data ) {
+	        // For each item in our JSON, add a table row and cells to the content string
+	        $.each(data, function(){
+	            tableContent += '<tr>';
+	            tableContent += '<td>' + this.CityName + '</td>';
+	            console.log("test "+CityList);
+	            console.log("testData "+data);
+	            tableContent += '</tr>';
+	        });
+	        makediv(tableContent,appendResults);
+		});
+	});
 }
+
 
 function makediv(response,callback)
 {
