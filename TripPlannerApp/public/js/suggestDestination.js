@@ -84,20 +84,21 @@ function suggestDest(){
 		query=query+"&next="+cityBatch;
 		cityBatch+=5;
 		var i=0;
-		var tableContent ='';
+		var list ='<ul>';
 		$.getJSON( '/suggestDest?'+query, function(data ) {
 	        // For each item in our JSON, add a table row and cells to the content string
 	        $.each(data, function(){
-	        	tableContent ='';
-	        	tableContent += '<tr>';
-	            tableContent += '<td>' + data.CityList[i].CityName + '</td>';
-	            tableContent += '</tr>';
+	        	list+='<li>';
+	        	list+='<h3><div class="destination" id="'+data.CityList[i].CityName+'" lat="'+data.CityList[i].Latitude+'" long="'+data.CityList[i].Longitude+'" fact="0" style="cursor:pointer" >'+data.CityList[i].CityName+'</div></h3>';
+                list+='</li>';
 	            console.log("i "+i);
-	            makediv(tableContent,appendResults);
+	            makediv(list,appendResults);
+	            //afterScroll(function(){});
+				$(window).data('ajaxready', true);
 	            i++;
 	        });
-	       
 		});
+		list+='</ul>'
 	});
 }
 
