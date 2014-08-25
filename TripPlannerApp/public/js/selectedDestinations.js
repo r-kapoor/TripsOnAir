@@ -27,6 +27,7 @@
 			var cityselected = document.createElement('td');
 			cityselected.innerHTML=city;
 			cityselected.id="selected-"+city;
+			cityselected.className='clect';//change
 			document.getElementById(tableDes.id).appendChild(cityselected);
 			var canceldiv = document.createElement('td');
 			canceldiv.innerHTML='Cancel';
@@ -35,6 +36,8 @@
 			canceldiv.style.cursor="pointer";
 			document.getElementById(tableDes.id).appendChild(canceldiv);
 			countofselections++;
+			//update(mark);
+			
 		}
 	}
      });
@@ -111,6 +114,7 @@
 			var cityselected = document.createElement('td');
 			cityselected.innerHTML=city;
 			cityselected.id="selected-"+citygroup;
+			cityselected.className='clect';//change
 			document.getElementById(tableDes.id).appendChild(cityselected);
 			var canceldiv = document.createElement('td');
 			canceldiv.innerHTML='Cancel';
