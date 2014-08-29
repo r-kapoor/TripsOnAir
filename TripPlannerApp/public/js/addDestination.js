@@ -16,26 +16,36 @@ $(document).ready(function(){
 	/*var newTextBoxDiv = $(document.createElement('div'))
     .attr("id", 'TextBoxDiv' + counter);
 	
-	/*var row = $(document.createElement("tr"));
+	var row = $(document.createElement("tr"));
 	console.log("row "+row);
-	// Find a <table> element with id="myTable":
-	//var table = document.getElementById("inptable");
+	// Find a <table> element with id="myTable":*/
+	var table = document.getElementById("inptable");
 
 	// Create an empty <tr> element and add it to the required position of the table:
-	//var row = table.insertRow(2);
+	var row = table.insertRow(2);
 
 	// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-	//var cell1 = row.insertCell(0);
-	//var cell2 = row.insertCell(1);
-	var cell1 = row.innerHTML('<td></td>');
-	var cell2 = row.innerHTML(document.createElement('td'));
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	//var cell1 = row.innerHTML('<td></td>');
+	//var cell2 = row.innerHTML(document.createElement('td'));
 	// Add some text to the new cells:
 	cell1.innerHTML = "<label>Destination #"+ counter + " : </label>";
-	cell2.innerHTML = '<input type="text" class="typeahead tt-query" name="textbox' + counter + 
-    '" id="textbox' + counter + '" value="" >';
-
+	cell2.innerHTML = '<input type="text" class="typeahead tt-query destination" id="textbox' + counter + '" value="">';
+	//$(document).on('DOMNodeInserted',function(){
+		console.log("test");
+		$('input.typeahead').typeahead({
+			name: 'origin',
+			local: ['Ahmedabad', 'Bangalore','Goa','Chennai', 'Chandigarh', 'New Delhi', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai','Katra','Patnitop','Jammu','Phalagam','Srinagar','Dharamshala','Haridwar','Rishikesh','Gulmarg','Dalhousie','Amritsar','Leh','Manali','Kargil']
+		})
+		//$(".typeahead").typeahead();
+		
+		//$("#textbox2").css("backgroundColor", "yellow");
+		
+	//});
+	
 	//newTextBoxDiv.appendTo(row);
-	newTextBoxDiv.innerHTML=row;
+	//newTextBoxDiv.innerHTML=row;
 	//newTextBoxDiv.after().html("#TextBoxDiv1");
 	//row.after().html(newTextBoxDiv);*/
 	//newTextBoxDiv.after().html("#TextBoxDiv1");

@@ -3,21 +3,11 @@
 <script src="js/algo1.js"></script>
 <script src="js/suggestDestination.js"></script>
 <script src="js/selectedDestinations.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script  type="text/javascript" src="../js/typeahead.min.js"></script>
 <link rel="stylesheet" href="css/input1.css"/>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-
-<script type="text/javascript">
-$(document).ready(function(){
-	$('input.typeahead').typeahead({
-		name: 'origin',
-		local: ['Ahmedabad', 'Bangalore','Goa','Chennai', 'Chandigarh', 'New Delhi', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai','Katra','Patnitop','Jammu','Phalagam','Srinagar','Dharamshala','Haridwar','Rishikesh','Gulmarg','Dalhousie','Amritsar','Leh','Manali','Kargil']
-	});
-});  
-</script>
 
 <script>
 var dateToday = new Date();
@@ -27,19 +17,33 @@ var dateToday = new Date();
     });
   });
   </script>
+  <script>
 
+console.log("in type");
+
+	$(document).ready(function(){
+	$('input.typeahead').typeahead({
+		name: 'origin',
+		local: ['Ahmedabad', 'Bangalore','Goa','Chennai', 'Chandigarh', 'New Delhi', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai','Katra','Patnitop','Jammu','Phalagam','Srinagar','Dharamshala','Haridwar','Rishikesh','Gulmarg','Dalhousie','Amritsar','Leh','Manali','Kargil']
+	})
+	});
+</script>
 <script>
 	function choose()
 	{
-		if(document.getElementById("textbox1").disabled)
-		{
-			document.getElementById("textbox1").disabled=false;
-		}
+		var elements=document.getElementsByClassName('destination');
+		for(var i=0;i<elements.length;i++)
+ 		{
+ 			if(elements[i].disabled)
+ 			{
+ 				elements[i].disabled=false;
+ 			}
+ 			else{
+ 				elements[i].disabled=true;
+ 				elements[i].value="Enter a city";
+ 			}
+ 		}
 		
-		else
-		{
-			document.getElementById("textbox1").disabled=true;
-		}
 	}
 </script> 
  
@@ -52,7 +56,7 @@ var dateToday = new Date();
 		</tr>
 		<tr id="TextBoxDiv1">
 			<td><label>Destination #1 : </label></td>
-			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='textbox1'></td>
+			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query destination" id='textbox1'></td>
 			<td></td>
 			<td><div id="addButton" style="cursor:pointer" >Add</div></td>
 		</tr>

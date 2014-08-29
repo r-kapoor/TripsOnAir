@@ -18,19 +18,41 @@ function geolocation()
 		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true";
 		var destinationLocation ="http://maps.googleapis.com/maps/api/geocode/json?address="+destination+"&sensor=true"; 
 		var diff = Math.abs(new Date(endDate)-new Date(startDate));
+		var count=2;
 		var numofDays=diff/(1000*60*60*24);
 
-		$.getJSON(originLocation, function(data){
+		/*$.getJSON(originLocation, function(data){
 			var orgLat = data.results[0].geometry.location.lat;
 			var orgLong =data.results[0].geometry.location.lng;
 			//console.log(orgLat,orgLong);
+			console.log("diff "+diff);
 			
 			$.getJSON(destinationLocation, function(data){
 				var destLat= data.results[0].geometry.location.lat;
 				var destLong=data.results[0].geometry.location.lng;
 				var dist=distance(orgLat,orgLong,destLat,destLong,"K");
+				
 				console.log("dist "+dist);
-				//alert(dist);
+				//alert(dist);*/
+		var arg=[$.getJSON(originLocation),$.getJSON(destinationLocation)];
+		
+		$.when.apply(this,arg).done(function(){
+			console.log("data1 "+arguments[0]);
+			console.log("data2 "+arguments[1]);
+			
+			var orgLat = arguments[0][0].results[0].geometry.location.lat;
+			//console.log("test "+orgLat);
+			var orgLong =arguments[0][0].results[0].geometry.location.lng;
+			var destLat= arguments[1][0].results[0].geometry.location.lat;
+			var destLong=arguments[1][0].results[0].geometry.location.lng;
+			
+			console.log(orgLat+","+orgLong+","+destLat+","+destLong);
+			
+			var dist=distance(orgLat,orgLong,destLat,destLong,"K");
+			
+			console.log("dist "+dist);
+			
+			
 				budgetCalc(origin,destination,dist,numofDays,function(budget){
 				console.log("budget "+budget);
 				//var budget = 7000;
@@ -67,9 +89,8 @@ function geolocation()
 				}
 				//display the other inputs
 				document.getElementById("input2").removeAttribute("style");
-				});//end budgetCalc
-			});
-
+				});//end budgetCalc*/
+			//});
 		});
 	}
 	else if((origin!="")&&(startDate!="")&&(endDate!="")&&(bool)&&(origin!="Enter a city"))
