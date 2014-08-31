@@ -11,16 +11,24 @@ function geolocation()
 	var startDate=document.getElementById("startdate").value;
 	var endDate=document.getElementById("enddate").value;
 	var bool=document.getElementById("textbox1").disabled;
-	//console.log(bool);
-	
-	if((origin!="")&&(startDate!="")&&(endDate!="")&&(destination!="")&&(!bool)&&(origin!="Enter a city")&&(destination!="Enter a city"))
-	{
-		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true";
-		var destinationLocation ="http://maps.googleapis.com/maps/api/geocode/json?address="+destination+"&sensor=true"; 
-		var diff = Math.abs(new Date(endDate)-new Date(startDate));
-		var count=2;
-		var numofDays=diff/(1000*60*60*24);
+	var destElements=document.getElementsByClassName('destination');
+	var len=destElements.length;
 
+	if((origin!="")&&(startDate!="")&&(endDate!="")&&(destElements[0]!="")&&(!bool)&&(origin!="Enter a city")&&(destElements[0]!="Enter a city"))
+	{
+		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true"; 
+		var diff = Math.abs(new Date(endDate)-new Date(startDate));
+		var numofDays=diff/(1000*60*60*24);
+		var destLocations=[];
+		var arg=[];
+		arg[0]=$.getJSON(originLocation);
+		console.log("length "+len);
+		for(var i=0;i<len;i++)
+		{
+			destLocations[i]="http://maps.googleapis.com/maps/api/geocode/json?address="+destElements[i].value+"&sensor=true";
+			arg[i+1]=$.getJSON(destLocations[i]);
+		}
+		
 		/*$.getJSON(originLocation, function(data){
 			var orgLat = data.results[0].geometry.location.lat;
 			var orgLong =data.results[0].geometry.location.lng;
@@ -34,21 +42,34 @@ function geolocation()
 				
 				console.log("dist "+dist);
 				//alert(dist);*/
-		var arg=[$.getJSON(originLocation),$.getJSON(destinationLocation)];
+		//var arg=[$.getJSON(originLocation),$.getJSON(destinationLocation)];
 		
 		$.when.apply(this,arg).done(function(){
 			console.log("data1 "+arguments[0]);
-			console.log("data2 "+arguments[1]);
+			console.log("data2 "+arguments[1]);	
+			i=0;
+			var lat=[];var long=[];var dist=0;
+			while(i<len+1)
+			{	
+				lat[i]=arguments[i][0].results[0].geometry.location.lat;
+				long[i]=arguments[i][0].results[0].geometry.location.lng;
+				console.log(lat[i]+","+long[i]);
+				if(i>0)
+				{
+					dist+=parseInt(distance(lat[i-1],long[i-1],lat[i],long[i],"K"));
+				}
+				i++;
+			}
 			
-			var orgLat = arguments[0][0].results[0].geometry.location.lat;
+			/*var orgLat = arguments[0][0].results[0].geometry.location.lat;
 			//console.log("test "+orgLat);
 			var orgLong =arguments[0][0].results[0].geometry.location.lng;
 			var destLat= arguments[1][0].results[0].geometry.location.lat;
 			var destLong=arguments[1][0].results[0].geometry.location.lng;
 			
 			console.log(orgLat+","+orgLong+","+destLat+","+destLong);
-			
-			var dist=distance(orgLat,orgLong,destLat,destLong,"K");
+			*/
+			//var dist=distance(orgLat,orgLong,destLat,destLong,"K");
 			
 			console.log("dist "+dist);
 			
