@@ -85,7 +85,7 @@ function suggestDest(){
 		var i=0;
 		var list ='<ul>';
 		var oldJSON = null;
-		$.getJSON( '/suggestDest?'+query, function(data ) {
+		$.getJSON( '/suggestDest?'+query	, function(data ) {
 			
 	        $.each(data, function(){
 	        	
@@ -101,6 +101,15 @@ function suggestDest(){
 	        	//}
 	        });
 	        makediv(list,appendResults);
+	        i=0;
+	        $.each(data, function(){
+	        	var cityName=data.CityList[i].CityName;
+	        	$("#"+cityName).data("lat",data.CityList[i].Latitude);
+	        	$("#"+cityName).data("long",data.CityList[i].Longitude);
+	        	console.log("long"+i+" "+data.CityList[i].Longitude);
+	        	console.log("testLat"+i+" "+$("#"+data.CityList[i].CityName).data("long"));
+	        	i++;
+	        });
 		});
 		list+='</ul>';
 	});

@@ -1,6 +1,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/addDestination.js"></script>
 <script src="js/algo1.js"></script>
+<script src="js/inputCityValidator.js"></script>
 <script src="js/suggestDestination.js"></script>
 <script src="js/selectedDestinations.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -52,11 +53,11 @@ console.log("in type");
 <table id="inptable">
 		<tr id="TextBoxDiv">	
 			<td ><label>Origin : </label></td>
-			<td><input type='text' value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>	
+			<td><input type='text' class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>	
 		</tr>
 		<tr id="TextBoxDiv1">
 			<td><label>Destination #1 : </label></td>
-			<td><input type='text'  value="Enter a city"  onFocus="this.value=''" class="typeahead tt-query destination" id='textbox1'></td>
+			<td><input type='text' class="typeahead tt-query destination" id='textbox1'></td>
 			<td></td>
 			<td><div id="addButton" style="cursor:pointer" >Add</div></td>
 		</tr>
