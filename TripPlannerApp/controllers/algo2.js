@@ -26,6 +26,7 @@ module.exports=function (app){
 		var start=parseInt(req.param('next'));
 		//Get the range of travel according to user budget and number of days
 		getRange.getRange(budget,numDays,function(range){
+			console.log("range "+range);
 			getCity.getCityList(conn,orgLat,orgLong,taste,range, start, batchsize,function(City){		
 			var model =
 	          {

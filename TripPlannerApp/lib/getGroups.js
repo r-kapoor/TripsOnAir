@@ -37,10 +37,14 @@ function getGroupList(conn,orgLat,orgLong,category,range,start,batchsize,callbac
 		//console.log(queryString);
 		if (err)
 		{
+			console.log('err');
 			throw err;
 		}
 	    else{
+	    	console.log('no err');
+	    	console.log("row "+rows[0]);
 	    	for (var i in rows) {
+	    		console.log('no err1');
 	        console.log(rows[i]);
 	    	}
 	  }

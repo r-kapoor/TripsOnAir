@@ -6,7 +6,7 @@
 
 var cityBatch=0;
 var groupBatch=0;
-var flag=0;//To be done once when submit is clicked
+var addScripts=0;//To be done once when submit is clicked
 
 function onSubmit(){
 	cityBatch=0;groupBatch=0;
@@ -14,12 +14,12 @@ function onSubmit(){
 	$(window).data('ajaxready', false);//to avoid scroll call
 	suggestDest();
 	suggestGroups();
-	if(flag==0)
+	if(addScripts==0)
 	{
 		createScript('selectedDestinations');
 		createScript('scroll');
 	}
-	flag=1;
+	addScripts=1;
 }
 
 function createQueryString(callback){
@@ -46,49 +46,49 @@ function createQueryString(callback){
 	});
 }
 
-/*function suggestDest(){
-
-	createQueryString(function(query){
-		var xmlhttp;
-		var Sender = window.event.srcElement;
-		query=query+"&next="+cityBatch;
-		cityBatch+=5;
-	
-		if (window.XMLHttpRequest)
-		  {// code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp=new XMLHttpRequest();
-		  }
-		else
-		  {// code for IE6, IE5
-			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		  }
-
-		xmlhttp.onreadystatechange=function()
-		  {
-			if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		    	{
-				  makediv(xmlhttp.responseText,appendResults);
-				  afterScroll(function(){});
-				  $(window).data('ajaxready', true);
-		    }
-		  }
-			xmlhttp.open("GET","/suggestDest?"+query,true);
-			xmlhttp.send();
-	});
-}*/
-
 function suggestDest(){
-	
+
 	createQueryString(function(query){
 		query=query+"&next="+cityBatch;
 		cityBatch+=5;
 		var i=0;
 		var list ='<ul>';
-		var oldJSON = null;
-		$.getJSON( '/suggestDest?'+query	, function(data ) {
-			
+		var ajaxQuery = $.getJSON( '/suggestDest?'+query);
+
+		ajaxQuery.done(function(data) {
+			$.each(data.CityList, function(key,value){
+				list+='<li>';
+	        	list+='<h3><div class="destination" id="'+ value.CityID+'" style="cursor:pointer" >'+value.CityName+'</div></h3>';
+                list+='</li>'
+				i++;
+			});
+			list+='</ul>';
+			makediv(list,appendResults);
+	        i=0;
+	        $.each(data.CityList, function(key,value) {
+	        	var cityId=value.CityID;
+	        	console.log("cityId "+cityId+","+value.Latitude+","+value.Longitude);
+	        	$("#"+cityId).data("lat",value.Latitude);
+	        	$("#"+cityId).data("long",value.Longitude);
+	        });
+	        $.each(data.CityList, function(key,value) {
+	        	var cityId=value.CityID;
+	        	console.log("testLat"+i+" "+$("#"+cityId).data("lat"));
+	        	console.log("testLong"+i+" "+$("#"+cityId).data("long"));	
+	        	i++;
+	        });
+		});
+	});
+}
+
+/*function suggestGroups(){
+	createQueryString(function(query){
+		query=query+"&next="+groupBatch;
+		groupBatch+=5;
+		var i=0;
+		var list ='<ul>';
+		$.getJSON( '/suggestGroups?'+query, function(data ) {
 	        $.each(data, function(){
-	        	
 	        	//if(data.CityList[i]!="undefined"){
 	        		console.log(data);
 	        	list+='<li>';
@@ -113,7 +113,7 @@ function suggestDest(){
 		});
 		list+='</ul>';
 	});
-}
+}*/
 
 function makediv(response,callback)
 {
