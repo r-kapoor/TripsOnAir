@@ -136,29 +136,54 @@ function appendResults(responseDiv)
 function suggestGroups(){
 
 	createQueryString(function(query){
-		var xmlhttp;
-		var Sender = window.event.srcElement;
+		
 		query=query+"&next="+groupBatch;
 		groupBatch+=5;
-	
-		if (window.XMLHttpRequest)
-		  {// code for IE7+, Firefox, Chrome, Opera, Safari
-			xmlhttp=new XMLHttpRequest();
-		  }
-		else
-		  {// code for IE6, IE5
-			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		  }
-	
-		xmlhttp.onreadystatechange=function()
-		  {
-		  if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		    {
-				  makediv(xmlhttp.responseText,appendResults);
-				  $(window).data('ajaxready', true);
-		    }
-		  }
-			xmlhttp.open("GET","/suggestGroups?"+query,true);
-			xmlhttp.send();
+		var groupIDs = [];
+		var numOfCities = [];
+		var list ='<ul>';
+		var ajaxQuery = $.getJSON( '/suggestGroups?'+query);
+
+		ajaxQuery.done(function(data) {
+			$.each(data.GroupList, function(key,value){
+				if(groupIDs.indexOf(value.GroupID) == -1)
+				{
+					list+='<li>';
+					if(!value.PopularName)
+					{
+						list+='<h3><div class="group" id="'+ value.GroupID+'" style="cursor:pointer" >'+value.GroupName+'</div></h3>';
+					}
+					else
+					{
+						list+='<h3><div class="group" id="'+ value.GroupID+'" style="cursor:pointer" >'+value.PopularName +":"+value.GroupName+'</div></h3>';
+					}
+					list+='</li>';
+					groupIDs.push(value.GroupID);
+					numOfCities.push(1);
+				}
+				else
+				{
+					numOfCities[groupIDs.indexOf(value.GroupID)]++;
+				}
+				
+			});
+			list+='</ul>';
+			makediv(list,appendResults);
+			var numOfCitiesCopy = numOfCities.slice(0);
+	        $.each(data.GroupList, function(key,value) {
+	        	var groupId=value.GroupID;
+				citynum = numOfCities[groupIDs.indexOf(groupId)]-numOfCitiesCopy[groupIDs.indexOf(groupId)];
+				numOfCitiesCopy[groupIDs.indexOf(groupId)]--;
+				if(citynum == 0)
+				{
+					$("#"+groupId).data("numofcities",numOfCities[groupIDs.indexOf(groupId)]);
+				}
+	        	console.log("groupId "+groupId+","+value.CityName+","+value.CityID, ","+value.Latitude+","+value.Longitude);
+	        	$("#"+groupId).data("lat"+citynum,value.Latitude);
+	        	$("#"+groupId).data("long"+citynum,value.Longitude);
+				$("#"+groupId).data("cityname"+citynum,value.CityName);
+				$("#"+groupId).data("cityid"+citynum,value.CityName);
+	        });
 		});
+	});
 }
