@@ -27,7 +27,7 @@ module.exports=function (app){
 		//Get the range of travel according to user budget and number of days
 		getRange.getRange(budget,numDays,function(range){
 			console.log("range "+range);
-			getCity.getCityList(conn,orgLat,orgLong,taste,range, start, batchsize,function(City){		
+			getCity.getCityList(conn,orgLat,orgLong,taste,range, start, batchsize,function(City){
 			var model =
 	          {
 	              CityList: City,
@@ -51,10 +51,10 @@ module.exports=function (app){
 		var batchsize = 5;
 		var start=parseInt(req.param('next'));
 		getRange.getRange(budget,numDays,function(range){
-			getGroup.getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,function(Group){
+			getGroup.getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,function(groupRows){
 			var model =
 		      {
-				 GroupList: Group
+				 GroupList: groupRows
 		      };
 			//res.render('group', model);
 			res.json(model);
