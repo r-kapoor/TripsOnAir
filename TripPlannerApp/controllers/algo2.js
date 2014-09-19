@@ -56,7 +56,8 @@ module.exports=function (app){
 		      {
 				 GroupList: Group
 		      };
-			res.render('group', model);
+			//res.render('group', model);
+			res.json(model);
 				});
 		});
 	});

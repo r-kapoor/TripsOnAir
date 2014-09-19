@@ -1,60 +1,185 @@
 /**
- * @author rajat
- * Algo3:
- * 
- * TODO:after selecting a group remove all of its cities in the uploaded cities list or gives warning before selection
- * TODO:select group after group
+ * @author rahul and rajat
+ * TODO:scrolling,if all cities of group than green,if remove a city that is in group then black,update on group cities
  *
  */
 
-	var count=0;/**maintain the count of selected cities and group*/
-	var flag=0;
-	var orgLat;var orgLong;/**orgin city lat/long*/
-	var lat;var long;/**Last selected city/group lat/long*/
-	var range;/**range that can be travelled after each selection or removal*/
-	var length=0;/**length of current loaded cities*/
+	var selectedCityId=[];
+	var countofselections = 0;
+	var orgLat;//Lat of the origin
+	var orgLong;//Long of the origin
+	var range;//Range that can be travelled by user
+	var LoadedCityLen=0;//represents the length of the current loaded suggested cities as per the user scrolling
 
+	var cityData=function(cityId,lat,long){
+		
+		this.cityId=cityId;
+		this.lat=lat;
+		this.long=long;
+	}
+	
 	$("#suggestedDest").on("click",".destination",function () {
-		var fact=parseInt($(this).attr('fact'));
-		var id=$(this).attr("id");
-		lat=$(this).attr("lat");
-		long=$(this).attr("long");
-		var name=$(this).text();
-		var list = $(document.getElementsByClassName('destination'));length=list.length;
-		orgLat=$("#values").attr("orgLat");
-		orgLong=$("#values").attr("orgLong");
-		var i=0;
-		if((fact>0)&&(count>0))/**if selection is a group and  */
+
+		
+		orgLat=$("#TextBoxDiv").data("orgLat");
+		orgLong=$("#TextBoxDiv").data("orgLong");
+		range=$("#TextBoxDiv").data("range");
+		
+		var cityId = $(this).attr('id');
+		var cityName=$(this).text();
+		console.log(cityName);
+		console.log(countofselections);
+		document.getElementById(cityId).className="destination-selected";
+		document.getElementById(cityId).style.cursor="initial";
+		document.getElementById(cityId).style.color="green";
+		if(countofselections==0)
 		{
-			checkAndRemove(id)/**if group has already selected city and remove the common city*/
+			var div = document.createElement('div');
+			div.innerHTML='YOUR SELECTED DESTINATIONS:';
+			div.id="selected-top";
+			document.getElementById("selectedDest").appendChild(div);
 		}
-		/**hide the selected city/group from the suggested city list*/
-		$(this).parent().parent().hide();
-		/**append the selected city/group in selected-top id and increase the count of selection*/
-		append(name,id,lat,long,fact,function(){
-			count++;
-			/**update the range that can be travelled*/
-			/**check if uploaded cities can be travelled from appended city/group and mark if not*/
-			Update(mark);
-			//call function that will send range,lat,long,category,start,batchsize to the backend	
-		});
+		
+		if(countofselections>=10){
+            alert("Only 10 destinations are allowed");
+            return false;
+		}
+		else{
+
+			if(document.getElementById("selects-"+cityId)==null)
+			{
+				var tableDes= document.createElement('tr');
+				tableDes.id="selects-"+cityId;
+				document.getElementById("selectedDest").appendChild(tableDes);
+				var cityselected = document.createElement('td');
+				cityselected.innerHTML=cityName;
+				cityselected.id="selected-"+cityId;
+				cityselected.className='clect';//change
+				document.getElementById(tableDes.id).appendChild(cityselected);
+				var canceldiv = document.createElement('td');
+				canceldiv.innerHTML='Cancel';
+				canceldiv.id='Cancel-'+cityId;
+				canceldiv.className='cancel';
+				canceldiv.style.cursor="pointer";
+				document.getElementById(tableDes.id).appendChild(canceldiv);
+				
+				/**Track appended city through selectedCityID array */
+				
+				var lat=$("#"+cityId).data("lat");
+				var long=$("#"+cityId).data("long");
+				//console.log("cityData "+cityId+","+lat+","+long);
+				var city_data = new cityData(cityId, lat, long);
+				selectedCityId.push(city_data);
+				countofselections++;
+				update(1);
+
+				/*for(var j=0;j<selectedCityId.length;j++)
+				{
+					console.log("cityID "+selectedCityId[j].cityId+","+selectedCityId[j].lat);
+				}*/
+				
+			}
+		}
 	});
 
-	function checkAndMark(range,orgLat,orgLong,destLat,destLong,fact,callback)
+	$("#suggestedDest").on("click",".groupDestination",function () {
+
+		var groupId=$(this).attr('id');
+		var numCity=$("#"+groupId).data("count");
+		
+		for(var i=0;i<numCity;i++)
+		{
+			var cityId=$("#"+groupId).data("cityId"+i);
+			if(selectedCityId.indexOf(cityId)!=-1)
+			{
+				var cityName=$("#"+groupId).data("cityName"+i);
+				//append the city in the html				
+
+				var singlecity=document.getElementById(cityId);
+				if(singlecity!=null)
+				{
+					singlecity.className="destination-selected";
+					singlecity.style.cursor="initial";
+					singlecity.style.color="green";
+				}
+				
+				if(document.getElementById("selects-"+cityId)==null)
+				{
+					var tableDes= document.createElement('tr');
+					tableDes.id="selects-"+cityId;
+					document.getElementById("selectedDest").appendChild(tableDes);
+					var cityselected = document.createElement('td');
+					cityselected.innerHTML=cityName;
+					cityselected.id="selected-"+cityId;
+					cityselected.className='clect';//change
+					document.getElementById(tableDes.id).appendChild(cityselected);
+					var canceldiv = document.createElement('td');
+					canceldiv.innerHTML='Cancel';
+					canceldiv.id='Cancel:'+groupId+':'+cityId;
+					canceldiv.className='cancelGroup';
+					canceldiv.style.cursor="pointer";
+					document.getElementById(tableDes.id).appendChild(canceldiv);
+					countofselections++;
+				}
+
+				//Add the cityId in the selectedCityId array
+				selectedCityId.push(cityId);
+			}
+		}
+		//update(mark);
+	});
+
+	$("#selectedDest").on("click",".cancel",function () {
+		var cityId = cityIn($(this).attr('id'));
+
+		document.getElementById("selects-"+cityId).remove();
+		document.getElementById(cityId).className="destination";
+		document.getElementById(cityId).style.cursor="pointer";
+		document.getElementById(cityId).style.color="black";
+		countofselections--;
+		if(countofselections==0)
+		{
+			document.getElementById("selected-top").remove();
+		}
+		removeByAttr(selectedCityId,"cityId",cityId);
+		
+		update(1);
+		
+		/*for(var i=0;i<selectedCityId.length;i++)
+		{
+			console.log("after "+selectedCityId[i].cityId+","+selectedCityId[i].lat);
+		}*/
+		
+		
+     });
+	
+	var removeByAttr = function(arr, attr, value){
+	    var i = arr.length;
+	    while(i--){
+	       if(arr[i] && arr[i].hasOwnProperty(attr) && (arguments.length > 2 && arr[i][attr] === value )){
+	           arr.splice(i,1);//The second parameter of splice is the number of elements to remove
+	       }
+	    }
+	    return arr;
+	}
+	
+	function calcDist(orgLat,orgLong,destLat,destLong)
 	{
-		var dist=calcDist(orgLat,orgLong,destLat,destLong,fact);
-		(dist>range)?callback(true):callback(false);		
+		return (parseInt( 6371 * Math.acos( Math.cos( toRad(orgLat) ) * Math.cos( toRad( destLat ) ) * Math.cos( toRad( destLong ) - toRad(orgLong) ) + Math.sin( toRad(orgLat) ) * Math.sin( toRad( destLat ) ) ) ));
 	}
 
-	function mark(range,lat,long,startLen,endLen,callback)
+	function update(startLen)
 	{
-		console.log(range+","+lat+","+long+","+startLen+","+endLen);
 		var i=parseInt(startLen);var jq = $([1]);
 		list= $(document.getElementsByClassName('destination'));
+		var endLen=list.length;
 		while (i < parseInt(endLen)) {
 			jq.context = jq[0] = list[i];
-			//console.log(jq.attr("lat"));
-			checkAndMark(range,lat,long,jq.attr("lat"),jq.attr("long"),jq.attr("fact"),function(Mark)
+			var cityId=jq.attr("id");
+			var checkingDestLat=$("#"+cityId).data("lat");
+			var checkingDestLong=$("#"+cityId).data("long");
+
+			checkAndMark(range,checkingDestLat,checkingDestLong,function(Mark)
 			{
 				jq.css('color','');
 				if(Mark==true)
@@ -70,16 +195,30 @@
 			i++;
 		}
 	};
+
+	function checkAndMark(range,checkingDestLat,checkingDestLong,callback)
+	{
+		var startLat=orgLat;var startLong=orgLong;var endLat,endLong;
+		var dist=0;var totalDistCovered=0;
+		
+		for(var i=0;i<selectedCityId.length;i++){
+			
+			endLat=selectedCityId[i].lat;endLong=selectedCityId[i].long;
+			//console.log(startLat+","+startLong+","+endLat+","+endLong);
+			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
+			console.log("dist "+dist);
+			totalDistCovered=totalDistCovered+parseInt(dist);
+			startLat=endLat;startLong=endLong;	
+		}
+		totalDistCovered=totalDistCovered+parseInt(calcDist(endLat,endLong,checkingDestLat,checkingDestLong))+parseInt(calcDist(checkingDestLat,checkingDestLong,orgLat,orgLong));
+		(totalDistCovered>range)?callback(true):callback(false);		
+	}
 	
 	function toRad(Value) {
 	    /** Converts numeric degrees to radians */
 	    return Value * Math.PI / 180;
 	}
-
-	function calcDist(orgLat,orgLong,destLat,destLong,fact)
-	{
-		return (parseInt( 6371 * Math.acos( Math.cos( toRad(orgLat) ) * Math.cos( toRad( destLat ) ) * Math.cos( toRad( destLong ) - toRad(orgLong) ) + Math.sin( toRad(orgLat) ) * Math.sin( toRad( destLat ) ) ) )+parseInt(fact));
-	}
+	
 	
 	function afterScroll(callback) {
 		list= $(document.getElementsByClassName('destination'));
@@ -94,89 +233,3 @@
 			});
 		}
 	}
-	
-	function Update(callback){
-		var list = $(document.getElementsByClassName('clect'));
-		var jq = $([1]);
-		var i=0;
-		var totalDist=0;var startLen=0;
-		var startLat=orgLat;var startLong=orgLong;var endLat,endLong,fact;
-		while (i < list.length) {
-			jq.context = jq[0] = list[i];
-			endLat=jq.attr("lat");endLong=jq.attr("long");fact=jq.attr("fact");
-			var dist=calcDist(startLat,startLong,endLat,endLong,fact);
-			totalDist=totalDist+parseInt(dist);
-			startLat=endLat;startLong=endLong;
-			i++;
-		}
-		console.log("totalDist "+totalDist);
-		console.log("oldRange "+$("#values").attr("range"));
-		range=$("#values").attr("range")-totalDist;
-		console.log("newR "+range);
-		callback(range,endLat,endLong,startLen,length,function(){});
-	}
-	
-	function checkAndRemove(id)
-	{	var list = $(document.getElementsByClassName('clect'));
-		var jq = $([1]);
-		var i=0;var check=false;
-		while (i < list.length) {
-			jq.context = jq[0] = list[i];
-			var Id=jq.attr("id");
-			if(id.indexOf(Id)!=-1)
-			{
-				check=true;
-				jq.parent().parent().remove();
-				count--;
-			}
-			i++;
-		}
-	}
-
-	function append(name,id,lat,long,fact,callback)
-	{
-		if(flag==0)
-		{
-			var div = document.createElement('div');
-			div.innerHTML='YOUR SELECTED DESTINATIONS:';
-			div.id="selected-top";
-			var table=document.createElement("TABLE");
-			table.setAttribute('id','sTable');
-			var row = table.insertRow(0);
-			row.appendChild(div);
-			document.getElementById("selectedDest").appendChild(table);
-			flag=1;
-		}
-			var div = document.createElement('div');
-			div.innerHTML=name;
-			div.id=id;
-			div.className="clect";
-			div.setAttribute('lat',lat);
-			div.setAttribute('long',long);
-			div.setAttribute('fact',fact);
-			var close=document.createElement('div');
-			close.innerHTML="X";
-			close.className="remove";
-			close.setAttribute('style','cursor:pointer');
-			
-			var table=document.getElementById("sTable");
-			var row = table.insertRow(count+1);
-			var cell1 = row.insertCell(0);
-			var cell2 = row.insertCell(1);
-			cell1.appendChild(div);
-			cell2.appendChild(close);
-			callback();
-	}
-	
-	$(document).on("click",".remove",function () {
-		var id=$(this).parent().prev().children().attr('id');
-		$(this).parent().parent().remove();
-		count--;
-		/**show the removed city/group in the loaded city*/
-		$("#"+id).parent().parent().show();
-		/**update the range that can be travelled*/
-		/**check if uploaded cities can be travelled from appended city/group and mark if not*/
-		Update(mark);
-		//call the daddy function dude
-		
-	});
