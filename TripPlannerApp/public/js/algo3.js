@@ -1,6 +1,6 @@
 /**
  * @author rahul and rajat
- * TODO:scrolling,if all cities of group than green,if remove a city that is in group then black,update on group cities
+ * TODO:Test scrolling,if all cities of group than green,if remove a city that is in group then black,update on group cities
  *
  */
 
@@ -9,7 +9,7 @@
 	var orgLat;//Lat of the origin
 	var orgLong;//Long of the origin
 	var range;//Range that can be travelled by user
-	var LoadedCityLen=0;//represents the length of the current loaded suggested cities as per the user scrolling
+	var LoadedCityLen=0;//represents the length of the old loaded suggested cities as per the user scrolling
 
 	var cityData=function(cityId,lat,long){
 		
@@ -82,7 +82,7 @@
 		}
 	});
 
-	$("#suggestedDest").on("click",".groupDestination",function () {
+	$("#suggestedDest").on("click",".group",function () {
 
 		var groupId=$(this).attr('id');
 		var numCity=$("#"+groupId).data("count");
@@ -171,15 +171,31 @@
 	function update(startLen)
 	{
 		var i=parseInt(startLen);var jq = $([1]);
-		list= $(document.getElementsByClassName('destination'));
-		var endLen=list.length;
+		var cityList= $(document.getElementsByClassName('destination'));
+		//var groupList=$(document.getElementsByClassName('group'));
+		var endLen=cityList.length;LoadedCityLen=cityList.length;
+
+		var startLat=orgLat;var startLong=orgLong;var endLat,endLong,distCovered=0;
+		//find the distance from origin to last selected city
+		for(var i=0;i<selectedCityId.length;i++){
+			
+			endLat=selectedCityId[i].lat;endLong=selectedCityId[i].long;
+			//console.log(startLat+","+startLong+","+endLat+","+endLong);
+			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
+			console.log("dist "+dist);
+			distCovered=distCovered+parseInt(dist);
+			startLat=endLat;startLong=endLong;	
+		}
+
+		/** TODO: checkAndMark for groups*/
+		
 		while (i < parseInt(endLen)) {
-			jq.context = jq[0] = list[i];
+			jq.context = jq[0] = cityList[i];
 			var cityId=jq.attr("id");
 			var checkingDestLat=$("#"+cityId).data("lat");
 			var checkingDestLong=$("#"+cityId).data("long");
-
-			checkAndMark(range,checkingDestLat,checkingDestLong,function(Mark)
+			
+			checkAndMark(range,distCovered,endLat,endLong,checkingDestLat,checkingDestLong,function(Mark)
 			{
 				jq.css('color','');
 				if(Mark==true)
@@ -196,40 +212,32 @@
 		}
 	};
 
-	function checkAndMark(range,checkingDestLat,checkingDestLong,callback)
+	function checkAndMark(range,distCovered,endLat,endLong,checkingDestLat,checkingDestLong,callback)
 	{
-		var startLat=orgLat;var startLong=orgLong;var endLat,endLong;
-		var dist=0;var totalDistCovered=0;
-		
-		for(var i=0;i<selectedCityId.length;i++){
-			
-			endLat=selectedCityId[i].lat;endLong=selectedCityId[i].long;
-			//console.log(startLat+","+startLong+","+endLat+","+endLong);
-			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
-			console.log("dist "+dist);
-			totalDistCovered=totalDistCovered+parseInt(dist);
-			startLat=endLat;startLong=endLong;	
-		}
-		totalDistCovered=totalDistCovered+parseInt(calcDist(endLat,endLong,checkingDestLat,checkingDestLong))+parseInt(calcDist(checkingDestLat,checkingDestLong,orgLat,orgLong));
-		(totalDistCovered>range)?callback(true):callback(false);		
+		//var dist=0;var totalDistCovered=0;
+		distCovered=distCovered+parseInt(calcDist(endLat,endLong,checkingDestLat,checkingDestLong))+parseInt(calcDist(checkingDestLat,checkingDestLong,orgLat,orgLong));
+		(distCovered>range)?callback(true):callback(false);		
 	}
 	
 	function toRad(Value) {
 	    /** Converts numeric degrees to radians */
 	    return Value * Math.PI / 180;
 	}
-	
-	
-	function afterScroll(callback) {
-		list= $(document.getElementsByClassName('destination'));
-		var startLen=length;
-		var endLen=list.length;
-		length=endLen;
-		console.log(startLen+","+endLen);
-		if((count>0)&&(endLen>length)){
-			console.log("afterScroll");
-			mark(range,lat,long,startLen,endLen,function(){
-				callback();
-			});
+
+	function afterScroll() {
+		
+		console.log("after scroll");
+		/**TODO: afterscroll for groups*/
+		cityList= $(document.getElementsByClassName('destination'));
+		var startLen=LoadedCityLen;
+		var endLen=cityList.length;
+		LoadedCityLen=endLen;
+		console.log("len Testing "+startLen+","+endLen);
+		if((countofselections>0)&&(endLen>startLen)){
+			console.log("yes u can call");
+			/*mark(range,lat,long,startLen,endLen,function(){
+				//callback();
+			});*/
+			update(startLen);
 		}
 	}
