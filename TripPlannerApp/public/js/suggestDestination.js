@@ -158,8 +158,8 @@ function suggestGroups(){
 	        	console.log("groupId "+groupId+","+value.CityName+","+value.CityID, ","+value.Latitude+","+value.Longitude);
 	        	$("#"+groupId).data("lat"+citynum,value.Latitude);
 	        	$("#"+groupId).data("long"+citynum,value.Longitude);
-				$("#"+groupId).data("cityname"+citynum,value.CityName);
-				$("#"+groupId).data("cityid"+citynum,value.CityName);
+				$("#"+groupId).data("cityName"+citynum,value.CityName);
+				$("#"+groupId).data("cityId"+citynum,value.CityName);
 	        });
 		});
 	});

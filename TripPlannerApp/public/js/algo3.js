@@ -1,6 +1,6 @@
 /**
  * @author rahul and rajat
- * TODO:Test scrolling,if all cities of group than green,if remove a city that is in group then black,update on group cities
+ * TODO:Test scrolling,if all cities of group than green,update on group cities
  *
  */
 
@@ -10,7 +10,7 @@
 	var orgLong;//Long of the origin
 	var range;//Range that can be travelled by user
 	var LoadedCityLen=0;//represents the length of the old loaded suggested cities as per the user scrolling
-
+	var LoadedGroupLen=0;
 	var cityData=function(cityId,lat,long){
 		
 		this.cityId=cityId;
@@ -71,6 +71,11 @@
 				var city_data = new cityData(cityId, lat, long);
 				selectedCityId.push(city_data);
 				countofselections++;
+				
+				//if all the cities of the group get selected then select the group
+				selectGroupIfAllCitiesSelected();
+				
+				//
 				update(1);
 
 				/*for(var j=0;j<selectedCityId.length;j++)
@@ -85,6 +90,10 @@
 	$("#suggestedDest").on("click",".group",function () {
 
 		var groupId=$(this).attr('id');
+		document.getElementById(groupId).className="group-selected";
+		document.getElementById(groupId).style.cursor="initial";
+		document.getElementById(groupId).style.color="green";
+		
 		var numCity=$("#"+groupId).data("count");
 		
 		for(var i=0;i<numCity;i++)
@@ -126,6 +135,10 @@
 				selectedCityId.push(cityId);
 			}
 		}
+
+		//if all the cities of the group get selected then select the group
+		selectGroupIfAllCitiesSelected();
+		
 		//update(mark);
 	});
 
@@ -136,6 +149,34 @@
 		document.getElementById(cityId).className="destination";
 		document.getElementById(cityId).style.cursor="pointer";
 		document.getElementById(cityId).style.color="black";
+		
+		
+		//if the cancel city is in the selected group then make the group unselected
+		var groupList=$(document.getElementsByClassName('group'));
+		var i=0,j;
+		while(i<groupList.length)
+		{
+			jq.context = jq[0] = groupList[i];
+			var groupId=jq.attr('id');
+			if(jq.attr('class')=="group-selected")
+			{
+				var numCity=$("#"+groupId).data("count");j=0;
+				while(j<numCity)
+				{
+					if(cityId==$("#"+groupId).data("cityId"+j))
+					{
+						document.getElementById(groupId).className="group";
+						document.getElementById(groupId).style.cursor="pointer";
+						document.getElementById(groupId).style.color="black";
+						break;
+					}
+					j++;
+				}
+				
+			}
+			i++;
+		}
+
 		countofselections--;
 		if(countofselections==0)
 		{
@@ -168,18 +209,23 @@
 		return (parseInt( 6371 * Math.acos( Math.cos( toRad(orgLat) ) * Math.cos( toRad( destLat ) ) * Math.cos( toRad( destLong ) - toRad(orgLong) ) + Math.sin( toRad(orgLat) ) * Math.sin( toRad( destLat ) ) ) ));
 	}
 
-	function update(startLen)
+	function update(startLenForCity,startLenForGroup)
 	{
-		var i=parseInt(startLen);var jq = $([1]);
+		var i=parseInt(startLenForCity);var jq = $([1]);
+		var j=parseInt(startLenForGroup);
 		var cityList= $(document.getElementsByClassName('destination'));
-		//var groupList=$(document.getElementsByClassName('group'));
-		var endLen=cityList.length;LoadedCityLen=cityList.length;
-
+		var groupList=$(document.getElementsByClassName('group'));
+		LoadedCityLen=cityList.length;
+		LoadedGroupLen=groupList.length;
+		var endLenForCity=cityList.length;
+		var endLenForGroup=groupList.length;
+		
 		var startLat=orgLat;var startLong=orgLong;var endLat,endLong,distCovered=0;
 		//find the distance from origin to last selected city
 		for(var i=0;i<selectedCityId.length;i++){
 			
-			endLat=selectedCityId[i].lat;endLong=selectedCityId[i].long;
+			endLat=selectedCityId[i].lat;
+			endLong=selectedCityId[i].long;
 			//console.log(startLat+","+startLong+","+endLat+","+endLong);
 			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
 			console.log("dist "+dist);
@@ -187,9 +233,7 @@
 			startLat=endLat;startLong=endLong;	
 		}
 
-		/** TODO: checkAndMark for groups*/
-		
-		while (i < parseInt(endLen)) {
+		while (i < parseInt(endLenForCity)) {
 			jq.context = jq[0] = cityList[i];
 			var cityId=jq.attr("id");
 			var checkingDestLat=$("#"+cityId).data("lat");
@@ -210,6 +254,29 @@
 			});
 			i++;
 		}
+		
+		/** TODO: checkAndMark for groups*/
+		
+		/*while(j< parseInt(endLenForGroup))
+		{
+			
+			jq.context = jq[0] = groupList[i];
+			var groupId=jq.attr("id");
+			var numCity=$("#"+groupId).data("count");
+			var k=0;
+			while(k<numCity)
+			{
+				var cityId=$("#"+groupId).data("cityId"+k); 
+				if(selectedCityId.indexOf(cityId)==-1)
+				{
+					var lat=$("#"+groupId).data("lat"+k);
+					var long=$("#"+groupId).data("long"+k);
+					
+				}
+			}
+			
+		}*/
+		
 	};
 
 	function checkAndMark(range,distCovered,endLat,endLong,checkingDestLat,checkingDestLong,callback)
@@ -241,3 +308,38 @@
 			update(startLen);
 		}
 	}
+	
+	
+	function selectGroupIfAllCitiesSelected()
+	{
+		var groupList=$(document.getElementsByClassName('group'));		
+		var i=0,j;
+		while(i<groupList.length)
+		{
+			jq.context = jq[0] = groupList[i];
+			var groupId=jq.attr('id');
+			if(jq.attr('class')=="group")
+			{
+				var numCity=$("#"+groupId).data("count");
+				j=0;
+				while(j<numCity)
+				{
+					var cityId=$("#"+groupId).data("cityId"+j);
+					if(selectedCityId.indexOf(cityId)==-1)
+					{
+							break;
+					}
+					j++;
+				}
+				if(j==numCity)
+				{
+					document.getElementById(groupId).className="group-selected";
+					document.getElementById(groupId).style.cursor="initial";
+					document.getElementById(groupId).style.color="green";
+				}				
+			}
+			i++;
+		}
+	}
+	
+	
