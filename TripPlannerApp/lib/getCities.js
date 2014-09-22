@@ -3,6 +3,10 @@
  * 
  */
 
+var Hashids=require('hashids');
+var hashidscity = new Hashids("encrypting the cityid", 8);
+
+
 function getCityList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
 	var connection=conn.conn();
 	connection.connect();
@@ -22,6 +26,8 @@ function getCityList(conn,orgLat,orgLong,category,range,start,batchsize,callback
 		}
 	    else{
 	    	for (var i in rows) {
+	        var id = hashidscity.encode(rows[i].CityID);
+	        rows[i].CityID = id;
 	        console.log(rows[i]);
 	    	}
 	  }

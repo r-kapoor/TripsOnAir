@@ -1,7 +1,8 @@
 /**
  * @author rahul and rajat
  * TODO:Test scrolling,if all cities of group than green,update on group cities
- *
+ *		There is a problem with afterScroll function, Sometime Error comes: "Uncaught ReferenceError: afterScroll is not defined"
+ *	Afterscroll: selected cities should be green as it may come from the group
  */
 
 	var selectedCityId=[];
@@ -20,15 +21,13 @@
 	
 	$("#suggestedDest").on("click",".destination",function () {
 
-		console.log("on click");
 		orgLat=$("#TextBoxDiv").data("orgLat");
 		orgLong=$("#TextBoxDiv").data("orgLong");
 		range=$("#TextBoxDiv").data("range");
-		
+
 		var cityId = $(this).attr('id');
 		var cityName=$(this).text();
-		console.log(cityName);
-		console.log(countofselections);
+
 		document.getElementById(cityId).className="destination-selected";
 		document.getElementById(cityId).style.cursor="initial";
 		document.getElementById(cityId).style.color="green";
@@ -73,8 +72,7 @@
 				countofselections++;
 				
 				//if all the cities of the group get selected then select the group
-				selectGroupIfAllCitiesSelected();
-				
+				//selectGroupIfAllCitiesSelected();
 				//
 				update(1);
 
@@ -95,17 +93,31 @@
 		document.getElementById(groupId).style.cursor="initial";
 		document.getElementById(groupId).style.color="green";
 		
-		var numCity=$("#"+groupId).data("count");
+		//console.log("groupID "+groupId);
+		
+		var numCity=$("#"+groupId).data("numofcities");
+		console.log("count_city "+numCity);
+		
+		
+		if(countofselections==0)
+		{
+			var div = document.createElement('div');
+			div.innerHTML='YOUR SELECTED DESTINATIONS:';
+			div.id="selected-top";
+			document.getElementById("selectedDest").appendChild(div);
+		}
 		
 		for(var i=0;i<numCity;i++)
 		{
 			var cityId=$("#"+groupId).data("cityId"+i);
-			if(selectedCityId.indexOf(cityId)!=-1)
+			console.log("cityId"+i+" "+cityId);
+			if(selectedCityId.indexOf(cityId)==-1)
 			{
 				var cityName=$("#"+groupId).data("cityName"+i);
-				//append the city in the html				
+				console.log("cityName "+i+" "+cityName);				
 
 				var singlecity=document.getElementById(cityId);
+
 				if(singlecity!=null)
 				{
 					singlecity.className="destination-selected";
@@ -113,8 +125,9 @@
 					singlecity.style.color="green";
 				}
 				
-				if(document.getElementById("selects-"+cityId)==null)
-				{
+				//if(document.getElementById("selects-"+cityId)==null)
+				//{//append the city in the html
+				//console.log("should be append");
 					var tableDes= document.createElement('tr');
 					tableDes.id="selects-"+cityId;
 					document.getElementById("selectedDest").appendChild(tableDes);
@@ -125,12 +138,12 @@
 					document.getElementById(tableDes.id).appendChild(cityselected);
 					var canceldiv = document.createElement('td');
 					canceldiv.innerHTML='Cancel';
-					canceldiv.id='Cancel:'+groupId+':'+cityId;
-					canceldiv.className='cancelGroup';
+					canceldiv.id='Cancel-'+cityId;
+					canceldiv.className='cancel';
 					canceldiv.style.cursor="pointer";
 					document.getElementById(tableDes.id).appendChild(canceldiv);
 					countofselections++;
-				}
+				//}
 
 				//Add the cityId in the selectedCityId array
 				selectedCityId.push(cityId);
@@ -138,7 +151,7 @@
 		}
 
 		//if all the cities of the group get selected then select the group
-		selectGroupIfAllCitiesSelected();
+		//selectGroupIfAllCitiesSelected();
 		
 		//update(mark);
 	});
@@ -147,45 +160,48 @@
 		var cityId = cityIn($(this).attr('id'));
 
 		document.getElementById("selects-"+cityId).remove();
-		document.getElementById(cityId).className="destination";
-		document.getElementById(cityId).style.cursor="pointer";
-		document.getElementById(cityId).style.color="black";
 		
+		var cityElement=document.getElementById(cityId);
+		if(cityElement!=null){
+			cityElement.className="destination";
+			cityElement.style.cursor="pointer";
+			cityElement.style.color="black";
+		}
 		
 		//if the cancel city is in the selected group then make the group unselected
-		var groupList=$(document.getElementsByClassName('group'));
+		var groupList=$(document.getElementsByClassName('group-selected'));
 		var i=0,j;
 		while(i<groupList.length)
-		{
+		{	
+			var jq = $([1]);
 			jq.context = jq[0] = groupList[i];
 			var groupId=jq.attr('id');
-			if(jq.attr('class')=="group-selected")
+			var numCity=$("#"+groupId).data("numofcities");
+			j=0;
+			while(j<numCity)
 			{
-				var numCity=$("#"+groupId).data("count");j=0;
-				while(j<numCity)
+				if(cityId==$("#"+groupId).data("cityId"+j))
 				{
-					if(cityId==$("#"+groupId).data("cityId"+j))
-					{
-						document.getElementById(groupId).className="group";
-						document.getElementById(groupId).style.cursor="pointer";
-						document.getElementById(groupId).style.color="black";
-						break;
-					}
-					j++;
+					document.getElementById(groupId).className="group";
+					document.getElementById(groupId).style.cursor="pointer";
+					document.getElementById(groupId).style.color="black";
+					break;
 				}
-				
+				j++;
 			}
 			i++;
 		}
 
+		//Decrease selected cities count and remove the city from selectedCityId array
 		countofselections--;
+
 		if(countofselections==0)
 		{
 			document.getElementById("selected-top").remove();
 		}
 		removeByAttr(selectedCityId,"cityId",cityId);
 		
-		update(1);
+		//update(1);
 		
 		/*for(var i=0;i<selectedCityId.length;i++)
 		{
@@ -235,6 +251,7 @@
 		}
 
 		while (i < parseInt(endLenForCity)) {
+			var jq = $([1]);
 			jq.context = jq[0] = cityList[i];
 			var cityId=jq.attr("id");
 			var checkingDestLat=$("#"+cityId).data("lat");
@@ -312,26 +329,38 @@
 	
 	
 	function selectGroupIfAllCitiesSelected()
-	{
+	{console.log("test called");
 		var groupList=$(document.getElementsByClassName('group'));		
 		var i=0,j;
 		while(i<groupList.length)
-		{
+		{	console.log("enter time "+i);
+			var jq = $([1]);
 			jq.context = jq[0] = groupList[i];
 			var groupId=jq.attr('id');
+			console.log("in groupId"+groupId);
 			if(jq.attr('class')=="group")
 			{
-				var numCity=$("#"+groupId).data("count");
+				var numCity=$("#"+groupId).data("numofcities");
+				console.log("numCity "+numCity);
 				j=0;
 				while(j<numCity)
 				{
 					var cityId=$("#"+groupId).data("cityId"+j);
-					if(selectedCityId.indexOf(cityId)==-1)
+					console.log("cityId "+cityId);
+					/*for(var k=0;k<selectedCityId.length;k++)
 					{
+						console.log("selectedCity "+selectedCityId[k]);
+					}*/
+					
+					//if(selectedCityId.indexOf(cityId)==-1)
+					if(searchByAttr(selectedCityId,"cityId",cityId))
+					{
+						//console.log("it happens!!");
 							break;
 					}
 					j++;
 				}
+				console.log("j"+j+","+"numCity "+numCity);
 				if(j==numCity)
 				{
 					document.getElementById(groupId).className="group-selected";
@@ -343,4 +372,12 @@
 		}
 	}
 	
+	var searchByAttr = function(arr, attr, value){
+	    var i = arr.length;
+	    while(i--){
+	       if(arr[i] && arr[i].hasOwnProperty(attr) && (arguments.length > 2 && arr[i][attr] === value )){
+	          return true;
+	       }
+	    }
+	}
 	
