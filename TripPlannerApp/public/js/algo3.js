@@ -72,7 +72,7 @@
 				countofselections++;
 				
 				//if all the cities of the group get selected then select the group
-				//selectGroupIfAllCitiesSelected();
+				selectGroupIfAllCitiesSelected();
 				//
 				update(1);
 
@@ -95,7 +95,7 @@
 		//console.log("groupID "+groupId);
 		
 		var numCity=$("#"+groupId).data("numofcities");
-		console.log("count_city "+numCity);
+		//console.log("count_city "+numCity);
 		
 		
 		if(countofselections==0)
@@ -109,11 +109,11 @@
 		for(var i=0;i<numCity;i++)
 		{
 			var cityId=$("#"+groupId).data("cityId"+i);
-			console.log("cityId"+i+" "+cityId);
+			//console.log("cityId"+i+" "+cityId);
 			if(selectedCityId.indexOf(cityId)==-1)
 			{
 				var cityName=$("#"+groupId).data("cityName"+i);
-				console.log("cityName "+i+" "+cityName);				
+				//console.log("cityName "+i+" "+cityName);				
 
 				var singlecity=document.getElementById(cityId);
 
@@ -200,14 +200,12 @@
 		}
 		removeByAttr(selectedCityId,"cityId",cityId);
 		
-		//update(1);
+		update(1);
 		
 		/*for(var i=0;i<selectedCityId.length;i++)
 		{
 			console.log("after "+selectedCityId[i].cityId+","+selectedCityId[i].lat);
 		}*/
-		
-		
      });
 	
 	var removeByAttr = function(arr, attr, value){
@@ -328,38 +326,28 @@
 	
 	
 	function selectGroupIfAllCitiesSelected()
-	{console.log("test called");
+	{
 		var groupList=$(document.getElementsByClassName('group'));		
 		var i=0,j;
 		while(i<groupList.length)
-		{	console.log("enter time "+i);
+		{	
 			var jq = $([1]);
 			jq.context = jq[0] = groupList[i];
 			var groupId=jq.attr('id');
-			console.log("in groupId"+groupId);
+
 			if(jq.attr('class')=="group")
 			{
 				var numCity=$("#"+groupId).data("numofcities");
-				console.log("numCity "+numCity);
 				j=0;
 				while(j<numCity)
 				{
 					var cityId=$("#"+groupId).data("cityId"+j);
-					console.log("cityId "+cityId);
-					/*for(var k=0;k<selectedCityId.length;k++)
+					if(!searchByAttr(selectedCityId,"cityId",cityId))
 					{
-						console.log("selectedCity "+selectedCityId[k]);
-					}*/
-					
-					//if(selectedCityId.indexOf(cityId)==-1)
-					if(searchByAttr(selectedCityId,"cityId",cityId))
-					{
-						//console.log("it happens!!");
 							break;
 					}
 					j++;
 				}
-				console.log("j"+j+","+"numCity "+numCity);
 				if(j==numCity)
 				{
 					document.getElementById(groupId).className="group-selected";
