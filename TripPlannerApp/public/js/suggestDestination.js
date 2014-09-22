@@ -12,11 +12,11 @@ function onSubmit(){
 	cityBatch=0;groupBatch=0;
 	document.getElementById("suggestedDest").innerHTML="";
 	$(window).data('ajaxready', false);//to avoid scroll call
-	//if(addScripts==0)
-	//{
-		//createScript('algo3');
+	if(addScripts==0)
+	{
+		createScript('algo3');
 		createScript('scroll');
-	//}
+	}
 	suggestDest();
 	suggestGroups();
 	addScripts=1;
@@ -74,13 +74,13 @@ function suggestDest(){
 	        
 	        $.each(data.CityList, function(key,value) {
 	        	var cityId=value.CityID;
-	        	console.log("cityId "+cityId+","+value.Latitude+","+value.Longitude);
+	        	//console.log("cityId "+cityId+","+value.Latitude+","+value.Longitude);
 	        	$("#"+cityId).data("lat",value.Latitude);
 	        	$("#"+cityId).data("long",value.Longitude);
 	        });
 	        
 	        //console.log("can we call?");
-	        //afterScroll();
+	        afterScroll();
 	 
 	        $.each(data.CityList, function(key,value) {
 	        	var cityId=value.CityID;
@@ -155,11 +155,11 @@ function suggestGroups(){
 				{
 					$("#"+groupId).data("numofcities",numOfCities[groupIDs.indexOf(groupId)]);
 				}
-	        	console.log("groupId "+groupId+","+value.CityName+","+value.CityID, ","+value.Latitude+","+value.Longitude);
+	        	//console.log("groupId "+groupId+","+value.CityName+","+value.CityID, ","+value.Latitude+","+value.Longitude);
 	        	$("#"+groupId).data("lat"+citynum,value.Latitude);
 	        	$("#"+groupId).data("long"+citynum,value.Longitude);
 				$("#"+groupId).data("cityName"+citynum,value.CityName);
-				$("#"+groupId).data("cityId"+citynum,value.CityName);
+				$("#"+groupId).data("cityId"+citynum,value.CityID);
 	        });
 		});
 	});
