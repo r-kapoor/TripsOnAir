@@ -20,7 +20,7 @@
 	
 	$("#suggestedDest").on("click",".destination",function () {
 
-		
+		console.log("on click");
 		orgLat=$("#TextBoxDiv").data("orgLat");
 		orgLong=$("#TextBoxDiv").data("orgLong");
 		range=$("#TextBoxDiv").data("range");
@@ -85,6 +85,7 @@
 				
 			}
 		}
+		suggestDestinationsAccordingToSelections();
 	});
 
 	$("#suggestedDest").on("click",".group",function () {
