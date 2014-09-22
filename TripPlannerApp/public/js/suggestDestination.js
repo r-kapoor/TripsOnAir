@@ -8,6 +8,10 @@ var cityBatch=0;
 var groupBatch=0;
 var addScripts=0;//To be done once when submit is clicked
 
+function suggestDestinationsAccordingToSelections()
+{
+	console.log('function suggestDestinationsAccordingToSelections called');
+}
 function onSubmit(){
 	cityBatch=0;groupBatch=0;
 	document.getElementById("suggestedDest").innerHTML="";

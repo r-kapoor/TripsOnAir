@@ -83,6 +83,7 @@
 				
 			}
 		}
+		suggestDestinationsAccordingToSelections();
 	});
 
 	$("#suggestedDest").on("click",".group",function () {
