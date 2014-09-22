@@ -5,7 +5,7 @@
  */
 
 var Hashids=require('hashids');
-var hashidsgroup = new Hashids("encrypting the groupid usinng hash", 8);
+var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
 var hashidscity = new Hashids("encrypting the cityid", 8);
 function getGroupList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
 

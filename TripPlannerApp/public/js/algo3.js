@@ -149,7 +149,8 @@
 				selectedCityId.push(cityId);
 			}
 		}
-
+		
+		suggestDestinationsAccordingToSelections();
 		//if all the cities of the group get selected then select the group
 		//selectGroupIfAllCitiesSelected();
 		
@@ -203,6 +204,7 @@
 		
 		update(1);
 		
+		suggestDestinationsAccordingToSelections();
 		/*for(var i=0;i<selectedCityId.length;i++)
 		{
 			console.log("after "+selectedCityId[i].cityId+","+selectedCityId[i].lat);

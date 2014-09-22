@@ -10,6 +10,7 @@ var IndexModel = require('../models/index');
 var getCity = require('../lib/getCities');
 var getGroup = require('../lib/getGroups');
 var getRange= require('../lib/getRange');
+var getNearbyCity = require('../lib/getNearbyCities');
 
 module.exports=function (app){
 
@@ -55,6 +56,28 @@ module.exports=function (app){
 			var model =
 		      {
 				 GroupList: groupRows
+		      };
+			//res.render('group', model);
+			res.json(model);
+				});
+		});
+	});
+	
+	app.get('/suggestNearbyDest',function(req,res)
+	{
+		var selectedIDs=req.param('selectedIDs');
+		var selectedLats=req.param('selectedLats');
+		var selectedLongs = req.param('selectedLongs');
+		var taste = req.param('taste');
+		var budget = req.param('budget');
+		var numDays = req.param('numDays');
+		var batchsize = 5;
+		var start=parseInt(req.param('next'));
+		getRange.getRange(budget,numDays,function(range){
+			getNearbyCity.getNearbyCityList(conn,selectedIDs,selectedLats,selectedLongs,taste,range,start,batchsize,function(nearbyCityRows){
+			var model =
+		      {
+				 NearbyCityList: nearbyCityRows
 		      };
 			//res.render('group', model);
 			res.json(model);
