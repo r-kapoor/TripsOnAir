@@ -6,11 +6,77 @@
 
 var cityBatch=0;
 var groupBatch=0;
+var cityNearbyBatch=0;
 var addScripts=0;//To be done once when submit is clicked
+var userTastes=[];//To reuse the tastes both queries
+
+function createQueryStringForNextDestinations(callback){
+	var selectedIDs = [], selectedLats = [], selectedLongs = [];
+	var startDate = document.getElementById("startdate").value;
+	var endDate = document.getElementById("enddate").value;
+	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24);
+	var budget = document.getElementById("range").value;
+	/*var j=0;
+		for (var i=0, n=tastes.length;i<n;i++) {
+	  if (tastes[i].checked) 
+	  {
+		 userTastes[j] = tastes[i].value;
+		 j++;
+	  }
+	}*/
+	for( var i = 0; i < selectedCityId.length; i++)
+	{
+		selectedIDs[i] = selectedCityId[i].cityId;
+		selectedLats[i] = selectedCityId[i].lat;
+		selectedLongs[i] = selectedCityId[i].long;
+	}
+	var query="selectedIDs="+selectedIDs+"&"+"selectedLats="+selectedLats+"&"+"selectedLongs="+selectedLongs+"&"+"numDays="+numDays+"&"+"taste="+userTastes+"&"+"budget="+budget;
+	callback(query);
+}
 
 function suggestDestinationsAccordingToSelections()
 {
 	console.log('function suggestDestinationsAccordingToSelections called');
+	createQueryStringForNextDestinations(function(query){
+		query=query+"&next="+cityNearbyBatch;
+		cityNearbyBatch+=5;
+		var i=0;
+		var list ='<ul>';
+		var ajaxQuery = $.getJSON( '/suggestNearbyDest?'+query);
+
+		ajaxQuery.done(function(data) {
+		
+			if(cityNearbyBatch==5)
+			{	
+				var div = document.createElement('div');
+				div.innerHTML='BASED ON YOUR SELECTIONS YOU MAY WANT TO ADD THESE CITIES TO YOUR TRIP:';
+				div.id="nearbycities-top";
+				div.style.color="blue";
+				document.getElementById("suggestedNearbyDest").appendChild(div);
+			}
+			$.each(data.NearbyCityList, function(key,value){
+				list+='<li>';
+	        	list+='<h4><div class="nearby-destination" id="'+ value.CityID+'" style="cursor:pointer; color:blue">'+value.CityName+'</div></h4>';
+                list+='</li>'
+				i++;
+			});
+			list+='</ul>';
+			makediv(list,appendNearbyDestinations);
+	        i=0;	        
+	        
+	        $.each(data.NearbyCityList, function(key,value) {
+	        	var cityId=value.CityID;
+	        	//console.log("cityId "+cityId+","+value.Latitude+","+value.Longitude);
+	        	$("#"+cityId).data("lat",value.Latitude);
+	        	$("#"+cityId).data("long",value.Longitude);
+	        });
+	        
+	        //console.log("can we call?");
+	        afterScroll();
+
+		});
+	});
+	
 }
 function onSubmit(){
 	cityBatch=0;groupBatch=0;
@@ -34,7 +100,7 @@ function createQueryString(callback){
 	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24); 
 	var budget = document.getElementById("range").value;
 	var tastes = document.getElementsByName('category');
-	var userTastes=[];var j=0;
+	userTastes=[];var j=0;
 	$.getJSON(originLocation, function(data){
 		var orgLat = data.results[0].geometry.location.lat;
 		var orgLong =data.results[0].geometry.location.lng;
@@ -112,6 +178,11 @@ function createScript(attribute)
 function appendResults(responseDiv)
 {
 	document.getElementById("suggestedDest").appendChild(responseDiv);
+}
+
+function appendNearbyDestinations(responseDiv)
+{
+	document.getElementById("suggestedNearbyDest").appendChild(responseDiv);
 }
 
 function suggestGroups(){

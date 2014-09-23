@@ -76,4 +76,5 @@ console.log("in type");
 {>"layouts/master/input2" /}
 
 <div id="selectedDest"></div>
+<div id="suggestedNearbyDest"></div>
 <div id="suggestedDest" class="cities"></div>
