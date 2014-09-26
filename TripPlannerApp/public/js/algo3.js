@@ -1,10 +1,22 @@
 /**
  * @author rahul and rajat
- * TODO:Test scrolling,		
- *	Afterscroll: selected cities should be green as it may come from the group
+ * TODO: change the class through jq in afterscroll function
+ *	Test Cases:
+ *			1)If a city is selected then 
+ *				a)its color in list should be green;
+ *				b)check if the all of the cities of groups selected or not(through selectGroupIfAllCitiesSelected() function),if yes then group color in the list should be green
+ *				c)Make the cities/groups red which can't be covered now(through update() function)
+ *			2)If a group is selected then
+ *				a)cities/group color-green;only non-selected cities of that group should be appended into the selected list
+ *				b)Make the cities/groups red which can't be covered now(through update() function)
+ *				c)check if the all of the cities of groups selected or not(through selectGroupIfAllCitiesSelected() function)
+ *			3)After scroll:
+ *				a)update(),selectGroupIfAllCitiesSelected(),select cities which are already selected from group
+ *			4)Remove:
+ *				a)update();Make the removed cities black and accordingly groups too
  */
 
-	var selectedCityId=[];
+	var selectedCityData=[];
 	var countofselections = 0;
 	var orgLat;//Lat of the origin
 	var orgLong;//Long of the origin
@@ -23,7 +35,6 @@
 		orgLat=$("#TextBoxDiv").data("orgLat");
 		orgLong=$("#TextBoxDiv").data("orgLong");
 		range=$("#TextBoxDiv").data("range");
-
 		var cityId = $(this).attr('id');
 		var cityName=$(this).text();
 
@@ -61,42 +72,35 @@
 				canceldiv.style.cursor="pointer";
 				document.getElementById(tableDes.id).appendChild(canceldiv);
 				
-				/**Track appended city through selectedCityID array */
-				
+				/**Push the selected city data into the selectedCityData array */			
 				var lat=$("#"+cityId).data("lat");
 				var long=$("#"+cityId).data("long");
-				//console.log("cityData "+cityId+","+lat+","+long);
 				var city_data = new cityData(cityId, lat, long);
-				selectedCityId.push(city_data);
+				selectedCityData.push(city_data);
 				countofselections++;
 				
 				//if all the cities of the group get selected then select the group
 				selectGroupIfAllCitiesSelected();
-				//
-				update(0,0);
-
-				/*for(var j=0;j<selectedCityId.length;j++)
-				{
-					console.log("cityID "+selectedCityId[j].cityId+","+selectedCityId[j].lat);
-				}*/
 				
+				//Make the cities/groups red which can't be covered now
+				update(1,0);	
 			}
 		}
-		suggestDestinationsAccordingToSelections();
+		//suggestDestinationsAccordingToSelections();
 	});
 
 	$("#suggestedDest").on("click",".group",function () {
+
+		//Initialize origin lat/long and range that can be covered by the user 
+		orgLat=$("#TextBoxDiv").data("orgLat");
+		orgLong=$("#TextBoxDiv").data("orgLong");
+		range=$("#TextBoxDiv").data("range");
 
 		var groupId=$(this).attr('id');
 		document.getElementById(groupId).className="group-selected";
 		document.getElementById(groupId).style.cursor="initial";
 		document.getElementById(groupId).style.color="green";
-		
-		//console.log("groupID "+groupId);
-		
 		var numCity=$("#"+groupId).data("numofcities");
-		//console.log("count_city "+numCity);
-		
 		
 		if(countofselections==0)
 		{
@@ -109,12 +113,9 @@
 		for(var i=0;i<numCity;i++)
 		{
 			var cityId=$("#"+groupId).data("cityId"+i);
-			console.log("cityId"+i+" "+cityId);
-			if(selectedCityId.indexOf(cityId)==-1)
+			if(selectedCityData.indexOf(cityId)==-1)
 			{
 				var cityName=$("#"+groupId).data("cityName"+i);
-				//console.log("cityName "+i+" "+cityName);				
-
 				var singlecity=document.getElementById(cityId);
 
 				if(singlecity!=null)
@@ -123,10 +124,7 @@
 					singlecity.style.cursor="initial";
 					singlecity.style.color="green";
 				}
-				
-				//if(document.getElementById("selects-"+cityId)==null)
-				//{//append the city in the html
-				//console.log("should be append");
+
 					var tableDes= document.createElement('tr');
 					tableDes.id="selects-"+cityId;
 					document.getElementById("selectedDest").appendChild(tableDes);
@@ -142,25 +140,27 @@
 					canceldiv.style.cursor="pointer";
 					document.getElementById(tableDes.id).appendChild(canceldiv);
 					countofselections++;
-				//}
 
-				//Add the cityId in the selectedCityId array
-				selectedCityId.push(cityId);
+				//Add the cityId in the selectedCityData array
+				var lat=$("#"+groupId).data("lat"+i);
+				var long=$("#"+groupId).data("long"+i);
+				var city_data = new cityData(cityId, lat, long);
+				selectedCityData.push(city_data);
 			}
 		}
 		
-		suggestDestinationsAccordingToSelections();
 		//if all the cities of the group get selected then select the group
 		selectGroupIfAllCitiesSelected();
-		
-		//update(mark);
+		//Make the cities/groups red which can't be covered now
+		update(1,0);
+
+		//suggestDestinationsAccordingToSelections();
+
 	});
 
 	$("#selectedDest").on("click",".cancel",function () {
 		var cityId = cityIn($(this).attr('id'));
-
 		document.getElementById("selects-"+cityId).remove();
-		
 		var cityElement=document.getElementById(cityId);
 		if(cityElement!=null){
 			cityElement.className="destination";
@@ -192,38 +192,20 @@
 			i++;
 		}
 
-		//Decrease selected cities count and remove the city from selectedCityId array
+		//Decrease selected cities count and remove the city from selectedCityData array
 		countofselections--;
 
 		if(countofselections==0)
 		{
 			document.getElementById("selected-top").remove();
 		}
-		removeByAttr(selectedCityId,"cityId",cityId);
+		removeByAttr(selectedCityData,"cityId",cityId);
 		
-		update(1,1);
+		update(1,0);
 		
-		suggestDestinationsAccordingToSelections();
-		/*for(var i=0;i<selectedCityId.length;i++)
-		{
-			console.log("after "+selectedCityId[i].cityId+","+selectedCityId[i].lat);
-		}*/
+		//suggestDestinationsAccordingToSelections();
      });
-	
-	var removeByAttr = function(arr, attr, value){
-	    var i = arr.length;
-	    while(i--){
-	       if(arr[i] && arr[i].hasOwnProperty(attr) && (arguments.length > 2 && arr[i][attr] === value )){
-	           arr.splice(i,1);//The second parameter of splice is the number of elements to remove
-	       }
-	    }
-	    return arr;
-	}
-	
-	function calcDist(orgLat,orgLong,destLat,destLong)
-	{
-		return (parseInt( 6371 * Math.acos( Math.cos( toRad(orgLat) ) * Math.cos( toRad( destLat ) ) * Math.cos( toRad( destLong ) - toRad(orgLong) ) + Math.sin( toRad(orgLat) ) * Math.sin( toRad( destLat ) ) ) ));
-	}
+
 
 	function update(startLenForCity,startLenForGroup)
 	{
@@ -233,53 +215,48 @@
 		var groupList=$(document.getElementsByClassName('group'));
 		LoadedCityLen=cityList.length;
 		LoadedGroupLen=groupList.length;
-		var endLenForCity=cityList.length;
-		var endLenForGroup=groupList.length;
 		
 		var startLat=orgLat;var startLong=orgLong;var endLat,endLong,distCovered=0;
 		//find the distance from origin to last selected city
-		for(var k=0;k<selectedCityId.length;k++){
+		for(var k=0;k<selectedCityData.length;k++){
 			
-			endLat=selectedCityId[k].lat;
-			endLong=selectedCityId[k].long;
-			//console.log(startLat+","+startLong+","+endLat+","+endLong);
+			endLat=selectedCityData[k].lat;
+			endLong=selectedCityData[k].long;
+			//console.log("start and end lat/long:"+startLat+","+startLong+","+endLat+","+endLong);
 			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
-			console.log("dist "+dist);
+			//console.log("dist for city"+(k-1)+","+k+":"+dist);
 			distCovered=distCovered+parseInt(dist);
-			startLat=endLat;startLong=endLong;	
+			startLat=endLat;startLong=endLong;
 		}
 
-		while (i < parseInt(endLenForCity)) {
+		//console.log("From origin to last selected city "+distCovered);
+		//console.log("Lat selected Lat/long:"+endLat+","+endLong);
+		
+		while (i < parseInt(LoadedCityLen)) {
 			var jq = $([1]);
 			jq.context = jq[0] = cityList[i];
 			var cityId=jq.attr("id");
 			var checkingDestLat=$("#"+cityId).data("lat");
 			var checkingDestLong=$("#"+cityId).data("long");
-			
 			jq.css('color','');
-			//discovered is passed by value here
+
 			if(checkAndMark(range,distCovered,endLat,endLong,checkingDestLat,checkingDestLong))
 			{	
 				jq.css('color','red');
-			}	
-			else
-			{
-				console.log("false");
 			}
 			i++;
 		}
 
 		/** CheckAndMark for groups*/
-		console.log("endLenForGroup:"+endLenForGroup);
-		while(j< parseInt(endLenForGroup))
+		while(j< parseInt(LoadedGroupLen))
 		{
 			var distCoveredFromGroupCity=distCovered;
 			var jq = $([1]);
 			jq.context = jq[0] = groupList[j];
 			var groupId=jq.attr("id");
-			console.log("groupId "+groupId);
+			//console.log("groupId "+groupId);
 			var numCity=$("#"+groupId).data("numofcities");
-			console.log("numCity "+numCity);
+			//console.log("numCity "+numCity);
 			var k=0;
 			jq.css('color','');//intialized to black only
 			var lastSelectedLat=endLat;//lat of the last selected city
@@ -290,17 +267,19 @@
 				var cityId=$("#"+groupId).data("cityId"+k);
 				var cityName=$("#"+groupId).data("cityName"+k);
 
-				if(!searchByAttr(selectedCityId,"cityId",cityId))
-				{	console.log("cityNotFound:"+cityName);
+				if(!searchByAttr(selectedCityData,"cityId",cityId))
+				{	//console.log("cityNotFound:"+cityName);
 					var groupCityLat=$("#"+groupId).data("lat"+k);
 					var groupCityLong=$("#"+groupId).data("long"+k);
 					
 					if(k!=(numCity-1))//if not the last city of the group
 					{
+						//console.log("Already covered:"+distCoveredFromGroupCity);
 						distCoveredFromGroupCity=distCoveredFromGroupCity+parseInt(calcDist(lastSelectedLat,lastSelectedLong,groupCityLat,groupCityLong));
 						lastSelectedLat=groupCityLat;
 						lastSelectedLong=groupCityLong;
-						console.log("distCoveredFromGroupCity loop"+distCoveredFromGroupCity);
+						//console.log("Covered after new groupCity:"+distCoveredFromGroupCity);
+						//console.log("range:"+range);
 						if(distCoveredFromGroupCity>range)
 						{
 							jq.css('color','red');
@@ -313,61 +292,57 @@
 							{
 								jq.css('color','red');
 							}
-					}
-					console.log("k "+k+","+"numCity "+numCity);
-					/*if(k==numCity)
-					{
-						
-					}*/		
+					}	
 				}
 				k++;
 			}
 			j++;
 		}
-		console.log("distCoveredFromGroupCity:"+distCoveredFromGroupCity);
 	};
 
 	function checkAndMark(range,distCovered,endLat,endLong,checkingDestLat,checkingDestLong)
 	{
 			distCovered=parseInt(distCovered)+parseInt(calcDist(endLat,endLong,checkingDestLat,checkingDestLong))+parseInt(calcDist(checkingDestLat,checkingDestLong,orgLat,orgLong));
-			console.log("distCovered "+distCovered);
+			//console.log("Total distCovered from to and fro:"+distCovered);
+			//console.log("range:"+range)
 			if(distCovered>range)
 			{
 				return(true);
 			}
 			return(false);
 	}
-	
-	function toRad(Value) {
-	    /** Converts numeric degrees to radians */
-	    return Value * Math.PI / 180;
-	}
 
 	function afterScroll() {
-	
-		//console.log("after scroll");
-		/**TODO: afterscroll for groups*/
+
+		var cityList= $(document.getElementsByClassName('destination'));
+		var startLenForCity=LoadedCityLen;
+		LoadedCityLen=cityList.length;
+		//select cities which are already selected from group
+		if(countofselections>0){
+			for(var i=startLenForCity;i<LoadedCityLen;i++)
+			{
+				var jq = $([1]);
+				jq.context = jq[0] = cityList[i];
+				var cityId=jq.attr("id");
+				if(searchByAttr(selectedCityData,"cityId",cityId))
+				{
+					//jq.className="destination-selected";
+					//jq.style.cursor="initial";
+					jq.css('color','green');
+					//jq.toggleClass("destination-selected");
+				}
+			}
+		}
+		//some cities class might become "destination-selected"
 		var cityList= $(document.getElementsByClassName('destination'));
 		var groupList=$(document.getElementsByClassName('group'));
-		var startLenForCity=LoadedCityLen;
 		var startLenForGroup=LoadedGroupLen;
 		LoadedCityLen=cityList.length;
 		LoadedGroupLen=groupList.length;
 		if((countofselections>0)&&(LoadedCityLen>startLenForCity)){
-			//update(startLenForCity,startLenForGroup);
-		}
-		
-		/*for(var i=startLenForCity;i<LoadedCityLen;i++)
-		{
-			var jq = $([1]);
-			jq.context = jq[0] = cityList[i];
-			var cityId=jq.attr("id");
-			console.log("cityId:"+cityId);
-			if(searchByAttr(selectedCityId,"cityId",cityId))
-			{
-				jq.css('color','green');
-			}
-		}*/
+			update(startLenForCity,startLenForGroup);
+		}		
+		selectGroupIfAllCitiesSelected();
 	}
 
 	function selectGroupIfAllCitiesSelected()
@@ -387,7 +362,7 @@
 				while(j<numCity)
 				{
 					var cityId=$("#"+groupId).data("cityId"+j);
-					if(!searchByAttr(selectedCityId,"cityId",cityId))
+					if(!searchByAttr(selectedCityData,"cityId",cityId))
 					{
 							break;
 					}
@@ -413,3 +388,22 @@
 	    }
 	}
 	
+	var removeByAttr = function(arr, attr, value){
+	    var i = arr.length;
+	    while(i--){
+	       if(arr[i] && arr[i].hasOwnProperty(attr) && (arguments.length > 2 && arr[i][attr] === value )){
+	           arr.splice(i,1);//The second parameter of splice is the number of elements to remove
+	       }
+	    }
+	    return arr;
+	}
+	
+	function toRad(Value) {
+	    /** Converts numeric degrees to radians */
+	    return Value * Math.PI / 180;
+	}
+	
+	function calcDist(orgLat,orgLong,destLat,destLong)
+	{
+		return (parseInt( 6371 * Math.acos( Math.cos( toRad(orgLat) ) * Math.cos( toRad( destLat ) ) * Math.cos( toRad( destLong ) - toRad(orgLong) ) + Math.sin( toRad(orgLat) ) * Math.sin( toRad( destLat ) ) ) ));
+	}

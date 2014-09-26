@@ -22,7 +22,7 @@ function geolocation()
 		var destLocations=[];var city=[];
 		var arg=[];
 		arg[0]=$.getJSON(originLocation);
-		console.log("length "+len);
+		//console.log("length "+len);
 		for(var i=0;i<len;i++)
 		{
 			city[i]=destElements[i].value;

@@ -85,8 +85,10 @@ function onSubmit(){
 	if(addScripts==0)
 	{
 		createScript('algo3');
-		createScript('scroll');
+		
 	}
+	//TODO:check the soln for scroll.js problem
+	createScript('scroll');
 	suggestDest();
 	suggestGroups();
 	addScripts=1;
