@@ -8,18 +8,23 @@
     "test": "grunt test",
     "start": "node index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/r-kapoor/Crawlersforweb/tree/master/TripPlannerApp"
+  },
   "dependencies": {
     "adaro": "^0.1.5",
     "dustjs-helpers": "^1.1.1",
     "dustjs-linkedin": "^2.0.3",
     "express": "~3.4.4",
+    "hashids": "^1.0.1",
     "kraken-js": "^0.7.0",
     "less": "^1.6.1",
     "makara": "^0.3.4",
+    "mysql": "^2.3.1",
     "nconf": "^0.6.8",
     "requirejs": "^2.1.11",
-    "mysql":"^2.3.1",
-    "typeahead.js":"^0.10.2"
+    "typeahead.js": "^0.10.2"
   },
   "devDependencies": {
     "grunt": "^0.4.1",
@@ -33,6 +38,6 @@
     "grunt-mocha-cli": "^1.5.0",
     "mocha": "^1.17.0",
     "supertest": "^0.8.2",
-    "mysql":"^2.3.1"
+    "mysql": "^2.3.1"
   }
 }
