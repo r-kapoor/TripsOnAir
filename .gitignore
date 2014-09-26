@@ -1,3 +1,5 @@
 #npm Files
 TripPlannerApp/.build
 TripPlannerApp/npm-debug.log
+#Eclipse metadata
+.metadata/**

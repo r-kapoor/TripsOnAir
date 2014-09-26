@@ -12,6 +12,7 @@ function getCityList(conn,orgLat,orgLong,category,range,start,batchsize,callback
 	connection.connect();
 	var subQuery='';
 	var category=category.split(",");
+	range=range/2;//Range is round trip but we need here for one side
 	for(var i=0;i<(category.length-1);i++)
 	{
 		subQuery+='(Category like "' +category[i]+ '%") OR ';

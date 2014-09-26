@@ -1,7 +1,7 @@
 /**
  * @author rahul
  * Find the groups from db batch wise according to the inputs
- * TODO: Test the cases with different distance scaling factor 
+ * TODO: Remove the scaling factor and store last city lat/long to calculate dist from last city to origin 
  */
 
 var Hashids=require('hashids');

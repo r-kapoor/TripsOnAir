@@ -7,9 +7,7 @@
  */
 
 function getRange(budget, numDays,callback){
-	
-	var fgt1Fare= 12000;range1=1800;
-	var fgt2Fare= 8000;range2=1200;
+
 	var otherFgtFare=2500;//per day acco and food fare if travel by flight
 	var otherModeFare=1000;//per day acco and food fare if travel by train or bus
 	var totalBgt;//represents the possible total budget with different mode of travels

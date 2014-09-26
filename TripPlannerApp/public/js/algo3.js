@@ -17,7 +17,6 @@
  */
 
 	var selectedCityData=[];
-	var countofselections = 0;
 	var orgLat;//Lat of the origin
 	var orgLong;//Long of the origin
 	var range;//Range that can be travelled by user
@@ -41,7 +40,7 @@
 		document.getElementById(cityId).className="destination-selected";
 		document.getElementById(cityId).style.cursor="initial";
 		document.getElementById(cityId).style.color="green";
-		if(countofselections==0)
+		if(selectedCityData.length==0)
 		{
 			var div = document.createElement('div');
 			div.innerHTML='YOUR SELECTED DESTINATIONS:';
@@ -49,7 +48,7 @@
 			document.getElementById("selectedDest").appendChild(div);
 		}
 		
-		if(countofselections>=10){
+		if(selectedCityData.length>=10){
             alert("Only 10 destinations are allowed");
             return false;
 		}
@@ -77,7 +76,6 @@
 				var long=$("#"+cityId).data("long");
 				var city_data = new cityData(cityId, lat, long);
 				selectedCityData.push(city_data);
-				countofselections++;
 				
 				//if all the cities of the group get selected then select the group
 				selectGroupIfAllCitiesSelected();
@@ -102,7 +100,7 @@
 		document.getElementById(groupId).style.color="green";
 		var numCity=$("#"+groupId).data("numofcities");
 		
-		if(countofselections==0)
+		if(selectedCityData.length==0)
 		{
 			var div = document.createElement('div');
 			div.innerHTML='YOUR SELECTED DESTINATIONS:';
@@ -113,7 +111,7 @@
 		for(var i=0;i<numCity;i++)
 		{
 			var cityId=$("#"+groupId).data("cityId"+i);
-			if(selectedCityData.indexOf(cityId)==-1)
+			if(!searchByAttr(selectedCityData,"cityId",cityId))
 			{
 				var cityName=$("#"+groupId).data("cityName"+i);
 				var singlecity=document.getElementById(cityId);
@@ -139,7 +137,7 @@
 					canceldiv.className='cancel';
 					canceldiv.style.cursor="pointer";
 					document.getElementById(tableDes.id).appendChild(canceldiv);
-					countofselections++;
+					
 
 				//Add the cityId in the selectedCityData array
 				var lat=$("#"+groupId).data("lat"+i);
@@ -193,9 +191,9 @@
 		}
 
 		//Decrease selected cities count and remove the city from selectedCityData array
-		countofselections--;
 
-		if(countofselections==0)
+
+		if(selectedCityData.length==0)
 		{
 			document.getElementById("selected-top").remove();
 		}
@@ -318,7 +316,7 @@
 		var startLenForCity=LoadedCityLen;
 		LoadedCityLen=cityList.length;
 		//select cities which are already selected from group
-		if(countofselections>0){
+		if(selectedCityData.length>0){
 			for(var i=startLenForCity;i<LoadedCityLen;i++)
 			{
 				var jq = $([1]);
@@ -339,7 +337,7 @@
 		var startLenForGroup=LoadedGroupLen;
 		LoadedCityLen=cityList.length;
 		LoadedGroupLen=groupList.length;
-		if((countofselections>0)&&(LoadedCityLen>startLenForCity)){
+		if((selectedCityData.length>0)&&(LoadedCityLen>startLenForCity)){
 			update(startLenForCity,startLenForGroup);
 		}		
 		selectGroupIfAllCitiesSelected();
