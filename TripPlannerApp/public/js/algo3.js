@@ -29,6 +29,22 @@
 		this.long=long;
 	}
 	
+	function onFirstSelection()
+	{
+		var div = document.createElement('div');
+		div.innerHTML='YOUR SELECTED DESTINATIONS:';
+		div.id="selected-top";
+		document.getElementById("selectedDest").appendChild(div);
+		
+		//Append the submit button
+		var submitBtn = document.createElement("BUTTON");
+		var buttonText = document.createTextNode("Submit");
+		submitBtn.appendChild(buttonText);
+		submitBtn.setAttribute("id","nextPageSubmit");
+		var input2Form=document.getElementById("selectedDest");
+		input2Form.appendChild(submitBtn);	
+	}
+	
 	$("#suggestedDest").on("click",".destination",function () {
 
 		orgLat=$("#TextBoxDiv").data("orgLat");
@@ -42,10 +58,7 @@
 		document.getElementById(cityId).style.color="green";
 		if(selectedCityData.length==0)
 		{
-			var div = document.createElement('div');
-			div.innerHTML='YOUR SELECTED DESTINATIONS:';
-			div.id="selected-top";
-			document.getElementById("selectedDest").appendChild(div);
+			onFirstSelection();
 		}
 		
 		if(selectedCityData.length>=10){
@@ -58,7 +71,10 @@
 			{
 				var tableDes= document.createElement('tr');
 				tableDes.id="selects-"+cityId;
-				document.getElementById("selectedDest").appendChild(tableDes);
+				//document.getElementById("selectedDest").appendChild(tableDes);
+				var submitBtn=document.getElementById("nextPageSubmit");
+				document.getElementById("selectedDest").insertBefore(tableDes,submitBtn);
+				
 				var cityselected = document.createElement('td');
 				cityselected.innerHTML=cityName;
 				cityselected.id="selected-"+cityId;
@@ -102,10 +118,7 @@
 		
 		if(selectedCityData.length==0)
 		{
-			var div = document.createElement('div');
-			div.innerHTML='YOUR SELECTED DESTINATIONS:';
-			div.id="selected-top";
-			document.getElementById("selectedDest").appendChild(div);
+			onFirstSelection();
 		}
 		
 		for(var i=0;i<numCity;i++)
@@ -125,7 +138,9 @@
 
 					var tableDes= document.createElement('tr');
 					tableDes.id="selects-"+cityId;
-					document.getElementById("selectedDest").appendChild(tableDes);
+					//document.getElementById("selectedDest").appendChild(tableDes);
+					var submitBtn=document.getElementById("nextPageSubmit");
+					document.getElementById("selectedDest").insertBefore(tableDes,submitBtn);
 					var cityselected = document.createElement('td');
 					cityselected.innerHTML=cityName;
 					cityselected.id="selected-"+cityId;
@@ -190,15 +205,13 @@
 			i++;
 		}
 
-		//Decrease selected cities count and remove the city from selectedCityData array
-
-
+		//remove the city from selectedCityData array
+		removeByAttr(selectedCityData,"cityId",cityId);
 		if(selectedCityData.length==0)
 		{
 			document.getElementById("selected-top").remove();
+			document.getElementById("nextPageSubmit").remove();
 		}
-		removeByAttr(selectedCityData,"cityId",cityId);
-		
 		update(1,0);
 		
 		//suggestDestinationsAccordingToSelections();

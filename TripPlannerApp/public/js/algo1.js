@@ -7,7 +7,6 @@
 function geolocation()
 {		
 	var origin=document.getElementById("origin").value;
-	//var destination=document.getElementById("textbox1").value;
 	var startDate=document.getElementById("startdate").value;
 	var endDate=document.getElementById("enddate").value;
 	var bool=document.getElementById("textbox1").disabled;
@@ -22,7 +21,7 @@ function geolocation()
 		var destLocations=[];var city=[];
 		var arg=[];
 		arg[0]=$.getJSON(originLocation);
-		//console.log("length "+len);
+
 		for(var i=0;i<len;i++)
 		{
 			city[i]=destElements[i].value;
@@ -77,10 +76,14 @@ function geolocation()
 					document.getElementById("range").options[3].disabled=true;
 				}
 
-				if(bool)
-				{
-					
-				}
+				//Append the submit button
+				var submitBtn = document.createElement("BUTTON");
+				var buttonText = document.createTextNode("Submit");
+				submitBtn.appendChild(buttonText);
+				submitBtn.setAttribute("id","nextPageSubmit");
+				var input2Form=document.getElementById("inpBudget");
+				input2Form.appendChild(submitBtn);
+
 				//display the other inputs
 				document.getElementById("input2").removeAttribute("style");
 				});//end budgetCalc*/

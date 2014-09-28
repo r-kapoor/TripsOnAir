@@ -5,11 +5,10 @@
 </head>
 <body>
 
-
 <div id="input2" style="display: none">
 	<h3>Tell us Your Taste</h3>
-		<form id="inp2form" method="POST" action="places">
-			<form>
+	<form>
+		<form id="inpCategory" method="POST" action="/places">
 				<input type="checkbox" name="category" value="ADVENTURE">Adventure
 				<input type="checkbox" name="category" value="RELIGIOUS">Religious
 				<input type="checkbox" name="category" value="HILL STATION">Hill Station
@@ -17,10 +16,10 @@
 				<input type="checkbox" name="category" value="WILD LIFE">Wild Life
 				<input type="checkbox" name="category" value="BEACHES">Beaches
 				<input type="checkbox" name="category" value="HISTORICAL PLACES">Historical Places
-			</form></br>
+		</form></br>
 
 		<h3>Tell us your Budget</h3>
-			<form>
+			<form id="inpBudget" method="POST" action="/places">
 			<select id ="range" name="budget">
 			<option>Select budget</option>
 			<option value="5000">0-5000</option>
@@ -31,10 +30,12 @@
 			</select>
 			</br>
 			</br>
-				<!--<input type="submit" value="submit">-->
+			<input type="hidden" name="_csrf" value="{_csrf}">
+				<input type="submit" value="submit">
 			</form>
 		</form>
-	<button id="dest" type="button" onclick="onSubmit()">submit</button>
+	<!--button id="nextPageSubmit" type="button" onclick="onSubmit()">submit</button-->
+	 
 </div>
 
 </body>

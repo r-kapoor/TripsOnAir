@@ -1,6 +1,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/addDestination.js"></script>
 <script src="js/algo1.js"></script>
+<script src="js/onChooseClick.js"></script>
 <script src="js/inputCityValidator.js"></script>
 <script src="js/suggestDestination.js"></script>
 <script src="js/selectedDestinations.js"></script>
@@ -29,25 +30,7 @@ console.log("in type");
 	})
 	});
 </script>
-<script>
-	function choose()
-	{
-		var elements=document.getElementsByClassName('destination');
-		for(var i=0;i<elements.length;i++)
- 		{
- 			if(elements[i].disabled)
- 			{
- 				elements[i].disabled=false;
- 			}
- 			else{
- 				elements[i].disabled=true;
- 				elements[i].value="Enter a city";
- 			}
- 		}
-		
-	}
-</script> 
- 
+
 <div id = 'invalid'></div> 
 
 <table id="inptable">
