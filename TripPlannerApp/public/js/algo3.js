@@ -223,7 +223,7 @@
 			//console.log("start and end lat/long:"+startLat+","+startLong+","+endLat+","+endLong);
 			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
 			//console.log("dist for city"+(k-1)+","+k+":"+dist);
-			distCove4red=distCovered+parseInt(dist);
+			distCovered=distCovered+parseInt(dist);
 			startLat=endLat;startLong=endLong;
 		}
 
