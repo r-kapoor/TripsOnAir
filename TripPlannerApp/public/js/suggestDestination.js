@@ -14,8 +14,6 @@ function createQueryStringForNextDestinations(callback){
 	var selectedIDs = [], selectedLats = [], selectedLongs = [];
 	var startDate = document.getElementById("startdate").value;
 	var endDate = document.getElementById("enddate").value;
-	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24);
-	var budget = document.getElementById("range").value;
 	/*var j=0;
 		for (var i=0, n=tastes.length;i<n;i++) {
 	  if (tastes[i].checked) 
@@ -24,28 +22,69 @@ function createQueryStringForNextDestinations(callback){
 		 j++;
 	  }
 	}*/
-	for( var i = 0; i < selectedCityId.length; i++)
+	for( var i = 0; i < selectedCityData.length; i++)
 	{
-		selectedIDs[i] = selectedCityId[i].cityId;
-		selectedLats[i] = selectedCityId[i].lat;
-		selectedLongs[i] = selectedCityId[i].long;
+		selectedIDs[i] = selectedCityData[i].cityId;
+		selectedLats[i] = selectedCityData[i].lat;
+		selectedLongs[i] = selectedCityData[i].long;
 	}
-	var query="selectedIDs="+selectedIDs+"&"+"selectedLats="+selectedLats+"&"+"selectedLongs="+selectedLongs+"&"+"numDays="+numDays+"&"+"taste="+userTastes+"&"+"budget="+budget;
+	var query="selectedIDs="+selectedIDs+"&"+"selectedLats="+selectedLats+"&"+"selectedLongs="+selectedLongs+"&"+"orgLat="+orgLat+"&"+"orgLong="+orgLong+"&"+"taste="+userTastes+"&"+"distRemaining="+distRemaining;
 	callback(query);
 }
 
-function suggestDestinationsAccordingToSelections()
+function suggestDestinationsAccordingToSelections(calledFrom)
 {
 	console.log('function suggestDestinationsAccordingToSelections called');
+	if(calledFrom==0)//Called Because of City/Group Selection
+	{
+		if(document.getElementById("nearbycities-top"))
+		{
+			document.getElementById("nearbycities-top").remove();
+		}
+		if(document.getElementById('nearbycities'))
+		{
+			document.getElementById("nearbycities").remove();
+		}
+		if(document.getElementById('more-cities'))
+		{
+			document.getElementById("more-cities").remove();
+		}
+		if(document.getElementById('loading-text'))
+		{
+			document.getElementById("loading-text").remove();
+		}
+		if(document.getElementById('no-more-cities'))
+		{
+			document.getElementById("no-more-cities").remove();
+		}
+	}
+	else if(calledFrom==1)
+	{
+		if(document.getElementById('more-cities'))
+		{
+			document.getElementById("more-cities").remove();
+		}
+		var loadingText = '<h4><div style="color:grey">LOADING..</div></h4>';
+		makediv(loadingText,appendTo,"loading-text","suggestedNearbyDest");
+	}
+	
 	createQueryStringForNextDestinations(function(query){
+		if(calledFrom==0)//Called Because of City/Group Selection
+		{
+			cityNearbyBatch=0;
+		}
 		query=query+"&next="+cityNearbyBatch;
 		cityNearbyBatch+=5;
 		var i=0;
-		var list ='<ul>';
+		var list ='';
 		var ajaxQuery = $.getJSON( '/suggestNearbyDest?'+query);
 
 		ajaxQuery.done(function(data) {
-		
+			if(document.getElementById('loading-text'))
+			{
+				document.getElementById("loading-text").remove();
+			}
+			
 			if(cityNearbyBatch==5)
 			{	
 				var div = document.createElement('div');
@@ -55,24 +94,44 @@ function suggestDestinationsAccordingToSelections()
 				document.getElementById("suggestedNearbyDest").appendChild(div);
 			}
 			$.each(data.NearbyCityList, function(key,value){
-				list+='<li>';
-	        	list+='<h4><div class="nearby-destination" id="'+ value.CityID+'" style="cursor:pointer; color:blue">'+value.CityName+'</div></h4>';
-                list+='</li>'
-				i++;
+				if(!searchByAttr(selectedCityData,"cityId",value.CityID))
+				{
+					list+='<h4><div class="destination" id="nearby-'+ value.CityID+'" style="cursor:pointer; color:blue">'+value.CityName+'</div></h4>';
+					if(calledFrom==1)
+					{
+						makediv(list,appendTo,"nearbycities-sub","nearbycities");
+						list='';
+					}
+					i++;
+				}
 			});
-			list+='</ul>';
-			makediv(list,appendNearbyDestinations);
-	        i=0;	        
+			if(calledFrom==0)
+			{
+				makediv(list,appendTo,"nearbycities","suggestedNearbyDest");
+			}
+			if(jQuery.isEmptyObject(data.NearbyCityList))
+			{
+				var loadingText = '<h4><div style="color:grey">No More Results to show :(</div></h4>';
+				makediv(loadingText,appendTo,"no-more-cities","suggestedNearbyDest");
+			}
+			else
+			{
+				var moreButton = '<button id="MoreNearbyCities" type="button" onclick="suggestDestinationsAccordingToSelections(1)">More..</button>';
+				makediv(moreButton,appendTo,"more-cities","suggestedNearbyDest");	
+			}
+			i=0;	        
 	        
 	        $.each(data.NearbyCityList, function(key,value) {
 	        	var cityId=value.CityID;
-	        	//console.log("cityId "+cityId+","+value.Latitude+","+value.Longitude);
+	        	//console.log("cityId "+cityId+","+value.Latitude+","+value.Longitude)
+	        	console.log("LAT:"+value.Latitude);
+	        	console.log("cityid::"+cityId);
 	        	$("#"+cityId).data("lat",value.Latitude);
 	        	$("#"+cityId).data("long",value.Longitude);
+	        	console.log("retrie:"+$("#"+cityId).data("lat"));
 	        });
 	        
 	        //console.log("can we call?");
-	        afterScroll();
 
 		});
 	});
@@ -135,7 +194,8 @@ function suggestDest(){
 				i++;
 			});
 			list+='</ul>';
-			makediv(list,appendResults);
+			makediv(list,appendTo,"suggested-destination-set","suggestedDest");
+			$(window).data('ajaxready', true);
 	        i=0;
 	        
 	      //store lat,long of origin city using suggestedDest id
@@ -164,11 +224,15 @@ function suggestDest(){
 	});
 }
 
-function makediv(response,callback)
+function makediv(response,callback,idString,parentId)
 {
 	var div = document.createElement('div');
 	div.innerHTML=response;
-	callback(div);
+	if(idString)
+	{
+		div.id=idString;
+	}
+	callback(div,parentId);
 }
 
 function createScript(attribute)
@@ -177,14 +241,10 @@ function createScript(attribute)
 	Element.setAttribute('src','js/'+attribute+'.js');
   	document.head.appendChild(Element);
 }
-function appendResults(responseDiv)
-{
-	document.getElementById("suggestedDest").appendChild(responseDiv);
-}
 
-function appendNearbyDestinations(responseDiv)
+function appendTo(responseDiv,parentId)
 {
-	document.getElementById("suggestedNearbyDest").appendChild(responseDiv);
+	document.getElementById(parentId).appendChild(responseDiv);
 }
 
 function suggestGroups(){
@@ -222,7 +282,8 @@ function suggestGroups(){
 				
 			});
 			list+='</ul>';
-			makediv(list,appendResults);
+			makediv(list,appendTo,"suggested-destination-set","suggestedDest");
+			$(window).data('ajaxready', true);
 			var numOfCitiesCopy = numOfCities.slice(0);
 	        $.each(data.GroupList, function(key,value) {
 	        	var groupId=value.GroupID;

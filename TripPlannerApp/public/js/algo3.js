@@ -22,6 +22,8 @@
 	var range;//Range that can be travelled by user
 	var LoadedCityLen=0;//represents the length of the old loaded suggested cities as per the user scrolling
 	var LoadedGroupLen=0;
+	var distRemaining=0;
+
 	var cityData=function(cityId,lat,long){
 		
 		this.cityId=cityId;
@@ -45,17 +47,24 @@
 		input2Form.appendChild(submitBtn);	
 	}
 	
-	$("#suggestedDest").on("click",".destination",function () {
+	$("#suggestedDest,#suggestedNearbyDest").on("click",".destination",function () {
 
 		orgLat=$("#TextBoxDiv").data("orgLat");
 		orgLong=$("#TextBoxDiv").data("orgLong");
 		range=$("#TextBoxDiv").data("range");
 		var cityId = $(this).attr('id');
+		if(cityId.indexOf("nearby-")!=-1)
+		{
+			cityId=cityId.substring(7);
+		}
 		var cityName=$(this).text();
 
-		document.getElementById(cityId).className="destination-selected";
-		document.getElementById(cityId).style.cursor="initial";
-		document.getElementById(cityId).style.color="green";
+		if(document.getElementById(cityId))
+		{
+			document.getElementById(cityId).className="destination-selected";
+			document.getElementById(cityId).style.cursor="initial";
+			document.getElementById(cityId).style.color="green";
+		}
 		if(selectedCityData.length==0)
 		{
 			onFirstSelection();
@@ -87,7 +96,9 @@
 				canceldiv.style.cursor="pointer";
 				document.getElementById(tableDes.id).appendChild(canceldiv);
 				
-				/**Push the selected city data into the selectedCityData array */			
+				/**Push the selected city data into the selectedCityData array */	
+				console.log("cityid:"+cityId);
+				console.log("lat ::"+$("#"+cityId).data("lat"));
 				var lat=$("#"+cityId).data("lat");
 				var long=$("#"+cityId).data("long");
 				var city_data = new cityData(cityId, lat, long);
@@ -100,7 +111,7 @@
 				update(1,0);	
 			}
 		}
-		//suggestDestinationsAccordingToSelections();
+		suggestDestinationsAccordingToSelections(0);
 	});
 
 	$("#suggestedDest").on("click",".group",function () {
@@ -167,7 +178,7 @@
 		//Make the cities/groups red which can't be covered now
 		update(1,0);
 
-		//suggestDestinationsAccordingToSelections();
+		suggestDestinationsAccordingToSelections(0);
 
 	});
 
@@ -240,6 +251,8 @@
 			startLat=endLat;startLong=endLong;
 		}
 
+		distRemaining=range-distCovered;
+		
 		//console.log("From origin to last selected city "+distCovered);
 		//console.log("Lat selected Lat/long:"+endLat+","+endLong);
 		
