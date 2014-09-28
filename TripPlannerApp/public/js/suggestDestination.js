@@ -24,24 +24,48 @@ function createQueryStringForNextDestinations(callback){
 		 j++;
 	  }
 	}*/
-	for( var i = 0; i < selectedCityId.length; i++)
+	for( var i = 0; i < selectedCityData.length; i++)
 	{
-		selectedIDs[i] = selectedCityId[i].cityId;
-		selectedLats[i] = selectedCityId[i].lat;
-		selectedLongs[i] = selectedCityId[i].long;
+		selectedIDs[i] = selectedCityData[i].cityId;
+		selectedLats[i] = selectedCityData[i].lat;
+		selectedLongs[i] = selectedCityData[i].long;
 	}
 	var query="selectedIDs="+selectedIDs+"&"+"selectedLats="+selectedLats+"&"+"selectedLongs="+selectedLongs+"&"+"numDays="+numDays+"&"+"taste="+userTastes+"&"+"budget="+budget;
 	callback(query);
 }
 
-function suggestDestinationsAccordingToSelections()
+function suggestDestinationsAccordingToSelections(calledFrom)
 {
 	console.log('function suggestDestinationsAccordingToSelections called');
+	if(calledFrom==0)//Called Because of City/Group Selection
+	{
+		if(document.getElementById("nearbycities-top"))
+		{
+			document.getElementById("nearbycities-top").remove();
+		}
+		if(document.getElementsByClassName('nearby-destination'))
+		{
+			$('.nearby-destination').remove();
+			/*var nearbyDestinations = document.getElementsByClassName('nearby-destination');
+			for(var i = 0; i< nearbyDestinations.length; i++)
+			{
+				var jquery = $([1]);
+				jquery.context = jquery[0] = nearbyDestinations[i];
+				var nearbyCityId=jquery.attr('id');
+				document.getElementById(nearbyCityId).remove();
+			}*/
+		}
+	}
+	
 	createQueryStringForNextDestinations(function(query){
+		if(calledFrom==0)//Called Because of City/Group Selection
+		{
+			cityNearbyBatch=0;
+		}
 		query=query+"&next="+cityNearbyBatch;
 		cityNearbyBatch+=5;
 		var i=0;
-		var list ='<ul>';
+		var list ='';
 		var ajaxQuery = $.getJSON( '/suggestNearbyDest?'+query);
 
 		ajaxQuery.done(function(data) {
@@ -55,12 +79,12 @@ function suggestDestinationsAccordingToSelections()
 				document.getElementById("suggestedNearbyDest").appendChild(div);
 			}
 			$.each(data.NearbyCityList, function(key,value){
-				list+='<li>';
-	        	list+='<h4><div class="nearby-destination" id="'+ value.CityID+'" style="cursor:pointer; color:blue">'+value.CityName+'</div></h4>';
-                list+='</li>'
-				i++;
+				if(!searchByAttr(selectedCityData,"cityId",value.CityID))
+				{
+					list+='<h4><div class="nearby-destination" id="nearby-'+ value.CityID+'" style="cursor:pointer; color:blue">'+value.CityName+'</div></h4>';
+					i++;
+				}
 			});
-			list+='</ul>';
 			makediv(list,appendNearbyDestinations);
 	        i=0;	        
 	        
@@ -72,7 +96,6 @@ function suggestDestinationsAccordingToSelections()
 	        });
 	        
 	        //console.log("can we call?");
-	        afterScroll();
 
 		});
 	});

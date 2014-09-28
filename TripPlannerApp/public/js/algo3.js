@@ -84,7 +84,7 @@
 				update(1,0);	
 			}
 		}
-		//suggestDestinationsAccordingToSelections();
+		suggestDestinationsAccordingToSelections(0);
 	});
 
 	$("#suggestedDest").on("click",".group",function () {
@@ -152,7 +152,7 @@
 		//Make the cities/groups red which can't be covered now
 		update(1,0);
 
-		//suggestDestinationsAccordingToSelections();
+		suggestDestinationsAccordingToSelections(0);
 
 	});
 
@@ -223,7 +223,7 @@
 			//console.log("start and end lat/long:"+startLat+","+startLong+","+endLat+","+endLong);
 			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
 			//console.log("dist for city"+(k-1)+","+k+":"+dist);
-			distCovered=distCovered+parseInt(dist);
+			distCove4red=distCovered+parseInt(dist);
 			startLat=endLat;startLong=endLong;
 		}
 
