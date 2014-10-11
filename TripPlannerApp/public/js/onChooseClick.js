@@ -29,7 +29,7 @@ function choose()
 		chooseDestbtn.appendChild(buttonText);
 		chooseDestbtn.setAttribute("id","chooseDest");
 		chooseDestbtn.setAttribute("type","button");
-		chooseDestbtn.setAttribute("onClick","onSubmit()");
+		chooseDestbtn.setAttribute("onClick","onSubmitChoose()");
 		var input2Form=document.getElementById("inpBudget");
 		input2Form.appendChild(chooseDestbtn);
 	}

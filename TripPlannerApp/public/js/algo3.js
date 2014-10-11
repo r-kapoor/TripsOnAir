@@ -42,7 +42,8 @@
 		var submitBtn = document.createElement("BUTTON");
 		var buttonText = document.createTextNode("Submit");
 		submitBtn.appendChild(buttonText);
-		submitBtn.setAttribute("id","nextPageSubmit");
+		submitBtn.setAttribute("id","nextPageSubmitOnChoose");
+		submitBtn.setAttribute("onClick","dtoOnChoose()");
 		var input2Form=document.getElementById("selectedDest");
 		input2Form.appendChild(submitBtn);	
 	}

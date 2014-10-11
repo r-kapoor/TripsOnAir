@@ -81,6 +81,8 @@ function geolocation()
 				var buttonText = document.createTextNode("Submit");
 				submitBtn.appendChild(buttonText);
 				submitBtn.setAttribute("id","nextPageSubmit");
+				submitBtn.setAttribute("type","button");
+				submitBtn.setAttribute("onClick","dto()");
 				var input2Form=document.getElementById("inpBudget");
 				input2Form.appendChild(submitBtn);
 

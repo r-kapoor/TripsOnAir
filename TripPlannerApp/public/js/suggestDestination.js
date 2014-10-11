@@ -137,7 +137,7 @@ function suggestDestinationsAccordingToSelections(calledFrom)
 	});
 	
 }
-function onSubmit(){
+function onSubmitChoose(){
 	cityBatch=0;groupBatch=0;
 	document.getElementById("suggestedDest").innerHTML="";
 	$(window).data('ajaxready', false);//to avoid scroll call

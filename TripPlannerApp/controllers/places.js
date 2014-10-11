@@ -11,18 +11,21 @@ module.exports = function (app) {
     	
     	console.log("in get");
     	var model = new IndexModel();
-    	  res.render('places', model);
-    	
+    	res.render('places', model);
+    	  
     });
 
     
     /**
      * store the session variables
      */
-    app.post('/places', function (req, res) {
-    	
+    app.post('/places', function (req, res) {    	
     	console.log("in post");
-    	res.redirect('/places');
+    	var budget=req.param('budget');
+  	  	//console.log("budget "+budget);
+  	  	var category=req.param('cc');
+  	  	console.log("category "+category);
+    	res.redirect('/places?test='+12);
     	
     });
 

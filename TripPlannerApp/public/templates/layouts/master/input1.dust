@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="css/input1.css"/>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
+<script> var csrf_token = '{_csrf}'; </script>
+<script src="js/GlobalJSFunctions/onSubmit.js"></script>
+<script src="js/dto.js"></script>
 <script>
 var dateToday = new Date();
   $(function() {
@@ -19,11 +22,9 @@ var dateToday = new Date();
     });
   });
   </script>
-  <script>
+ <script>
 
-console.log("in type");
-
-	$(document).ready(function(){
+$(document).ready(function(){
 	$('input.typeahead').typeahead({
 		name: 'origin',
 		local: ['Ahmedabad', 'Bangalore','Goa','Chennai', 'Chandigarh', 'New Delhi', 'Ludhiana', 'Guwahati', 'Pune', 'Hyderabad', 'Mumbai','Katra','Patnitop','Jammu','Phalagam','Srinagar','Dharamshala','Haridwar','Rishikesh','Gulmarg','Dalhousie','Amritsar','Leh','Manali','Kargil']
