@@ -3,3 +3,5 @@ TripPlannerApp/.build
 TripPlannerApp/npm-debug.log
 #Eclipse metadata
 .metadata/**
+CrawlHTMLUnit/.metadata/
+TripPlannerApp/.settings
