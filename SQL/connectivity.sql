@@ -12,6 +12,8 @@ SELECT CityID, SUM(NumberOfTrains) as Connectivity FROM (
 	WHERE (c.StationCode = d.StationCode)
 ) e GROUP BY CityID
 
+--Railway City Connectivity
+
 TRUNCATE City_Connectivity_Railway;
 INSERT INTO City_Connectivity_Railway
 SELECT CityID, SUM(NumberOfTimesInDay) AS NumberOfTrains FROM (
@@ -24,6 +26,8 @@ SELECT CityID, SUM(NumberOfTimesInDay) AS NumberOfTrains FROM (
 		SELECT CityID, StationCode FROM RailwayStations_In_City
 	) b WHERE (a.StationCode = b.StationCode)
 ) b WHERE (a.TrainNo = b.TrainNo) GROUP BY CityID
+
+--Railway Between City Connectivity
 
 TRUNCATE City_Connectivity_Between_Railway;
 INSERT INTO City_Connectivity_Between_Railway
@@ -49,4 +53,23 @@ SELECT CityIDOrigin, CityIDDestination, SUM(NumberOfTimesInDay) AS Connectivity 
 	) f
 	WHERE (e.TrainNo = f.TrainNo)
 GROUP BY CityIDOrigin, CityIDDestination
+
+--Flight Between City Connectivity
+
+TRUNCATE City_Connectivity_Between_Air;
+SET @dateoftravel = '2014-06-01';
+INSERT INTO City_Connectivity_Between_Air
+SELECT OriginCityID, DestinationID, Count(*) AS Connectivity FROM 
+(SELECT DISTINCT OriginCityID, DestinationID, DepartureTime, ArrivalTime FROM Flight WHERE (DepartureDate = @dateoftravel) AND (Stops = 0)) a
+GROUP BY OriginCityID, DestinationID;
+
+--Flight City Connectivity
+
+TRUNCATE City_Connectivity_Air;
+SET @dateoftravel = '2014-06-01';
+INSERT INTO City_Connectivity_Air
+SELECT OriginCityID, COUNT(*) AS Connectivity FROM
+(SELECT DISTINCT OriginCityID, DestinationID, DepartureTime, ArrivalTime FROM Flight WHERE (DepartureDate = @dateoftravel) AND (Stops = 0)) a
+GROUP BY OriginCityID
+
 
