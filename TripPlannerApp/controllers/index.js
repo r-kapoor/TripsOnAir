@@ -2,6 +2,7 @@
 
 
 var IndexModel = require('../models/index');
+var tsp = require('../lib/tsp');
 
 
 module.exports = function (app) {
@@ -17,5 +18,12 @@ module.exports = function (app) {
     app.get('/test',function(req,res){
     	res.render('test',model);
     	console.log("testing");
+    });
+    
+    app.get('/tsp',function(req,res){
+    	res.render('test',model);
+    	console.log("testing TSP");
+    	
+    	tsp.getOrderUsingTsp();
     });
 };
