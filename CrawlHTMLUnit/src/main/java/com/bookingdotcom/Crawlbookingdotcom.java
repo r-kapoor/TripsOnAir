@@ -1,18 +1,13 @@
 package com.bookingdotcom;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.io.*;
-import java.util.Scanner;
+import java.util.Iterator;
 
 import GlobalClasses.HtmlUnitWebClient;
 
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.makemytrip.Hotels;
 
 /**
  * 
