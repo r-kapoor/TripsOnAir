@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Trains" table="Trains" catalog="Holiday">
+        <id name="trainNo" type="int">
+            <column name="TrainNo" />
+            <generator class="assigned" />
+        </id>
+        <property name="trainName" type="string">
+            <column name="TrainName" length="100" not-null="true" />
+        </property>
+        <property name="daysOfTravel" type="string">
+            <column name="DaysOfTravel" length="7" not-null="true">
+                <comment>0 for all days. 1-7 digits indicating week days from Sun - Sat. Value 8 indicates unidentified value</comment>
+            </column>
+        </property>
+        <property name="pantry" type="byte">
+            <column name="Pantry" not-null="true">
+                <comment>0-No,1-yes,-1 undefined</comment>
+            </column>
+        </property>
+        <property name="type" type="string">
+            <column name="Type" length="20">
+                <comment>Rajdhani,shatabdi,superfast,mail/express,Garib rath,Jan shatabdi,Duronto</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

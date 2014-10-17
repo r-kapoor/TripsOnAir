@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory name="newFactory">
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">duKiwg4kLMSV</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/Holiday</property>
+        <property name="hibernate.connection.username">adminzESTl5F</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+        <mapping resource="Cab.hbm.xml" />
+        <mapping resource="RestaurantTimings.hbm.xml" />
+        <mapping resource="RestaurantImage.hbm.xml" />
+        <mapping resource="RailwayStation.hbm.xml" />
+        <mapping resource="HotelPrices.hbm.xml" />
+        <mapping resource="PlaceCharges.hbm.xml" />
+        <mapping resource="CityAlternateName.hbm.xml" />
+        <mapping resource="RailwayStationsInCity.hbm.xml" />
+        <mapping resource="RailwayTimetable.hbm.xml" />
+        <mapping resource="Flight.hbm.xml" />
+        <mapping resource="Groups.hbm.xml" />
+        <mapping resource="CityConnectivityBetweenRailway.hbm.xml" />
+        <mapping resource="Bus.hbm.xml" />
+        <mapping resource="FlightDetails.hbm.xml" />
+        <mapping resource="Trains.hbm.xml" />
+        <mapping resource="CityConnectivityBetweenAir.hbm.xml" />
+        <mapping resource="Timing.hbm.xml" />
+        <mapping resource="Weather.hbm.xml" />
+        <mapping resource="Restaurants.hbm.xml" />
+        <mapping resource="HotelImage.hbm.xml" />
+        <mapping resource="Climate.hbm.xml" />
+        <mapping resource="GroupsCity.hbm.xml" />
+        <mapping resource="BusBoardings.hbm.xml" />
+        <mapping resource="CityConnectivityAir.hbm.xml" />
+        <mapping resource="City.hbm.xml" />
+        <mapping resource="PlacesAlternateName.hbm.xml" />
+        <mapping resource="BestPlaces.hbm.xml" />
+        <mapping resource="HotelRooms.hbm.xml" />
+        <mapping resource="PlaceImage.hbm.xml" />
+        <mapping resource="Places.hbm.xml" />
+        <mapping resource="CabOutstation.hbm.xml" />
+        <mapping resource="FlightNumber.hbm.xml" />
+        <mapping resource="Hotels.hbm.xml" />
+        <mapping resource="CityConnectivityRailway.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

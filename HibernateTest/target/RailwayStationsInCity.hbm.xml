@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="RailwayStationsInCity" table="RailwayStations_In_City" catalog="Holiday">
+        <composite-id name="id" class="RailwayStationsInCityId">
+            <key-property name="cityId" type="int">
+                <column name="CityID" />
+            </key-property>
+            <key-property name="stationCode" type="string">
+                <column name="StationCode" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

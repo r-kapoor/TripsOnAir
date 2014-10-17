@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="RestaurantTimings" table="Restaurant_Timings" catalog="Holiday">
+        <id name="timingId" type="java.lang.Integer">
+            <column name="Timing_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="restaurantId" type="int">
+            <column name="RestaurantID" not-null="true" />
+        </property>
+        <property name="timeStart" type="time">
+            <column name="TimeStart" length="8" not-null="true" />
+        </property>
+        <property name="timeEnd" type="time">
+            <column name="TimeEnd" length="8" not-null="true" />
+        </property>
+        <property name="days" type="string">
+            <column name="Days" length="7" not-null="true">
+                <comment>0 for all days. 1-7 digits indicating week days from Sun - Sat. Value 8 indicates unidentified value</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

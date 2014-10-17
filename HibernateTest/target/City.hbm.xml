@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="City" table="City" catalog="Holiday">
+        <id name="cityId" type="java.lang.Integer">
+            <column name="CityID" />
+            <generator class="identity" />
+        </id>
+        <property name="cityName" type="string">
+            <column name="CityName" length="50" not-null="true" />
+        </property>
+        <property name="state" type="string">
+            <column name="State" length="50" not-null="true" />
+        </property>
+        <property name="country" type="string">
+            <column name="Country" length="20" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="Description" length="50000" />
+        </property>
+        <property name="category" type="string">
+            <column name="Category" length="100" />
+        </property>
+        <property name="rating" type="float">
+            <column name="Rating" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="latitude" type="java.lang.Double">
+            <column name="Latitude" precision="22" scale="0" />
+        </property>
+        <property name="longitude" type="java.lang.Double">
+            <column name="Longitude" precision="22" scale="0" />
+        </property>
+        <property name="ixigo" type="boolean">
+            <column name="Ixigo" not-null="true" />
+        </property>
+        <property name="tripAdvisor" type="boolean">
+            <column name="TripAdvisor" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

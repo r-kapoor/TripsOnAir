@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="BusBoardings" table="Bus_Boardings" catalog="Holiday">
+        <composite-id name="id" class="BusBoardingsId">
+            <key-property name="busId" type="int">
+                <column name="BusID" />
+            </key-property>
+            <key-property name="boardingPoint" type="string">
+                <column name="BoardingPoint" />
+            </key-property>
+            <key-property name="boardingLandmark" type="string">
+                <column name="BoardingLandmark" />
+            </key-property>
+            <key-property name="boardingAddress" type="string">
+                <column name="BoardingAddress" />
+            </key-property>
+            <key-property name="boardingTime" type="time">
+                <column name="BoardingTime" length="8" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

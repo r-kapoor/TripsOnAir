@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Places" table="Places" catalog="Holiday">
+        <id name="placeId" type="java.lang.Integer">
+            <column name="PlaceID" />
+            <generator class="identity" />
+        </id>
+        <property name="type" type="string">
+            <column name="Type" length="500" />
+        </property>
+        <property name="name" type="string">
+            <column name="Name" length="200" not-null="true" />
+        </property>
+        <property name="address" type="string">
+            <column name="Address" length="6000" />
+        </property>
+        <property name="pinCode" type="java.lang.Integer">
+            <column name="PinCode" />
+        </property>
+        <property name="phoneNo" type="string">
+            <column name="PhoneNo" length="12" />
+        </property>
+        <property name="cityId" type="int">
+            <column name="CityID" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="Description" length="50000" />
+        </property>
+        <property name="score" type="float">
+            <column name="Score" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="scoreSources" type="int">
+            <column name="ScoreSources" not-null="true">
+                <comment>Number of Sources from which rating has been calcullated</comment>
+            </column>
+        </property>
+        <property name="broadCategory" type="string">
+            <column name="Broad_Category" length="50">
+                <comment>As in TripAdvisor</comment>
+            </column>
+        </property>
+        <property name="website" type="string">
+            <column name="Website" length="15" />
+        </property>
+        <property name="latitude" type="java.lang.Double">
+            <column name="Latitude" precision="22" scale="0" />
+        </property>
+        <property name="longitude" type="java.lang.Double">
+            <column name="Longitude" precision="22" scale="0" />
+        </property>
+        <property name="ixigo" type="boolean">
+            <column name="Ixigo" not-null="true" />
+        </property>
+        <property name="tripAdvisor" type="boolean">
+            <column name="TripAdvisor" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
