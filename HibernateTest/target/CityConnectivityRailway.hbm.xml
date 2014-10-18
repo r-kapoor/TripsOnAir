@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="CityConnectivityRailway" table="City_Connectivity_Railway" catalog="Holiday">
+        <id name="cityId" type="int">
+            <column name="CityID" />
+            <generator class="assigned" />
+        </id>
+        <property name="connectivity" type="double">
+            <column name="Connectivity" precision="22" scale="0" not-null="true">
+                <comment>Number of Trains Passing/Entering/Leaving any of the stations in the city</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="HotelRooms" table="Hotel_Rooms" catalog="Holiday">
+        <id name="roomId" type="java.lang.Integer">
+            <column name="RoomID" />
+            <generator class="identity" />
+        </id>
+        <property name="hotelId" type="int">
+            <column name="HotelID" not-null="true" />
+        </property>
+        <property name="roomType" type="string">
+            <column name="RoomType" length="500" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

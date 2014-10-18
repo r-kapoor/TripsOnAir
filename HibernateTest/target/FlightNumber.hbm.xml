@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="FlightNumber" table="Flight_Number" catalog="Holiday">
+        <composite-id name="id" class="FlightNumberId">
+            <key-property name="flightId" type="int">
+                <column name="FlightID" />
+            </key-property>
+            <key-property name="flightNumberId" type="int">
+                <column name="FlightNumberID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

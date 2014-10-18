@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Restaurants" table="Restaurants" catalog="Holiday">
+        <id name="restaurantId" type="java.lang.Integer">
+            <column name="RestaurantID" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="string">
+            <column name="Name" length="100" not-null="true" />
+        </property>
+        <property name="address" type="string">
+            <column name="Address" />
+        </property>
+        <property name="cityId" type="int">
+            <column name="CityID" not-null="true" />
+        </property>
+        <property name="phoneNo" type="string">
+            <column name="PhoneNo" length="30" />
+        </property>
+        <property name="costForTwo" type="java.lang.Integer">
+            <column name="CostForTwo" />
+        </property>
+        <property name="description" type="string">
+            <column name="Description" length="5000" />
+        </property>
+        <property name="cuisines" type="string">
+            <column name="Cuisines" length="500" />
+        </property>
+        <property name="rating" type="float">
+            <column name="Rating" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="locality" type="string">
+            <column name="Locality" length="30">
+                <comment>Area as in Zomato</comment>
+            </column>
+        </property>
+        <property name="numOfVotes" type="int">
+            <column name="NumOfVotes" not-null="true">
+                <comment>Number of Votes for Rating</comment>
+            </column>
+        </property>
+        <property name="nonVeg" type="java.lang.Boolean">
+            <column name="NonVeg" />
+        </property>
+        <property name="homeDelivery" type="java.lang.Boolean">
+            <column name="HomeDelivery" />
+        </property>
+        <property name="dineIn" type="java.lang.Boolean">
+            <column name="DineIn" />
+        </property>
+        <property name="ac" type="java.lang.Boolean">
+            <column name="AC" />
+        </property>
+        <property name="bar" type="java.lang.Boolean">
+            <column name="Bar" />
+        </property>
+        <property name="zomato" type="int">
+            <column name="Zomato" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

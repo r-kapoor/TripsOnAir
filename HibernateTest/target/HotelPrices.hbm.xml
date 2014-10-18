@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="HotelPrices" table="Hotel_Prices" catalog="Holiday">
+        <composite-id name="id" class="HotelPricesId">
+            <key-property name="roomId" type="int">
+                <column name="RoomID" />
+            </key-property>
+            <key-property name="conditions" type="string">
+                <column name="Conditions" length="500" />
+            </key-property>
+            <key-property name="maxCapacity" type="int">
+                <column name="MaxCapacity" />
+            </key-property>
+            <key-property name="availability" type="int">
+                <column name="Availability" />
+            </key-property>
+            <key-property name="price" type="int">
+                <column name="Price" />
+            </key-property>
+            <key-property name="checkInDate" type="date">
+                <column name="CheckInDate" length="10" />
+            </key-property>
+            <key-property name="checkOutDate" type="date">
+                <column name="CheckOutDate" length="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

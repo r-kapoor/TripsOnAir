@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Bus" table="Bus" catalog="Holiday">
+        <id name="busId" type="java.lang.Integer">
+            <column name="BusID" />
+            <generator class="identity" />
+        </id>
+        <property name="operator" type="string">
+            <column name="Operator" length="50" not-null="true" />
+        </property>
+        <property name="originCityId" type="int">
+            <column name="OriginCityID" not-null="true" />
+        </property>
+        <property name="departureDate" type="date">
+            <column name="DepartureDate" length="10" not-null="true" />
+        </property>
+        <property name="departureTime" type="time">
+            <column name="DepartureTime" length="8" not-null="true" />
+        </property>
+        <property name="dropPoint" type="string">
+            <column name="DropPoint" />
+        </property>
+        <property name="dropAddress" type="string">
+            <column name="DropAddress" />
+        </property>
+        <property name="destinationId" type="int">
+            <column name="DestinationID" not-null="true" />
+        </property>
+        <property name="arrivalTime" type="time">
+            <column name="ArrivalTime" length="8" not-null="true" />
+        </property>
+        <property name="duration" type="time">
+            <column name="Duration" length="8" not-null="true" />
+        </property>
+        <property name="seatsAvailable" type="java.lang.Integer">
+            <column name="SeatsAvailable" />
+        </property>
+        <property name="a/c" type="java.lang.Boolean">
+            <column name="A/C" />
+        </property>
+        <property name="sleeper" type="java.lang.Boolean">
+            <column name="Sleeper" />
+        </property>
+        <property name="rating" type="float">
+            <column name="Rating" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="numofReviews" type="int">
+            <column name="NumofReviews" not-null="true" />
+        </property>
+        <property name="price" type="float">
+            <column name="Price" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="Description" length="50000" />
+        </property>
+        <property name="redBus" type="boolean">
+            <column name="RedBus" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

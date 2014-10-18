@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Flight" table="Flight" catalog="Holiday">
+        <id name="flightId" type="java.lang.Integer">
+            <column name="FlightID" />
+            <generator class="identity" />
+        </id>
+        <property name="originCityId" type="java.lang.Integer">
+            <column name="OriginCityID" />
+        </property>
+        <property name="departureDate" type="date">
+            <column name="DepartureDate" length="10" />
+        </property>
+        <property name="departureTime" type="time">
+            <column name="DepartureTime" length="8" />
+        </property>
+        <property name="nextDay" type="boolean">
+            <column name="NextDay" not-null="true">
+                <comment>1 Indicates the flight reaches the next day</comment>
+            </column>
+        </property>
+        <property name="arrivalTime" type="time">
+            <column name="ArrivalTime" length="8" />
+        </property>
+        <property name="destinationId" type="java.lang.Integer">
+            <column name="DestinationID" />
+        </property>
+        <property name="classofTravel" type="string">
+            <column name="ClassofTravel" length="50" />
+        </property>
+        <property name="price" type="java.lang.Float">
+            <column name="Price" precision="12" scale="0" />
+        </property>
+        <property name="stops" type="int">
+            <column name="Stops" not-null="true" />
+        </property>
+        <property name="hops" type="int">
+            <column name="Hops" not-null="true" />
+        </property>
+        <property name="goibibo" type="boolean">
+            <column name="Goibibo" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

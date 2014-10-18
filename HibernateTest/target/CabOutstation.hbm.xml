@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="CabOutstation" table="Cab_Outstation" catalog="Holiday">
+        <composite-id name="id" class="CabOutstationId">
+            <key-property name="pickupCityId" type="int">
+                <column name="PickupCityID" />
+            </key-property>
+            <key-property name="operator" type="string">
+                <column name="Operator" length="20" />
+            </key-property>
+            <key-property name="carType" type="string">
+                <column name="CarType" length="20" />
+            </key-property>
+            <key-property name="ac" type="boolean">
+                <column name="AC" />
+            </key-property>
+            <key-property name="baseFare" type="float">
+                <column name="BaseFare" precision="12" scale="0" />
+            </key-property>
+            <key-property name="chargePerKm" type="float">
+                <column name="ChargePerKm" precision="12" scale="0" />
+            </key-property>
+            <key-property name="cancellationCharge" type="int">
+                <column name="CancellationCharge" />
+            </key-property>
+            <key-property name="totalFare" type="float">
+                <column name="TotalFare" precision="12" scale="0" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="Description" length="50000" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

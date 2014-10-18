@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Hotels" table="Hotels" catalog="Holiday">
+        <id name="hotelId" type="java.lang.Integer">
+            <column name="HotelID" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="string">
+            <column name="Name" length="100" not-null="true" />
+        </property>
+        <property name="address" type="string">
+            <column name="Address" length="100" not-null="true" />
+        </property>
+        <property name="pincode" type="string">
+            <column name="Pincode" length="6" />
+        </property>
+        <property name="phoneNo" type="string">
+            <column name="PhoneNo" length="30" />
+        </property>
+        <property name="cityId" type="int">
+            <column name="CityID" not-null="true" />
+        </property>
+        <property name="ac" type="java.lang.Boolean">
+            <column name="AC" />
+        </property>
+        <property name="rating" type="float">
+            <column name="Rating" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="numOfReviews" type="int">
+            <column name="NumOfReviews" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="Description" />
+        </property>
+        <property name="checkIn" type="time">
+            <column name="CheckIn" length="8" />
+        </property>
+        <property name="checkOut" type="time">
+            <column name="CheckOut" length="8" />
+        </property>
+        <property name="bookingdotcom" type="boolean">
+            <column name="Bookingdotcom" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

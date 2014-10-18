@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Cab" table="Cab" catalog="Holiday">
+        <composite-id name="id" class="CabId">
+            <key-property name="operator" type="string">
+                <column name="Operator" length="20" />
+            </key-property>
+            <key-property name="city" type="string">
+                <column name="City" length="20" />
+            </key-property>
+            <key-property name="cityId" type="int">
+                <column name="CityID" />
+            </key-property>
+            <key-property name="firstKm" type="int">
+                <column name="FirstKm" />
+            </key-property>
+            <key-property name="firstKmRateDay" type="float">
+                <column name="FirstKmRateDay" precision="12" scale="0" />
+            </key-property>
+            <key-property name="ratePerKmDay" type="float">
+                <column name="RatePerKmDay" precision="12" scale="0" />
+            </key-property>
+            <key-property name="waitingChargesPerMinDay" type="float">
+                <column name="WaitingChargesPerMinDay" precision="12" scale="0" />
+            </key-property>
+            <key-property name="firstKmRateNight" type="float">
+                <column name="FirstKmRateNight" precision="12" scale="0" />
+            </key-property>
+            <key-property name="ratePerKmNight" type="float">
+                <column name="RatePerKmNight" precision="12" scale="0" />
+            </key-property>
+            <key-property name="waitingChargesPerMinNight" type="float">
+                <column name="WaitingChargesPerMinNight" precision="12" scale="0" />
+            </key-property>
+            <key-property name="minCharge" type="int">
+                <column name="MinCharge" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Climate" table="Climate" catalog="Holiday">
+        <composite-id name="id" class="ClimateId">
+            <key-property name="cityId" type="int">
+                <column name="CityID" />
+            </key-property>
+            <key-property name="month" type="int">
+                <column name="Month" />
+            </key-property>
+            <key-property name="minTemp" type="float">
+                <column name="MinTemp" precision="12" scale="0" />
+            </key-property>
+            <key-property name="maxTemp" type="float">
+                <column name="MaxTemp" precision="12" scale="0" />
+            </key-property>
+            <key-property name="humidity" type="float">
+                <column name="Humidity" precision="12" scale="0" />
+            </key-property>
+            <key-property name="recommend" type="boolean">
+                <column name="Recommend" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

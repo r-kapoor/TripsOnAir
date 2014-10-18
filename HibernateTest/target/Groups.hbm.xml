@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Groups" table="Groups" catalog="Holiday">
+        <id name="groupId" type="java.lang.Integer">
+            <column name="GroupID" />
+            <generator class="identity" />
+        </id>
+        <property name="popularName" type="string">
+            <column name="PopularName" length="50">
+                <comment>Popular name can be displayed</comment>
+            </column>
+        </property>
+        <property name="groupName" type="string">
+            <column name="GroupName" length="50" not-null="true" />
+        </property>
+        <property name="distFactor" type="int">
+            <column name="DistFactor" not-null="true" />
+        </property>
+        <property name="groupRating" type="double">
+            <column name="GroupRating" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="latitude" type="double">
+            <column name="Latitude" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="longitude" type="double">
+            <column name="Longitude" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="groupCategory" type="string">
+            <column name="GroupCategory" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

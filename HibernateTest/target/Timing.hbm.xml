@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Timing" table="Timing" catalog="Holiday">
+        <id name="placeId" type="int">
+            <column name="PlaceID" />
+            <generator class="assigned" />
+        </id>
+        <property name="openTime" type="time">
+            <column name="OpenTime" length="8" />
+        </property>
+        <property name="closeTime" type="time">
+            <column name="CloseTime" length="8" />
+        </property>
+        <property name="mon" type="boolean">
+            <column name="Mon" not-null="true" />
+        </property>
+        <property name="tue" type="boolean">
+            <column name="Tue" not-null="true" />
+        </property>
+        <property name="wed" type="boolean">
+            <column name="Wed" not-null="true" />
+        </property>
+        <property name="thu" type="boolean">
+            <column name="Thu" not-null="true" />
+        </property>
+        <property name="fri" type="boolean">
+            <column name="Fri" not-null="true" />
+        </property>
+        <property name="sat" type="boolean">
+            <column name="Sat" not-null="true" />
+        </property>
+        <property name="sun" type="boolean">
+            <column name="Sun" not-null="true" />
+        </property>
+        <property name="expectedDuration" type="float">
+            <column name="ExpectedDuration" precision="12" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
