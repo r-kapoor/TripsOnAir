@@ -72,4 +72,19 @@ SELECT OriginCityID, COUNT(*) AS Connectivity FROM
 (SELECT DISTINCT OriginCityID, DestinationID, DepartureTime, ArrivalTime FROM Flight WHERE (DepartureDate = @dateoftravel) AND (Stops = 0)) a
 GROUP BY OriginCityID
 
+--Bus Between City Connectivity
+TRUNCATE City_Connectivity_Between_Bus;
+SET @dateoftravel = '2014-02-24';
+INSERT INTO City_Connectivity_Between_Bus
+SELECT OriginCityID, DestinationID, Count(*) AS Connectivity FROM 
+(SELECT distinct OriginCityID, DestinationID, DepartureDate, DepartureTime, Operator from Bus WHERE DepartureDate = @dateoftravel) a
+GROUP BY OriginCityID, DestinationID;
+
+--Bus City Connectivity
+TRUNCATE City_Connectivity_Bus;
+SET @dateoftravel = '2014-02-24';
+INSERT INTO City_Connectivity_Bus
+SELECT OriginCityID, Count(*) AS Connectivity FROM 
+(SELECT distinct OriginCityID, DestinationID, DepartureDate, DepartureTime, Operator from Bus WHERE DepartureDate = @dateoftravel) a
+GROUP BY OriginCityID;
 
