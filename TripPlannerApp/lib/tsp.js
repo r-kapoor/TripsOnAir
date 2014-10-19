@@ -6,7 +6,7 @@
 var positions = [];
 var minWeight = 10000;
 
-function getOrderUsingTsp() {
+function getOrderUsingTsp(error, distanceAndConnectivity, cities) {
 	
 	//Inputs
 	var origin = {name: 'Pilani'};

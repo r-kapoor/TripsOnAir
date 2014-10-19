@@ -4,7 +4,7 @@
 
 var APP_KEY="Fmjtd%7Cluurnuuznd%2Cbg%3Do5-9wrshz";
 
-function getDistanceMatrix(dests)
+function getDistanceMatrix(dests, callback)
 {
 	console.log("dist matrix called");
 	
@@ -30,7 +30,8 @@ function getDistanceMatrix(dests)
 		
 	 // reponse variable has raw response
 	 
-		return data;
+		//return data;
+		callback(null, data);
 	});
 }
 function getURL(dests)

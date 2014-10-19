@@ -2,7 +2,8 @@
 
 var IndexModel = require('../models/places');
 var getDistanceMatrix = require('../lib/getDistanceMatrix');
-
+var getConnectivity = require('../lib/getConnectivity')
+var tsp = require('../lib/tsp');
 
 module.exports = function (app) {
 
@@ -24,12 +25,26 @@ module.exports = function (app) {
     	console.log("tastes:"+tastes);
     	console.log("destinations:"+destinations);
     	
+    	destinations = destinations.split("+");
+    	cities = [];
+    	cities = cities.push(origin);
+    	cities = cities.concat(destinations);
+    	
+    	
     	var responseData = getDistanceMatrix.getDistanceMatrix(destinations.split("+"));
     	 //TODO : separate destinations and pass array into functions
     	//var connectivity = connectivity(destinations);
     	
     	var async  = require('async');
-    	
+    	async.parallel([
+    	                getDistanceMatrix.getDistanceMatrix(cities, callback);
+    	                ,
+    	                getConnectivity.getConnectivity(cities,callback);
+    	            ],
+    	            //callback
+    	            tsp.getOrderUsingTsp(err, results, cities);
+    	        	);
+
 
     	var model = new IndexModel();
     	res.render('places', model);
