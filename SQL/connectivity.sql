@@ -88,3 +88,22 @@ SELECT OriginCityID, Count(*) AS Connectivity FROM
 (SELECT distinct OriginCityID, DestinationID, DepartureDate, DepartureTime, Operator from Bus WHERE DepartureDate = @dateoftravel) a
 GROUP BY OriginCityID;
 
+--Update Tables
+UPDATE City_Connectivity_Air
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Air) a);
+
+UPDATE City_Connectivity_Bus
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Bus) a);
+
+UPDATE City_Connectivity_Railway
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Railway) a);
+
+UPDATE City_Connectivity_Between_Air
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Air) a);
+
+UPDATE City_Connectivity_Between_Bus
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Between_Bus) a);
+
+UPDATE City_Connectivity_Between_Railway
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Between_Railway) a);
+
