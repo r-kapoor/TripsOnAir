@@ -1,5 +1,7 @@
 package com.indianRail;
 
+import java.sql.Time;
+
 /**
  * 
  * @author rajat
@@ -9,11 +11,11 @@ public class arrayListObject {
 
 	public String stationName;
 	public String stationCode;
-	public String arrTime;
-	public String deptTime;
+	public Time arrTime;
+	public Time deptTime;
 	public int distTravelled;
-	public int day;
-	public int route;
+	public byte day;
+	public byte route;
 	public String getStationName() {
 		return stationName;
 	}
@@ -26,16 +28,16 @@ public class arrayListObject {
 	public void setStationCode(String stationCode) {
 		this.stationCode = stationCode;
 	}
-	public String getArrTime() {
+	public Time getArrTime() {
 		return arrTime;
 	}
-	public void setArrTime(String arrTime) {
+	public void setArrTime(Time arrTime) {
 		this.arrTime = arrTime;
 	}
-	public String getDeptTime() {
+	public Time getDeptTime() {
 		return deptTime;
 	}
-	public void setDeptTime(String deptTime) {
+	public void setDeptTime(Time deptTime) {
 		this.deptTime = deptTime;
 	}
 	public int getDistTravelled() {
@@ -44,16 +46,16 @@ public class arrayListObject {
 	public void setDistTravelled(int distTravelled) {
 		this.distTravelled = distTravelled;
 	}
-	public int getDay() {
+	public byte getDay() {
 		return day;
 	}
-	public void setDay(int day) {
+	public void setDay(byte day) {
 		this.day = day;
 	}
-	public int getRoute() {
+	public byte getRoute() {
 		return route;
 	}
-	public void setRoute(int route) {
+	public void setRoute(byte route) {
 		this.route = route;
 	}
 }

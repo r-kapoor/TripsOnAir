@@ -1,10 +1,16 @@
 package com.indianRail;
 
 import java.net.URL;
-import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.hibernate.Session;
+
+import GlobalClasses.HtmlUnitWebClient;
+import GlobalClasses.getHibernateSession;
 
 import com.dataTransferObject.IndianRailwayDto;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -18,14 +24,15 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * @author rajat
  * Crawl railways data from cleartrip
  * Starting Link:https://www.cleartrip.com/trains/list?page=1
- *
+ * TODO: use interface to use HtmlUnitWebClient with Hibernate
  */
 
-public class CrawlIndianRail {
+public class CrawlIndianRail extends getHibernateSession {
 
-	public void getTrains() throws Exception {
+	public void getTrains()throws Exception {
 			
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
+		Session session=getHibernateSession();
 		DomElement trainNoDetails;
 		int pagesNo=5;//Need to be set Manually
 		//Set the URL of the page
@@ -60,7 +67,7 @@ public class CrawlIndianRail {
 				        	indianRailwayDto.setName(TrainName);
 				        	indianRailwayDto.setTrainNo(Integer.parseInt(TrainNo));
 				        	getDetails(detailsUrl,indianRailwayDto);
-				        	//TransferDataRailway.transferData(indianRailwayDto);
+				        	TransferDataRailway.transferData(indianRailwayDto,session);
 			        	}
 			        }
 		    	}
@@ -166,7 +173,7 @@ public class CrawlIndianRail {
 			    	{
 			    		  Iterable<DomElement> pathDetails = pathFirstChildsChild.getChildElements();
 			    		  Iterator<DomElement> pathDetailsIterator = pathDetails.iterator();
-			    		  
+			    		  DateFormat formatter = new SimpleDateFormat("hh:mm:ss");
 			    		  while(pathDetailsIterator.hasNext())
 			    		  {
 			    			  //Get each row of TrainDetails (tr)
@@ -200,7 +207,7 @@ public class CrawlIndianRail {
 						        			}
 						        			else
 						        			{
-						        				trainData.setArrTime(element.trim()+":00");
+						        				trainData.setArrTime(new java.sql.Time(formatter.parse(element.trim()+":00").getTime()));
 						        			}
 						        			
 						        		}
@@ -211,7 +218,7 @@ public class CrawlIndianRail {
 						        				trainData.setDeptTime(null);
 						        			}
 						        			else{
-						        				trainData.setDeptTime(element.trim()+":00");
+						        				trainData.setDeptTime(new java.sql.Time(formatter.parse(element.trim()+":00").getTime()));
 						        			}
 						        		}
 						        		else if(columnNo==6)
@@ -221,11 +228,11 @@ public class CrawlIndianRail {
 						        		
 						        		else if(columnNo==7)
 						        		{
-						        			trainData.setDay(Integer.parseInt(element.trim()));
+						        			trainData.setDay(Byte.valueOf(element.trim()));
 						        		}
 						        		else if(columnNo==8)
 						        		{
-						        			trainData.setRoute(Integer.parseInt(element.trim()));
+						        			trainData.setRoute(Byte.valueOf(element.trim()));
 						        		}
 										columnNo++;
 						        	}
