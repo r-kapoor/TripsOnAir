@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.RailwayTimetable" table="Railway_Timetable" catalog="Holiday">
+            <key-property name="trainNo" type="int">
+                <column name="TrainNo" />
+            </key-property>
+            <key-property name="stationCode" type="string">
+                <column name="StationCode" length="10" />
+            </key-property>
+            <key-property name="arrivalTime" type="time">
+                <column name="ArrivalTime" length="8" />
+            </key-property>
+            <key-property name="departureTime" type="time">
+                <column name="DepartureTime" length="8" />
+            </key-property>
+            <key-property name="distanceCovered" type="int">
+                <column name="DistanceCovered" />
+            </key-property>
+            <key-property name="day" type="byte">
+                <column name="Day" />
+            </key-property>
+            <key-property name="route" type="byte">
+                <column name="Route" />
+            </key-property>
+    </class>
+</hibernate-mapping>

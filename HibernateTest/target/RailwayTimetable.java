@@ -8,6 +8,7 @@ public class RailwayTimetable implements java.io.Serializable {
 
 	private RailwayTimetableId id;
 
+	
 	public RailwayTimetable() {
 	}
 

@@ -1,16 +1,16 @@
 package com.indianRail;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import GlobalClasses.ConnectMysql;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
 import com.dataTransferObject.IndianRailwayDto;
+import com.hibernate.RailwayTimetable;
 
 public class TransferDataRailway {
 
-	public static void transferData(IndianRailwayDto indianRailwayDto)throws Exception
+	/*public static void transferData(IndianRailwayDto indianRailwayDto)throws Exception
 	{		
 		//Connection conn=ConnectMysql.MySqlConnection();
 		//Statement statement = conn.createStatement();
@@ -37,12 +37,51 @@ public class TransferDataRailway {
 			System.out.println("route "+stationDetails.get(i).getRoute());
 		}
 		
+	}*/
+
+			
+	public static void transferData(IndianRailwayDto indianRailwayDto)throws Exception
+		{		
+			SessionFactory sessionFactory;
+	        try {
+	    	    Configuration conf = new Configuration();
+	    	    //conf.addClass(RailwayStation.class);
+	    	    conf.addResource("com/hibernate/RailwayTimetable.hbm.xml");
+	    	    sessionFactory = conf.configure("com/hibernate/hibernate.cfg.xml").buildSessionFactory();
+	        } catch (Throwable ex) {
+	            System.err.println("SessionFactory creation failed" + ex);
+	            throw new ExceptionInInitializerError(ex);
+	        }
+
+		Session session = null;
+		Transaction tr = null;
 		
+		RailwayStation rstation = new RailwayStation();
+		//rstation.setStationCode("test");
+		//rstation.setStationName("Lucknow");
 		
+		RailwayTimetable rtimetable= new RailwayTimetable();
+		rtimetable.setTrainNo("12456");
+		//rtimetable.setArrivalTime("12:30");
+		//rtimetable.setDay("");
 		
-		
-		
-		
-	}
+		session = sessionFactory.openSession();
+
+		// create a transaction
+
+		tr = session.beginTransaction();
+
+		// save using the session
+
+		session.save(rstation);
+
+		session.flush();
+
+		tr.commit();
+		}	
 	
+
+		public static void main(String[] args) {
+
+	}
 }

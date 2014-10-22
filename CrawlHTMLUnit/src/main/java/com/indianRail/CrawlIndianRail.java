@@ -60,7 +60,7 @@ public class CrawlIndianRail {
 				        	indianRailwayDto.setName(TrainName);
 				        	indianRailwayDto.setTrainNo(Integer.parseInt(TrainNo));
 				        	getDetails(detailsUrl,indianRailwayDto);
-				        	TransferDataRailway.transferData(indianRailwayDto);
+				        	//TransferDataRailway.transferData(indianRailwayDto);
 			        	}
 			        }
 		    	}
