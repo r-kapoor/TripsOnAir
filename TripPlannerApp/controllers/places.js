@@ -25,7 +25,7 @@ module.exports = function (app) {
     	console.log("tastes:"+tastes);
     	console.log("destinations:"+destinations);
     	
-    	destinations = destinations.split("+");
+    	//destinations = destinations.split(",");
     	/*cities = [];
     	cities = cities.push(origin);
     	cities = cities.concat(destinations);
@@ -55,12 +55,7 @@ module.exports = function (app) {
     /**
      * store the session variables
      */
-    app.post('/places', function (req, res) {    	
-    	/*console.log("in post");
-    	var budget=req.param('budget');
-  	  	//console.log("budget "+budget);
-  	  	var category=req.param('cc');
-  	  	console.log("category "+category);*/
+    app.post('/places', function (req, res) {
     	res.redirect('/places');
     });
 

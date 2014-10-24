@@ -1,3 +1,8 @@
+/**
+ * @author rajat
+ * Drag and Drop cities to change their order
+ */
+
 $(document).ready(function(){
 
 $(".citiesOrder").droppable({
