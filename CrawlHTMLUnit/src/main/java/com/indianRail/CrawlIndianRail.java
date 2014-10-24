@@ -24,7 +24,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * @author rajat
  * Crawl railways data from cleartrip
  * Starting Link:https://www.cleartrip.com/trains/list?page=1
- * TODO: use interface to use HtmlUnitWebClient with Hibernate
+ * TODO: use interface to use HtmlUnitWebClient with Hibernate;print errors in file;no unique identifier in RailwayTimeTable
  */
 
 public class CrawlIndianRail extends getHibernateSession {
