@@ -2,7 +2,7 @@
 
 var IndexModel = require('../models/places');
 var getDistanceMatrix = require('../lib/getDistanceMatrix');
-var getConnectivity = require('../lib/getConnectivity')
+var getConnectivity = require('../lib/getConnectivity');
 var tsp = require('../lib/tsp');
 
 module.exports = function (app) {
@@ -26,7 +26,7 @@ module.exports = function (app) {
     	console.log("destinations:"+destinations);
     	
     	destinations = destinations.split("+");
-    	cities = [];
+    	/*cities = [];
     	cities = cities.push(origin);
     	cities = cities.concat(destinations);
     	
@@ -37,15 +37,15 @@ module.exports = function (app) {
     	
     	var async  = require('async');
     	async.parallel([
-    	                getDistanceMatrix.getDistanceMatrix(cities, callback);
+    	                getDistanceMatrix.getDistanceMatrix(cities, callback)
     	                ,
-    	                getConnectivity.getConnectivity(cities,callback);
+    	                getConnectivity.getConnectivity(cities,callback)
     	            ],
     	            //callback
-    	            tsp.getOrderUsingTsp(err, results, cities);
+    	            tsp.getOrderUsingTsp(err, results, cities)
     	        	);
 
-
+*/
     	var model = new IndexModel();
     	res.render('places', model);
     	  
@@ -56,13 +56,12 @@ module.exports = function (app) {
      * store the session variables
      */
     app.post('/places', function (req, res) {    	
-    	console.log("in post");
+    	/*console.log("in post");
     	var budget=req.param('budget');
   	  	//console.log("budget "+budget);
   	  	var category=req.param('cc');
-  	  	console.log("category "+category);
-    	res.redirect('/places?test='+12);
-    	
+  	  	console.log("category "+category);*/
+    	res.redirect('/places');
     });
 
 };

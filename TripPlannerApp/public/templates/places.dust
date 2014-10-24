@@ -1,8 +1,26 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="js/page2JSFunctions/reorderByDrag.js"></script>
+<link rel="stylesheet" href="css/page2Css/reorder.css"/>
+</head>
+
 <body>
 <h1> Welcome  to places<h2>
+
+<div class="sideBySide">
+  <div class="left">
+    <ul class="citiesOrder">
+      <li>Delhi</li>
+      <li style="cursor:pointer" class="source">Agra</li>
+      <li style="cursor:pointer" class="source">Pilani</li>
+      <li style="cursor:pointer" class="source">Jaipur</li>
+      <li>Delhi</li>
+    </ul>
+  </div>
 </body>
 
 </html>
