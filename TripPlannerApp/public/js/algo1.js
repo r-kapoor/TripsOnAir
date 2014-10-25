@@ -2,8 +2,10 @@
  * 
  * @author rajat
  * Gelocation finds the lat/long of the inputs & subsequently finds the distance followed by approximate budget
+ * TODO:Change tellusBudget box value if geolocation is called multiple times
  */	
 
+var countOfCall=0;
 function geolocation()
 {		
 	var origin=document.getElementById("origin").value;
@@ -12,7 +14,6 @@ function geolocation()
 	var bool=document.getElementById("textbox1").disabled;
 	var destElements=document.getElementsByClassName('destination');
 	var len=destElements.length;
-
 	if((origin!="")&&(startDate!="")&&(endDate!="")&&(destElements[0]!="")&&(!bool)&&(origin!="Enter a city")&&(destElements[0]!="Enter a city"))
 	{
 		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true"; 
@@ -75,7 +76,8 @@ function geolocation()
 					document.getElementById("range").options[2].disabled=true;
 					document.getElementById("range").options[3].disabled=true;
 				}
-
+				//append the submit button only once
+				if(countOfCall==0){
 				//Append the submit button
 				var submitBtn = document.createElement("BUTTON");
 				var buttonText = document.createTextNode("Submit");
@@ -85,7 +87,8 @@ function geolocation()
 				submitBtn.setAttribute("onClick","dto()");
 				var input2Form=document.getElementById("inpBudget");
 				input2Form.appendChild(submitBtn);
-
+				countOfCall++;
+				}
 				//display the other inputs
 				document.getElementById("input2").removeAttribute("style");
 				});//end budgetCalc*/

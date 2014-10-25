@@ -31,20 +31,7 @@
 			</br>
 			</br>
 			</form>
-		</form>
-		
-		<!--form method="post" action="/places">
-                    <input name="cc" placeholder="CC #" value="4532649989162709" maxlength="16"><br>
-                    <input name="expMonth" placeholder="MM" value="12" maxlength="2" size="2">
-                    <input name="expYear" placeholder="YYYY" value="2018" maxlength="4" size="4">
-                    <input name="cvv" placeholder="cvv" value="111" maxlength="4" size="4"><br>
-                    <input name="firstName" value="Ash" placeholder="First Name">
-                    <input name="lastName" value="Williams" placeholder="Last Name"><br>
-                    <!--input type="hidden" name="_csrf" value="{_csrf}"-->
-                    <!--input type="submit" value="Complete Purchase"-->
-        </form-->
-	<!--button id="nextPageSubmit" type="button" onclick="dto()">submitButton</button-->
-	 
+		</form>	 
 </div>
 
 </body>
