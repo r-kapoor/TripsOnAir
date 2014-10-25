@@ -27,10 +27,10 @@ function getConnectivity(cities, callback)
 		}
 	    else{
 	    	for (var i in rows) {
-	    		console.log(rows[i].CityIDOrigin+','+rows[i].CityIDDestination+','+rows[i].AirConnectivity','+rows[i].BusConnectivity','+rows[i].RailwayConnectivity);
+	    		console.log(rows[i].CityIDOrigin+','+rows[i].CityIDDestination+','+rows[i].AirConnectivity+','+rows[i].BusConnectivity+','+rows[i].RailwayConnectivity);
 	    	}
 	    }
-	callback(null, );
+	callback(null, rows);
 	});
 	connection.end();
 }
