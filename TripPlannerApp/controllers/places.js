@@ -3,6 +3,7 @@
 var IndexModel = require('../models/places');
 var getDistanceMatrix = require('../lib/getDistanceMatrix');
 var getConnectivity = require('../lib/getConnectivity');
+var getCityID = require('../lib/getCityID');
 var tsp = require('../lib/tsp');
 
 module.exports = function (app) {
@@ -22,32 +23,38 @@ module.exports = function (app) {
     	var budget=req.param("bdg");
     	var type=req.param("type");
     	
+    	origin = origin.toUpperCase();
     	console.log("tastes:"+tastes);
     	console.log("destinations:"+destinations);
     	
-    	//destinations = destinations.split(",");
-    	/*cities = [];
-    	cities = cities.push(origin);
+    	destinations = destinations.split(",");
+    	var cities = [];
+    	cities.push(origin);
     	cities = cities.concat(destinations);
-    	
-    	
-    	var responseData = getDistanceMatrix.getDistanceMatrix(destinations.split("+"));
-    	 //TODO : separate destinations and pass array into functions
-    	//var connectivity = connectivity(destinations);
     	
     	var async  = require('async');
     	async.parallel([
-    	                getDistanceMatrix.getDistanceMatrix(cities, callback)
+    	                function (callback){
+    	                	getDistanceMatrix.getDistanceMatrix(cities, callback);
+    	                }
     	                ,
-    	                getConnectivity.getConnectivity(cities,callback)
+    	                function(callback){
+    	                	getCityID.getCityID(cities, function(err, cityIDs) {
+        	                	if(err)
+        	                	{
+        	                		throw err;
+        	                	}
+        	                	getConnectivity.getConnectivity(cities, cityIDs, callback);
+        	                });
+    	                }
     	            ],
     	            //callback
-    	            tsp.getOrderUsingTsp(err, results, cities)
-    	        	);
-
-*/
-    	var model = new IndexModel();
-    	res.render('places', model);
+    	            function(err, results) {
+    					tsp.getOrderUsingTsp(err, results, function(tripOrder, originName, originID){
+    				    	var model = new IndexModel(tripOrder, originName, originID);
+    				    	res.render('places', model);
+    						});
+    				});
     	  
     });
 
