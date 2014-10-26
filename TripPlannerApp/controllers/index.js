@@ -26,4 +26,10 @@ module.exports = function (app) {
     	
     	tsp.getOrderUsingTsp();
     });
+    
+
+    app.get('/poptest',function(req,res){
+    	res.render('popTest',model);
+    	console.log("UI code");
+    });
 };

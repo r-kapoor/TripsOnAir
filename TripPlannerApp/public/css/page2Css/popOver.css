@@ -1,0 +1,7 @@
+.popover.right .arrow {
+	top:5%;
+}
+.popover{
+	top:100px;
+}
+[data-style=primary] + .popover {background:  #E6E6FA; border-radius: 0;top:100px;height:227px;display:block;width:500px}
