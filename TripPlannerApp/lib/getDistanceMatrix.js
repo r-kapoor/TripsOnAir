@@ -5,16 +5,17 @@
 var APP_KEY="Fmjtd%7Cluurnuuznd%2Cbg%3Do5-9wrshz";
 
 function getDistanceMatrix(dests, callback)
-{	
+{
+	console.log('getDistanceMatrix called');
 	var url=getURL(dests);
 	url=url.replace('YOUR_KEY_HERE', APP_KEY);
-	console.log("nURL"+url);
+	//console.log("nURL"+url);
 	var Client = require('node-rest-client').Client;
 	client = new Client();
 	client.registerMethod("jsonMethod", url, "GET");
 	client.methods.jsonMethod(function(data,response){		
-		console.log("Alldata:%j",data);
-		console.log("distance:"+data.distance);
+		//console.log("Alldata:%j",data);
+		//console.log("distance:"+data.distance);
 		/*var distanceMatrix = data.distance;
 		for(var i = 0; i < distanceMatrix.length; i++)
 		{
@@ -23,8 +24,8 @@ function getDistanceMatrix(dests, callback)
 				console.log("i:"+i+":j:"+j+":"+distanceMatrix[i][j]);
 			}
 		}*/
-		
-	callback(null, data);
+		//console.log('callback called');
+		callback(null, data);
 	});
 }
 function getURL(dests)

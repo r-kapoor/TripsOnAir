@@ -14,11 +14,11 @@
 <div class="sideBySide">
   <div class="left">
     <ul class="citiesOrder">
-      <li>Delhi</li>
-      <li style="cursor:pointer" class="source">Agra</li>
-      <li style="cursor:pointer" class="source">Pilani</li>
-      <li style="cursor:pointer" class="source">Jaipur</li>
-      <li>Delhi</li>
+			<li id="{OriginID}">{OriginName}</li>
+			{#trip}
+	      	<li style="cursor:pointer" class="source" id="{.CityID}">{.CityName}</li>
+      		{/trip}
+			<li id="{OriginID}">{OriginName}</li>
     </ul>
   </div>
 </body>

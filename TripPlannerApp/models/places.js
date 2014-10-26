@@ -1,8 +1,10 @@
 'use strict';
 
 
-module.exports = function IndexModel() {
+module.exports = function IndexModel(tripOrder, originName, originID) {
     return {
-        name: 'places'
+        trip: tripOrder,
+        OriginName:originName,
+        OriginID:originID
     };
 };
