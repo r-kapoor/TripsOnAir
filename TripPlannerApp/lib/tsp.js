@@ -3,6 +3,7 @@
  * TODO : All
  */
 
+var hashidEncoder =  require('../lib/hashEncoderDecoder');
 var positions = [];
 var minWeight = 10000;
 
@@ -167,20 +168,20 @@ function getOrderUsingTsp(err, results, callback) {
 	var tripOrder = [];
 	console.log("Best Trip:"+minTrip);
 	console.log(cities[0]);
-	var city = {CityName:cities[0], CityID:cityIDs[0]};
+	var city = {CityName:cities[0], CityID:hashidEncoder.encodeCityID(cityIDs[0])};
 	//tripOrder.push(city);
 	for(var i = 0; i < minTrip.length; i++)
 	{
 		console.log(cities[minTrip[i]]);
-		city = {CityName:cities[minTrip[i]], CityID:cityIDs[minTrip[i]]};
+		city = {CityName:cities[minTrip[i]], CityID:hashidEncoder.encodeCityID(cityIDs[minTrip[i]])};
 		tripOrder.push(city);
 	}
 	console.log(cities[0]);
-	city = {CityName:cities[0], CityID:cityIDs[0]};
+	city = {CityName:cities[0], CityID:hashidEncoder.encodeCityID(cityIDs[0])};
 	//tripOrder.push(city);
 	console.log("Min Weight:"+minWeight);
 	
-	callback(tripOrder, cities[0], cityIDs[0]);
+	callback(tripOrder, cities[0], hashidEncoder.encodeCityID(cityIDs[0]), weight, cities, hashidEncoder.encodeCityID(cityIDs), minWeight);
 }
 
 function getWeight(trip, weight)

@@ -1,7 +1,6 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<script src="js/page2JSFunctions/reorderByDrag.js"></script>
 <link rel="stylesheet" href="css/page2Css/reorder.css"/>
 <link rel="stylesheet" type="text/css" href="css/page2Css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="css/page2Css/demo.css" />
@@ -10,6 +9,7 @@
 <script src="js/jQueryCookie/jquery.cookie.js"></script>
 <script src="js/jqueryTemplate/jquery.tmpl.js"></script>
 <script src="js/callPlaces.js"></script>
+<script src="js/page2JSFunctions/reorderByDrag.js"></script>
 <script src="js/page2JSFunctions/showRoutes.js"></script>
 <script src="js/page2JSFunctions/modernizr.custom.js"></script>
 <div id="placesOrder">

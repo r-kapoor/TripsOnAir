@@ -3,10 +3,10 @@
  * Find the groups from db batch wise according to the inputs
  * TODO: Remove the scaling factor and store last city lat/long to calculate dist from last city to origin 
  */
-
-var Hashids=require('hashids');
-var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
-var hashidscity = new Hashids("encrypting the cityid", 8);
+var hashidEncoder =  require('../lib/hashEncoderDecoder');
+//var Hashids=require('hashids');
+//var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
+//var hashidscity = new Hashids("encrypting the cityid", 8);
 function getGroupList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
 
 	var connection=conn.conn();
@@ -44,9 +44,11 @@ function getGroupList(conn,orgLat,orgLong,category,range,start,batchsize,callbac
 		}
 	    else{
 			for (var i in rows) {
-		        var id = hashidsgroup.encode(rows[i].GroupID);
+		        //var id = hashidsgroup.encode(rows[i].GroupID);
+				var id = hashidEncoder.encodeGroupID(rows[i].GroupID);
 		        rows[i].GroupID = id;
-		        var id = hashidscity.encode(rows[i].CityID);
+		        //var id = hashidscity.encode(rows[i].CityID);
+		        var id = hashidEncoder.encodeCityID(rows[i].CityID);
 		        rows[i].CityID = id;
 		        console.log(rows[i]);
 	    	}
