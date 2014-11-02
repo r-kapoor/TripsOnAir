@@ -25,11 +25,6 @@
   </div>
 </div>  
 
-<button id="orderSubmit" type="button" onclick="showRoutes()">ShowRoutes</button>
-
-
-
-
- 
+<button id="orderSubmit" type="button" onclick="showRoutes()">ShowRoutes</button> 
 </body>
 </html>

@@ -5,14 +5,14 @@
  */
 
 
-function onSubmit(dto,action)
+function onSubmit(dto,action,cookieKey)
 {
 	console.log("OnSubmit");	
 	var c=$("<form></form>");
 	c.attr("action","/"+action);
 	c.css("display","none");
 	c.attr("method","GET");
-	
+	var cookieValue = "?";
 	for(var key in dto)
 	{
 		if (dto.hasOwnProperty(key)) {
@@ -21,7 +21,12 @@ function onSubmit(dto,action)
 			d.attr("name",key);
 			d.attr("value",dto[key]);
 			c.append(d);
+			cookieValue += key + "=" + dto[key] + "&";
 		}
+	}
+	if(cookieKey)
+	{
+		$.cookie(cookieKey, cookieValue);
 	}
 	var csrf=$("<input type='hidden'/>");
 	csrf.attr("name","_csrf");

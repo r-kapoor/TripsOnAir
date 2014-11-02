@@ -1,21 +1,20 @@
 'use strict';
 
-var IndexModel = require('../models/places');
-var getDistanceMatrix = require('../lib/getDistanceMatrix');
-var getConnectivity = require('../lib/getConnectivity');
-var getCityID = require('../lib/getCityID');
-var tsp = require('../lib/tsp');
+var getTravelOptionsModel = require('../models/places');
 
 module.exports = function (app) {
 
     /**
-     * Display the places
+     * Render the second page
      */
-    app.get('/places', function (req, res) {
+    app.get('/getTravelOptions', function (req, res) {
     	
-    	console.log("in get");
-    
-    	var origin=req.param("o");
+    	console.log("in get travel options");
+    	
+    	var model = new getTravelOptionsModel();
+    	res.render('getTravelOptions', model);
+    	
+    	/*var origin=req.param("o");
     	var startDate=req.param("stD");
     	var endDate=req.param("enD");
     	var tastes=req.param("tst");
@@ -52,10 +51,10 @@ module.exports = function (app) {
     	            function(err, results) {
     					tsp.getOrderUsingTsp(err, results, function(tripOrder, originName, originID){
     				    	var model = new IndexModel(tripOrder, originName, originID);
-    				    	//res.render('places', model);
-    				    	res.json(model);
+    				    	res.render('places', model);
     						});
     				});
+    	*/
     	  
     });
 
