@@ -5,6 +5,8 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script src="js/page2JSFunctions/reorderByDrag.js"></script>
+<script src="js/jqueryTemplate/jquery.tmpl.js"></script>
+<script src="js/page2JSFunctions/showRoutes.js"></script>
 <link rel="stylesheet" href="css/page2Css/reorder.css"/>
 </head>
 
@@ -21,6 +23,13 @@
 			<li id="{OriginID}">{OriginName}</li>
     </ul>
   </div>
-</body>
+</div>  
 
+<button id="orderSubmit" type="button" onclick="showRoutes()">ShowRoutes</button>
+
+
+
+
+ 
+</body>
 </html>

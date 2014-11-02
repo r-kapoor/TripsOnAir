@@ -18,24 +18,24 @@ function getOrderUsingTsp(err, results, callback) {
 	
 	//Validating the Inputs
 	var distanceMatrix = results[0].distance;
-	/*console.log('distance matrix');
+	console.log('distance matrix');
 	for(var i = 0; i < distanceMatrix.length; i++)
 	{
 		for(var j = 0; j < distanceMatrix.length; j++)
 		{
 			console.log("i:"+i+":j:"+j+":"+distanceMatrix[i][j]);
 		}
-	}*/
+	}
 	
 	var timeMatrix = results[0].time;
-	/*console.log('time matrix');
+	console.log('time matrix');
 	for(var i = 0; i < timeMatrix.length; i++)
 	{
 		for(var j = 0; j < timeMatrix.length; j++)
 		{
 			console.log("i:"+i+":j:"+j+":"+timeMatrix[i][j]);
 		}
-	}*/
+	}
 	
 	var connectivities = results[1][0];
 	/*console.log('connectivities');
@@ -73,19 +73,19 @@ function getOrderUsingTsp(err, results, callback) {
 			}
 			else
 			{
-				connectivities[i][j] += timeMatrix[i][j]/TimeFactor;
+				connectivities[i][j] += TimeFactor/timeMatrix[i][j];
 			}
 		}
 	}
 	
-	/*console.log('connectivities');
+	console.log('connectivities');
 	for(var i = 0; i < connectivities.length; i++)
 	{
 		for(var j = 0; j < connectivities.length; j++)
 		{
 			console.log("i:"+i+":j:"+j+":"+connectivities[i][j]);
 		}
-	}*/
+	}
 	
 	//Inputs
 	//var origin = {name: 'Pilani'};

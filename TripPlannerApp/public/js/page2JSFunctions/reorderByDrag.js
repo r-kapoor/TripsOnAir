@@ -16,9 +16,24 @@ $(".citiesOrder").droppable({
 	//cursor: "move",
 	  sort: function() {
 	    $(this).removeClass("listActive");
-	  }
+	  },
+	update: function() {
+    updateValues();
+  }
+
 });
  
+function updateValues()
+{
+	/*var items = [];
+    $("ul.citiesOrder").children().each(function() {
+      var item = $(this).text();
+      items.push(item);
+    });
+    return items;*/
+}
+
+
 /*$(".target").droppable({
   addClasses: false,
   activeClass: "listActive",
