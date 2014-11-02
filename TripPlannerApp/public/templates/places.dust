@@ -20,7 +20,7 @@
       		{/trip}
 			<li id="{OriginID}">{OriginName}</li>
     </ul>
-  </div>
+</div>
 </body>
 
 </html>

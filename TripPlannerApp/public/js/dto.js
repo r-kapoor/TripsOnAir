@@ -30,7 +30,7 @@ function dto()
 			"tst":tst,
 			"dsts":dsts
 	};
-	onSubmit(dto,"places");
+	onSubmit(dto,"getTravelOptions","getTravelOptions");
 }
 
 function dtoOnChoose()
@@ -59,7 +59,7 @@ function dtoOnChoose()
 			"tst":tst,
 			"dsts":dsts
 	};
-	onSubmit(dto,"places");
+	onSubmit(dto,"getTravelOptions", "getTravelOptions");
 }
 
 function getTastes()

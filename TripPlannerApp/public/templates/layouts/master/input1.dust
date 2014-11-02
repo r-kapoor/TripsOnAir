@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
 <script> var csrf_token = '{_csrf}'; </script>
+<script src="js/jQueryCookie/jquery.cookie.js"></script>
 <script src="js/GlobalJSFunctions/onSubmit.js"></script>
 <script src="js/dto.js"></script>
 <script>
