@@ -32,4 +32,10 @@ module.exports = function (app) {
     	res.render('popTest',model);
     	console.log("UI code");
     });
+    
+    app.get('/rome2rio', function (req, res) {
+        res.render('rome2rio', model);
+        
+    });
+
 };
