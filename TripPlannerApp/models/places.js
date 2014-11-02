@@ -1,10 +1,11 @@
 'use strict';
 
 
-module.exports = function IndexModel(tripOrder, originName, originID) {
+module.exports = function IndexModel(tripOrder, originName, originID, weight) {
     return {
         trip: tripOrder,
         OriginName:originName,
-        OriginID:originID
+        OriginID:originID,
+        weight:weight
     };
 };

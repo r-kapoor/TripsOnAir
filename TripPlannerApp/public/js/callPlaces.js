@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	var ajaxQuery = $.getJSON( '/places'+$.cookie('getTravelOptions'));
 	ajaxQuery.done(function(data) {
-		console.log("data:"+JSON.stringify(data.trip));
+		console.log("data:"+JSON.stringify(data));
 		/*
 		<li id="{OriginID}">{OriginName}</li>
 		{#trip}

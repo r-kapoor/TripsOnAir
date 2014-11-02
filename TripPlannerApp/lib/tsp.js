@@ -180,7 +180,7 @@ function getOrderUsingTsp(err, results, callback) {
 	//tripOrder.push(city);
 	console.log("Min Weight:"+minWeight);
 	
-	callback(tripOrder, cities[0], cityIDs[0]);
+	callback(tripOrder, cities[0], cityIDs[0], weight);
 }
 
 function getWeight(trip, weight)
