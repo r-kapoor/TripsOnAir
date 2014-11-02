@@ -2,9 +2,9 @@
  * @author rahul
  * 
  */
-
-var Hashids=require('hashids');
-var hashidscity = new Hashids("encrypting the cityid", 8);
+var hashidEncoder =  require('../lib/hashEncoderDecoder');
+//var Hashids=require('hashids');
+//var hashidscity = new Hashids("encrypting the cityid", 8);
 
 
 function getCityList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
@@ -27,7 +27,8 @@ function getCityList(conn,orgLat,orgLong,category,range,start,batchsize,callback
 		}
 	    else{
 	    	for (var i in rows) {
-				var id = hashidscity.encode(rows[i].CityID);
+				//var id = hashidscity.encode(rows[i].CityID);
+	    		var id = hashidEncoder.encodeCityID(rows[i].CityID);
 				rows[i].CityID = id;
 				console.log(rows[i]);
 	    	}

@@ -50,8 +50,8 @@ module.exports = function (app) {
     	            ],
     	            //callback
     	            function(err, results) {
-    					tsp.getOrderUsingTsp(err, results, function(tripOrder, originName, originID, weight){
-    				    	var model = new IndexModel(tripOrder, originName, originID, weight);
+    					tsp.getOrderUsingTsp(err, results, function(tripOrder, originName, originID, weight, cities, cityIDs, minWeight){
+    				    	var model = new IndexModel(tripOrder, originName, originID, weight, cities, cityIDs, minWeight);
     				    	//res.render('places', model);
     				    	res.json(model);
     						});

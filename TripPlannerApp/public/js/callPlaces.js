@@ -1,7 +1,13 @@
+var weight = [];
+var cityIDs = [];
+var minWeight = 0;
 $(document).ready(function(){
 	var ajaxQuery = $.getJSON( '/places'+$.cookie('getTravelOptions'));
 	ajaxQuery.done(function(data) {
 		console.log("data:"+JSON.stringify(data));
+		weight = data.weight;
+		cityIDs = data.cityIDs;
+		minWeight = data.minWeight;
 		/*
 		<li id="{OriginID}">{OriginName}</li>
 		{#trip}
@@ -11,8 +17,8 @@ $(document).ready(function(){
 		*/
 		
 		//var data1 = [{CityName:"PATNITOP",CityID:33},{CityName:"GULMARG",CityID:31}];
-		var markupWithReorder = "<li style=\"cursor:pointer\" class=\"source\" id=\"${CityID}\">${CityName}</li>";
-		var markupWithoutReorder = "<li id=\"${OriginID}\">${OriginName}</li>";
+		var markupWithReorder = '<li style="cursor:pointer" class="source" id="${CityID}">${CityName}</li>';
+		var markupWithoutReorder = '<li id="${OriginID}">${OriginName}</li>';
 		// Compile the markup as a named template
 	    $.template( "orderTemplate", markupWithReorder );
 	    $.template( "WOOrderTemplate", markupWithoutReorder );	    
@@ -25,9 +31,4 @@ $(document).ready(function(){
 	    $(button).appendTo("#placesOrder");
 	
 	});
-	
-	
-	
-	
-	
 });
