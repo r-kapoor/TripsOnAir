@@ -6,6 +6,7 @@
 <script src="js/jQueryCookie/jquery.cookie.js"></script>
 <script src="js/jqueryTemplate/jquery.tmpl.js"></script>
 <script src="js/callPlaces.js"></script>
+<script src="js/page2JSFunctions/showRoutes.js"></script>
 <div id="placesOrder">
 	<div class="sideBySide">
 		<div class="left">

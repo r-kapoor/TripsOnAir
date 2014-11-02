@@ -20,5 +20,14 @@ $(document).ready(function(){
 	    $.tmpl( "WOOrderTemplate", data ).appendTo( "#ordered" );
 	    $.tmpl( "orderTemplate", data.trip ).appendTo( "#ordered" );
 	    $.tmpl( "WOOrderTemplate", data ).appendTo( "#ordered" );
+	
+	    var button='<button id="orderSubmit" type="button" onclick="showRoutes()">ShowRoutes</button>';
+	    $(button).appendTo("#placesOrder");
+	
 	});
+	
+	
+	
+	
+	
 });
