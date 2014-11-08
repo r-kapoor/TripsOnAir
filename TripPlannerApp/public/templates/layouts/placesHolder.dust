@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="css/page2Css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="css/page2Css/demo.css" />
 <link rel="stylesheet" type="text/css" href="css/page2Css/icons.css" />
-<link rel="stylesheet" href="css/page2Css/component.css"/>
+<link rel="stylesheet" type="text/css" href="css/page2Css/component.css"/>
 <script src="js/jQueryCookie/jquery.cookie.js"></script>
 <script src="js/jqueryTemplate/jquery.tmpl.js"></script>
 <script src="js/callPlaces.js"></script>
@@ -21,5 +21,5 @@
 		</div>
 	</div>
 </div>
-<div id="travelOptions">
+<div id="travelOptions" class="container">
 </div>

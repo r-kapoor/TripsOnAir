@@ -10,7 +10,10 @@ function dto()
 	var origin = document.getElementById("origin").value;
 	var startDate = document.getElementById("startdate").value;
 	var endDate = document.getElementById("enddate").value;
+	var startTime=document.getElementById("stTime").value;
+	var endTime=document.getElementById("endTime").value;
 	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24); 
+	var numPeople=document.getElementById("numPeopleId").value;
 	var budget = document.getElementById("range").value;
 	var dsts="";	
 	var tst=getTastes();
@@ -28,7 +31,10 @@ function dto()
 			"no":numDays,
 			"bdg":budget,
 			"tst":tst,
-			"dsts":dsts
+			"dsts":dsts,
+			"stT":startTime,
+			"enT":endTime,
+			"numP":numPeople
 	};
 	onSubmit(dto,"getTravelOptions","getTravelOptions");
 }
@@ -38,7 +44,10 @@ function dtoOnChoose()
 	var origin = document.getElementById("origin").value;
 	var startDate = document.getElementById("startdate").value;
 	var endDate = document.getElementById("enddate").value;
-	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24); 
+	var startTime=document.getElementById("stTime").value;
+	var endTime=document.getElementById("endTime").value;
+	var numDays= (new Date(endDate)-new Date(startDate))/(1000*60*60*24);
+	var numPeople=document.getElementById("numPeopleId").value;
 	var budget = document.getElementById("range").value;
 	var chooosenDestinations=document.getElementsByClassName('clect');
 	var dsts="";
@@ -57,7 +66,10 @@ function dtoOnChoose()
 			"no":numDays,
 			"bdg":budget,
 			"tst":tst,
-			"dsts":dsts
+			"dsts":dsts,
+			"stT":startTime,
+			"enT":endTime,
+			"numP":numPeople
 	};
 	onSubmit(dto,"getTravelOptions", "getTravelOptions");
 }

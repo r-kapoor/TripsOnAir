@@ -6,8 +6,12 @@
     box-sizing: border-box;
 }
 
-html, body, .container, .scroller {
+html, body, .scroller {
 	height: 100%;
+}
+
+.container{
+	height:200%
 }
 
 .scroller {
@@ -17,6 +21,7 @@ html, body, .container, .scroller {
 .scroller,
 .scroller-inner {
 	position: relative;
+	height: 100%;
 }
 
 .container {

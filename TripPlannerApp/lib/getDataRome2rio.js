@@ -4,6 +4,9 @@
 
 var APP_KEY="R1hcHt58";
 
+
+
+
 function getDataRome2rio(origin,dest,callback)
 {
 	console.log('rome2rio called');
@@ -15,7 +18,34 @@ function getDataRome2rio(origin,dest,callback)
 	client.registerMethod("jsonMethod", url, "GET");
 	client.methods.jsonMethod(function(data,response){	
 		
-		console.log("originDest:"+origin+","+dest);
+		//console.log("originDest:"+origin+","+dest);
+		/*var routeOfTravelObject={
+				uniqueId:"1",
+				routeName:"fly",
+				totalDistance:"456km",
+				totalDuration:"2hr",
+				stopsArray:[{stops:"delhi",duration:"1hr",price:"1200rs"},{stops:"mumbai"},{stops:"bangalore"}]
+		}
+		var dataObject={
+				CityName: data.places[0].name, 
+				City2City: data.places[0].name+"-"+data.places[1].name,
+            	RouteOfTravelData:routeOfTravelObject
+		}*/
+		
+		/*for(var j=0;j<data.routes.length;j++)
+		{
+			var route={ 
+					uniqueId:(j+1),
+					routeName:data.routes[j].name,
+					totalDistance:data.routes[j].distance,
+					TotalDuration:data.routes[j].duration,
+					
+			
+			
+		}*/
+		
+		
+		
 		callback(null, data);
 	});
 }

@@ -6,6 +6,12 @@
 <body>
 
 <div id="input2" style="display: none">
+	<table id="numPeopleTable">
+		<tr>	
+			<td ><label>Number of People : </label></td>
+			<td><input type='text' id ="numPeopleId" value="5"></td>	
+		</tr>
+	</table>	
 	<h3>Tell us Your Taste</h3>
 	<form>
 		<form id="inpCategory" method="POST" action="/places">

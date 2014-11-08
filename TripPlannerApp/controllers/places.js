@@ -26,6 +26,7 @@ module.exports = function (app) {
     	origin = origin.toUpperCase();
     	console.log("tastes:"+tastes);
     	console.log("destinations:"+destinations);
+    	console.log("startDate:"+startDate);
     	
     	destinations = destinations.split(",");
     	var cities = [];
