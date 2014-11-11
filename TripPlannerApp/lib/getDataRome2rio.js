@@ -30,23 +30,23 @@ function getDataRome2rio(origin,dest,callback)
 				CityName: data.places[0].name, 
 				City2City: data.places[0].name+"-"+data.places[1].name,
             	RouteOfTravelData:routeOfTravelObject
-		}*/
+		}
 		
-		/*for(var j=0;j<data.routes.length;j++)
+		for(var j=0;j<data.routes.length;j++)
 		{
+			for(var k=0; k < data.routes[j].stops.length; k++)
+			{
+				data.routes[j].stops[k].name;
+			}
 			var route={ 
 					uniqueId:(j+1),
 					routeName:data.routes[j].name,
 					totalDistance:data.routes[j].distance,
 					TotalDuration:data.routes[j].duration,
-					
-			
-			
+					stopsArray:stopsArrayObject
+			}
 		}*/
-		
-		
-		
-		callback(null, data);
+		callback(null, JSON.parse(data));
 	});
 }
 function getURL(origin,dest)

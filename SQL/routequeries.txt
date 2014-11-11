@@ -1,0 +1,51 @@
+--Changing the route number of stations after common station to be 3 from 1
+SELECT * FROM
+(SELECT * FROM Railway_Timetable WHERE Route = 1) a
+JOIN
+(SELECT TrainNo, StationCode, DistanceCovered FROM
+(SELECT TrainNo, StationCode, DistanceCovered, COUNT(*) as counter FROM Railway_Timetable GROUP BY TrainNo, StationCode, DistanceCovered) b
+WHERE counter > 1) c
+ON (a.TrainNo = c.TrainNo) AND(a.DistanceCovered >= c.DistanceCovered)
+
+
+SELECT * FROM
+(SELECT * FROM Railway_Timetable WHERE StationCode='NDLS') origin
+JOIN
+(SELECT * FROM Railway_Timetable WHERE StationCode='UMB') dest
+ON (origin.TrainNo = dest.TrainNo) AND (origin.DistanceCovered < dest.DistanceCovered) AND (origin.Route = dest.Route OR origin.Route = 1)
+
+CREATE TABLE Railway_Timetable_Dump LIKE Railway_Timetable
+
+CREATE TABLE `Railway_Timetable` (
+ `TrainNo` int(11) NOT NULL,
+ `StationCode` varchar(10) NOT NULL,
+ `ArrivalTime` time DEFAULT NULL,
+ `DepartureTime` time DEFAULT NULL,
+ `DistanceCovered` int(10) DEFAULT NULL,
+ `Day` tinyint(4) NOT NULL,
+ `Route` tinyint(4) NOT NULL,
+ PRIMARY KEY (`TrainNo`,`StationCode`,`Route`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+--Get Train Data Query
+SELECT train.TrainNo, TrainName, DaysOfTravel, Pantry, Type, OriginStationCode, DestStationCode, OriginDepartureTime, DestArrivalTime, Distance, OriginDay, DestDay FROM
+(SELECT * FROM Trains) train
+JOIN
+(SELECT origin.TrainNo as TrainNo, origin.StationCode as OriginStationCode, dest.StationCode as DestStationCode, origin.DepartureTime as OriginDepartureTime, dest.ArrivalTime as DestArrivalTime, (dest.DistanceCovered - origin.DistanceCovered) as Distance, origin.Day as OriginDay, dest.Day as DestDay FROM
+(SELECT * FROM Railway_Timetable WHERE StationCode='SBC') origin 
+JOIN 
+(SELECT * FROM Railway_Timetable WHERE StationCode='MYS') dest 
+ON (origin.TrainNo = dest.TrainNo) AND (origin.DistanceCovered < dest.DistanceCovered) AND (origin.Route = dest.Route OR origin.Route = 1) 
+UNION ALL 
+SELECT origin.TrainNo as TrainNo, origin.StationCode as OriginStationCode, dest.StationCode as DestStationCode, origin.DepartureTime as OriginDepartureTime, dest.ArrivalTime as DestArrivalTime, (dest.DistanceCovered - origin.DistanceCovered) as Distance, origin.Day as OriginDay, dest.Day as DestDay FROM 
+(SELECT * FROM Railway_Timetable WHERE StationCode='NZM') origin 
+JOIN 
+(SELECT * FROM Railway_Timetable WHERE StationCode='MYS') dest 
+ON (origin.TrainNo = dest.TrainNo) AND (origin.DistanceCovered < dest.DistanceCovered) AND (origin.Route = dest.Route OR origin.Route = 1) 
+UNION ALL 
+SELECT origin.TrainNo as TrainNo, origin.StationCode as OriginStationCode, dest.StationCode as DestStationCode, origin.DepartureTime as OriginDepartureTime, dest.ArrivalTime as DestArrivalTime, (dest.DistanceCovered - origin.DistanceCovered) as Distance, origin.Day as OriginDay, dest.Day as DestDay FROM 
+(SELECT * FROM Railway_Timetable WHERE StationCode='SBC') origin 
+JOIN 
+(SELECT * FROM Railway_Timetable WHERE StationCode='NZM') dest 
+ON (origin.TrainNo = dest.TrainNo) AND (origin.DistanceCovered < dest.DistanceCovered) AND (origin.Route = dest.Route OR origin.Route = 1)) trip
+ON (train.TrainNo = trip.TrainNo)
