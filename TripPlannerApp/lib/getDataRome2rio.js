@@ -53,7 +53,7 @@ function getURL(origin,dest)
 {
 	var HOST_URL="http://free.rome2rio.com";
     var rome2RioUrl = HOST_URL + '/api/1.2/json/Search?key=YOUR_KEY_HERE';
-    rome2RioUrl += '&oName='+origin+'&dName='+dest;
+    rome2RioUrl += '&oName='+origin+'&dName='+dest+'&currencyCode=INR';
     return rome2RioUrl;
 }
 

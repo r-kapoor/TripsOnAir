@@ -1,15 +1,18 @@
-function getTrainData(conn, rome2RioData, dateSet) {
+function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, callback) {
 	var connection=conn.conn();
 	connection.connect();
 	var queryString = '';
 	var parsingQuery = 'origin.TrainNo as TrainNo, origin.StationCode as OriginStationCode, dest.StationCode as DestStationCode, origin.DepartureTime as OriginDepartureTime, dest.ArrivalTime as DestArrivalTime, (dest.DistanceCovered - origin.DistanceCovered) as Distance, origin.Day as OriginDay, dest.Day as DestDay';
 	var numOfTravels = rome2RioData.length;
 	var trainDateSetObjectArray=[];
+	var lengthOfSegmentsArray=[];
 	//Duration of origin city to train station has to be added in the dateSet for that train 
 
 	for(var i = 0; i < numOfTravels; i++)
 	{
 		var allRoutes = rome2RioData[i].routes;
+		//Needed by getDefaultModeOfTravel.js
+		lengthOfSegmentsArray[i]=allRoutes.length;
 		console.log("PLaces:"+rome2RioData[i].places[0].name+":"+rome2RioData[i].places[1].name);
 		console.log(dateSet.dateStart[i]+":"+dateSet.dateEnd[i]);
 		for(var j = 0; j < allRoutes.length; j++)
@@ -54,7 +57,7 @@ function getTrainData(conn, rome2RioData, dateSet) {
 		+' JOIN'
 		+' ('+queryString+') trip'
 		+' ON (train.TrainNo = trip.TrainNo);';
-	//console.log('QUERY for trains:'+fullQueryString);
+	console.log('QUERY for trains:'+fullQueryString);
 	
 	connection.query(fullQueryString, function(err, rows, fields) {
 		if (err)
@@ -81,10 +84,12 @@ function getTrainData(conn, rome2RioData, dateSet) {
 			//Iterating the array of rome2rio objects
 			for(var i = 0; i < numOfTravels; i++)
 			{
+				console.log("i:"+i);
 				var allRoutes = rome2RioData[i].routes;
 				for(var j = 0; j < allRoutes.length; j++)
 				{
 					var allSegments = allRoutes[j].segments;
+					var isRecommendedRoute = 1;
 					for(var k = 0; k < allSegments.length; k++)
 					{
 						if(allSegments[k].vehicle)
@@ -102,31 +107,34 @@ function getTrainData(conn, rome2RioData, dateSet) {
 								var atLeastATrain=0;
 								var trainData=[];
 								//Iterate the train rows from the database to check whether there are trains on the possible days:times
-								for (var i in rows) {
-									if((sourceStationCode==rows[i].OriginStationCode)&&(destinationStationCode==rows[i].DestStationCode))
+								for (var t in rows) {
+									if((sourceStationCode==rows[t].OriginStationCode)&&(destinationStationCode==rows[t].DestStationCode))
 									{
-										var daysofTravelArray=rows[i].DaysOfTravel.split("");
-										var OriginDepartureTime=rows[i].OriginDepartureTime;
+										var daysofTravelArray=rows[t].DaysOfTravel.split("");
+										var OriginDepartureTime=rows[t].OriginDepartureTime;
 										if(isTrainInDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime))
 										{
 											atLeastATrain=1;
-											console.log("Train found:"+rows[i].TrainName+":"+rows[i].TrainNo);
-											rows[i].isRecommendedTrain=1;
+											console.log("Train found:"+rows[t].TrainName+":"+rows[t].TrainNo);
+											rows[t].isRecommendedTrain=1;
 										}
 										else
 										{
-											rows[i].isRecommendedTrain=0;
+											rows[t].isRecommendedTrain=0;
 										}	
-										trainData.push(rows[i]);
+										trainData.push(rows[t]);
 							    	}
 								}
 								if(atLeastATrain==1)
 								{
-									allSegments[k].isRecommendedRoute=1;
+									allSegments[k].isRecommendedSegment=1;
+									isRecommendedRoute = 1;
+									
 								}
 								else
 								{
-									allSegments[k].isRecommendedRoute=0;
+									allSegments[k].isRecommendedSegment=0;
+									isRecommendedRoute = 0;
 								}
 								allSegments[k].trainData=trainData;
 								countOfVehicleTrain++;
@@ -134,6 +142,14 @@ function getTrainData(conn, rome2RioData, dateSet) {
 							}
 						}
 					}
+					if(isRecommendedRoute==1)
+					{
+						 allRoutes[j].isRecommendedRoute=1;
+					}
+					else
+					{
+						allRoutes[j].isRecommendedRoute=0;
+					}	
 				}
 			}
 			
@@ -146,7 +162,7 @@ function getTrainData(conn, rome2RioData, dateSet) {
 		        console.log("The file was saved!");
 		    }
 		});
-		//callback(rows);
+		callback(rome2RioData,dateSet,budget,dates, times,lengthOfSegmentsArray);
 	});
 	connection.end();
 

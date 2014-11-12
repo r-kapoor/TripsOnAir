@@ -9,6 +9,7 @@ var getRatingRatio=require('../lib/getRatingRatio');
 var conn = require('../lib/database');
 var getDateSets = require('../lib/getDateSets');
 var getTrainData=require('../lib/getTrainData');
+var getDefaultModeOfTravel=require('../lib/getDefaultModeOfTravel');
 
 module.exports=function (app){
 
@@ -25,6 +26,7 @@ module.exports=function (app){
     	var endTime=req.param("enT");
     	var times=[startTime,endTime];
     	var  numPeople=req.param("numP");
+    	var budget = req.param("bdg");
 		console.log(startTime+":"+endTime+":"+numPeople);
 		
 		var fns=[];
@@ -67,7 +69,7 @@ module.exports=function (app){
     					console.log("JSON.stringify(results[0]):"+JSON.stringify(results[0]));
     					dateSet = getDateSets.getDateSets(results.slice(0,results.length-1), dates, times);
     					
-    					getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet);
+    					getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times, getDefaultModeOfTravel.getDefaultModeOfTravel);
     					//mergeJson.mergeJson(results, function(mergedJsonString){
     				    	//console.log("Merged done");
     						/*var model = {
