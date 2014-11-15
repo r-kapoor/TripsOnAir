@@ -7,6 +7,9 @@ var getDataRome2rio=require('../lib/getDataRome2rio');
 var mergeJson=require('../lib/mergeJson');
 var getRatingRatio=require('../lib/getRatingRatio');
 var conn = require('../lib/database');
+var getDateSets = require('../lib/getDateSets');
+var getTrainData=require('../lib/getTrainData');
+var getDefaultModeOfTravel=require('../lib/getDefaultModeOfTravel');
 
 module.exports=function (app){
 
@@ -18,11 +21,12 @@ module.exports=function (app){
 		var cities=req.param('cities').split(',');
 		var startDate=req.param("stD");
     	var endDate=req.param("enD");
-    	var dates=[startDate,endDate];
+    	var dates=[new Date(startDate),new Date(endDate)];
     	var startTime=req.param("stT");
     	var endTime=req.param("enT");
     	var times=[startTime,endTime];
     	var  numPeople=req.param("numP");
+    	var budget = req.param("bdg");
 		console.log(startTime+":"+endTime+":"+numPeople);
 		
 		var fns=[];
@@ -46,7 +50,7 @@ module.exports=function (app){
 		}
 		
 		fns.push(function (callback){
-			getRatingRatio.getRatingRatio(conn,cities.slice(1,cities.length-1),dates,times,callback);
+			getRatingRatio.getRatingRatio(conn,cities.slice(1,cities.length-1),callback);
 			});
 		
     	var async  = require('async');
@@ -62,6 +66,10 @@ module.exports=function (app){
     						console.log("ratio after async");
     						console.log(ratio[i]);
     					}
+    					console.log("JSON.stringify(results[0]):"+JSON.stringify(results[0]));
+    					dateSet = getDateSets.getDateSets(results.slice(0,results.length-1), dates, times);
+    					
+    					getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times, getDefaultModeOfTravel.getDefaultModeOfTravel);
     					//mergeJson.mergeJson(results, function(mergedJsonString){
     				    	//console.log("Merged done");
     						/*var model = {

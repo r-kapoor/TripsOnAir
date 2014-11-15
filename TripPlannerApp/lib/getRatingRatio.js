@@ -2,14 +2,11 @@
  * New node file
  */
 
-function getRatingRatio(conn,cities,dates,times,callback)
+function getRatingRatio(conn,cities,callback)
 {
 	var num_city=cities.length;
 	var connection=conn.conn();
 	connection.connect();
-	var diff = Math.abs(new Date(dates[1])-new Date(dates[0]));
-	var numofDays=diff/(1000*60*60*24);
-	console.log("numofDays:"+numofDays);
 	var ratio= Array.apply(null, new Array(num_city)).map(Number.prototype.valueOf, 0);
 	var subQuery='';
 	var queryString='SELECT CityID, CityName, Rating FROM City WHERE CityName IN (' + connection.escape(cities) + ');';
