@@ -1,15 +1,18 @@
 package com.indianRail;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
 
-import GlobalClasses.HtmlUnitWebClient;
 import GlobalClasses.getHibernateSession;
 
 import com.dataTransferObject.IndianRailwayDto;
@@ -29,15 +32,22 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class CrawlIndianRail extends getHibernateSession {
 
+	private static String exceptionUrls = "";
+	private static String exceptionUrlsFile = "target/indianRail/exceptionUrls.txt";
+	
 	public void getTrains()throws Exception {
-			
+		int count=0;
+		URL detailsUrl=new URL("https://www.test2345.com");
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 		Session session=getHibernateSession();
 		DomElement trainNoDetails;
-		int pagesNo=5;//Need to be set Manually
+		int pagesNo=6;//Need to be set Manually
 		//Set the URL of the page
-		for(int i=1;i<=pagesNo;i++){		
+		for(int i=0;i<=pagesNo;i++){
+			
 			URL url = new URL("https://www.cleartrip.com/trains/list?page="+i);
+			//URL url = new URL("https://www.hkujhbiu.com");
+			try{
 			WebRequest request = new WebRequest(url);	    
 			//Read the whole page
 			HtmlPage page = webClient.getPage(request);
@@ -55,24 +65,97 @@ public class CrawlIndianRail extends getHibernateSession {
 		    		
 		    		while(TrainDetailsIterator.hasNext())
 			        {
-		    			//Get each row of TrainDetails (tr)
-						trainNoDetails = TrainDetailsIterator.next();
-			        	if(trainNoDetails!=null){
-				        	String TrainNo = trainNoDetails.getFirstElementChild().asText();
-				        	String TrainName=trainNoDetails.getFirstElementChild().getNextElementSibling().asText();
-				        	URL detailsUrl  = new URL("https://www.cleartrip.com/trains/"+TrainNo);
-				        	System.out.println("detailsUrl: "+detailsUrl);
-				        	//set the train no. and train Name in dto
-				        	IndianRailwayDto indianRailwayDto = new IndianRailwayDto();
-				        	indianRailwayDto.setName(TrainName);
-				        	indianRailwayDto.setTrainNo(Integer.parseInt(TrainNo));
-				        	getDetails(detailsUrl,indianRailwayDto);
-				        	TransferDataRailway.transferData(indianRailwayDto,session);
-			        	}
+		    			/*if(count<74)
+		    			{
+		    				count++;
+		    				TrainDetailsIterator.next();
+		    				continue;
+		    			}*/
+		    			try{
+			    			//Get each row of TrainDetails (tr)
+							trainNoDetails = TrainDetailsIterator.next();						
+				        	if(trainNoDetails!=null){
+					        	String TrainNo = trainNoDetails.getFirstElementChild().asText();
+					        	String TrainName=trainNoDetails.getFirstElementChild().getNextElementSibling().asText();
+					        	detailsUrl  = new URL("https://www.cleartrip.com/trains/"+TrainNo);
+					        	System.out.println("detailsUrl: "+detailsUrl);
+					        	//set the train no. and train Name in dto
+					        	IndianRailwayDto indianRailwayDto = new IndianRailwayDto();
+					        	indianRailwayDto.setName(TrainName);
+					        	indianRailwayDto.setTrainNo(Integer.parseInt(TrainNo));
+					        	if(TrainName.toLowerCase().contains("duronto"))
+			        			{
+					        		indianRailwayDto.setType("DURONTO");
+			        			}
+					        	else if(TrainName.toLowerCase().contains("rajdhani"))
+					        	{
+					        		indianRailwayDto.setType("RAJDHANI");
+					        	}
+					        	else if(TrainName.toLowerCase().contains("jan shatabdi"))
+					        	{
+					        		indianRailwayDto.setType("JAN SHATABDI");
+					        	}
+					        	else if(TrainName.toLowerCase().contains("shatabdi"))
+					        	{
+					        		indianRailwayDto.setType("SHATABDI");
+					        	}
+					        	else if(TrainName.toLowerCase().contains("garib rath"))
+					        	{
+					        		indianRailwayDto.setType("GARIB RATH");
+					        	}
+					        	else if(TrainName.toLowerCase().contains("superfast"))
+								{
+					        		indianRailwayDto.setType("SUPERFAST");
+								}
+					        	else if((TrainName.toLowerCase().contains("express"))||(TrainName.toLowerCase().contains("mail")))
+					        	{
+					        		indianRailwayDto.setType("EXPRESS");
+					        	}
+					        	getDetails(detailsUrl,indianRailwayDto);
+					        	TransferDataRailway.transferData(indianRailwayDto,session);
+			        		}
+		    			}
+		    			catch(Exception e){
+		    				exceptionUrls=new Date()+" "+detailsUrl+"\n";
+		    				System.out.println(detailsUrl+",Error:"+e+",Error Message:"+e.getMessage());
+		    				exceptionUrls+="Error:"+e+",Error Message:"+e.getMessage()+"\n";
+		    				if(!(e.getMessage().contains("IndexOutOfBoundsException"))||(e.getMessage().contains("UnknownHostException"))){
+		    					Thread.sleep(5*60*1000);//sleep for 5 mins
+		    				}
+		    				System.out.println("Writing Exceptions, if any, into file");		
+		    				FileOutputStream exception=new FileOutputStream(exceptionUrlsFile,true);
+		    				@SuppressWarnings("resource")
+		    				PrintStream exe=new PrintStream(exception);
+		    				exe.append(exceptionUrls);
+		    				exe.close();
+		    			}
 			        }
 		    	}
 		    }
+		}
+		catch(Exception e)
+		{
+			exceptionUrls=new Date()+" "+url+":";
+			System.out.println(url+":"+e.getMessage());
+			exceptionUrls+=e.getMessage()+"\n";
+			if(!(e.getMessage().contains("IndexOutOfBoundsException"))||(e.getMessage().contains("UnknownHostException"))){
+				Thread.sleep(5*60*1000);//sleep for 5 mins
+				}
+			System.out.println("Writing Exceptions, if any, into file");		
+			FileOutputStream exception=new FileOutputStream(exceptionUrlsFile, true);
+			@SuppressWarnings("resource")
+			PrintStream e1=new PrintStream(exception);
+			e1.append(exceptionUrls);
+			e1.close();
+		}
 	}
+		
+		/*System.out.println("Writing Exceptions, if any, into file");		
+		FileOutputStream exception=new FileOutputStream(exceptionUrlsFile);
+		@SuppressWarnings("resource")
+		PrintStream e=new PrintStream(exception);
+		e.append(exceptionUrls);
+		e.close();*/
 }
 	public void getDetails(URL url,IndianRailwayDto indianRailwayDto) throws Exception {
 		
@@ -120,31 +203,31 @@ public class CrawlIndianRail extends getHibernateSession {
 			    {
 			    	for(int i=0;i<day.length;i++)
 				    {
-				    	if(day[i].equals("Su"))
+				    	if(day[i].trim().equals("Su"))
 				    	{
 				    		dayNo+="1";
 				    	}
-				    	else if(day[i].equals("T"))
+				    	else if(day[i].trim().equals("T"))
 				    	{
 				    		dayNo+="2";
 				    	}
-				    	else if(day[i].equals("W"))
+				    	else if(day[i].trim().equals("W"))
 				    	{
 				    		dayNo+="3";
 				    	}
-				    	else if(day[i].equals("Th"))
+				    	else if(day[i].trim().equals("Th"))
 				    	{
 				    		dayNo+="4";
 				    	}
-				    	else if(day[i].equals("F"))
+				    	else if(day[i].trim().equals("F"))
 				    	{
 				    		dayNo+="5";
 				    	}
-				    	else if(day[i].equals("Sa"))
+				    	else if(day[i].trim().equals("Sa"))
 				    	{
 				    		dayNo+="6";
 				    	}
-				    	else if(day[i].equals("M"))
+				    	else if(day[i].trim().equals("M"))
 				    	{
 				    		dayNo+="7";
 				    	}
@@ -156,14 +239,18 @@ public class CrawlIndianRail extends getHibernateSession {
 			    	indianRailwayDto.setDays(dayNo);
 			    	
 			    }
-			    if(pantry.contains("Yes"))
+			    if(pantry.toLowerCase().contains("yes"))
 			    {
-			    	indianRailwayDto.setPantry(1);
+			    	indianRailwayDto.setPantry((byte)1);
+			    }
+			    else if(pantry.toLowerCase().contains("no"))
+			    {
+			    	indianRailwayDto.setPantry((byte)0);
 			    }
 			    else
 			    {
-			    	indianRailwayDto.setPantry(0);
-			    }					
+			    	indianRailwayDto.setPantry((byte)(-1));
+			    }
    
 			    DomElement pathFirstChild=path.getFirstElementChild();
 			    if((pathFirstChild!=null)&&(pathFirstChild.hasChildNodes()))
