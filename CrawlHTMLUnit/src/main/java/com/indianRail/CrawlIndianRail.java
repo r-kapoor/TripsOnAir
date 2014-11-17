@@ -43,7 +43,7 @@ public class CrawlIndianRail extends getHibernateSession {
 		DomElement trainNoDetails;
 		int pagesNo=6;//Need to be set Manually
 		//Set the URL of the page
-		for(int i=0;i<=pagesNo;i++){
+		for(int i=5;i<=pagesNo;i++){
 			
 			URL url = new URL("https://www.cleartrip.com/trains/list?page="+i);
 			//URL url = new URL("https://www.hkujhbiu.com");
@@ -65,12 +65,12 @@ public class CrawlIndianRail extends getHibernateSession {
 		    		
 		    		while(TrainDetailsIterator.hasNext())
 			        {
-		    			/*if(count<74)
+		    			if(count<90)
 		    			{
 		    				count++;
 		    				TrainDetailsIterator.next();
 		    				continue;
-		    			}*/
+		    			}
 		    			try{
 			    			//Get each row of TrainDetails (tr)
 							trainNoDetails = TrainDetailsIterator.next();						
