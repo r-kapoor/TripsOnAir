@@ -25,9 +25,9 @@ function getRatingRatio(conn,cities,callback)
 	    	}
 	    	
 	    	for(var j in rows)
-	    		{
+	    	{
 	    			ratio[cities.indexOf(rows[j].CityName)]=((parseFloat(rows[j].Rating)/totalRating));
-	    		}
+	    	}
 	    	for(var i in ratio)
 	    	{
 	    		console.log("ratio:"+i+":"+ratio[i]);

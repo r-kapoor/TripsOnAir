@@ -1,5 +1,7 @@
 require('date-utils');
-function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, lengthOfSegmentsArray) {
+
+var getTravelPlan = require('../lib/getTravelPlan');
+function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, ratingRatio,lengthOfSegmentsArray,callbackDefaultMode) {
 	var durationFactor = 0.5;//People spend max half time on travelling
 	var budgetFactor = 0.5;// People spend half the budget oon travel
 	console.log('date:'+Date.today());
@@ -27,6 +29,7 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, length
 	var allPossibleCombinations=getAllPossibleCombinations(lengthOfSegmentsArray);
 	var minPriority1 = -1, minPriority2 = -1, minPriority3 = -1, minPriority4 = -1;
 	var minPriorityCombinations1 = [], minPriorityCombinations2 = [], minPriorityCombinations3 = [], minPriorityCombinations4 = [];
+	var finalPriorityCombination=[];
 	outer:
 	for(var i=0;i<allPossibleCombinations.length;i++)
 	{
@@ -87,22 +90,41 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, length
 	}
 	if(minPriorityCombinations1.length > 0)
 	{
+		finalPriorityCombination=minPriorityCombinations1;
 		console.log('Combination 1:'+minPriorityCombinations1);
 	}
 	else if(minPriorityCombinations2.length > 0)
 	{
+		finalPriorityCombination=minPriorityCombinations2;
 		console.log('Combination 2:'+minPriorityCombinations2);
 	}
 	else if(minPriorityCombinations3.length > 0)
 	{
+		finalPriorityCombination=minPriorityCombinations3;
 		console.log('Combination 3:'+minPriorityCombinations3);
 	}
 	else if(minPriorityCombinations4.length > 0)
 	{
+		finalPriorityCombination=minPriorityCombinations4;
 		console.log('Combination 4:'+minPriorityCombinations4);
 	}
 	
 	
+	for(var t=0;t<rome2RioData.length;t++)
+	{
+		rome2RioData[t].routes[finalPriorityCombination[t]].isDefault=1;
+	}	
+	
+	var fs = require('fs');
+	fs.writeFile("text.txt",JSON.stringify(rome2RioData), function(err) {
+	    if(err) {
+	        console.log(err);
+	    } else {
+	        console.log("The file was saved!");
+	    }
+	});
+	//callbackDefaultMode(rome2RioData);
+	//getTravelPlan.getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDurationOfTrip,callbackDefaultMode);
 	
 }
 module.exports.getDefaultModeOfTravel = getDefaultModeOfTravel;

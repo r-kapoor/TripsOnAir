@@ -1,0 +1,14 @@
+--Delhi query
+UPDATE RailwayStations_In_City SET CityID = 6 WHERE StationCode IN
+('NDLS','NZM','SZM','DEC','DLI','ANVT','TKD','SSB','NUR','DSA','DEE','DKZ','BWSN','OKA','ANDI','VVB','TKJ','CSB','PM','NNO','MGLP','DSJ','BHD','ANVR')
+
+--Bangalore
+UPDATE RailwayStations_In_City SET CityID = 4 WHERE StationCode IN
+('SBC','BNC','BNCE','KJM','WFD','YPR','BAND','CRLM')
+
+--Mysore
+
+
+--Ooty
+UPDATE RailwayStations_In_City SET CityID = 16 WHERE StationCode IN
+('UAM')

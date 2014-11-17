@@ -1,4 +1,6 @@
-function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, callback) {
+var extractStationCode=require('../lib/extractStationCode');
+
+function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,callback, callbackDefaultMode) {
 	var connection=conn.conn();
 	connection.connect();
 	var queryString = '';
@@ -34,8 +36,8 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, callback
 						var sourceStation = allSegments[k].sName;
 						var destinationStation = allSegments[k].tName;
 						console.log("Source Dest:"+sourceStation+":"+destinationStation);
-						var sourceStationCode = extractStationCode(sourceStation);
-						var destinationStationCode = extractStationCode(destinationStation);
+						var sourceStationCode = extractStationCode.extractStationCode(sourceStation);
+						var destinationStationCode = extractStationCode.extractStationCode(destinationStation);
 						trainDateSetObjectArray.push(getTrainDateSetObject(sourceStationCode,destinationStationCode,dateSetAccToTrain));
 						if(queryString != '')
 						{
@@ -98,8 +100,8 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, callback
 							{
 								var sourceStation = allSegments[k].sName;
 								var destinationStation = allSegments[k].tName;
-								var sourceStationCode = extractStationCode(sourceStation);
-								var destinationStationCode = extractStationCode(destinationStation);
+								var sourceStationCode = extractStationCode.extractStationCode(sourceStation);
+								var destinationStationCode = extractStationCode.extractStationCode(destinationStation);
 								var startDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateStart;
 								var endDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateEnd;
 								var startTime=startDate.getHours()+":"+startDate.getMinutes();
@@ -154,15 +156,15 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, callback
 			}
 			
 	    }
-		var fs = require('fs');
+		/*var fs = require('fs');
 		fs.writeFile("text.txt",JSON.stringify(rome2RioData), function(err) {
 		    if(err) {
 		        console.log(err);
 		    } else {
 		        console.log("The file was saved!");
 		    }
-		});
-		callback(rome2RioData,dateSet,budget,dates, times,lengthOfSegmentsArray);
+		});*/
+		callback(rome2RioData,dateSet,budget,dates, times,ratingRatio,lengthOfSegmentsArray,callbackDefaultMode);
 	});
 	connection.end();
 
@@ -178,12 +180,6 @@ function getTrainDateSetObject(originStationCode,destStationCode,dateSet)
 		dateSet:dateSet
 	}; 
 }
-
-function extractStationCode(stationString)
-{
-	return stationString.substring(stationString.indexOf('(')+1,stationString.indexOf(')'));
-}
-
 
 
 function isTrainInDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime)
