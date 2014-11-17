@@ -10,6 +10,7 @@ var conn = require('../lib/database');
 var getDateSets = require('../lib/getDateSets');
 var getTrainData=require('../lib/getTrainData');
 var getDefaultModeOfTravel=require('../lib/getDefaultModeOfTravel');
+var planTaxiTrip=require('../lib/planTaxiTrip');
 
 module.exports=function (app){
 
@@ -68,8 +69,23 @@ module.exports=function (app){
     					}
     					console.log("JSON.stringify(results[0]):"+JSON.stringify(results[0]));
     					dateSet = getDateSets.getDateSets(results.slice(0,results.length-1), dates, times);
-    					
-    					getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times, getDefaultModeOfTravel.getDefaultModeOfTravel);
+
+    				//async.parallel(
+    					//	[function (callback){
+    							getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times,results.slice(results.length-1), 
+    									getDefaultModeOfTravel.getDefaultModeOfTravel);
+    			//	},
+    				//function (callback){
+    					//planTaxiTrip.planTaxiTrip(conn,results.slice(0,results.length-1),numPeople,budget,dateSet,dates, times);
+    					//}
+    				//]
+    						//,
+    						//callback
+    				
+    				//)
+    				
+    				
+    				
     					//mergeJson.mergeJson(results, function(mergedJsonString){
     				    	//console.log("Merged done");
     						/*var model = {
