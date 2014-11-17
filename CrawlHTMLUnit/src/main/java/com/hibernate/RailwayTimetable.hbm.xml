@@ -11,21 +11,21 @@
             <key-property name="stationCode" type="string">
                 <column name="StationCode" length="10" />
             </key-property>
-            <key-property name="arrivalTime" type="time">
-                <column name="ArrivalTime" length="8" />
-            </key-property>
-            <key-property name="departureTime" type="time">
-                <column name="DepartureTime" length="8" />
-            </key-property>
-            <key-property name="distanceCovered" type="int">
-                <column name="DistanceCovered" />
-            </key-property>
-            <key-property name="day" type="byte">
-                <column name="Day" />
-            </key-property>
             <key-property name="route" type="byte">
                 <column name="Route" />
             </key-property>
-        </composite-id>
+        </composite-id>            
+            <property name="arrivalTime" type="time">
+                <column name="ArrivalTime" length="8" />
+            </property>
+            <property name="departureTime" type="time">
+                <column name="DepartureTime" length="8" />
+            </property>
+            <property name="distanceCovered" type="int">
+                <column name="DistanceCovered" />
+            </property>
+            <property name="day" type="byte">
+                <column name="Day" />
+            </property>
     </class>
 </hibernate-mapping>

@@ -9,7 +9,7 @@ public class IndianRailwayDto {
 	public String name;
 	public int trainNo;
 	public String days;
-	public int pantry;
+	public byte pantry;
 	public String type;
 	public ArrayList<arrayListObject> stationsDetails;
 	
@@ -31,10 +31,10 @@ public class IndianRailwayDto {
 	public void setDays(String days) {
 		this.days = days;
 	}
-	public int getPantry() {
+	public byte getPantry() {
 		return pantry;
 	}
-	public void setPantry(int pantry) {
+	public void setPantry(byte pantry) {
 		this.pantry = pantry;
 	}
 	public String getType() {

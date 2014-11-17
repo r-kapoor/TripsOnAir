@@ -3,6 +3,7 @@ package GlobalClasses;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.omg.CosNaming.NamingContextExtPackage.AddressHelper;
 
 public class getHibernateSession {
 
@@ -11,7 +12,7 @@ public class getHibernateSession {
 		SessionFactory sessionFactory;
 		try {
     	    Configuration conf = new Configuration();
-    	    conf.addResource("com/hibernate/RailwayStation.hbm.xml").addResource("com/hibernate/RailwayTimetable.hbm.xml");
+    	    conf.addResource("com/hibernate/RailwayStation.hbm.xml").addResource("com/hibernate/RailwayTimetable.hbm.xml").addResource("com/hibernate/Trains.hbm.xml");
     	    sessionFactory = conf.configure("com/hibernate/hibernate.cfg.xml").buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("SessionFactory creation failed" + ex);

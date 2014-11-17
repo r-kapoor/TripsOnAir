@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 14, 2014 11:08:41 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.indianRail.RailwayStation" table="Railway_Station" catalog="Holiday">
+    <class name="com.hibernate.RailwayStation" table="Railway_Station" catalog="Holiday">
         <id name="stationCode" type="string">
             <column name="StationCode" length="20" />
             <generator class="assigned" />
