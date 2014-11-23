@@ -1,23 +1,12 @@
 require('date-utils');
+var getDuration = require('../lib/UtilityFunctions/getDuration');
 
 var getTravelPlan = require('../lib/getTravelPlan');
-function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, ratingRatio,lengthOfSegmentsArray,callbackDefaultMode) {
+function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, ratingRatio,lengthOfRoutesArray,indexOfDrive,numPeople,callback) {
 	var durationFactor = 0.5;//People spend max half time on travelling
 	var budgetFactor = 0.5;// People spend half the budget oon travel
 	console.log('date:'+Date.today());
-	var duration =dates[0].getMinutesBetween(dates[1]);
-	console.log("duration between:"+duration);
-	if(times[0]!=times[1])
-	{
-		if(times[0]=="Morning")
-		{
-			duration+=12*60;
-		}
-		else
-		{
-			duration-=12*60;
-		}
-	}
+	var duration = getDuration.getDuration(dates, times);
 	console.log("duration after:"+duration);
 	var durationInTravel = duration * durationFactor;
 	console.log("budget between:"+budget);
@@ -26,7 +15,7 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, rating
 	console.log('durationInTravel:'+durationInTravel);
 	console.log('budgetInTravel:'+budgetInTravel);
 	
-	var allPossibleCombinations=getAllPossibleCombinations(lengthOfSegmentsArray);
+	var allPossibleCombinations=getAllPossibleCombinations(lengthOfRoutesArray,indexOfDrive);
 	var minPriority1 = -1, minPriority2 = -1, minPriority3 = -1, minPriority4 = -1;
 	var minPriorityCombinations1 = [], minPriorityCombinations2 = [], minPriorityCombinations3 = [], minPriorityCombinations4 = [];
 	var finalPriorityCombination=[];
@@ -124,7 +113,7 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, rating
 	    }
 	});
 	//callbackDefaultMode(rome2RioData);
-	//getTravelPlan.getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDurationOfTrip,callbackDefaultMode);
+	getTravelPlan.getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,duration,numPeople,callback);
 	
 }
 module.exports.getDefaultModeOfTravel = getDefaultModeOfTravel;
@@ -132,16 +121,19 @@ module.exports.getDefaultModeOfTravel = getDefaultModeOfTravel;
 
 
 
-function getAllPossibleCombinations(lengthOfSegmentsArray)
+function getAllPossibleCombinations(lengthOfSegmentsArray,indexOfDrive)
 {
 	
 	var tempStringArray=[];
 	for(var i=0;i<lengthOfSegmentsArray.length;i++)
-	{
+	{	
 		tempStringArray[i]=[];
 		for(var j=0;j<lengthOfSegmentsArray[i];j++)
 		{
-			tempStringArray[i].push(j+"");			
+			if(indexOfDrive[i]!=j)
+			{
+				tempStringArray[i].push(j+"");
+			}						
 		}		
 	}	
 	

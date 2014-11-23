@@ -29,6 +29,23 @@ module.exports=function (app){
     	var  numPeople=req.param("numP");
     	var budget = req.param("bdg");
 		console.log(startTime+":"+endTime+":"+numPeople);
+		console.log('CONTROLLER times:'+times);
+		if(times[0]=="morning")
+		{
+			times[0] = "Morning";
+		}
+		else if(times[0]=="evening")
+		{
+			times[0] = "Evening";
+		}
+		if(times[1]=="morning")
+		{
+			times[1] = "Morning";
+		}
+		else if(times[1]=="evening")
+		{
+			times[1] = "Evening";
+		}
 		
 		var fns=[];
 		var test=Array.apply(null, new Array(cities.length-1)).map(Number.prototype.valueOf, 0);
@@ -67,13 +84,15 @@ module.exports=function (app){
     						console.log("ratio after async");
     						console.log(ratio[i]);
     					}
-    					console.log("JSON.stringify(results[0]):"+JSON.stringify(results[0]));
+    					//console.log("JSON.stringify(results[0]):"+JSON.stringify(results[0]));
     					dateSet = getDateSets.getDateSets(results.slice(0,results.length-1), dates, times);
 
     				//async.parallel(
     					//	[function (callback){
-    							getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times,results.slice(results.length-1), 
-    									getDefaultModeOfTravel.getDefaultModeOfTravel);
+    							getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times,ratio,numPeople, 
+    									getDefaultModeOfTravel.getDefaultModeOfTravel,planTaxiTrip.planTaxiTrip, function(model){
+    								res.json(model);
+    							});
     			//	},
     				//function (callback){
     					//planTaxiTrip.planTaxiTrip(conn,results.slice(0,results.length-1),numPeople,budget,dateSet,dates, times);
@@ -90,8 +109,8 @@ module.exports=function (app){
     				    	//console.log("Merged done");
     						/*var model = {
     								mergedJsonString:mergedJsonString
-    						}*/
-    				    	//res.json(model);
+    						}
+    				    	res.json(model);*/
     						//};
     				});
 		
