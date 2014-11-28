@@ -1,19 +1,21 @@
 /**
  * New node file
  */
-
+var getDefaultModeOfTravel = require('../lib/getDefaultModeOfTravel');
 var extractStationCode=require('../lib/extractStationCode');
 var changeCase=require('change-case');
 
-function planTaxiTrip(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times,callback)
+var getDuration = require('../lib/UtilityFunctions/getDuration');
+
+function planTaxiTrip(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times,ratingRatio,callback)
 {
-	getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times,callback);
+	getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, callback);
 }
 
 module.exports.planTaxiTrip=planTaxiTrip;
 
 
-function getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times,callback)
+function getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times,ratingRatio, callback)
 {
 	var connection=conn.conn();
 	connection.connect();
@@ -72,12 +74,12 @@ function getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, t
 			for (var i in rows) {
 				console.log(rows[i].CityName+","+rows[i].StationCode);
 			}
-			getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, rows, callback);
+			getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, rows, callback);
 	    }
 	});
 	connection.end();
 }
-function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, rows, callback)
+function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, rows, callback)
 {
 	var carRouteDetailsArray = [];
 	var doneRoutesArray =[];
@@ -159,13 +161,18 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 					}
 					var carRouteDetails=
 						{
-							index:i,
+							indexOfLeg:i,
+							routeAndSegments:[{
+								route:j,
+								segment:k
+							}],
 							startPlace:rome2RioData[i].places[0].name,
 							endPlace:rome2RioData[i].places[1].name,
 							source:source,
 							destination:destination,
 							duration:allSegments[k].duration,
-							distance:allSegments[k].distance
+							distance:allSegments[k].distance,
+							path:allSegments[k].path
 						};
 					console.log("The next route coming is :"+carRouteDetails.source+","+carRouteDetails.destination);
 					var routeHasBeenAdded = 0;
@@ -175,6 +182,25 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 						if(doneRoutesArray[a].source == carRouteDetails.source && doneRoutesArray[a].destination == carRouteDetails.destination)
 						{
 							routeAlreadyAdded = 1;
+							for(var p = 0; p < carRouteDetailsArray.length; p++)
+							{
+								for(var q = 0; q < carRouteDetailsArray[p].length; q++)
+								{
+									if(carRouteDetailsArray[p][q].source == carRouteDetails.source && carRouteDetailsArray[p][q].destination == carRouteDetails.destination)
+									{
+										carRouteDetailsArray[p][q].routeAndSegments.push({
+											route:j,
+											segment:k
+										});
+										if(allSegments[k].subkind &&allSegments[k].subkind == "taxi")
+										{
+											carRouteDetailsArray[p][q].duration = carRouteDetails.duration;
+											carRouteDetailsArray[p][q].distance = carRouteDetails.distance;
+											carRouteDetailsArray[p][q].path = carRouteDetails.path;
+										}
+									}
+								}
+							}
 							break;
 						}
 					}
@@ -203,7 +229,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 									{
 										if(carRouteDetailsArray[y][u+1].destination != carRouteDetails.destination)
 										{
-											if((carRouteDetails.index==carRouteDetailsArray[y][u].index)||(carRouteDetails.index-1==carRouteDetailsArray[y][u].index&&carRouteDetails.source==carRouteDetailsArray[y][u].endPlace))
+											if((carRouteDetails.indexOfLeg==carRouteDetailsArray[y][u].indexOfLeg)||(carRouteDetails.indexOfLeg-1==carRouteDetailsArray[y][u].indexOfLeg&&carRouteDetails.source==carRouteDetailsArray[y][u].endPlace))
 											{
 												//The current route is continuing to another destination
 												//Thus the current trip has to be copied to a new index and the current route to be added to it
@@ -247,7 +273,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 									}
 									else
 									{
-										if((carRouteDetails.index==carRouteDetailsArray[y][u].index)||(carRouteDetails.index-1==carRouteDetailsArray[y][u].index&&carRouteDetails.source==carRouteDetailsArray[y][u].endPlace))
+										if((carRouteDetails.indexOfLeg==carRouteDetailsArray[y][u].indexOfLeg)||(carRouteDetails.indexOfLeg-1==carRouteDetailsArray[y][u].indexOfLeg&&carRouteDetails.source==carRouteDetailsArray[y][u].endPlace))
 										{	//The current route can be continued
 											console.log("added route:"+carRouteDetails.source+","+carRouteDetails.destination);
 											carRouteDetailsArray[y][u+1] = carRouteDetails;
@@ -306,7 +332,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 			}
 			console.log('SOURCE:'+carRouteDetailsArray[i][j].source);
 			console.log('DESTINATION:'+carRouteDetailsArray[i][j].destination);
-			console.log('index:'+carRouteDetailsArray[i][j].index);
+			console.log('indexOfLeg:'+carRouteDetailsArray[i][j].indexOfLeg);
 			console.log('startPlace:'+carRouteDetailsArray[i][j].startPlace);
 			console.log('endPlace:'+carRouteDetailsArray[i][j].endPlace);
 			console.log('duration:'+carRouteDetailsArray[i][j].duration);
@@ -344,4 +370,223 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 	}
 	console.log('#################And the winner is:'+preferredTaxi);
 	
+	rome2RioData = taxiModifiedRome2RioData(rome2RioData,carRouteDetailsArray[preferredTaxi]);
+	var lengthOfRoutesArray = [];
+	var duration = getDuration.getDuration(dates, times);
+	var durationInDays = duration/(24*60);
+	var countOfCabTrips = 0;
+	for(var i = 0; i < rome2RioData.length; i++)
+	{
+		lengthOfRoutesArray[i] = rome2RioData[i].routes.length;
+		if(rome2RioData[i].hasCab && rome2RioData[i].hasCab == 1)
+		{
+			countOfCabTrips ++;
+			
+		}
+	}
+	console.log('lengthOfRoutesArray:'+lengthOfRoutesArray);
+	var numberOfDaysInCab = durationInDays*countOfCabTrips/rome2RioData.length;
+	var distanceInCab = distanceSumArray[preferredTaxi];
+	
+	rome2RioData = insertCabBudget(rome2RioData, numberOfDaysInCab, distanceInCab,carRouteDetailsArray[preferredTaxi].length, numPeople);
+	
+	var indexOfDrive = Array.apply(null, new Array(rome2RioData.length)).map(Number.prototype.valueOf, -1);
+	
+	getDefaultModeOfTravel.getDefaultModeOfTravel(rome2RioData,dateSet,userBudget,dates, times, ratingRatio,lengthOfRoutesArray,indexOfDrive,numPeople,callback);
+	
+	/*var fs = require('fs');
+	fs.writeFile("aftertaxi.txt",JSON.stringify(rome2RioData), function(err) {
+	    if(err) {
+	        console.log(err);
+	    } else {
+	        console.log("The file was saved!");
+	    }
+	});*/
 }
+
+function insertCabBudget(rome2RioData, numberOfDaysInCab, distanceInCab,countOfCabSegments, numPeople)
+{
+	//Fare Rules
+	var perDayNumberOfKilometers = 250;
+	//Assuming fare to be Rs 9 per km
+	var farePerKm=9;
+	if(numPeople == 2)
+	{
+		farePerKm=4.5;
+	}
+	else
+	{
+		farePerKm=3;
+	}
+	
+	
+	var totalKilometers = perDayNumberOfKilometers * numberOfDaysInCab;
+	var distance = Math.max(totalKilometers, distanceInCab);
+	var budgetPerTaxiTrip=parseInt((farePerKm*distance)/countOfCabSegments);
+	
+	for(var i=0;i<rome2RioData.length;i++)
+	{
+		var allRoutes = rome2RioData[i].routes;
+		for(var j = 0; j < allRoutes.length; j++)
+		{
+			var totalPrice = 0;
+			var allSegments = allRoutes[j].segments;
+			for(var k = 0; k < allSegments.length; k++)
+			{
+				if(allSegments[k].subkind=="cab")
+				{
+					var indicativePrice = {
+						price : budgetPerTaxiTrip,
+						currency : "INR"
+					}
+					allSegments[k].indicativePrice = indicativePrice;
+					totalPrice += indicativePrice.price;
+				}
+				else
+				{
+					totalPrice += allSegments[k].indicativePrice.price;
+				}
+			}
+			allRoutes[j].indicativePrice.price = totalPrice;
+		}
+	}
+	return rome2RioData;
+}
+
+function taxiModifiedRome2RioData(rome2RioData,carRouteDetails)
+{
+	
+	var numOfTravels = rome2RioData.length;
+	for(var i = 0; i < numOfTravels; i++)
+	{
+		var allRoutes = rome2RioData[i].routes;
+		for(var j = 0; j < allRoutes.length; j++)
+		{
+			allRoutes[j].isRecommendedRoute = 1;
+			var allSegments = allRoutes[j].segments;
+			for(var k = 0; k < allSegments.length; k++)
+			{
+				for(var l = 0; l < carRouteDetails.length; l++)
+				{
+					if(carRouteDetails[l].indexOfLeg == i)
+					{
+						rome2RioData[i].hasCab = 1;
+						for(var m = 0; m < carRouteDetails[l].routeAndSegments.length; m++)
+						{
+							if(carRouteDetails[l].routeAndSegments[m].route == j && carRouteDetails[l].routeAndSegments[m].segment == k)
+							{
+								var cabSegment = {
+										kind:"car",
+										subkind:"cab",
+										isMajor:1,
+										distance:carRouteDetails[l].distance,
+										duration:carRouteDetails[l].duration,
+										sName:carRouteDetails[l].source,
+										tName:carRouteDetails[l].destination,
+										sPos:rome2RioData[i].routes[j].segments[k].sPos,
+										tPos:rome2RioData[i].routes[j].segments[k].tPos,
+										path:carRouteDetails[l].path
+								}
+								rome2RioData[i].routes[j].segments.splice(k,1,cabSegment);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	for(var i = 0; i < numOfTravels; i++)
+	{
+		if(rome2RioData[i].hasCab && rome2RioData[i].hasCab == 1)
+		{
+			var allRoutes = rome2RioData[i].routes;
+			var isCabInRoute;
+			for(var j=0;j<allRoutes.length;j++)
+			{
+				isCabInRoute=0;
+				var allSegments=allRoutes[j].segments;
+				for(var k=0;k<allSegments.length;k++)
+				{
+					if(allSegments[k].subkind=="cab")
+					{
+						isCabInRoute=1;
+					}					
+				}
+				if(isCabInRoute==0)
+				{
+					//delete the array
+					rome2RioData[i].routes.splice(j,1);
+					j--;
+				}
+			}
+		}
+	}
+	
+	//Removing duplicate routes,if any
+	
+	for(var i=0;i<numOfTravels;i++)
+	{
+		if(rome2RioData[i].hasCab && rome2RioData[i].hasCab == 1)
+		{
+			var allRoutes = rome2RioData[i].routes;
+			for(var j=0;j<allRoutes.length;j++)
+			{
+				for(var k=j+1;k<allRoutes.length;k++)
+				{
+					if(isDuplicateCab(allRoutes[j],allRoutes[k]))
+					{
+						//removing kth route
+						rome2RioData[i].routes.splice(k,1);
+						k--;
+					}						
+				}	
+			}
+		}
+	}
+	return rome2RioData;
+}
+
+function isDuplicateCab(route1,route2)
+{
+	var length1=route1.segments.length;
+	var length2=route2.segments.length;
+	if((length1==1)&&(length2==1))
+	{
+		//Since cab will be present in these routes.Hence both will be same
+		return true;
+	}	
+
+	var i=0,j=0;
+	while((i<length1)&&(j<length2))
+	{
+		while(route1.segment[i].isMajor==0)
+		{
+			i++;
+		}	
+		while(route2.segment[j].isMajor==0)
+		{
+			j++;
+		}
+		if(isIdenticalSegment(route1.segment[i], route2.segment[j]))
+		{
+			i++;
+			j++;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return true;
+}
+function isIdenticalSegment(segment1, segment2)
+{
+	if(segment1.kind == segment2.kind && segment1.sCode == segment2.sCode && segment1.tCode == segment2.tCode)
+	{
+		return true;
+	}
+	return false;
+}
+
+

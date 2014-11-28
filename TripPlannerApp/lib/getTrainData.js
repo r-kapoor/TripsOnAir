@@ -1,25 +1,36 @@
 var extractStationCode=require('../lib/extractStationCode');
+var chooseMajorDefault=require('../lib/chooseMajorDefault');
+var cloneJSON=require('../lib/UtilityFunctions/cloneJSON');
+var async  = require('async');
 
-function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,callback, callbackDefaultMode) {
+function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,numPeople,callbackDefaultModeOfTravel,callbackPlanTaxiTrip, callbackResponse) {
+	console.log('TRAIN times:'+times);
 	var connection=conn.conn();
 	connection.connect();
 	var queryString = '';
 	var parsingQuery = 'origin.TrainNo as TrainNo, origin.StationCode as OriginStationCode, dest.StationCode as DestStationCode, origin.DepartureTime as OriginDepartureTime, dest.ArrivalTime as DestArrivalTime, (dest.DistanceCovered - origin.DistanceCovered) as Distance, origin.Day as OriginDay, dest.Day as DestDay';
 	var numOfTravels = rome2RioData.length;
 	var trainDateSetObjectArray=[];
-	var lengthOfSegmentsArray=[];
+	var lengthOfRoutesArray=[];
 	//Duration of origin city to train station has to be added in the dateSet for that train 
 
+	//maintain index of drive,if any, for the routes
+	var indexOfDrive=[];	
 	for(var i = 0; i < numOfTravels; i++)
 	{
 		var allRoutes = rome2RioData[i].routes;
 		//Needed by getDefaultModeOfTravel.js
-		lengthOfSegmentsArray[i]=allRoutes.length;
+		lengthOfRoutesArray[i]=allRoutes.length;
+		indexOfDrive[i]=-1;
 		console.log("PLaces:"+rome2RioData[i].places[0].name+":"+rome2RioData[i].places[1].name);
 		console.log(dateSet.dateStart[i]+":"+dateSet.dateEnd[i]);
 		for(var j = 0; j < allRoutes.length; j++)
 		{
 			console.log("Route Name:",allRoutes[j].name);
+			if(allRoutes[j].name=="Drive")
+			{
+				indexOfDrive[i]=j;
+			}	
 			var allSegments = allRoutes[j].segments;
 			var durBeforeTrain=0;
 			for(var k = 0; k < allSegments.length; k++)
@@ -156,15 +167,23 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 			}
 			
 	    }
-		/*var fs = require('fs');
-		fs.writeFile("text.txt",JSON.stringify(rome2RioData), function(err) {
-		    if(err) {
-		        console.log(err);
-		    } else {
-		        console.log("The file was saved!");
-		    }
-		});*/
-		callback(rome2RioData,dateSet,budget,dates, times,ratingRatio,lengthOfSegmentsArray,callbackDefaultMode);
+	
+		async.parallel(
+				[
+				 function (callback){
+					callbackDefaultModeOfTravel(cloneJSON.clone(rome2RioData),dateSet,budget,dates, times,ratingRatio,lengthOfRoutesArray,indexOfDrive,numPeople,callback);
+				},
+				function (callback){
+				 	
+					callbackPlanTaxiTrip(conn,rome2RioData,numPeople,budget,dateSet,dates, times, ratingRatio,callback);
+				}],
+	            //callback
+	            function(err, results) {
+				
+					chooseMajorDefault.chooseMajorDefault(results,dates,times,budget,callbackResponse);
+					
+				});
+		
 	});
 	connection.end();
 
