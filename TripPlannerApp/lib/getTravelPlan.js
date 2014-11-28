@@ -83,7 +83,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 											{
 												if((currentStartDate.getHours()+":"+currentStartDate.getMinutes())<trainData[l].OriginDepartureTime)
 												{
-													var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime(":")[0]),parseInt(trainData[l].OriginDepartureTime(":")[1])));
+													var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime(":")[0]),parseInt(trainData[l].OriginDepartureTime(":")[1]));
 													if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 													{
 														minTrainTime = currentTrainTime;
@@ -96,7 +96,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 												//This is the end date
 												if((currentStartDate.getHours()+":"+currentStartDate.getMinutes())>trainData[l].OriginDepartureTime)
 												{
-													var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime(":")[0]),parseInt(trainData[l].OriginDepartureTime(":")[1])));
+													var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime(":")[0]),parseInt(trainData[l].OriginDepartureTime(":")[1]));
 													if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 													{
 														minTrainTime = currentTrainTime;
@@ -106,7 +106,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 											}
 											else
 											{
-												var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime(":")[0]),parseInt(trainData[l].OriginDepartureTime(":")[1])));
+												var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime(":")[0]),parseInt(trainData[l].OriginDepartureTime(":")[1]));
 												if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 												{
 													minTrainTime = currentTrainTime;
