@@ -26,7 +26,7 @@ public class HtmlUnitWebClient {
 	while (i > 3)
     {
         i = webClient.waitForBackgroundJavaScript(5000);
-        //System.out.println("i "+i);
+        System.out.println("i "+i);
         if ((i == 3)||(i == 2))
         {
             break;
