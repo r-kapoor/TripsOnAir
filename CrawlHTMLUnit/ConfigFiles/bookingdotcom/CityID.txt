@@ -18,3 +18,8 @@ Mysore,2105255
 Shirdi,2111115
 Srinagar,2111972
 Pondicherry,2108165
+Coorg,2105255
+Dalhousie,2093873
+Shimla,2093873
+Manali,2103603
+Dharamshala,900051114

@@ -22,7 +22,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  *
  */
 
-public class ExtractData extends HtmlUnitWebClient{
+/*public class ExtractData extends HtmlUnitWebClient{
 
 	private static String exceptionFile = "target/bookingdotcom/hotelUrlException.txt";
 	private static String hotelUrlsFile	= "ConfigFiles/bookingdotcom/allHotelsUrls.txt";
@@ -170,7 +170,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			}
 		}*/
 
-		DomElement policyArea = page.getFirstByXPath("//div[@id='hotelPoliciesInc']");
+		/*DomElement policyArea = page.getFirstByXPath("//div[@id='hotelPoliciesInc']");
 		if((policyArea!=null)&&(policyArea.hasChildNodes()))
 		{
 			Iterator<DomElement> policyItr=policyArea.getChildElements().iterator();
@@ -221,7 +221,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("Parking="+Parking);
 		System.out.println("Services="+Services);
 		System.out.println("General="+General);
-		System.out.println("Languages="+Languages);*/
+		System.out.println("Languages="+Languages);
 		System.out.println("checkIn="+checkIn);
 		System.out.println("checkOut="+checkOut);
 		
@@ -348,7 +348,7 @@ public class ExtractData extends HtmlUnitWebClient{
 					if((priceE!=null)&&(priceE.hasChildNodes())&&((priceE.getAttribute("class").contains("room_loop_counter1"))
 							||(priceE.getAttribute("class").contains("room_loop_counter2"))
 							||(priceE.getAttribute("class").contains("room_loop_counter3"))
-							||(priceE.getAttribute("class").contains("room_loop_counter4")||(priceE.getAttribute("class").contains("room_loop_counter5"))))){
+							||(priceE.getAttribute("class").contains("room_loop_counter4")||(priceE.getAttribute("class").contains("room_loop_counter5"))||(priceE.getAttribute("class").contains("room_loop_counter6"))||(priceE.getAttribute("class").contains("room_loop_counter7"))))){
 						
 						DomElement priceE1=priceE.getLastElementChild();
 						if((priceE1!=null)
@@ -418,7 +418,7 @@ public class ExtractData extends HtmlUnitWebClient{
 	
 	public static void main(String args[])throws Exception
 	{
-		Scanner in = new Scanner(new File(hotelUrlsFile));
+		/*Scanner in = new Scanner(new File(hotelUrlsFile));
 		in.useDelimiter("\n");
 		
 		while(in.hasNext())
@@ -443,6 +443,9 @@ public class ExtractData extends HtmlUnitWebClient{
 				//ExtractData.getData(bookingLink);
 				ExtractData.getPrices(bookingLink.link);
 			}	
-		}	
+		}*/
+		
+		/*URL url = new URL("http://www.booking.com/hotel/in/ritz-carlton-bangalore.en-us.html?sid=9c45de710b95a5bed9f7e088614d0419;dcid=4;checkin=2014-12-03;checkout=2014-12-04;ucfs=1;srfid=bf7f40973c36d951e5ef0a23d37d89c4a0d5993dX1;highlight_room=63281802");
+		getPrices(url);
 	}	
-}
+}*/

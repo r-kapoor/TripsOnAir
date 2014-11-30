@@ -1,1 +1,13 @@
 
+Sun Nov 30 03:23:07 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2106102;rows=20
+Error:java.lang.NullPointerException,Error Message:null
+Sun Nov 30 03:33:39 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20
+Error:java.lang.NullPointerException,Error Message:null
+Sun Nov 30 03:40:08 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20
+Error:java.lang.NullPointerException,Error Message:null
+Sun Nov 30 03:45:54 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20
+Error:java.lang.NullPointerException,Error Message:null
+Sun Nov 30 03:47:38 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20;offset=20
+Error:java.lang.NullPointerException,Error Message:null
+Sun Nov 30 03:51:49 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2106102;rows=20
+Error:java.lang.NullPointerException,Error Message:null
