@@ -11,7 +11,7 @@ import java.util.Scanner;
  *
  */
 
-public class ExtractPrice {
+/*public class ExtractPrice {
 
 	private static String urlFile = "ConfigFiles/bookingdotcom/priceCheckingUrls.txt";
 	private static ArrayList<URL> priceExtractUrls = new ArrayList<URL>();
@@ -44,4 +44,4 @@ public class ExtractPrice {
 		getPrice();
 	}
 	
-}
+}*/

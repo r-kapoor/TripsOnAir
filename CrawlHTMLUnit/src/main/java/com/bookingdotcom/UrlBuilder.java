@@ -50,7 +50,7 @@ public class UrlBuilder {
 	{
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			//get current date time with Date()
-		   	Date checkinDate = new Date();
+		   	Date checkinDate = addDays(new Date(),30);
 			String checkInDate = dateFormat.format(checkinDate);
 			Date checkoutDate = addDays(checkinDate,1);
 			String checkOutDate = dateFormat.format(checkoutDate);

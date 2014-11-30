@@ -3,24 +3,27 @@ package com.dataTransferObject;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**
+ * @author rajat
+ */
+
 public class BookingdotComDto {
 
 	public String source;
 	public String Locality;
 	public String city;
 	public String country;
+	public String latitude;
+	public String longitude;
 	public String name;
-	public String address;
-	public String pincode;
-	public String phoneNo;
 	public String rating;
 	public String numofreviews;
-	public String description;
-	public String checkIn;
-	public String checkOut;
-	public ArrayList<URL> photoLink;
-
-
+	public String photoLink;
+	public String hotelUrl;
+	public String price;
+	public String roomType;
+	public String maxPersons;
+	
 	public String getCountry() {
 		return country;
 	}
@@ -45,29 +48,23 @@ public class BookingdotComDto {
 	public void setCity(String city) {
 		this.city = city;
 	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getPincode() {
-		return pincode;
-	}
-	public void setPincode(String pincode) {
-		this.pincode = pincode;
-	}
-	public String getPhoneNo() {
-		return phoneNo;
-	}
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
 	}
 	public String getRating() {
 		return rating;
@@ -81,29 +78,35 @@ public class BookingdotComDto {
 	public void setNumofreviews(String numofreviews) {
 		this.numofreviews = numofreviews;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public String getCheckIn() {
-		return checkIn;
-	}
-	public void setCheckIn(String checkIn) {
-		this.checkIn = checkIn;
-	}
-	public String getCheckOut() {
-		return checkOut;
-	}
-	public void setCheckOut(String checkOut) {
-		this.checkOut = checkOut;
-	}
-	public ArrayList<URL> getPhotoLink() {
+	public String getPhotoLink() {
 		return photoLink;
 	}
-	public void setPhotoLink(ArrayList<URL> photoLink) {
+	public void setPhotoLink(String photoLink) {
 		this.photoLink = photoLink;
+	}
+	public String getHotelUrl() {
+		return hotelUrl;
+	}
+	public void setHotelUrl(String hotelUrl) {
+		this.hotelUrl = hotelUrl;
+	}
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}
+	public String getRoomType() {
+		return roomType;
+	}
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+	public String getMaxPersons() {
+		return maxPersons;
+	}
+	public void setMaxPersons(String maxPersons) {
+		this.maxPersons = maxPersons;
 	}
 
 }

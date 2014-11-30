@@ -18,7 +18,7 @@ import com.dataTransferObject.*;
  *
  */
 
-public class TransferDataBookingdotcom {
+/*public class TransferDataBookingdotcom {
 
 	public static void transferData(BookingdotComDto bookingdotcomDto) throws Exception{
 		
@@ -65,7 +65,7 @@ public class TransferDataBookingdotcom {
 					 */
 				//}
 				//Merge the info already present
-			}
+			/*}
 		}
 		if(!cityExists)
 		{
@@ -117,7 +117,7 @@ public class TransferDataBookingdotcom {
 					 * Then Update the tuple
 					 */
 					//Doing nothing as the merge logic for same source not clear
-				}
+				/*}
 				else
 				{
 					//The tuple is from a different source. Merge the data
@@ -290,4 +290,4 @@ public class TransferDataBookingdotcom {
 	
 	}	
 			
-}
+}*/

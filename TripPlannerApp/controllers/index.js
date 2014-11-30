@@ -11,13 +11,19 @@ module.exports = function (app) {
 
 
     app.get('/', function (req, res) {
-        res.render('index', model);
+        //res.render('index', model);
+        res.sendfile('./public/templates/index.html');
         
     });
 
     app.get('/test',function(req,res){
-    	res.render('test',model);
+    	res.render('angularTest',model);
     	console.log("testing");
+    });
+
+    app.get('/ang',function(req,res){
+        res.render('normalApp',model);
+        console.log("testing");
     });
     
     app.get('/tsp',function(req,res){
