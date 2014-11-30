@@ -1,54 +1,41 @@
-/**
- * New node file
+/*
+ * Calls the rome2rio API for the cities passed in origin and dest and gets the JSON object
  */
 
+//The API Key used for Rome2Rio
 var APP_KEY="R1hcHt58";
 
-
-
-
+/*
+ * Calls the Rome2Rio API to get the mode of travel between cities
+ * Params : 
+ * origin - Origin City
+ * dest - Destination City
+ * callback(err, data) - The JSON data is passed to this function
+ */
 function getDataRome2rio(origin,dest,callback)
 {
-	console.log('rome2rio called');
+	//Getting the request URL for rome2rio
 	var url=getURL(origin,dest);
+	
+	//Replacing the key
 	url=url.replace('YOUR_KEY_HERE', APP_KEY);
-	console.log("requestedUrl:"+url);
+	
 	var Client = require('node-rest-client').Client;
 	client = new Client();
 	client.registerMethod("jsonMethod", url, "GET");
+	
+	//Calling the rome2rio API
 	client.methods.jsonMethod(function(data,response){	
-		
-		//console.log("originDest:"+origin+","+dest);
-		/*var routeOfTravelObject={
-				uniqueId:"1",
-				routeName:"fly",
-				totalDistance:"456km",
-				totalDuration:"2hr",
-				stopsArray:[{stops:"delhi",duration:"1hr",price:"1200rs"},{stops:"mumbai"},{stops:"bangalore"}]
-		}
-		var dataObject={
-				CityName: data.places[0].name, 
-				City2City: data.places[0].name+"-"+data.places[1].name,
-            	RouteOfTravelData:routeOfTravelObject
-		}
-		
-		for(var j=0;j<data.routes.length;j++)
-		{
-			for(var k=0; k < data.routes[j].stops.length; k++)
-			{
-				data.routes[j].stops[k].name;
-			}
-			var route={ 
-					uniqueId:(j+1),
-					routeName:data.routes[j].name,
-					totalDistance:data.routes[j].distance,
-					TotalDuration:data.routes[j].duration,
-					stopsArray:stopsArrayObject
-			}
-		}*/
 		callback(null, JSON.parse(data));
 	});
 }
+
+/*
+ * Returns the URL for rome2rio API
+ * Params :
+ * origin - Origin City
+ * dest - Destination City
+ */
 function getURL(origin,dest)
 {
 	var HOST_URL="http://free.rome2rio.com";

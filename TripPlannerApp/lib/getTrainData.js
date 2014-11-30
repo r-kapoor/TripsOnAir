@@ -1,3 +1,7 @@
+/*
+ * Gets the schedules of the trains 
+ */
+
 var extractStationCode=require('../lib/extractStationCode');
 var chooseMajorDefault=require('../lib/chooseMajorDefault');
 var cloneJSON=require('../lib/UtilityFunctions/cloneJSON');

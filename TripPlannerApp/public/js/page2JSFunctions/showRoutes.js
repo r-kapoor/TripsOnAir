@@ -10,8 +10,11 @@ function showRoutes()
 	var urlAttrs=url.split("?")[1];
 	console.log(urlAttrs);
 	var query=createQuery();
-	console.log("query:"+query);
+	//console.log("query:"+query);
 	var ajaxQuery = $.getJSON('/showRoutes?'+query+"&"+urlAttrs);
+	
+	console.log("query:"+'/showRoutes?'+query+"&"+urlAttrs);
+	
 	ajaxQuery.done(function(data) {
 		
 		console.log("GotData:"+data);
