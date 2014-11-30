@@ -39,7 +39,8 @@ public class CrawlIndianRail extends getHibernateSession {
 		int count=0;
 		URL detailsUrl=new URL("https://www.test2345.com");
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-		Session session=getHibernateSession();
+		String resources[] = {"com/hibernate/RailwayStation.hbm.xml","com/hibernate/RailwayTimetable.hbm.xml", "com/hibernate/Trains.hbm.xml"};
+		Session session=getHibernateSession(resources);
 		DomElement trainNoDetails;
 		int pagesNo=6;//Need to be set Manually
 		//Set the URL of the page

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 30, 2014 2:44:16 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.FlightSchedule" table="Flight_Schedule" catalog="Holiday">
+        <id name="flightID" type="int">
+            <column name="FlightID" />
+            <generator class="assigned" />
+        </id>
+        <property name="originCityID" type="int">
+            <column name="OriginCityID" not-null="true"/>
+        </property>
+        <property name="destinationCityID" type="int">
+            <column name="DestinationCityID" not-null="true"/>
+        </property>
+        <property name="operator" type="java.lang.String">
+            <column name="Operator" length="10" not-null="true"/>
+        </property>
+        <property name="flightNumber" type="java.lang.String">
+            <column name="FlightNumber" length="20" not-null="true"/>
+        </property>
+        <property name="daysOfTravel" type="java.lang.String">
+            <column name="DaysOfTravel" length="8" not-null="true"/>
+        </property>
+        <property name="departureTime" type="java.sql.Time">
+            <column name="DepartureTime" not-null="true"/>
+        </property>
+        <property name="arrivalTime" type="java.sql.Time">
+            <column name="ArrivalTime" not-null="true"/>
+        </property>
+        <property name="hops" type="int">
+            <column name="Hops" not-null="true"/>
+        </property>
+        <property name="carrierType" type="java.lang.String">
+            <column name="CarrierType" length="30"/>
+        </property>
+    </class>
+</hibernate-mapping>
