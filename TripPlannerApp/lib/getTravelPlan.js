@@ -134,6 +134,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 											}
 											else
 											{
+
 												var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
 												if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 												{

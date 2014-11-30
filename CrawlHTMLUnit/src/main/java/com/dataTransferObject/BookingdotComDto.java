@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class BookingdotComDto {
 
 	public String source;
+	public String Locality;
 	public String city;
 	public String country;
 	public String name;
@@ -31,6 +32,12 @@ public class BookingdotComDto {
 	}
 	public void setSource(String source) {
 		this.source = source;
+	}
+	public String getLocality() {
+		return Locality;
+	}
+	public void setLocality(String locality) {
+		Locality = locality;
 	}
 	public String getCity() {
 		return city;

@@ -69,7 +69,7 @@ public class UrlBuilder {
 				bookingUrl.link=new URL(newUrl);
 				bookingUrl.locality="unknown";
 				Crawlbookingdotcom.getMainLinks(bookingUrl);
-				Thread.sleep(4000);
+				//Thread.sleep(4000);
 				//break; //only to check flow in less time
 			}
 	}
@@ -80,7 +80,7 @@ public class UrlBuilder {
 		 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		   
 		   //get current date time with Date()
-		   Date checkinDate = new Date();
+		   Date checkinDate = addDays(new Date(),30);
 		   Date checkoutDate = addDays(checkinDate,1);
 		   String checkInDate = dateFormat.format(checkinDate);
 		   String chkoutDate = dateFormat.format(checkoutDate);
@@ -88,8 +88,7 @@ public class UrlBuilder {
 		   
 		   return(new URL(newUrl));
 	}
-	
-	
+
 	public static Date addDays(Date date, int days)
     {
         Calendar cal = Calendar.getInstance();

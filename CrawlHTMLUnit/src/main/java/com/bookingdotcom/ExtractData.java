@@ -3,9 +3,9 @@ package com.bookingdotcom;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -24,16 +24,16 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ExtractData extends HtmlUnitWebClient{
 
-	private static String exceptionUrls = "";
-	private static String exceptionFile = "target/bookingdotcom/exception.txt";
-	private static String exceptionmsgFile = "target/bookingdotcom/exceptionmsg.txt";
-	private static String exceptionMsg = "";
-	private static String linksFile="ConfigFiles/bookingdotcom/PriceCheckingUrls.txt";
+	private static String exceptionFile = "target/bookingdotcom/hotelUrlException.txt";
+	private static String hotelUrlsFile	= "ConfigFiles/bookingdotcom/allHotelsUrls.txt";
+	//private static String exceptionmsgFile = "target/bookingdotcom/exceptionmsg.txt";
+	//private static String exceptionMsg = "";
+	//private static String linksFile="ConfigFiles/bookingdotcom/PriceCheckingUrls.txt";
 	
 	public static void getData(BKDCURL bkdcUrl)throws Exception
 	{
 		//URL url1 = new URL("http://www.booking.com/hotel/in/hilton-garden-inn-new-delhi-saket.en-gb.html?aid=367912;label=dial-FM;sid=6b4a0f8b7d12fca42a71b2ab3b4ec786;dcid=1;checkin=2014-05-10;checkout=2014-05-11;ucfs=1;srfid=b41b64303289312c14ac80addd1920eaa773bc4eX11");
-		
+		String exceptionUrl = "";
 		try{
 		HtmlPage page=WebClient(bkdcUrl.link);
 		
@@ -52,13 +52,22 @@ public class ExtractData extends HtmlUnitWebClient{
 				DomElement dataE=dataItr.next();
 				if(dataE.getTagName().contains("h1")&&(dataE.hasChildNodes()))
 				{
-					Title=dataE.getFirstElementChild().asText().trim();
-					
+					Title=dataE.getFirstElementChild().asText().trim();		
 				}
 				
 				if(dataE.getTagName().contains("p")&&(dataE.hasChildNodes()))
 				{
-					address=dataE.getFirstElementChild().asText().trim();
+					//address=dataE.getFirstElementChild().asText().trim();
+					Iterator<DomElement> addressItr=dataE.getChildElements().iterator();
+					while(addressItr.hasNext())
+					{
+						DomElement addressE=addressItr.next();
+						System.out.println("---Address DOM---\n"+addressE);
+						if((addressE.getTagName().contains("span"))&&(addressE.getAttribute("id").contains("hp_address_subtitle")))
+						{
+							address=addressE.asText().trim();
+						}
+					}
 					
 				}
 			}
@@ -71,12 +80,11 @@ public class ExtractData extends HtmlUnitWebClient{
 		}
 		
 		DomElement reviewsArea = page.getFirstByXPath("//strong[@class='count']");
-		if((reviewsArea!=null)&&(reviewsArea.hasChildNodes()))
+		if((reviewsArea!=null))
 		{
 			numofreviews =reviewsArea.asText().trim();
 		}
-		
-		
+	
 		DomElement photosArea = page.getFirstByXPath("//div[@id='photos_distinct']");
 		if((photosArea!=null)&&(photosArea.hasChildNodes())){
 			Iterator<DomElement> photosItr = photosArea.getChildElements().iterator();
@@ -93,11 +101,10 @@ public class ExtractData extends HtmlUnitWebClient{
 		
 		DomElement desciptionArea = page.getFirstByXPath("//div[@id='summary']");
 		if(desciptionArea!=null){
-			description = desciptionArea.asText().trim();
-			
+			description = desciptionArea.asText().trim();			
 		}
 		
-		DomElement facilitiesArea = page.getFirstByXPath("//div[@class='nha_single_unit_facilities common_room_facilities']");
+		/*DomElement facilitiesArea = page.getFirstByXPath("//div[@class='nha_single_unit_facilities common_room_facilities']");
 		if((facilitiesArea!=null)&&(facilitiesArea.hasChildNodes()))
 		{
 			Iterator<DomElement> facilitiesItr=facilitiesArea.getChildElements().iterator();
@@ -161,7 +168,7 @@ public class ExtractData extends HtmlUnitWebClient{
 					}
 				}		
 			}
-		}
+		}*/
 
 		DomElement policyArea = page.getFirstByXPath("//div[@id='hotelPoliciesInc']");
 		if((policyArea!=null)&&(policyArea.hasChildNodes()))
@@ -184,7 +191,7 @@ public class ExtractData extends HtmlUnitWebClient{
 					{
 						checkOut=time;
 						break;
-					}	
+					}
 				}
 			}
 		}
@@ -204,7 +211,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		//getPrices(url);
 		
 		System.out.println("desciption="+description);
-		System.out.println("Bedroom="+Bedroom);
+		/*System.out.println("Bedroom="+Bedroom);
 		System.out.println("Outdoors="+Outdoors);
 		System.out.println("Activities="+Activities);
 		System.out.println("Living_Area="+Living_Area);
@@ -214,7 +221,7 @@ public class ExtractData extends HtmlUnitWebClient{
 		System.out.println("Parking="+Parking);
 		System.out.println("Services="+Services);
 		System.out.println("General="+General);
-		System.out.println("Languages="+Languages);
+		System.out.println("Languages="+Languages);*/
 		System.out.println("checkIn="+checkIn);
 		System.out.println("checkOut="+checkOut);
 		
@@ -226,11 +233,11 @@ public class ExtractData extends HtmlUnitWebClient{
 			address = address.replaceAll("(.*)(\\d{6})(.*)","$1$3");
 		}
 		
-		BookingdotComDto bookingdotcomDto = new BookingdotComDto();
-		
+		BookingdotComDto bookingdotcomDto = new BookingdotComDto();		
 		bookingdotcomDto.setSource("Bookingdotcom");
 		bookingdotcomDto.setName(Title.toUpperCase());
 		bookingdotcomDto.setCity(city.toUpperCase());
+		bookingdotcomDto.setLocality(locality.toUpperCase());
 		bookingdotcomDto.setCountry(country.toUpperCase());
 		bookingdotcomDto.setAddress(address);
 		bookingdotcomDto.setPincode(pincode);
@@ -241,30 +248,24 @@ public class ExtractData extends HtmlUnitWebClient{
 		bookingdotcomDto.setCheckIn(checkIn);
 		bookingdotcomDto.setCheckOut(checkOut);
 		
-		System.out.println("Starting Transferring the data to DB");
+		//System.out.println("Starting Transferring the data to DB");
 		
-		TransferDataBookingdotcom.transferData(bookingdotcomDto);
-				
+		//TransferDataBookingdotcom.transferData(bookingdotcomDto);
 		
 		}catch(Exception e)
 		{
 			System.out.println("Exception Occured. Adding to exceptionUrls");
 			System.out.println(e);
 			System.out.println(e.getMessage());
-			exceptionUrls+=bkdcUrl.country+"&&&"+bkdcUrl.city+"&&&"+bkdcUrl.locality+"&&&"+bkdcUrl.link+"\n";
-			exceptionMsg+=e+"\n";
+			exceptionUrl=new Date()+":"+bkdcUrl.country+"&&&"+bkdcUrl.city+"&&&"+bkdcUrl.locality+"&&&"+bkdcUrl.link+"\n";
+			exceptionUrl+="Error:"+e+",Error Message:"+e.getMessage()+"\n";
+			FileOutputStream exception=new FileOutputStream(exceptionFile);
+			@SuppressWarnings("resource")
+			PrintStream pExceptionStream=new PrintStream(exception);
+			pExceptionStream.println(exceptionUrl);
+			pExceptionStream.close();
+			Thread.sleep(60000);//sleep for 1 minute
 		}
-		
-		FileOutputStream exception=new FileOutputStream(exceptionFile);
-		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
-		@SuppressWarnings("resource")
-		PrintStream e=new PrintStream(exception);
-		PrintStream e1=new PrintStream(exceptionmsg);
-		e.println(exceptionUrls);
-		e1.println(exceptionMsg);
-		e.close();
-		e1.close();
-		
 	}
 	
 	public static void getPrices(URL url) throws Exception
@@ -391,7 +392,7 @@ public class ExtractData extends HtmlUnitWebClient{
 			
 			System.out.println(checkoutDate);
 			
-			TransferDataBookingdotcomPrice.transferData(bookingdotcompriceDto);
+			//TransferDataBookingdotcomPrice.transferData(bookingdotcompriceDto);
 			
 		}
 		catch(Exception e)
@@ -399,25 +400,25 @@ public class ExtractData extends HtmlUnitWebClient{
 			System.out.println("Exception Occured. Adding to exceptionUrls");
 			System.out.println(e);
 			System.out.println(e.getMessage());
-			exceptionUrls+=url+"\n";
-			exceptionMsg+=e+"\n";
+			//exceptionUrls+=url+"\n";
+			//exceptionMsg+=e+"\n";
 		}
 
 		FileOutputStream exception=new FileOutputStream(exceptionFile);
-		FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
+		//FileOutputStream exceptionmsg=new FileOutputStream(exceptionmsgFile);
 		@SuppressWarnings("resource")
 		PrintStream e=new PrintStream(exception);
-		PrintStream e1=new PrintStream(exceptionmsg);
-		e.println(exceptionUrls);
-		e1.println(exceptionMsg);
+		//PrintStream e1=new PrintStream(exceptionmsg);
+		//e.println(exceptionUrls);
+		//e1.println(exceptionMsg);
 		e.close();
-		e1.close();
+		//e1.close();
 
 	}
 	
 	public static void main(String args[])throws Exception
 	{
-		Scanner in = new Scanner(new File(linksFile));
+		Scanner in = new Scanner(new File(hotelUrlsFile));
 		in.useDelimiter("\n");
 		
 		while(in.hasNext())
@@ -425,23 +426,22 @@ public class ExtractData extends HtmlUnitWebClient{
 			String bkdcurl=in.next();
 			if(bkdcurl.indexOf("&&&")!=-1)
 			{
-			String parts[]=bkdcurl.split("&&&");
-			String country=parts[0];
-			String city = parts[1];
-			String locality = parts[2];
-			String link = parts[3];
-			//System.out.println(country+city+locality+link);
-
-			//now extract the data with updated link
-			BKDCURL bookingLink = new BKDCURL();
-			bookingLink.country=country;
-			bookingLink.city=city;
-			bookingLink.locality=locality;
-			bookingLink.link=UrlBuilder.updateUrl(link);//update for current date.Otherwise link might have expired
-			
-			//System.out.println(bookingLink.link);
-			ExtractData.getData(bookingLink);
-			
+				String parts[]=bkdcurl.split("&&&");
+				String country=parts[0];
+				String city = parts[1];
+				String locality = parts[2];
+				String link = parts[3];
+	
+				//now extract the data with updated link
+				BKDCURL bookingLink = new BKDCURL();
+				bookingLink.country=country;
+				bookingLink.city=city;
+				bookingLink.locality=locality;
+				bookingLink.link=UrlBuilder.updateUrl(link);//update for current date.Otherwise link might have expired
+				
+				//System.out.println(bookingLink.link);
+				//ExtractData.getData(bookingLink);
+				ExtractData.getPrices(bookingLink.link);
 			}	
 		}	
 	}	
