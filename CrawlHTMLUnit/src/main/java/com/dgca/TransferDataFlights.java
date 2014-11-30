@@ -115,8 +115,10 @@ public class TransferDataFlights extends getHibernateSession{
 		else
 		{
 			try {
+				
+				Session session4=getHibernateSession(resources);
 				FlightSchedule flightSchedule = new FlightSchedule();
-				Criteria flightCriteria = session.createCriteria(FlightSchedule.class);
+				Criteria flightCriteria = session4.createCriteria(FlightSchedule.class);
 				Criterion c1 = Restrictions.eq("originCityID", cityIDs[0]);
 				Criterion c2 = Restrictions.eq("destinationCityID", cityIDs[1]);
 				Criterion c3 = Restrictions.eq("operator", operator);
@@ -126,6 +128,13 @@ public class TransferDataFlights extends getHibernateSession{
 				Criterion c7 = Restrictions.eq("arrivalTime", arrivalTime);
 				Criterion combined = Restrictions.and(c1, c2, c3, c4, c5, c6, c7);
 				flightCriteria.add(combined);
+				
+				tr = session4.beginTransaction();
+				session4.flush();
+				tr.commit();
+				tr = null;
+				
+				
 				
 				if(flightCriteria.list().isEmpty())
 				{
@@ -144,6 +153,7 @@ public class TransferDataFlights extends getHibernateSession{
 					tr = session.beginTransaction();
 					session.flush();
 					tr.commit();
+					tr = null;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

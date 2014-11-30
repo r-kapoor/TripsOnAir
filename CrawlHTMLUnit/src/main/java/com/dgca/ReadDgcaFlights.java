@@ -20,7 +20,6 @@ public class ReadDgcaFlights extends getHibernateSession{
 
 	public static void main(String[] args) {
 		String[] resources = {"com/hibernate/FlightSchedule.hbm.xml", "com/hibernate/City.hbm.xml"};
-		Session session=getHibernateSession(resources);
 		DateFormat formatter = new SimpleDateFormat("hh:mm:ss");
 		File dgcaFile = new File("./ConfigFiles/dgca/flight.csv");
 		try {
@@ -30,6 +29,7 @@ public class ReadDgcaFlights extends getHibernateSession{
 			String originCity = "";
 			while(scanner.hasNext())
 			{
+				Session session=getHibernateSession(resources);
 				//System.out.println("Processing Line:"+lineNum);
 				lineNum++;
 				String line = scanner.next();
