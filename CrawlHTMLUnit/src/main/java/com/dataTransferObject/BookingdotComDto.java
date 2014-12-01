@@ -9,31 +9,24 @@ import java.util.ArrayList;
 
 public class BookingdotComDto {
 
-	public String source;
+	public int source;
 	public String Locality;
 	public String city;
 	public String country;
-	public String latitude;
-	public String longitude;
+	public double latitude;
+	public double longitude;
 	public String name;
-	public String rating;
-	public String numofreviews;
+	public double rating;
+	public int numofreviews;
 	public String photoLink;
 	public String hotelUrl;
-	public String price;
+	public int price;
 	public String roomType;
-	public String maxPersons;
-	
-	public String getCountry() {
-		return country;
-	}
-	public void setCountry(String country) {
-		this.country = country;
-	}
-	public String getSource() {
+	public int maxPersons;
+	public int getSource() {
 		return source;
 	}
-	public void setSource(String source) {
+	public void setSource(int source) {
 		this.source = source;
 	}
 	public String getLocality() {
@@ -48,16 +41,22 @@ public class BookingdotComDto {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getLatitude() {
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 	public String getName() {
@@ -66,16 +65,16 @@ public class BookingdotComDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getRating() {
+	public double getRating() {
 		return rating;
 	}
-	public void setRating(String rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
-	public String getNumofreviews() {
+	public int getNumofreviews() {
 		return numofreviews;
 	}
-	public void setNumofreviews(String numofreviews) {
+	public void setNumofreviews(int numofreviews) {
 		this.numofreviews = numofreviews;
 	}
 	public String getPhotoLink() {
@@ -90,10 +89,10 @@ public class BookingdotComDto {
 	public void setHotelUrl(String hotelUrl) {
 		this.hotelUrl = hotelUrl;
 	}
-	public String getPrice() {
+	public int getPrice() {
 		return price;
 	}
-	public void setPrice(String price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 	public String getRoomType() {
@@ -102,11 +101,10 @@ public class BookingdotComDto {
 	public void setRoomType(String roomType) {
 		this.roomType = roomType;
 	}
-	public String getMaxPersons() {
+	public int getMaxPersons() {
 		return maxPersons;
 	}
-	public void setMaxPersons(String maxPersons) {
+	public void setMaxPersons(int maxPersons) {
 		this.maxPersons = maxPersons;
 	}
-
 }

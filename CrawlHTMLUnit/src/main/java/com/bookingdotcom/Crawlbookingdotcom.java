@@ -109,7 +109,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 															if(ratingE.getAttribute("class").contains("rating"))
 															{
 																String rating=ratingE.asText().trim();
-																bookingdotComDto.setRating(rating);
+																bookingdotComDto.setRating(Double.parseDouble(rating));
 																System.out
 																.println("11");
 															}
@@ -131,7 +131,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 														String num_review_string=detailsitrElement.asText().trim();
 														//System.out
 															//	.println(num_review_string);
-														bookingdotComDto.setNumofreviews(num_review_string.replaceAll("[^0-9]",""));					
+														bookingdotComDto.setNumofreviews(Integer.parseInt(num_review_string.replaceAll("[^0-9]","")));					
 													}
 												}
 											}
@@ -168,8 +168,8 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 															.println("lat:"+latLong[0]);
 													System.out
 															.println("long:"+latLong[1]);
-													bookingdotComDto.setLatitude(latLong[0]);
-													bookingdotComDto.setLongitude(latLong[1]);
+													bookingdotComDto.setLatitude(Double.parseDouble(latLong[0]));
+													bookingdotComDto.setLongitude(Double.parseDouble(latLong[1]));
 												}					
 											}
 										}
@@ -209,7 +209,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 																					if((maxPersonEChild!=null)&&(maxPersonEChild.hasAttribute("data-title")))
 																					{
 																						String maxPersonDetails=maxPersonEChild.getAttribute("data-title");
-																						bookingdotComDto.setMaxPersons(maxPersonDetails.replaceAll("[^0-9]",""));
+																						bookingdotComDto.setMaxPersons(Integer.parseInt(maxPersonDetails.replaceAll("[^0-9]","")));
 																					}
 																				}
 																				
@@ -251,60 +251,36 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 																							System.out
 																									.println("test:"+priceItrElement);
 																								String roomPrice=priceItrElement.asText().trim();
-																								bookingdotComDto.setPrice(roomPrice.replaceAll("[^0-9]",""));
+																								bookingdotComDto.setPrice(Integer.parseInt(roomPrice.replaceAll("[^0-9]","")));
 																							}
 																							else if((priceItrElement!=null)&&(priceItrElement.getAttribute("class").contains("price availprice")))
 																							{
 																								System.out
 																										.println("24");
 																								String roomPrice=priceItrElement.asText().trim();
-																								bookingdotComDto.setPrice(roomPrice.replaceAll("[^0-9]",""));
+																								bookingdotComDto.setPrice(Integer.parseInt(roomPrice.replaceAll("[^0-9]","")));
 																							}
 																						}
 																					}
-																					/*else if((priceElement.getAttribute("class").contains("smart_price_style")))
-																					{System.out
-																							.println("24");
-																						String roomPrice=priceElement.getFirstElementChild().asText().trim();
-																						System.out
-																								.println("price in 24:"+roomPrice);
-																						bookingdotComDto.setPrice(roomPrice.replaceAll("[^0-9]",""));
-																					}*/
 																				}			
 																			}
 																		}
 																	}
-																	
-																	
 																}
 															}
 														}
 													}
 												}
 											}
-											
-											
-											/*DomElement roomDetailsE=detailsE.getFirstByXPath("//tr[@class='roomrow entire_row_clickable']");
-											if((roomDetailsE!=null)&&(roomDetailsE.hasChildNodes()))
-											{
-						
-											}*/
 										}
 									}
-									/*if((isLinkSet==1)&&(isLocalitySet==1))
-									{
-										System.out.println(bookingUrl.country+","+bookingUrl.city+","+bookingUrl.locality+","+bookingUrl.link);
-										mainLinks.add(bookingUrl);
-										isLinkSet=0;
-										isLocalitySet=0;
-									}*/
 								}
 							}
 						}
 					}
 				if(bookingdotComDto.getName()!=null){
 					//transferdata
-					System.out.println("name:"+bookingdotComDto.getName());
+					/*System.out.println("name:"+bookingdotComDto.getName());
 					System.out.println("country:"+bookingdotComDto.getCountry());
 					System.out.println("city:"+bookingdotComDto.getCity());
 					System.out.println("locality:"+bookingdotComDto.getLocality());
@@ -316,8 +292,11 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 					System.out.println("hotelUrl:"+bookingdotComDto.getHotelUrl());
 					System.out.println("roomType:"+bookingdotComDto.getRoomType());
 					System.out.println("price:"+bookingdotComDto.getPrice());
-					System.out.println("maxPersons:"+bookingdotComDto.getMaxPersons());
-					//source
+					System.out.println("maxPersons:"+bookingdotComDto.getMaxPersons());*/
+					//source=1 signifies data is from booking.com
+					bookingdotComDto.setSource(1);
+					//Transfer data into database
+					TransferDataBkdcHibernate.transferData(bookingdotComDto);					
 					}
 				}
 			}
