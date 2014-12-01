@@ -15,6 +15,11 @@ module.exports = function (app) {
         res.sendfile('./public/templates/index.html');
         
     });
+    
+    app.get('/old',function(req,res){
+    	res.render('index',model);
+    	console.log("testing");
+    });
 
     app.get('/test',function(req,res){
     	res.render('angularTest',model);

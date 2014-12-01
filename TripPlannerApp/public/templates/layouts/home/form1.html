@@ -3,7 +3,7 @@
 <div ng-controller="form1Controller" class="jumbotron">
 	<div class ="container-fluid ">
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-4">
 			</div>
 				<div class="col-md-4">
 					<div class="panel panel-default">
@@ -33,7 +33,7 @@
 						        <div class="col-md-6">
 						        	
 						            <p class="input-group">
-						              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						              <input type="button" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1" is-open="opened1" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
 						              <span class="input-group-btn">
 						                <button id="1" type="button" class="btn btn-default" ng-click="open($event,'opened1')"><i class="glyphicon glyphicon-calendar"></i></button>
 						              </span>
@@ -44,7 +44,7 @@
 						        <div class="col-md-6">
 						        		 
 						            <p class="input-group">
-						              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened2" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						              <input type="button" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2" is-open="opened2" min-date="minDate1" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close"/>
 						              <span class="input-group-btn">
 						                <button id="2" type="button" class="btn btn-default" ng-click="open($event,'opened2')"><i class="glyphicon glyphicon-calendar"></i></button>
 						              </span>

@@ -7,7 +7,7 @@ import org.omg.CosNaming.NamingContextExtPackage.AddressHelper;
 
 public class getHibernateSession {
 
-	public static Session getHibernateSession(String []resources)
+	public static SessionFactory getHibernateSessionFactory(String []resources)
 	{
 		SessionFactory sessionFactory;
 		try {
@@ -23,10 +23,16 @@ public class getHibernateSession {
             throw new ExceptionInInitializerError(ex);
         }
 
-		Session session = null;
-		session = sessionFactory.openSession();
-			return session;
+		return sessionFactory;
+		//Session session = null;
+		//session = sessionFactory.openSession();
 	}
 	
 	
+	public static Session getHibernateSession(SessionFactory sessionFactory)
+	{
+		return sessionFactory.openSession();
+	}
+	
 }
+

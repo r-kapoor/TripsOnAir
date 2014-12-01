@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import GlobalClasses.getHibernateSession;
 
@@ -29,7 +30,7 @@ public class ReadDgcaFlights extends getHibernateSession{
 			String originCity = "";
 			while(scanner.hasNext())
 			{
-				Session session=getHibernateSession(resources);
+				SessionFactory sessionFactory = getHibernateSessionFactory(resources);
 				//System.out.println("Processing Line:"+lineNum);
 				lineNum++;
 				String line = scanner.next();
@@ -119,7 +120,7 @@ public class ReadDgcaFlights extends getHibernateSession{
 				
 				System.out.println(dgcaDto);
 				
-				TransferDataFlights.transferData(dgcaDto, session);
+				TransferDataFlights.transferData(dgcaDto, sessionFactory);
 				
 			}
 		} catch (FileNotFoundException e) {
