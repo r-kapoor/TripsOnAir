@@ -9,6 +9,13 @@ inputModule.controller('DatepickerCtrl', function ($scope) {
     $scope.dt1 = null;
     $scope.dt2 = null;
   };
+  
+  $scope.dateSelected = function() {
+	  if($scope.dt2 != null) {
+		  $scope.dt2 = $scope.dt1;
+	  }
+  }
+  $scope.dateSelected();
 
   // Disable weekend selection
   $scope.disabled = function(date, mode) {

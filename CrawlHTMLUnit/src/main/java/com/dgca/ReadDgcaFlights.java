@@ -21,6 +21,7 @@ public class ReadDgcaFlights extends getHibernateSession{
 
 	public static void main(String[] args) {
 		String[] resources = {"com/hibernate/FlightSchedule.hbm.xml", "com/hibernate/City.hbm.xml"};
+		SessionFactory sessionFactory = getHibernateSessionFactory(resources);
 		DateFormat formatter = new SimpleDateFormat("hh:mm:ss");
 		File dgcaFile = new File("./ConfigFiles/dgca/flight.csv");
 		try {
@@ -30,7 +31,6 @@ public class ReadDgcaFlights extends getHibernateSession{
 			String originCity = "";
 			while(scanner.hasNext())
 			{
-				SessionFactory sessionFactory = getHibernateSessionFactory(resources);
 				//System.out.println("Processing Line:"+lineNum);
 				lineNum++;
 				String line = scanner.next();
@@ -125,6 +125,8 @@ public class ReadDgcaFlights extends getHibernateSession{
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+			sessionFactory.close();
 		}
 	}
 }
