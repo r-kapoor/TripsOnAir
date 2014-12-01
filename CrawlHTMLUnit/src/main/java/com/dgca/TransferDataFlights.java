@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -24,7 +25,7 @@ public class TransferDataFlights extends getHibernateSession{
 	
 	private static String dataBaseExceptionFile = "target/flights/dataBaseException.txt";
 	private static String dataBaseException="";
-	public static void transferData(DgcaDto dgcaDto,Session session)
+	public static void transferData(DgcaDto dgcaDto,SessionFactory sessionFactory)
 	{
 		System.out.println("Begin transfer");
 		Transaction tr = null;
@@ -40,18 +41,18 @@ public class TransferDataFlights extends getHibernateSession{
 		String carrierType = dgcaDto.getCarrierType();
 		
 		//Getting the city ids of the origin and destination cities
-		String[] resources = {"com/hibernate/FlightSchedule.hbm.xml", "com/hibernate/City.hbm.xml"};
-		Session session1=getHibernateSession(resources);
+		Session session1=getHibernateSession(sessionFactory);
 		int[] cityIDs = getOriginDestinationCityIDs(session1, originCityName, destinationCityName);
 		tr = session1.beginTransaction();
 		session1.flush();
 		tr.commit();
 		tr = null;
+		session1.close();
 
 		boolean needToFetchAgain = false;
 		if(cityIDs[0] == -1 || cityIDs[1] == -1)
 		{
-			Session session2=getHibernateSession(resources);
+			Session session2=getHibernateSession(sessionFactory);
 			if(cityIDs[0] == -1)
 			{
 				needToFetchAgain = true;
@@ -85,16 +86,18 @@ public class TransferDataFlights extends getHibernateSession{
 			session2.flush();
 			tr.commit();
 			tr = null;
+			session2.close();
 		}
 		
 		if(needToFetchAgain)
 		{
-			Session session3=getHibernateSession(resources);
+			Session session3=getHibernateSession(sessionFactory);
 			cityIDs = getOriginDestinationCityIDs(session3, originCityName, destinationCityName);
 			tr = session3.beginTransaction();
 			session3.flush();
 			tr.commit();
 			tr = null;
+			session3.close();
 		}
 		
 		if(cityIDs[0] == -1 || cityIDs[1] == -1)
@@ -116,7 +119,7 @@ public class TransferDataFlights extends getHibernateSession{
 		{
 			try {
 				
-				Session session4=getHibernateSession(resources);
+				Session session4=getHibernateSession(sessionFactory);
 				FlightSchedule flightSchedule = new FlightSchedule();
 				Criteria flightCriteria = session4.createCriteria(FlightSchedule.class);
 				Criterion c1 = Restrictions.eq("originCityID", cityIDs[0]);
@@ -132,8 +135,7 @@ public class TransferDataFlights extends getHibernateSession{
 				tr = session4.beginTransaction();
 				session4.flush();
 				tr.commit();
-				tr = null;
-				
+				tr = null;		
 				
 				
 				if(flightCriteria.list().isEmpty())
@@ -148,12 +150,16 @@ public class TransferDataFlights extends getHibernateSession{
 					flightSchedule.setHops(hops);
 					flightSchedule.setCarrierType(carrierType);
 					
+					
+					Session session = getHibernateSession(sessionFactory);
 					session.save(flightSchedule);
 					
 					tr = session.beginTransaction();
 					session.flush();
 					tr.commit();
 					tr = null;
+					session.close();
+					session4.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import GlobalClasses.getHibernateSession;
 
@@ -39,7 +40,8 @@ public class CrawlIndianRail extends getHibernateSession {
 		URL detailsUrl=new URL("https://www.test2345.com");
 		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 		String resources[] = {"com/hibernate/RailwayStation.hbm.xml","com/hibernate/RailwayTimetable.hbm.xml", "com/hibernate/Trains.hbm.xml"};
-		Session session=getHibernateSession(resources);
+		SessionFactory sessionFactory = getHibernateSessionFactory(resources);
+		Session session=getHibernateSession(sessionFactory);
 		DomElement trainNoDetails;
 		int pagesNo=6;//Need to be set Manually
 		//Set the URL of the page

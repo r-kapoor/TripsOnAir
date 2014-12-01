@@ -2,12 +2,12 @@
 <html>
 
 <head>
-{>"layouts/master/global/header" /}
+
 </head>
 
 <body>
-{>"/angularTest" /}
+{>"layouts/master/input1" /}
 </body>
 
-{>"layouts/master/global/footer" /}
+
 </html>
