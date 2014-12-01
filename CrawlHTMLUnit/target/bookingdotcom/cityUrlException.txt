@@ -13,3 +13,21 @@ Sun Nov 30 03:51:49 IST 2014:http://www.booking.com/searchresults.en-us.html?che
 Error:java.lang.NullPointerException,Error Message:null
 Mon Dec 01 02:00:47 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-31;checkout_year_month_monthday=2015-01-01;city=-2092174;rows=20
 Error:java.lang.NumberFormatException: For input string: "8.9",Error Message:For input string: "8.9"
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=480
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=500
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=520
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=540
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=560
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=580
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=600
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=620
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=640
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com

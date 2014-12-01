@@ -10,13 +10,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
+import org.hibernate.SessionFactory;
+
+import GlobalClasses.getHibernateSession;
+
 /**
  * 
  * @author rajat
  *
  */
 
-public class UrlBuilder {
+public class UrlBuilder  extends getHibernateSession {
 
 	private static String cityBase = "http://www.booking.com/searchresults.en-us.html?";
 	//private static String cityIdFile = "ConfigFiles/bookingdotcom/CityId.txt";
@@ -55,6 +59,10 @@ public class UrlBuilder {
 			Date checkoutDate = addDays(checkinDate,1);
 			String checkOutDate = dateFormat.format(checkoutDate);
 			Scanner in= new Scanner(new File(cityIdFile));
+			
+			String[] resources = {"com/hibernate/HotelsDetails.hbm.xml", "com/hibernate/City.hbm.xml"};
+			SessionFactory sessionFactory=getHibernateSessionFactory(resources);
+			
 			while(in.hasNext())
 			{
 				String cityId=in.next();
@@ -68,10 +76,11 @@ public class UrlBuilder {
 				bookingUrl.city=city;
 				bookingUrl.link=new URL(newUrl);
 				bookingUrl.locality="unknown";
-				Crawlbookingdotcom.getMainLinks(bookingUrl);
+				Crawlbookingdotcom.getMainLinks(bookingUrl,sessionFactory);
 				//Thread.sleep(4000);
 				//break; //only to check flow in less time
 			}
+			sessionFactory.close();
 	}
 	
 	public static URL updateUrl(String url) throws Exception

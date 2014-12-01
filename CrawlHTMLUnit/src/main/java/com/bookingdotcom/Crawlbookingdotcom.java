@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.hibernate.SessionFactory;
+
 import GlobalClasses.HtmlUnitWebClient;
 
 import com.dataTransferObject.BookingdotComDto;
@@ -30,7 +32,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 	private static String hotelUrlsFile = "ConfigFiles/bookingdotcom/allHotelsUrls.txt";
 	private static String exceptionUrlsFile = "target/bookingdotcom/cityUrlException.txt";
 	
-	public static void getMainLinks(BKDCURL bkdcUrl) throws Exception
+	public static void getMainLinks(BKDCURL bkdcUrl,SessionFactory sessionFactory) throws Exception
 	{	
 		String exceptionUrls="";
 		try{
@@ -296,7 +298,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 					//source=1 signifies data is from booking.com
 					bookingdotComDto.setSource(1);
 					//Transfer data into database
-					TransferDataBkdcHibernate.transferData(bookingdotComDto);					
+					TransferDataBkdcHibernate.transferData(bookingdotComDto,sessionFactory);					
 					}
 				}
 			}
@@ -315,11 +317,11 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 		}
 		
 		if(getFlag()==0){
-			getOtherPagesUrl(bkdcUrl,getNum());
+			getOtherPagesUrl(bkdcUrl,getNum(),sessionFactory);
 		}
 }
 	
-	public static void getOtherPagesUrl(BKDCURL url,int num) throws Exception
+	public static void getOtherPagesUrl(BKDCURL url,int num,SessionFactory sessionFactory) throws Exception
 	{
 		int offset=20;
 		setFlag(1);
@@ -332,7 +334,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 			bookingLink.country=url.country;
 			bookingLink.locality="unknown";
 			bookingLink.link=new URL(pageUrl);
-			getMainLinks(bookingLink);
+			getMainLinks(bookingLink,sessionFactory);
 			offset = offset+20;
 		}
 		setFlag(0);

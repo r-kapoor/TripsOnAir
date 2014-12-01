@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -28,21 +29,21 @@ public class TransferDataBkdcHibernate extends getHibernateSession{
 
 	private static String dataBaseExceptionFile = "target/bookingdotcom/dataBaseException.txt";
 	private static String dataBaseException="";
-	public static void transferData(BookingdotComDto bookingdotComDto) throws FileNotFoundException
+	public static void transferData(BookingdotComDto bookingdotComDto,SessionFactory sessionFactory) throws FileNotFoundException
 	{
 		System.out.println("BEGIN transaction");
 		Transaction tr = null;
 		String name=bookingdotComDto.getName();
 		
-		String[] resources = {"com/hibernate/HotelsDetails.hbm.xml", "com/hibernate/City.hbm.xml"};
-		Session session1=getHibernateSession(resources);
+		
+		Session session1=getHibernateSession(sessionFactory);
 		int cityID = getCityID(session1, bookingdotComDto.getCity());
 		tr = session1.beginTransaction();
 		session1.flush();
 		tr.commit();
 		tr = null;
 		session1.close();
-		Session session2=getHibernateSession(resources);
+		Session session2=getHibernateSession(sessionFactory);
 		try{
 			Criteria cr = session2.createCriteria(HotelsDetails.class);
 			Criterion c1 = Restrictions.eq("name",name);
@@ -79,6 +80,7 @@ public class TransferDataBkdcHibernate extends getHibernateSession{
 				hotelDetails.setMaxPersons(bookingdotComDto.getMaxPersons());
 				hotelDetails.setSource(bookingdotComDto.getSource());
 
+				session2.save(hotelDetails);
 				tr = session2.beginTransaction();
 				session2.flush();
 				tr.commit();
