@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 1, 2014 12:56:51 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.HotelsDetails" table="Hotels_Details" catalog="Holiday">
+        <id name="hotelID" type="int">
+            <column name="HotelID" />
+            <generator class="assigned" />
+        </id>
+        <property name="cityID" type="int">
+            <column name="CityID" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="Name" />
+        </property>
+        <property name="locality" type="java.lang.String">
+            <column name="Locality" />
+        </property>
+        <property name="latitude" type="double">
+            <column name="Latitude" />
+        </property>
+        <property name="longitude" type="double">
+            <column name="Longitude" />
+        </property>
+        <property name="rating" type="double">
+            <column name="Rating" />
+        </property>
+        <property name="numReviews" type="int">
+            <column name="NumReviews" />
+        </property>
+        <property name="photoLink" type="java.lang.String">
+            <column name="PhotoLink" />
+        </property>
+        <property name="hotelUrl" type="java.lang.String">
+            <column name="HotelUrl" />
+        </property>
+        <property name="price" type="int">
+            <column name="Price" />
+        </property>
+        <property name="roomType" type="java.lang.String">
+            <column name="RoomType" />
+        </property>
+        <property name="maxPersons" type="int">
+            <column name="MaxPersons" />
+        </property>
+        <property name="source" type="int">
+            <column name="Source" />
+        </property>
+    </class>
+</hibernate-mapping>

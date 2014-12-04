@@ -13,7 +13,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  *
  */
 
-public class HtmlUnitWebClient {
+public class HtmlUnitWebClient extends getHibernateSession{
 
 	public static HtmlPage WebClient(URL url) throws Exception{
 	

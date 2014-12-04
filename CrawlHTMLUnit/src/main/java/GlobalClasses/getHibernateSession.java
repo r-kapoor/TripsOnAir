@@ -19,7 +19,7 @@ public class getHibernateSession {
     	    //conf.addResource("com/hibernate/RailwayStation.hbm.xml").addResource("com/hibernate/RailwayTimetable.hbm.xml").addResource("com/hibernate/Trains.hbm.xml");
     	    sessionFactory = conf.configure("com/hibernate/hibernate.cfg.xml").buildSessionFactory();
         } catch (Throwable ex) {
-            System.err.println("SessionFactory creation failed" + ex);
+            System.err.println("SessionFactory creation failed:" + ex);
             throw new ExceptionInInitializerError(ex);
         }
 
