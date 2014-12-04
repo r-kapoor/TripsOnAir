@@ -72,10 +72,8 @@ public class UrlBuilder  extends getHibernateSession {
 				String newUrl = cityBase+"checkin_year_month_monthday="+checkInDate+";"+"checkout_year_month_monthday="+checkOutDate+";"+"city=-"+Id+";"+"rows=20"; 
 				System.out.println("cityUrl "+newUrl);
 				BKDCURL bookingUrl= new BKDCURL();
-				bookingUrl.country="India";
 				bookingUrl.city=city;
 				bookingUrl.link=new URL(newUrl);
-				bookingUrl.locality="unknown";
 				Crawlbookingdotcom.getMainLinks(bookingUrl,sessionFactory);
 				//Thread.sleep(4000);
 				//break; //only to check flow in less time

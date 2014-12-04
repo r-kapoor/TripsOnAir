@@ -1,11 +1,13 @@
 package com.bookingdotcom;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import org.hibernate.SessionFactory;
 
@@ -146,7 +148,6 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 												String href=detailsEChd.getAttribute("href");
 												String hotelName=detailsEChd.asText().trim();
 												bookingdotComDto.setHotelUrl(baseUrl+href);
-												bookingdotComDto.setCountry(bkdcUrl.country);
 												bookingdotComDto.setCity(bkdcUrl.city);
 												bookingdotComDto.setName(hotelName);
 												//System.out.println("hotelUrl:"+baseUrl+href);
@@ -253,14 +254,35 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 																							System.out
 																									.println("test:"+priceItrElement);
 																								String roomPrice=priceItrElement.asText().trim();
-																								bookingdotComDto.setPrice(Integer.parseInt(roomPrice.replaceAll("[^0-9]","")));
+																								//bookingdotComDto.setPrice(Integer.parseInt(roomPrice.replaceAll("[^0-9]","")));
+																								Scanner st = new Scanner(roomPrice);
+																						        while (!st.hasNextDouble())
+																						        {
+																						            st.next();
+																						        }
+																						        double value = st.nextDouble();
+																						        //System.out.println(value);
+																						        int rmPrice=(int)value;
+																								System.out.println("roomPrice:"+rmPrice);
+																						        bookingdotComDto.setPrice(rmPrice);
+																
 																							}
 																							else if((priceItrElement!=null)&&(priceItrElement.getAttribute("class").contains("price availprice")))
 																							{
 																								System.out
 																										.println("24");
 																								String roomPrice=priceItrElement.asText().trim();
-																								bookingdotComDto.setPrice(Integer.parseInt(roomPrice.replaceAll("[^0-9]","")));
+																								//bookingdotComDto.setPrice(Integer.parseInt(roomPrice.replaceAll("[^0-9]","")));
+																								Scanner st = new Scanner(roomPrice);
+																						        while (!st.hasNextDouble())
+																						        {
+																						            st.next();
+																						        }
+																						        double value = st.nextDouble();
+																						        //System.out.println(value);
+																						        int rmPrice=(int)value;
+																								System.out.println("roomPrice:"+rmPrice);
+																						        bookingdotComDto.setPrice(rmPrice);
 																							}
 																						}
 																					}
@@ -305,7 +327,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 	}
 		catch(Exception e)
 		{
-			exceptionUrls=new Date()+":"+bkdcUrl.link+"\n";
+			exceptionUrls=new Date()+"--"+bkdcUrl.city+"--"+bkdcUrl.link+"\n";
 			System.out.println(bkdcUrl.link+",Error:"+e+",Error Message:"+e.getMessage());
 			exceptionUrls+="Error:"+e+",Error Message:"+e.getMessage()+"\n";		
 			FileOutputStream exception=new FileOutputStream(exceptionUrlsFile,true);
@@ -313,7 +335,10 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 			PrintStream exe=new PrintStream(exception);
 			exe.append(exceptionUrls);
 			exe.close();
-			//Thread.sleep(60000);//sleep for 1 min
+			if(exceptionUrls.contains("UnknownHostException"))
+			{	
+				Thread.sleep(300000);//sleep for 5 min
+			}	
 		}
 		
 		if(getFlag()==0){
@@ -331,8 +356,6 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 			System.out.println("pageUrl "+pageUrl);
 			BKDCURL bookingLink= new BKDCURL();
 			bookingLink.city=url.city;
-			bookingLink.country=url.country;
-			bookingLink.locality="unknown";
 			bookingLink.link=new URL(pageUrl);
 			getMainLinks(bookingLink,sessionFactory);
 			offset = offset+20;
@@ -351,6 +374,7 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 	
 	public static int getFlag() {
 		return flag;
+		//return 1;//only for exception ulrs
 	}
 
 	public static void setFlag(int flag) {
@@ -363,46 +387,28 @@ public class Crawlbookingdotcom extends HtmlUnitWebClient {
 		 * Make the url for city
 		 * Sample url generated:"http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-11-27;checkout_year_month_monthday=2014-11-28;city=-2097701;rows=20"
 		 */
-		UrlBuilder.cityUrlBuilder();	
-		//store all above city wise hotel urls into allHotelsUrls.txt
-		/*String hotelUrl="";
-		for(int j=0;j<mainLinks.size();j++)
+		UrlBuilder.cityUrlBuilder();
+		
+		//Extract data from exception urls
+		/*String[] resources = {"com/hibernate/HotelsDetails.hbm.xml", "com/hibernate/City.hbm.xml"};
+		SessionFactory sessionFactory=getHibernateSessionFactory(resources);
+		Scanner in = new Scanner(new File(exceptionUrlsFile));
+		
+		while(in.hasNext())
 		{
-			BKDCURL link = mainLinks.get(j);
-			//ExtractData.getData(link);
-			hotelUrl=link.country+"&&&"+link.city+"&&&"+link.locality+"&&&"+link.link+"\n";
-			FileOutputStream hotelUrlFile=new FileOutputStream(hotelUrlsFile,true);
-			PrintStream pstream=new PrintStream(hotelUrlFile);
-			pstream.append(hotelUrl);
-			pstream.close();
-			//System.out.println(mainUrls);
-		}*/
-		
-		
-		//For testing
-
-		/*BKDCURL bookingTest= new BKDCURL();
-		bookingTest.link=new URL("http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-05-18;checkout_year_month_monthday=2014-05-19;city=-2098033;rows=20;offset=20");
-		bookingTest.country="India";
-		bookingTest.city="Jaipur";
-		getMainLinks(bookingTest);
-		*/
-//		URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-06-14;checkout=2014-06-15;");
-
-		//URL test = new URL("http://www.booking.com/hotel/in/the-leela-palace-kempinski-new-delhi.en-gb.html?checkin=2014-05-05;checkout=2014-05-07;");
-		//ExtractData.getData(test);
-
-//		ExtractData.getPrices(test);
-		
-		/*URL test1= new URL("http://www.booking.com/searchresults.html?src=index&nflt=&ss_raw=delhi&error_url=http%3A%2F%2Fwww.booking.com%2Findex.en-gb.html%3Fsid%3Debe7d62a1bd79af153bc686482db1ed3%3Bdcid%3D4%3B&dcid=4&lang=en-gb&sid=ebe7d62a1bd79af153bc686482db1ed3&si=ai%2Cco%2Cci%2Cre%2Cdi&ss=New+Delhi%2C+Delhi+NCR%2C+India&checkin_monthday=12&checkin_year_month=2014-6&checkout_monthday=13&checkout_year_month=2014-6&interval_of_time=any&flex_checkin_year_month=any&no_rooms=1&group_adults=2&group_children=0&dest_type=city&dest_id=-2106102&ac_pageview_id=153c4d7352b00060&ac_position=0&ac_suggestion_list_length=5");
-		getMainLinks(test1);
-		*/
-		/*for(int j=0;j<mainLinks.size();j++)
-		{
-			URL link = mainLinks.get(j);
-			ExtractData.getData(link);
-			//mainUrls+=link.toString()+"\n";
-			
-		}*/
+			String line= in.next();
+			if(line.contains("--"))
+			{
+				String ln[]=line.split("--");
+				System.out.println(ln[2]);
+				URL url=new URL(ln[2]);
+				BKDCURL bkdcUrl=new BKDCURL();
+				bkdcUrl.city=ln[1];
+				bkdcUrl.link=url;
+				getMainLinks(bkdcUrl,sessionFactory);
+			}
+		}
+		sessionFactory.close();
+	*/
 	}
 }

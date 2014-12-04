@@ -1,33 +1,61 @@
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=480
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=500
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=520
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=540
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=560
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=580
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=600
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=620
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 01:07:20 IST 2014--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=640
+Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
 
-Sun Nov 30 03:23:07 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2106102;rows=20
-Error:java.lang.NullPointerException,Error Message:null
-Sun Nov 30 03:33:39 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20
-Error:java.lang.NullPointerException,Error Message:null
-Sun Nov 30 03:40:08 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20
-Error:java.lang.NullPointerException,Error Message:null
-Sun Nov 30 03:45:54 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20
-Error:java.lang.NullPointerException,Error Message:null
-Sun Nov 30 03:47:38 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2090174;rows=20;offset=20
-Error:java.lang.NullPointerException,Error Message:null
-Sun Nov 30 03:51:49 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-30;checkout_year_month_monthday=2014-12-31;city=-2106102;rows=20
-Error:java.lang.NullPointerException,Error Message:null
-Mon Dec 01 02:00:47 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2014-12-31;checkout_year_month_monthday=2015-01-01;city=-2092174;rows=20
-Error:java.lang.NumberFormatException: For input string: "8.9",Error Message:For input string: "8.9"
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=480
+Tue Dec 02 02:49:49 IST 2014--Mumbai--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2092174;rows=20;offset=80
 Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=500
+Tue Dec 02 03:22:41 IST 2014--Chennai--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2103041;rows=20;offset=120
 Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=520
+Tue Dec 02 05:18:49 IST 2014--Kochi--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093645;rows=20
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:20:08 IST 2014--Kochi--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093645;rows=20;offset=20
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:21:29 IST 2014--Kochi--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093645;rows=20;offset=40
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:22:43 IST 2014--Kochi--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093645;rows=20;offset=60
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:24:06 IST 2014--Kochi--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093645;rows=20;offset=80
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:25:07 IST 2014--Kochi--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093645;rows=20;offset=100
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:47:27 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:48:45 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=20
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:49:50 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=40
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:51:04 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=60
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:52:13 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=80
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:53:20 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=100
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:54:25 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=120
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:55:30 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=140
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:56:39 IST 2014--Gurgaon--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2096897;rows=20;offset=160
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 05:57:38 IST 2014--Calangute--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2093662;rows=20
+Error:java.lang.IndexOutOfBoundsException: Index: 0, Size: 0,Error Message:Index: 0, Size: 0
+Tue Dec 02 10:44:49 IST 2014--Amritsar--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2088794;rows=20;offset=60
+Error:org.hibernate.exception.JDBCConnectionException: could not extract ResultSet,Error Message:could not extract ResultSet
+Tue Dec 02 10:44:49 IST 2014--Ooty--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2113628;rows=20
 Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=540
-Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=560
-Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=580
-Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=600
-Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=620
-Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
-Tue Dec 02 01:07:20 IST 2014:http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-2106102;rows=20;offset=640
-Error:java.net.UnknownHostException: www.booking.com,Error Message:www.booking.com
+Tue Dec 02 12:03:31 IST 2014--Dharamshala--http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-900051114;rows=20
+Error:com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException: 404 Not Found for http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-900051114;rows=20,Error Message:404 Not Found for http://www.booking.com/searchresults.en-us.html?checkin_year_month_monthday=2015-01-01;checkout_year_month_monthday=2015-01-02;city=-900051114;rows=20
