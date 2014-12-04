@@ -11,10 +11,10 @@ inputModule.controller('DatepickerCtrl', function ($scope) {
   };
   
   $scope.dateSelected = function() {
-	  if($scope.dt2 != null) {
+	  if($scope.dt2 !== null) {
 		  $scope.dt2 = $scope.dt1;
 	  }
-  }
+  };
   $scope.dateSelected();
 
   // Disable weekend selection
@@ -35,8 +35,6 @@ inputModule.controller('DatepickerCtrl', function ($scope) {
     $event.preventDefault();
     $event.stopPropagation();
     $scope.minDate1 = $scope.dt1;
-    console.log('$scope.dt1:'+$scope.dt1);
-    console.log('$scope.dt2:'+$scope.dt2);
     if(opened === 'opened1')
     {
       $scope.opened2 = false;
