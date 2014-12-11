@@ -5,10 +5,10 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, cityData, fo
   $scope.label="Enter the Destination";
 
   $scope.addDestination = function() {
-   $scope.destinationCityList.push($scope.destinationCity); 
-  $scope.destinationCity = null;
-  $scope.label="Enter another Destination";
-   console.log("destinationCityList:"+$scope.destinationCityList);  
+      $scope.destinationCityList.push($scope.destinationCity);
+      $scope.destinationCity = null;
+      $scope.label="Enter another Destination";
+      console.log("destinationCityList:"+$scope.destinationCityList);
   };
 
   $scope.byMatch = function(viewValue) {
