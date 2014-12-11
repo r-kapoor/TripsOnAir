@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.ixigo.DayHourIxigo;
 
-
 public class IxigoJsonDto {
 
 	public String placeName;

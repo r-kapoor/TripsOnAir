@@ -1,0 +1,24 @@
+{
+    "cities": [
+    {
+        "city": "Bangalore",
+        "tier": "1"
+    },
+    {
+        "city": "New Delhi",
+        "tier": "1"
+    },
+    {
+        "city": "Mumbai",
+        "tier": "1"
+    },
+    {
+    	"city": "Hyderabad",
+    	"tier": "1"
+    },
+    {
+    	"city": "Goa",
+    	"tier": "2"
+    }
+    ]
+}

@@ -1,4 +1,4 @@
-var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap']);
+var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider']);
 inputModule.controller('form1Controller', ['$scope', function($scope) {
     $scope.title='Plan your Travel';
     $scope.todos = [

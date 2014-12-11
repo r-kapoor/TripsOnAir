@@ -1,4 +1,4 @@
-inputModule.controller('DatepickerCtrl', function ($scope) {
+inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData) {
   $scope.today = function() {
     $scope.dt1 = new Date();
     $scope.dt2 = null;
@@ -10,12 +10,18 @@ inputModule.controller('DatepickerCtrl', function ($scope) {
     $scope.dt2 = null;
   };
   
-  $scope.dateSelected = function() {
+  $scope.startDateSelected = function() {
 	  if($scope.dt2 !== null) {
 		  $scope.dt2 = $scope.dt1;
 	  }
   };
-  $scope.dateSelected();
+  $scope.startDateSelected();
+
+  $scope.endDateSelected = function() {
+    $rootScope.$emit('formComplete');
+    formData.setStartDate($scope.dt1);
+    formData.setEndDate($scope.dt2);
+  };
 
   // Disable weekend selection
   $scope.disabled = function(date, mode) {

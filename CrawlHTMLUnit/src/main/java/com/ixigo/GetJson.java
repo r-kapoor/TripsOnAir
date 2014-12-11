@@ -151,6 +151,7 @@ public class GetJson {
 									// System.out.println(hoursDataObject.get("days").getAsString());
 									JsonElement daysElement = hoursDataObject
 											.get("days");
+									//System.out.println("daysElement:"+daysElement);
 									JsonArray hoursArray = hoursDataObject.get(
 											"hours").getAsJsonArray();
 									String daysArray[] = {};
@@ -175,7 +176,10 @@ public class GetJson {
 											}
 										}
 									}
-
+//System.out.println("day:"+day);
+									
+									
+									
 									for (int t = 0; t < hoursArray.size(); t++) {
 										//System.out.println("Enters");
 										DayHourIxigo dayHour;
@@ -185,6 +189,7 @@ public class GetJson {
 												.get("open").getAsString();
 										String closingTimeString = hoursObject
 												.get("close").getAsString();
+
 										openingTimeString = getInTimeFormat(openingTimeString);
 										closingTimeString = getInTimeFormat(closingTimeString);
 										Time openTime = Time
@@ -372,6 +377,11 @@ public class GetJson {
 			ixigoJsonDto.setForeignerCharge(pricePPForeign);
 			ixigoJsonDto.setTime2Cover(time2Cover);
 
+			//Transfer data into database
+			
+			
+			
+			
 			// System.out.println(ixigoJsonDto);
 
 			String inFile = "count:" + count + "\n";
@@ -434,7 +444,7 @@ public class GetJson {
 		SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
 		Date date = null;
 		try {
-			date = parseFormat.parse("00:30 PM");
+			date = parseFormat.parse(openingTimeString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;

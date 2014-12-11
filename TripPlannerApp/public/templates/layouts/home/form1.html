@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-
+<script type="text/ng-template" id="customTemplate.html">
+<a style="width:100%">
+<span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+</a>
+</script>
 <div ng-controller="form1Controller" class="jumbotron">
 	<div class="container-fluid ">
 		<div class="row">
@@ -12,31 +16,40 @@
 						</div>
 						<div class="panel-body">
 							<div id='invalid'></div>
+
 							<form role="form">
-								<div class="form-group">
-									<!--<label for="originCity">Origin City</label>-->
-									<input ng-model="originCity" class="form-control" id="originCity"
-										placeholder="Enter the origin">
-								</div>
-								<div class="form-group">
-									<!--<label for="Destcity1">Destination</label>-->
-									<input ng-model="destinationCity" class="form-control" id="Destcity1"
-										placeholder="Enter the destination">
-								</div>
-								<div class="checkbox">
-									<label> <input ng-model="suggestDestinations" type="checkbox"> OR Let us
-										choose your destinations
-									</label>
-								</div>
-								<!--<button type="submit" class="btn btn-default">Submit</button>-->
-								<div ng-controller="DatepickerCtrl">
-									<div class="row">
-										<div class="col-md-6">
-											<button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
+								<div collapse="isOverviewCollapsed">
+									<div ng-controller="AddCityCtrl">
+										<div class="form-group">
+											<!-- <label for="originCity">Origin City</label> -->
+											<input type="text" ng-model="originCity"
+											placeholder="Enter the origin" typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)" class="form-control" >
+										</div>	
+										<div class="form-group">
+											<div class="input-group">
+												<!--<label for="Destcity1">Destination</label>-->
+												<input ng-model="destinationCity" class="form-control"
+												placeholder="{{label}}" typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)">
+												<div class="input-group-addon " ng-click="addDestination()"><i class="glyphicon glyphicon-plus"></i></div>
+											</div>		
+										</div>
+									</div>
+
+
+									<div class="checkbox">
+										<label> <input ng-model="suggestDestinations" type="checkbox"> OR Let us
+											choose your destinations
+										</label>
+									</div>
+									<!--<button type="submit" class="btn btn-default">Submit</button>-->
+									<div ng-controller="DatepickerCtrl">
+										<div class="row form-group">
+											<div class="col-md-6">
+												<button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
 												is-open="opened1" min-date="minDate" max-date="'2015-06-22'"
 												datepicker-options="dateOptions" ng-required="true"
 												close-text="Close" ng-click="open($event,'opened1')"
-												ng-change="dateSelected()">
+												ng-change="startDateSelected()">
 												<div class="row">
 													<div class="col-sm-2 col-md-2">
 														<i class="glyphicon glyphicon-calendar"></i>
@@ -49,7 +62,7 @@
 														</div>
 														<div class="row">
 															<div class="col-sm-2 col-md-4">{{dt1 | date:'EEE'
-																}}</div>
+															}}</div>
 															<div class="col-sm-2 col-md-4">AM</div>
 														</div>
 													</div>
@@ -58,32 +71,70 @@
 										</div>
 										<div class="col-md-6">
 											<button datepicker-popup="dd-MMMM-yyyy" ng-model="dt2"
-												is-open="opened2" min-date="minDate1"
-												max-date="'2015-06-22'" datepicker-options="dateOptions"
-												ng-required="true" close-text="Close"
-												ng-click="open($event,'opened2')">
-												<div class="row">
-													<div class="col-sm-2 col-md-2">
-														<i class="glyphicon glyphicon-calendar"></i>
+											is-open="opened2" min-date="minDate1"
+											max-date="'2015-06-22'" datepicker-options="dateOptions"
+											ng-required="true" close-text="Close"
+											ng-click="open($event,'opened2')" ng-change="endDateSelected()">
+											<div class="row">
+												<div class="col-sm-2 col-md-2">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</div>
+												<div class="col-sm-2 col-md-2">{{dt2 | date:'dd' }}</div>
+												<div class="col-sm-2 col-md-8">
+													<div class="row">
+														<div class="col-sm-2 col-md-1">{{dt2 | date:'MMM'}}</div>
+														<div class="col-sm-2 col-md-1">{{dt2 | date:'yy' }}</div>
 													</div>
-													<div class="col-sm-2 col-md-2">{{dt2 | date:'dd' }}</div>
-													<div class="col-sm-2 col-md-8">
-														<div class="row">
-															<div class="col-sm-2 col-md-1">{{dt2 | date:'MMM'}}</div>
-															<div class="col-sm-2 col-md-1">{{dt2 | date:'yy' }}</div>
-														</div>
-														<div class="row">
-															<div class="col-sm-2 col-md-4">{{dt2 | date:'EEE'
-																}}</div>
-															<div class="col-sm-2 col-md-4">AM</div>
-														</div>
+													<div class="row">
+														<div class="col-sm-2 col-md-4">{{dt2 | date:'EEE'
+														}}</div>
+														<div class="col-sm-2 col-md-4">AM</div>
 													</div>
 												</div>
-											</button>
-										</div>
+											</div>
+										</button>
 									</div>
 								</div>
-							</form>
+							</div>
+						</div>
+						<div collapse="isDetailsCollapsed">
+							<label>Interests</label>
+							<div class="form-group ">
+								<div class="btn-group">
+									<label class="btn btn-primary btn-lg" ng-model="checkModel.adventure" btn-checkbox>
+										<i class="glyphicon glyphicon-plus"></i>
+									</label>
+									<label class="btn btn-primary btn-lg" ng-model="checkModel.wild" btn-checkbox>
+										<i class="glyphicon glyphicon-plus"></i>
+									</label>
+									<label class="btn btn-primary btn-lg" ng-model="checkModel.culture" btn-checkbox>
+										<i class="glyphicon glyphicon-plus"></i>
+									</label>
+									<label class="btn btn-primary btn-lg" ng-model="checkModel.religious" btn-checkbox>
+										<i class="glyphicon glyphicon-plus"></i>
+									</label>
+									<label class="btn btn-primary btn-lg" ng-model="checkModel.romantic" btn-checkbox>
+										<i class="glyphicon glyphicon-plus"></i>
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<!-- <label>Budget</label> -->
+								<div class="col-md-2 col-md-offset-2 ">
+									<slider  ng-model="sliders.sliderValue" min="{{sliderOptions.min}}" step="{{sliderOptions.step}}" max="{{sliderOptions.max}}"></slider>
+
+
+									{{myFormater(sliders.sliderValue) | currency:"&#8377;"}}
+
+
+								</div>
+							</div>
+						</div>
+
+
+
+
+					</form>
 
 
 
@@ -108,16 +159,17 @@
 									</form></td>
 								</tr>
 							</table>
--->
+						-->
 
 
 
-						</div>
 					</div>
-
 				</div>
+
 			</div>
+
 		</div>
+	</div>
 
 
 
@@ -136,7 +188,7 @@
 </select>
 -->
 
-	</div>
-	<!--container-->
+</div>
+<!--container-->
 </div>
 <!--jumbotron-->
