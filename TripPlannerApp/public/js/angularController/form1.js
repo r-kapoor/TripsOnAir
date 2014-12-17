@@ -1,15 +1,19 @@
 var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider']);
-inputModule.controller('form1Controller', ['$scope', function($scope) {
+
+inputModule.run();
+inputModule.controller('form1Controller',  function($scope, $rootScope) {
     $scope.title='Plan your Travel';
     $scope.todos = [
       {text:'learn angular', done:true},
       {text:'build an angular app', done:false}];
- 
+
     $scope.addTodo = function() {
       $scope.todos.push({text:$scope.todoText, done:false});
       $scope.todoText = '';
     };
- 
+
+    $scope.isFormPanelCollapsed = false;
+
     $scope.remaining = function() {
       var count = 0;
       angular.forEach($scope.todos, function(todo) {
@@ -17,7 +21,7 @@ inputModule.controller('form1Controller', ['$scope', function($scope) {
       });
       return count;
     };
- 
+
     $scope.archive = function() {
       var oldTodos = $scope.todos;
       $scope.todos = [];
@@ -25,4 +29,8 @@ inputModule.controller('form1Controller', ['$scope', function($scope) {
         if (!todo.done) $scope.todos.push(todo);
       });
     };
-  }]);
+
+    $rootScope.$on('suggest', function collapseEvents(event, data) {
+        $scope.isFormPanelCollapsed = true;
+    })
+  });
