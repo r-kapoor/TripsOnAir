@@ -70,6 +70,11 @@ angular.module('ui.bootstrap-slider', [])
                     }
                 });
 
+                /*$scope.$watch(attrs.min, function(value) {
+                    options.min = parseFloat(attrs.min);
+                    slider = $(element[0]).slider(options);
+                });*/
+
                 if (angular.isDefined(attrs.ngDisabled)) {
                     $scope.$watch(attrs.ngDisabled, function(value) {
                         if (value) {

@@ -6,6 +6,63 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	$scope.isOverviewCollapsed = false;
 	$scope.suggestDestinations = false;
 
+    $scope.sliders = {};
+    $scope.sliders.sliderValue = 10000;
+
+    $scope.sliderOptions = {
+        min: null,
+        max: 100000,
+        step: 100
+    };
+
+    $scope.sliders.thirdSliderValue = 0;
+
+    $scope.suggestDestinations = function() {
+        formData.setBudget($scope.sliders.sliderValue);
+        formData.setTastes($scope.checkModel);
+
+        $rootScope.$emit('suggest');
+    };
+
+    $scope.myFormater = function(value) {
+        return value;
+    };
+
+    $scope.tripStartTime = {
+        morning : false,
+        evening : false
+    };
+
+    $scope.tripEndTime = {
+        morning : false,
+        evening : false
+    };
+
+    $scope.$watch('tripStartTime', function startTimeSelected() {
+        formData.setTripStartTime($scope.tripStartTime);
+        $rootScope.$emit('selectionDone');
+    }, true);
+    $scope.$watch('tripEndTime', function endTimeSelected() {
+        formData.setTripEndTime($scope.tripEndTime);
+        $rootScope.$emit('selectionDone');
+    }, true);
+
+    $rootScope.$on('selectionDone', function checkAndShowOtherInputs() {
+
+        var startTimeSet=(formData.getTripStartTime()!=null)&&(formData.getTripStartTime().morning == true || formData.getTripStartTime().evening == true);
+        var endTimeSet=(formData.getTripEndTime()!=null)&&(formData.getTripEndTime().morning == true || formData.getTripEndTime().evening == true);
+        var originSet=formData.getOrigin()!=null;
+        var destinationSet=formData.getDestinations().length;
+        if(formData.getStartDate() !== null && formData.getEndDate() !== null && startTimeSet && endTimeSet && originSet && destinationSet) {
+            $rootScope.$emit('formComplete');
+        }
+        else
+        {
+            //notify for other inputs
+            console.log("please enter all inputs");
+        }
+    });
+
 	$rootScope.$on('formComplete', function collapseEvents(event, data) {
     	$scope.isOverviewCollapsed = true;
         setTimeout(function () {
@@ -15,23 +72,31 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
   	});
 
+    $scope.showOtherInputs = function() {
+        $rootScope.$emit('formComplete');
+    };
+
   	$scope.getLocation = function(queryString, deferred) {
-            $http.jsonp(queryString)
+            $http.get(queryString)
             .success(
                 function onLocationFound(data, status) {
-                    deferred[0].resolve(data);
+                    deferred.resolve(data);
                 })
             .error(
                 function(data, status) {
                     console.log(data || "Request failed");
-                    deferred[0].reject("Request Failed for:" + queryString);
+                    deferred.reject("Request Failed for:" + queryString);
             });
      };
 
      $scope.locationQueryString = function(city) {
          console.log('http://maps.googleapis.com/maps/api/geocode/json?address='+city+'&sensor=true&callback=JSON_CALLBACK');
-         return 'http://maps.googleapis.com/maps/api/geocode/json?callback=JSON_CALLBACK&address='+city+'&sensor=true&';
+         return 'http://maps.googleapis.com/maps/api/geocode/json?address='+city+'&sensor=true';
      };
+
+    $scope.checkBudget = function() {
+        console.log($scope.sliders.sliderValue);
+    };
 
     $scope.getDistance = function(originLat, originLong, destinationLat, destinationLong) {
         var R = 6371;
@@ -94,21 +159,22 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     $scope.getFareFromTier = function(tier) {
         switch(tier){
         case "1":
-            return numofDays*1500;
+            return 1500;
         case "2":
-            return numofDays*1000;
+            return 1000;
         case "3":
-            return numofDays*750;
+            return 750;
         }
     };
 
-    $scope.getAccommodationFoodFare = function(cities) {
+    $scope.getAccommodationFoodFare = function(cities, numOfDays) {
         var accommodationFoodFare = 0;
         var count=0;
+        var numOfDaysInEachCity = Math.ceil(numOfDays / cities.length); //Equally dividing the days in each city
 
         angular.forEach(cities, function(city, indexCity) {
             if(city.tier) {
-                accommodationFoodFare += $scope.getFareFromTier(city.tier);
+                accommodationFoodFare += numOfDaysInEachCity * $scope.getFareFromTier(city.tier);
                 count++;
             }
         });
@@ -128,7 +194,9 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         fare += $scope.getTravelFare(totalDistance, numOfDays, fare);
 
         //Now calculate approx. accommodation and food fare according to the destination city
-        fare += $scope.getAccommodationFoodFare(destinations);
+        fare += $scope.getAccommodationFoodFare(destinations, numOfDays);
+
+        return fare;
 
     };
 
@@ -155,13 +223,13 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
                 $q.all(promise)
                     .then(
-                    function onQuerySuccessful(result) {
+                    function onQuerySuccessful(results) {
                         var latitudes = [];
                         var longitudes = [];
                         var totalDistance = 0;
-                        angular.forEach(result, function (result, index) {
-                            latitudes[index] = result[i][0].results[0].geometry.location.lat;
-                            longitudes[index] = result[i][0].results[0].geometry.location.lng;
+                        angular.forEach(results, function (result, index) {
+                            latitudes[index] = result.results[0].geometry.location.lat;
+                            longitudes[index] = result.results[0].geometry.location.lng;
                             if (index > 0) {
                                 totalDistance += parseInt($scope.getDistance(latitudes[index - 1], longitudes[index - 1], latitudes[index], longitudes[index]));
                             }
@@ -170,7 +238,11 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
                         var totalFare = $scope.getBudget(origin, destinations, totalDistance, numOfDays);
 
+
                         $scope.sliderOptions.min = parseInt(totalFare);
+                        //$scope.$render();
+                        console.log($scope.sliderOptions.min);
+                        $scope.sliders.sliderValue = $scope.sliderOptions.min;
 
                     },
                     function onQueryFailure(result) {
@@ -198,19 +270,6 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     	romantic: false
   	};
 
-		$scope.sliders = {};
-		$scope.sliders.sliderValue = 10000;
 
-		$scope.sliderOptions = {
-			min: 0,
-			max: 100000,
-			step: 100
-		};
-
-        $scope.sliders.thirdSliderValue = 0;
-
-        $scope.myFormater = function(value) {
-            return value;
-        };
 
 });

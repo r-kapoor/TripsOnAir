@@ -2,11 +2,11 @@
  * @author rajat
  * return range of travel
  * Algo: 	1. Find whether user can travel by flight or not by comparing user budget with total possible budget if he travels by flight
- * 			2. If user can travel by flight then return the possible range of travel acco. to the type of flight 
+ * 			2. If user can travel by flight then return the possible range of travel acco. to the type of flight
  * 			3. Otherwise, calculate range with other mode of travels
  */
 
-function getRange(budget, numDays,callback){
+function getRange(budget, startDate, startTime, endDate, endTime, callback){
 
 	var otherFgtFare=2500;//per day acco and food fare if travel by flight
 	var otherModeFare=1000;//per day acco and food fare if travel by train or bus
@@ -14,32 +14,45 @@ function getRange(budget, numDays,callback){
 	var avgSpeed=55; // average speed of travel in kmph by train/bus
 	var trainFare=1000;//min round trip fare for train
 	var flightDist=0,otherDist=0,timeAvailableDist=0;
-	
-	var flightBudget=budget-(otherFgtFare*numDays);
-	var otherBudget=budget-(otherModeFare*numDays);
+    var totalTimeOfTrip;
+    if((endTime.morning) &&(startTime.evening))
+    {
+        totalTimeOfTrip=((endDate.getTime()-startDate.getTime())/(1000*60*60))-12;
+    }
+    else if((endTime.evening) &&(startTime.morning))
+    {
+        totalTimeOfTrip=((endDate.getTime()-startDate.getTime())/(1000*60*60))+12;
+    }
+    else
+    {
+        totalTimeOfTrip=((endDate.getTime()-startDate.getTime())/(1000*60*60));
+    }
+	var flightBudget=budget-(otherFgtFare*(totalTimeOfTrip/12));
+	var otherBudget=budget-(otherModeFare*(totalTimeOfTrip/12));
 	console.log("flightBudget "+flightBudget);
 	if((5000<flightBudget)&&(flightBudget<=8000))
 	{
 		flightDist=flightBudget-4400;
 	}
-	
+
 	else if(flightBudget>8000)
 	{
-		flightDist=((flightBudget/8000)*(8000-4400))+((flightBudget%8000)-4400);		
+		flightDist=((flightBudget/8000)*(8000-4400))+((flightBudget%8000)-4400);
 	}
 
 	otherDist=((0.75)*otherBudget)-320;
-	
-	var totalTravelTime=(numDays/2)*24;//round trip travel time should be less then 50% of the total time for trip
+
+
+    var totalTravelTime=totalTimeOfTrip/2;//round trip travel time should be less then 50% of the total time for trip
 	timeAvailableDist=((totalTravelTime/2)*avgSpeed);
 
 	console.log(flightDist+","+otherDist+","+timeAvailableDist);
-	
+
 	callback(Math.max(Math.min(otherDist,timeAvailableDist),flightDist));
-	
-	
-	
-	
+
+
+
+
 	/*if((fgt1Fare+(otherFgtFare*numDays))<budget)
 		{
 			callback(range1);

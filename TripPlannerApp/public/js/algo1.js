@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * @author rajat
  * Gelocation finds the lat/long of the inputs & subsequently finds the distance followed by approximate budget
  * TODO:Change tellusBudget box value if geolocation is called multiple times
- */	
+ */
 
 var countOfCall=0;
 function geolocation()
-{		
+{
 	var origin=document.getElementById("origin").value;
 	var startDate=document.getElementById("startdate").value;
 	var endDate=document.getElementById("enddate").value;
@@ -16,7 +16,7 @@ function geolocation()
 	var len=destElements.length;
 	if((origin!="")&&(startDate!="")&&(endDate!="")&&(destElements[0]!="")&&(!bool)&&(origin!="Enter a city")&&(destElements[0]!="Enter a city"))
 	{
-		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true"; 
+		var originLocation = "http://maps.googleapis.com/maps/api/geocode/json?address="+origin+"&sensor=true";
 		var diff = Math.abs(new Date(endDate)-new Date(startDate));
 		var numofDays=diff/(1000*60*60*24);
 		var destLocations=[];var city=[];
@@ -32,24 +32,24 @@ function geolocation()
 
 		$.when.apply(this,arg).done(function(){
 			console.log("data1 "+arguments[0]);
-			console.log("data2 "+arguments[1]);	
+			console.log("data2 "+arguments[1]);
 			i=0;
 			var lat=[];var long=[];var dist=0;
 			while(i<len+1)
-			{	
+			{
 				lat[i]=arguments[i][0].results[0].geometry.location.lat;
 				long[i]=arguments[i][0].results[0].geometry.location.lng;
 				console.log(lat[i]+","+long[i]);
 				if(i>0)
 				{
-					dist+=parseInt(distance(lat[i-1],long[i-1],lat[i],long[i],"K"));
+					totalDistance+=parseInt(distance(lat[i-1],long[i-1],lat[i],long[i],"K"));
 				}
 				i++;
 			}
 
-			dist+=parseInt(distance(lat[0],long[0],lat[len],long[len],"K"));
-			console.log("dist "+dist);
-				budgetCalc(origin,city,dist,numofDays,function(budget){
+			totalDistance+=parseInt(distance(lat[0],long[0],lat[len],long[len],"K"));
+			console.log("dist "+totalDistance);
+				budgetCalc(origin,city,totalDistance,numofDays,function(budget){
 				console.log("budget "+budget);
 
 				//first make all enable
@@ -69,7 +69,7 @@ function geolocation()
 				{
 					document.getElementById("range").options[1].disabled=true;
 					document.getElementById("range").options[2].disabled=true;
-				}	
+				}
 				else
 				{
 					document.getElementById("range").options[1].disabled=true;
@@ -106,42 +106,42 @@ function geolocation()
 
 function distance(orgLat, orgLong, destLat, destLong, unit) {
 
-	var R = 6371;  
-	var dLat = (destLat-orgLat)*Math.PI/180;  
-	var dLon = (destLong-orgLong)*Math.PI/180;   
-	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +  
-	Math.cos(orgLat*Math.PI/180) * Math.cos(destLat*Math.PI/180) *   
-	Math.sin(dLon/2) * Math.sin(dLon/2);   
-	var c = 2 * Math.asin(Math.sqrt(a));   
-	var d = R * c; 
+	var R = 6371;
+	var dLat = (destLat-orgLat)*Math.PI/180;
+	var dLon = (destLong-orgLong)*Math.PI/180;
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+	Math.cos(orgLat*Math.PI/180) * Math.cos(destLat*Math.PI/180) *
+	Math.sin(dLon/2) * Math.sin(dLon/2);
+	var c = 2 * Math.asin(Math.sqrt(a));
+	var d = R * c;
 	return d;
 }
 
 function budgetCalc(origin,destination,dist,numofDays,display)
 {
-	
+
 	var fare=0;
 	var avgSpeed = 60;//kmph
 	//calculate average non-flight travel time round trip
-	var nFlgtTime = (dist/avgSpeed);
+	var nFlgtTime = (totalDistance/avgSpeed);
 	var totalTime = 24*numofDays;
 	//if avg non-flight travel time is 50% more than non-travel time then go with flight else train or bus or cab
 
 	if((nFlgtTime*100)/totalTime>=50)
 	{//travel by flight
-		if(dist<1500)
+		if(totalDistance<1500)
 		{
 			fare+=7000;
 		}
-		else if(dist<2000)
+		else if(totalDistance<2000)
 		{
 			fare+=10000;
 		}
-		else if(dist<2500)
+		else if(totalDistance<2500)
 		{
 			fare+=13000;
 		}
-		else if(dist<3000)
+		else if(totalDistance<3000)
 		{
 			fare+=18000;
 		}
@@ -151,20 +151,20 @@ function budgetCalc(origin,destination,dist,numofDays,display)
 		}
 	}
 	else
-	{		
-		if(dist<1500)
+	{
+		if(totalDistance<1500)
 		{
 			fare+=1000;//round trip min fare
 		}
-		else if(dist<2000)
+		else if(totalDistance<2000)
 		{
 			fare+=3000;
 		}
-		else if(dist<2500)
+		else if(totalDistance<2500)
 		{
 			fare+=4000;
 		}
-		else if(dist<3000)
+		else if(totalDistance<3000)
 		{
 			fare+=5000;
 		}
@@ -185,7 +185,7 @@ function budgetCalc(origin,destination,dist,numofDays,display)
 		case "2":
 			fare+=numofDays*1000;
 			break;
-		case "3":	
+		case "3":
 			fare+=numofDays*750;
 			break;
 		}
@@ -207,7 +207,7 @@ function updateFare(city, fare,display, calculateFare)
 				count++;
 				break;
 				}
-			}			
+			}
 			if(count==city.length){
 				return false;
 			}

@@ -1,181 +1,211 @@
 <!DOCTYPE html>
 <script type="text/ng-template" id="customTemplate.html">
-<a style="width:100%">
-<span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
-</a>
+    <a style="width:100%">
+        <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    </a>
 </script>
-<div ng-controller="form1Controller" class="jumbotron">
-	<div class="container-fluid ">
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div ng-controller="KuberController">
-				<div class="col-md-4">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h4 class="panel-title">{{title}}</h4>
-						</div>
-						<div class="panel-body">
-							<div id='invalid'></div>
+<div ng-controller="form1Controller" class="jumbotron" collapse="isFormPanelCollapsed">
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div ng-controller="KuberController">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{title}}</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div id='invalid'></div>
 
-							<form role="form">
-								<div collapse="isOverviewCollapsed">
-									<div ng-controller="AddCityCtrl">
-										<div class="form-group">
-											<!-- <label for="originCity">Origin City</label> -->
-											<input type="text" ng-model="originCity"
-											placeholder="Enter the origin" typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)" class="form-control" >
-										</div>	
-										<div class="form-group">
-											<div class="input-group">
-												<!--<label for="Destcity1">Destination</label>-->
-												<input ng-model="destinationCity" class="form-control"
-												placeholder="{{label}}" typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)">
-												<div class="input-group-addon " ng-click="addDestination()"><i class="glyphicon glyphicon-plus"></i></div>
-											</div>		
-										</div>
-									</div>
+                            <form role="form">
+                                <div collapse="isOverviewCollapsed">
+                                    <div ng-controller="AddCityCtrl">
+                                        <div class="form-group">
+                                            <!-- <label for="originCity">Origin City</label> -->
+                                            <input type="text" id="originId" ng-model="originCity" ng-blur="originSelected()" tooltip="Please Enter Correct Value"  tooltip-trigger="{{getTriggerOn()}}" tooltip-placement="right"
+                                                   placeholder="Enter the origin" typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)" class="form-control" >
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <!--<label for="Destcity1">Destination</label>-->
+                                                <input ng-model="destinationCity" ng-blur="destinationSelected()" class="form-control" tooltip="Please Enter Correct Value"  tooltip-trigger="{{{true: '', false: 'blur'}[isDestinationValid()]}}" tooltip-placement="right"
+                                                       placeholder="{{label}}" typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)">
+                                                <div class="input-group-addon " ng-click="addDestination()"><i class="glyphicon glyphicon-plus"></i></div>
+                                            </div>
+                                            <h5 class="text-center">
+                                                -- OR --
+                                            </h5>
 
+                                            <div class="checkbox text-center">
+                                                <label> <input ng-model="suggestDestinations" type="checkbox"><em>Help me choose destinations</em>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
 
-									<div class="checkbox">
-										<label> <input ng-model="suggestDestinations" type="checkbox"> OR Let us
-											choose your destinations
-										</label>
-									</div>
-									<!--<button type="submit" class="btn btn-default">Submit</button>-->
-									<div ng-controller="DatepickerCtrl">
-										<div class="row form-group">
-											<div class="col-md-6">
-												<button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
-												is-open="opened1" min-date="minDate" max-date="'2015-06-22'"
-												datepicker-options="dateOptions" ng-required="true"
-												close-text="Close" ng-click="open($event,'opened1')"
-												ng-change="startDateSelected()">
-												<div class="row">
-													<div class="col-sm-2 col-md-2">
-														<i class="glyphicon glyphicon-calendar"></i>
-													</div>
-													<div class="col-sm-2 col-md-2">{{dt1 | date:'dd' }}</div>
-													<div class="col-sm-2 col-md-8">
-														<div class="row">
-															<div class="col-sm-2 col-md-1">{{dt1 | date:'MMM'}}</div>
-															<div class="col-sm-2 col-md-1">{{dt1 | date:'yy' }}</div>
-														</div>
-														<div class="row">
-															<div class="col-sm-2 col-md-4">{{dt1 | date:'EEE'
-															}}</div>
-															<div class="col-sm-2 col-md-4">AM</div>
-														</div>
-													</div>
-												</div>
-											</button>
-										</div>
-										<div class="col-md-6">
-											<button datepicker-popup="dd-MMMM-yyyy" ng-model="dt2"
-											is-open="opened2" min-date="minDate1"
-											max-date="'2015-06-22'" datepicker-options="dateOptions"
-											ng-required="true" close-text="Close"
-											ng-click="open($event,'opened2')" ng-change="endDateSelected()">
-											<div class="row">
-												<div class="col-sm-2 col-md-2">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</div>
-												<div class="col-sm-2 col-md-2">{{dt2 | date:'dd' }}</div>
-												<div class="col-sm-2 col-md-8">
-													<div class="row">
-														<div class="col-sm-2 col-md-1">{{dt2 | date:'MMM'}}</div>
-														<div class="col-sm-2 col-md-1">{{dt2 | date:'yy' }}</div>
-													</div>
-													<div class="row">
-														<div class="col-sm-2 col-md-4">{{dt2 | date:'EEE'
-														}}</div>
-														<div class="col-sm-2 col-md-4">AM</div>
-													</div>
-												</div>
-											</div>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div collapse="isDetailsCollapsed">
-							<label>Interests</label>
-							<div class="form-group ">
-								<div class="btn-group">
-									<label class="btn btn-primary btn-lg" ng-model="checkModel.adventure" btn-checkbox>
-										<i class="glyphicon glyphicon-plus"></i>
-									</label>
-									<label class="btn btn-primary btn-lg" ng-model="checkModel.wild" btn-checkbox>
-										<i class="glyphicon glyphicon-plus"></i>
-									</label>
-									<label class="btn btn-primary btn-lg" ng-model="checkModel.culture" btn-checkbox>
-										<i class="glyphicon glyphicon-plus"></i>
-									</label>
-									<label class="btn btn-primary btn-lg" ng-model="checkModel.religious" btn-checkbox>
-										<i class="glyphicon glyphicon-plus"></i>
-									</label>
-									<label class="btn btn-primary btn-lg" ng-model="checkModel.romantic" btn-checkbox>
-										<i class="glyphicon glyphicon-plus"></i>
-									</label>
-								</div>
-							</div>
-							<div class="form-group">
-								<!-- <label>Budget</label> -->
-								<div class="col-md-2 col-md-offset-2 ">
-									<slider  ng-model="sliders.sliderValue" min="{{sliderOptions.min}}" step="{{sliderOptions.step}}" max="{{sliderOptions.max}}"></slider>
+                                    <!--<button type="submit" class="btn btn-default">Submit</button>-->
+                                    <label></label>
+                                    <div ng-controller="DatepickerCtrl">
+                                        <div class="row form-group">
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
+                                                        is-open="opened1" min-date="minDate" max-date="'2015-06-22'"
+                                                        datepicker-options="dateOptions" ng-required="true"
+                                                        close-text="Close" ng-click="open($event,'opened1')"
+                                                        ng-change="startDateSelected()">
+                                                    <div class="row">
+                                                        <div class="col-sm-1 col-md-1 col-xs-1 h4">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </div>
+                                                        <div class="col-sm-1 col-md-1 col-xs-1 h4">{{dt1 | date:'dd' }}</div>
+                                                        <div class="col-sm-2 col-md-2 col-xs-2">
+                                                            <div class="row">
+                                                                <div class="col-sm-1 col-md-1 col-xs-1">{{dt1 | date:'MMM'}}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-1 col-md-1 col-xs-1">{{dt1 | date:'EEE'}}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-primary" ng-model="tripStartTime.morning" btn-checkbox>
+                                                        <i class="glyphicon glyphicon-plus"></i>
+                                                    </label>
+                                                    <label class="btn btn-primary" ng-model="tripStartTime.evening" btn-checkbox>
+                                                        <i class="glyphicon glyphicon-minus"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                                <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt2"
+                                                        is-open="opened2" min-date="minDate1"
+                                                        max-date="'2015-06-22'" datepicker-options="dateOptions"
+                                                        ng-required="true" close-text="Close"
+                                                        ng-click="open($event,'opened2')" ng-change="endDateSelected()">
+                                                    <div class="row">
+                                                        <div class="col-sm-2 col-md-2 col-xs-2 h4">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </div>
+                                                        <div class="col-sm-2 col-md-2 col-xs-2 {{heading}}">{{(dt2 | date:'dd') || 'Select'}}</div>
+                                                        <div class="col-sm-2 col-md-2 col-xs-2">
+                                                            <div class="row">
+                                                                <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 | date:'MMM' }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 | date:'EEE'}}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-primary" ng-model="tripEndTime.morning" btn-checkbox>
+                                                        <i class="glyphicon glyphicon-plus"></i>
+                                                    </label>
+                                                    <label class="btn btn-primary" ng-model="tripEndTime.evening" btn-checkbox>
+                                                        <i class="glyphicon glyphicon-minus"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div collapse="isDetailsCollapsed">
+                                    <label>Choose Interests</label>
+                                    <div class="form-group ">
+                                        <div class="btn-group">
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.adventure" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.wild" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.culture" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.religious" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.romantic" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.nature" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
+                                            <label class="btn btn-primary btn-lg" ng-model="checkModel.family" btn-checkbox>
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </label>
 
-
-									{{myFormater(sliders.sliderValue) | currency:"&#8377;"}}
-
-
-								</div>
-							</div>
-						</div>
-
-
-
-
-					</form>
-
-
-
-							<!--
-							<table id="inptable">
-								<tr id="TextBoxDiv">	
-									<td ><label>Origin : </label></td>
-									<td><input type='text' class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>	
-								</tr>
-								<tr id="TextBoxDiv1">
-									<td><label>Destination #1 : </label></td>
-									<td><input type='text' class="typeahead tt-query destination" id='textbox1'></td>
-									<td></td>
-									<td><div id="addButton" style="cursor:pointer" >Add</div></td>
-								</tr>
-
-								<tr>
-									<td></td>
-									<td>
-									<form>
-									<input type="checkbox" name="" value="" onclick="choose()"> OR Let us choose your destinations<br>
-									</form></td>
-								</tr>
-							</table>
-						-->
+                                        </div>
+                                    </div>
+                                    <label>Budget Per Person</label>
+                                    <div class="form-group">
+                                        <!-- <label>Budget</label> -->
+                                        <div class="col-md-12 text-center ">
+                                            <slider  ng-model="sliders.sliderValue" min="{{sliderOptions.min}}" step="{{sliderOptions.step}}" max="{{sliderOptions.max}}"></slider>
 
 
+                                            {{myFormater(sliders.sliderValue) | currency:"&#8377;"}}
 
-					</div>
-				</div>
 
-			</div>
-
-		</div>
-	</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <button type="button" class="btn btn-primary" ng-model="singleModel" ng-click="suggestDestinations()" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                                            Single Toggle
+                                        </button>
+                                    </div>
+                                </div>
 
 
 
 
+                            </form>
 
-		<!--
+
+
+                            <!--
+                            <table id="inptable">
+                                <tr id="TextBoxDiv">
+                                    <td ><label>Origin : </label></td>
+                                    <td><input type='text' class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>
+                                </tr>
+                                <tr id="TextBoxDiv1">
+                                    <td><label>Destination #1 : </label></td>
+                                    <td><input type='text' class="typeahead tt-query destination" id='textbox1'></td>
+                                    <td></td>
+                                    <td><div id="addButton" style="cursor:pointer" >Add</div></td>
+                                </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                    <form>
+                                    <input type="checkbox" name="" value="" onclick="choose()"> OR Let us choose your destinations<br>
+                                    </form></td>
+                                </tr>
+                            </table>
+                        -->
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+        <!--
 <p>Start Date: <input type="text" id="startdate"></p>
 <select id="stTime" name="startTime">
 <option value="morning">Morning</option>
@@ -188,7 +218,11 @@
 </select>
 -->
 
-</div>
-<!--container-->
+    </div>
+    <!--container-->
 </div>
 <!--jumbotron-->
+<div>
+    <div style="height:100%" ng-include src="'templates/layouts/home/destinationsSuggest.html'"></div>
+</div>
+

@@ -2,7 +2,7 @@
  * @author rahul and rajat
  * TODO: change the class through jq in afterscroll function
  *	Test Cases:
- *			1)If a city is selected then 
+ *			1)If a city is selected then
  *				a)its color in list should be green;
  *				b)check if the all of the cities of groups selected or not(through selectGroupIfAllCitiesSelected() function),if yes then group color in the list should be green
  *				c)Make the cities/groups red which can't be covered now(through update() function)
@@ -25,19 +25,19 @@
 	var distRemaining=0;
 
 	var cityData=function(cityId,lat,long){
-		
+
 		this.cityId=cityId;
 		this.lat=lat;
 		this.long=long;
 	}
-	
+
 	function onFirstSelection()
 	{
 		var div = document.createElement('div');
 		div.innerHTML='YOUR SELECTED DESTINATIONS:';
 		div.id="selected-top";
 		document.getElementById("selectedDest").appendChild(div);
-		
+
 		//Append the submit button
 		var submitBtn = document.createElement("BUTTON");
 		var buttonText = document.createTextNode("Submit");
@@ -45,9 +45,9 @@
 		submitBtn.setAttribute("id","nextPageSubmitOnChoose");
 		submitBtn.setAttribute("onClick","dtoOnChoose()");
 		var input2Form=document.getElementById("selectedDest");
-		input2Form.appendChild(submitBtn);	
+		input2Form.appendChild(submitBtn);
 	}
-	
+
 	$("#suggestedDest,#suggestedNearbyDest").on("click",".destination",function () {
 
 		orgLat=$("#TextBoxDiv").data("orgLat");
@@ -70,7 +70,7 @@
 		{
 			onFirstSelection();
 		}
-		
+
 		if(selectedCityData.length>=10){
             alert("Only 10 destinations are allowed");
             return false;
@@ -84,7 +84,7 @@
 				//document.getElementById("selectedDest").appendChild(tableDes);
 				var submitBtn=document.getElementById("nextPageSubmit");
 				document.getElementById("selectedDest").insertBefore(tableDes,submitBtn);
-				
+
 				var cityselected = document.createElement('td');
 				cityselected.innerHTML=cityName;
 				cityselected.id="selected-"+cityId;
@@ -96,20 +96,20 @@
 				canceldiv.className='cancel';
 				canceldiv.style.cursor="pointer";
 				document.getElementById(tableDes.id).appendChild(canceldiv);
-				
-				/**Push the selected city data into the selectedCityData array */	
+
+				/**Push the selected city data into the selectedCityData array */
 				console.log("cityid:"+cityId);
 				console.log("lat ::"+$("#"+cityId).data("lat"));
 				var lat=$("#"+cityId).data("lat");
 				var long=$("#"+cityId).data("long");
 				var city_data = new cityData(cityId, lat, long);
 				selectedCityData.push(city_data);
-				
+
 				//if all the cities of the group get selected then select the group
 				selectGroupIfAllCitiesSelected();
-				
+
 				//Make the cities/groups red which can't be covered now
-				update(1,0);	
+				update(1,0);
 			}
 		}
 		suggestDestinationsAccordingToSelections(0);
@@ -117,7 +117,7 @@
 
 	$("#suggestedDest").on("click",".group",function () {
 
-		//Initialize origin lat/long and range that can be covered by the user 
+		//Initialize origin lat/long and range that can be covered by the user
 		orgLat=$("#TextBoxDiv").data("orgLat");
 		orgLong=$("#TextBoxDiv").data("orgLong");
 		range=$("#TextBoxDiv").data("range");
@@ -127,12 +127,12 @@
 		document.getElementById(groupId).style.cursor="initial";
 		document.getElementById(groupId).style.color="green";
 		var numCity=$("#"+groupId).data("numofcities");
-		
+
 		if(selectedCityData.length==0)
 		{
 			onFirstSelection();
 		}
-		
+
 		for(var i=0;i<numCity;i++)
 		{
 			var cityId=$("#"+groupId).data("cityId"+i);
@@ -164,7 +164,7 @@
 					canceldiv.className='cancel';
 					canceldiv.style.cursor="pointer";
 					document.getElementById(tableDes.id).appendChild(canceldiv);
-					
+
 
 				//Add the cityId in the selectedCityData array
 				var lat=$("#"+groupId).data("lat"+i);
@@ -173,7 +173,7 @@
 				selectedCityData.push(city_data);
 			}
 		}
-		
+
 		//if all the cities of the group get selected then select the group
 		selectGroupIfAllCitiesSelected();
 		//Make the cities/groups red which can't be covered now
@@ -192,12 +192,12 @@
 			cityElement.style.cursor="pointer";
 			cityElement.style.color="black";
 		}
-		
+
 		//if the cancel city is in the selected group then make the group unselected
 		var groupList=$(document.getElementsByClassName('group-selected'));
 		var i=0,j;
 		while(i<groupList.length)
-		{	
+		{
 			var jq = $([1]);
 			jq.context = jq[0] = groupList[i];
 			var groupId=jq.attr('id');
@@ -225,7 +225,7 @@
 			document.getElementById("nextPageSubmit").remove();
 		}
 		update(1,0);
-		
+
 		//suggestDestinationsAccordingToSelections();
      });
 
@@ -238,25 +238,25 @@
 		var groupList=$(document.getElementsByClassName('group'));
 		LoadedCityLen=cityList.length;
 		LoadedGroupLen=groupList.length;
-		
+
 		var startLat=orgLat;var startLong=orgLong;var endLat,endLong,distCovered=0;
 		//find the distance from origin to last selected city
 		for(var k=0;k<selectedCityData.length;k++){
-			
+
 			endLat=selectedCityData[k].lat;
 			endLong=selectedCityData[k].long;
 			//console.log("start and end lat/long:"+startLat+","+startLong+","+endLat+","+endLong);
-			dist=parseInt(calcDist(startLat,startLong,endLat,endLong));
-			//console.log("dist for city"+(k-1)+","+k+":"+dist);
-			distCovered=distCovered+parseInt(dist);
+			totalDistance=parseInt(calcDist(startLat,startLong,endLat,endLong));
+			//console.log("totalDistance for city"+(k-1)+","+k+":"+totalDistance);
+			distCovered=distCovered+parseInt(totalDistance);
 			startLat=endLat;startLong=endLong;
 		}
 
 		distRemaining=range-distCovered;
-		
+
 		//console.log("From origin to last selected city "+distCovered);
 		//console.log("Lat selected Lat/long:"+endLat+","+endLong);
-		
+
 		while (i < parseInt(LoadedCityLen)) {
 			var jq = $([1]);
 			jq.context = jq[0] = cityList[i];
@@ -266,7 +266,7 @@
 			jq.css('color','');
 
 			if(checkAndMark(range,distCovered,endLat,endLong,checkingDestLat,checkingDestLong))
-			{	
+			{
 				jq.css('color','red');
 			}
 			i++;
@@ -286,7 +286,7 @@
 			jq.css('color','');//intialized to black only
 			var lastSelectedLat=endLat;//lat of the last selected city
 			var lastSelectedLong=endLong;
-			
+
 			while(k<numCity)
 			{
 				var cityId=$("#"+groupId).data("cityId"+k);
@@ -296,7 +296,7 @@
 				{	//console.log("cityNotFound:"+cityName);
 					var groupCityLat=$("#"+groupId).data("lat"+k);
 					var groupCityLong=$("#"+groupId).data("long"+k);
-					
+
 					if(k!=(numCity-1))//if not the last city of the group
 					{
 						//console.log("Already covered:"+distCoveredFromGroupCity);
@@ -311,13 +311,13 @@
 							break;
 						}
 					}
-					else//last group city to origin dist has to be added to check whole group coverage
+					else//last group city to origin totalDistance has to be added to check whole group coverage
 					{
 						if(checkAndMark(range,distCoveredFromGroupCity,lastSelectedLat,lastSelectedLong,groupCityLat,groupCityLong))
 							{
 								jq.css('color','red');
 							}
-					}	
+					}
 				}
 				k++;
 			}
@@ -366,16 +366,16 @@
 		LoadedGroupLen=groupList.length;
 		if((selectedCityData.length>0)&&(LoadedCityLen>startLenForCity)){
 			update(startLenForCity,startLenForGroup);
-		}		
+		}
 		selectGroupIfAllCitiesSelected();
 	}
 
 	function selectGroupIfAllCitiesSelected()
 	{
-		var groupList=$(document.getElementsByClassName('group'));		
+		var groupList=$(document.getElementsByClassName('group'));
 		var i=0,j;
 		while(i<groupList.length)
-		{	
+		{
 			var jq = $([1]);
 			jq.context = jq[0] = groupList[i];
 			var groupId=jq.attr('id');
@@ -398,12 +398,12 @@
 					document.getElementById(groupId).className="group-selected";
 					document.getElementById(groupId).style.cursor="initial";
 					document.getElementById(groupId).style.color="green";
-				}				
+				}
 			}
 			i++;
 		}
 	}
-	
+
 	var searchByAttr = function(arr, attr, value){
 	    var i = arr.length;
 	    while(i--){
@@ -412,7 +412,7 @@
 	       }
 	    }
 	}
-	
+
 	var removeByAttr = function(arr, attr, value){
 	    var i = arr.length;
 	    while(i--){
@@ -422,12 +422,12 @@
 	    }
 	    return arr;
 	}
-	
+
 	function toRad(Value) {
 	    /** Converts numeric degrees to radians */
 	    return Value * Math.PI / 180;
 	}
-	
+
 	function calcDist(orgLat,orgLong,destLat,destLong)
 	{
 		return (parseInt( 6371 * Math.acos( Math.cos( toRad(orgLat) ) * Math.cos( toRad( destLat ) ) * Math.cos( toRad( destLong ) - toRad(orgLong) ) + Math.sin( toRad(orgLat) ) * Math.sin( toRad( destLat ) ) ) ));
