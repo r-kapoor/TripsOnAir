@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 11, 2014 11:23:14 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.Places" table="Places" catalog="Holiday">
+        <id name="placeId" type="int">
+            <column name="PlaceID" />
+            <generator class="assigned" />
+        </id>
+        <property name="cityId" type="int">
+            <column name="CityID" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="Type" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="Name" />
+        </property>
+        <property name="address" type="java.lang.String">
+            <column name="Address" />
+        </property>
+        <property name="pinCode" type="int">
+            <column name="PinCode" />
+        </property>
+        <property name="phoneNo" type="java.lang.String">
+            <column name="PhoneNo" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="Description" />
+        </property>
+        <property name="score" type="double">
+            <column name="Score" />
+        </property>
+        <property name="scoreSources" type="int">
+            <column name="ScoreSources" />
+        </property>
+        <property name="broadCategory" type="java.lang.String">
+            <column name="Broad_Category" />
+        </property>
+        <property name="website" type="java.lang.String">
+            <column name="Website" />
+        </property>
+        <property name="latitude" type="double">
+            <column name="Latitude" />
+        </property>
+        <property name="longitude" type="double">
+            <column name="Longitude" />
+        </property>
+        <property name="time2Cover" type="int">
+            <column name="Time2Cover" />
+        </property>
+        <property name="unescoHeritage" type="byte">
+            <column name="UnescoHeritage" />
+        </property>
+        <property name="ixigo" type="byte">
+            <column name="Ixigo" />
+        </property>
+    </class>
+</hibernate-mapping>

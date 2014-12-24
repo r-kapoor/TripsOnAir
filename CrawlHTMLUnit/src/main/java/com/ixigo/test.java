@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class test {
 
-	public static void main(String args[])
+	public static void test()
 	{
 		String time2cover[]={"Around 1 hour","1 to 2 hours","1-2 hours","30 minutes to 1 hour","1 hour","2 hours","","20 minutes",
 		"30 to 45 minutes","1 to2 hours"};
@@ -91,4 +91,41 @@ String s1 = s.replaceAll("\"|\\[|\\]", "");
 		System.out.println(s1);
 	}
 	
+	private static void convertIntoFormat()
+	{	String timeString[]={"04:00  PM","9:00am","06:05","7:00 PM"};
+		//String timeString2="9:00am";
+		//String timeString3="6:05 am";
+		
+		//starttime = openinghrs.replaceAll("(\\d+[:]{0,1}\\d*)( ([AP]M|Noon|Midnight) to \\d+[:]{0,1}\\d* ([AP]M|Noon|Midnight))","$1");
+		
+		for(int i=0;i<timeString.length;i++)
+		{
+			String pattern="(\\d+)[:](\\d+)([ ]*)(PM|pm|AM|am)";
+			if(timeString[i].matches(pattern))
+			{
+				System.out.println("matched for:"+timeString[i]);
+				//int time1=Integer.parseInt(test.replaceAll(pattern2, "$1"));
+				System.out.println(timeString[i].replaceAll(pattern, "$1"));
+				System.out.println(timeString[i].replaceAll(pattern, "$2"));
+				System.out.println(timeString[i].replaceAll(pattern, "$4"));
+			}
+			else
+			{
+				System.out.println("Not matched for:"+timeString[i]);
+			}
+			/*if(timeString[].contains("AM")||timeString.contains("am"))
+			{
+				
+			}
+			else if(timeString.contains("PM")||timeString.contains("pm"))
+			{
+				
+			}*/
+		}
+	}
+	public static void main(String args[])
+	{
+		//test();
+		convertIntoFormat();
+	}
 }

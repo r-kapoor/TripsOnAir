@@ -1,6 +1,7 @@
 package com.ixigo;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,40 +17,40 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
+
+import org.hibernate.SessionFactory;
+
+import GlobalClasses.getHibernateSession;
 
 import com.dataTransferObject.IxigoJsonDto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 
-public class GetJson {
+//TODO:check startTime and endTime in db
+public class GetJson extends getHibernateSession{
 
 	private static String outputFile = "target/ixigo/test.txt";
+	private static String exceptionUrlsFile = "target/ixigo/cityUrlException.txt";
 
-	public static void main(String[] args) throws IOException {
-
+	public static void getJson(IxigoServiceURL ixigoServiceURL,SessionFactory sessionFactory) throws Exception {
+		System.out.println("--START CRAWLING--");
+		String exceptionUrls="";
 		InputStream is = null;
 		try {
-			is = new URL(
-					"http://www.ixigo.com/rest/content/namedentity/v2/city/id?sort=po&order=dsc&cityId=503b2a78e4b032e338f10051&entityId=1&type=Places+To+Visit&limit=226&filterKeys=&filterValues=")
-					.openStream();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//is = new URL(
+				//	"http://www.ixigo.com/rest/content/namedentity/v2/city/id?sort=po&order=dsc&cityId=503b2a78e4b032e338f10051&entityId=1&type=Places+To+Visit&limit=226&filterKeys=&filterValues=")
+			is=ixigoServiceURL.getIxigoCityURL().openStream();
 
 		BufferedReader r = new BufferedReader(new InputStreamReader(is,
 				Charset.forName("UTF-8")));
 		JsonReader reader = new JsonReader(r);
 		JsonParser parser = new JsonParser();
 
-		reader.beginObject(); // the initial '{'
+		reader.beginObject();
 		String name = reader.nextName();
 		// reader.beginObject();
 		// System.out.println(name);
@@ -57,9 +58,7 @@ public class GetJson {
 		boolean value = reader.nextBoolean();
 		// System.out.println(value);
 		name = reader.nextName();
-		// System.out.println(name);
 		String data = reader.nextString();
-		// System.out.println(data.length());
 		Reader stringReader = new StringReader(data);
 		JsonReader dataReader = new JsonReader(stringReader);
 		dataReader.beginArray();
@@ -73,14 +72,13 @@ public class GetJson {
 			// JsonArray filenames = doc.getAsJsonArray("Filenames");
 			// do something with the document here
 			// ...
-
 			String nameOfPlace = "";
-			if (dataObject.has("r")) {
+			if (dataObject.has("r")&&(!dataObject.get("r").isJsonNull())) {
 				nameOfPlace = dataObject.get("r").getAsString();
 			}
 
 			String category = "";
-			if (dataObject.has("c")) {
+			if (dataObject.has("c")&&(!dataObject.get("c").isJsonNull())) {
 				JsonArray categoryArray = dataObject.get("c").getAsJsonArray();
 				int len = categoryArray.size();
 
@@ -95,20 +93,21 @@ public class GetJson {
 
 			double latitude = 0.0;
 			double longitude = 0.0;
-			if (dataObject.has("la")) {
+			if (dataObject.has("la")&&(!dataObject.get("la").isJsonNull())) {
 				latitude = dataObject.get("la").getAsDouble();
 			}
-			if (dataObject.has("ln")) {
+			if (dataObject.has("ln")&&(!dataObject.get("ln").isJsonNull())) {
 				longitude = dataObject.get("ln").getAsDouble();
 			}
-
 			String description = "";
-			if (dataObject.has("d")) {
+			
+			if ((dataObject.has("d"))&&(!dataObject.get("d").isJsonNull())){
 				description = dataObject.get("d").getAsString();
+				description=description.replaceAll("\n|</div>|<div>|<br />|<strong>|</strong>|<p>|</p>|<em>|</em>|&nbsp","");
 			}
 
 			String photoLink = "";
-			if (dataObject.has("i")) {
+			if (dataObject.has("i")&&(!dataObject.get("i").isJsonNull())) {
 				JsonArray photoArray = dataObject.get("i").getAsJsonArray();
 				if ((photoArray != null) && (photoArray.size() > 0)) {
 					if (photoArray.get(0).getAsJsonObject().has("s")) {
@@ -122,13 +121,13 @@ public class GetJson {
 			}
 
 			String placeHoursString = "";
-			String unescoHeritage = "";
+			String unescoHeritage = "-1";
 			ArrayList<DayHourIxigo> dayHourList = new ArrayList<DayHourIxigo>();
-			if (dataObject.has("attr_map")) {
+			if (dataObject.has("attr_map")&&(!dataObject.get("attr_map").isJsonNull())) {
 				JsonObject placeAttrObject = dataObject.get("attr_map")
 						.getAsJsonObject();
 
-				if (placeAttrObject.has("working hours")) {
+				if (placeAttrObject.has("working hours")&&(!placeAttrObject.get("working hours").isJsonNull())) {
 					try {
 						String day = "";
 						JsonElement workingHours = placeAttrObject
@@ -176,10 +175,7 @@ public class GetJson {
 											}
 										}
 									}
-//System.out.println("day:"+day);
-									
-									
-									
+								
 									for (int t = 0; t < hoursArray.size(); t++) {
 										//System.out.println("Enters");
 										DayHourIxigo dayHour;
@@ -190,6 +186,18 @@ public class GetJson {
 										String closingTimeString = hoursObject
 												.get("close").getAsString();
 
+										if(openingTimeString.contains("Sunrise"))
+										{
+											openingTimeString="06:00 am";
+										}
+										if(closingTimeString.contains("Sunset"))
+										{
+											closingTimeString="06:00 pm";
+										}
+										//make the timeString in hh:mm a format for cases like 4am or 4  pm
+										openingTimeString=convertIntoFormat(openingTimeString);
+										closingTimeString=convertIntoFormat(closingTimeString);
+										
 										openingTimeString = getInTimeFormat(openingTimeString);
 										closingTimeString = getInTimeFormat(closingTimeString);
 										Time openTime = Time
@@ -210,15 +218,23 @@ public class GetJson {
 						e.printStackTrace();
 					}
 				}
-				if (placeAttrObject.has("unesco world heritage")) {
+				if (placeAttrObject.has("unesco world heritage")&&(!placeAttrObject.get("unesco world heritage").isJsonNull())) {
 					unescoHeritage = placeAttrObject.get(
 							"unesco world heritage").getAsString();
+					if(unescoHeritage.toLowerCase().contains("true"))
+					{
+						unescoHeritage="1";
+					}
+					else
+					{
+						unescoHeritage="0";
+					}
 				}
 			}
 
 			String address = "";
 			String pincode = "";
-			if (dataObject.has("ad")) {
+			if (dataObject.has("ad")&&(!dataObject.get("ad").isJsonNull())) {
 				address = dataObject.get("ad").getAsString();
 				pincode = getPincode(address);
 			}
@@ -230,13 +246,13 @@ public class GetJson {
 			int rank = 0;
 			int numRatingSources = 0;
 			double score = 0.0;
-			if (dataObject.has("rr")) {
+			if (dataObject.has("rr")&&(!dataObject.get("rr").isJsonNull())) {
 				JsonArray ratingArray = dataObject.get("rr").getAsJsonArray();
 				int ratingArrayLen = ratingArray.size();
 				for (int i = 0; i < ratingArrayLen; i++) {
 					JsonObject ratingObject = ratingArray.get(i)
 							.getAsJsonObject();
-					if (ratingObject.has("s")) {
+					if (ratingObject.has("s")&&(!ratingObject.get("s").isJsonNull())) {
 						if (ratingObject.get("s").getAsString()
 								.equals("www.tripadvisor.com")) {
 							tripAdvisorRank = ratingObject.get("r").getAsInt();
@@ -267,98 +283,138 @@ public class GetJson {
 			}
 			int pricePPIndian = -1;
 			int pricePPForeign = -1;
-
-			if (dataObject.has("pr")) {
+			if (dataObject.has("pr")&&(!dataObject.get("pr").isJsonNull())) {
 				JsonArray feeArray = dataObject.get("pr").getAsJsonArray();
 				for (int i = 0; i < feeArray.size(); i++) {
 					JsonObject feeElementObject = feeArray.get(i)
 							.getAsJsonObject();
-
-					if (feeElementObject.get("lbl").getAsString().trim()
-							.toLowerCase().contains("for indian")) {
-						if (feeElementObject.get("un").getAsString().trim()
-								.toLowerCase().contains("per person")) {
+					if ((feeElementObject.has("lbl"))&&(feeElementObject.get("lbl").getAsString().trim()
+							.toLowerCase().contains("for indian"))){
+						if ((feeElementObject.has("un"))&&(feeElementObject.get("un").getAsString().trim()
+								.toLowerCase().contains("per person"))) {
+							if(feeElementObject.has("pmn")){
 							pricePPIndian = feeElementObject.get("pmn")
 									.getAsInt();
+							}
 						} else {
+							if(feeElementObject.has("un")){
 							System.out.println("New per person:"
 									+ feeElementObject.get("un").getAsString());
+							}
+							if(feeElementObject.has("pmn")){
 							System.out.println("price per person:"
 									+ feeElementObject.get("pmn").getAsInt());
+							}
 						}
 					}
 
-					else if (feeElementObject.get("lbl").getAsString().trim()
-							.toLowerCase().contains("for foreign")) {
-						if (feeElementObject.get("un").getAsString().trim()
-								.toLowerCase().contains("per person")) {
+					else if ((feeElementObject.has("lbl"))&&(feeElementObject.get("lbl").getAsString().trim()
+							.toLowerCase().contains("for foreign"))) {
+						if ((feeElementObject.has("pmn"))&&(feeElementObject.get("un").getAsString().trim()
+								.toLowerCase().contains("per person"))) {
 							pricePPForeign = feeElementObject.get("pmn")
 									.getAsInt();
 						} else {
+							if(feeElementObject.has("un")){
 							System.out.println("New per person:"
 									+ feeElementObject.get("un").getAsString());
+							}
+							if(feeElementObject.has("pmn")){
 							System.out.println("price per person:"
 									+ feeElementObject.get("pmn").getAsInt());
+							}
 						}
 					}
 
-					else if (feeElementObject.get("lbl").getAsString().trim()
-							.toLowerCase().contains("no entry fee")) {
+					else if ((feeElementObject.has("lbl"))&&(feeElementObject.get("lbl").getAsString().trim()
+							.toLowerCase().contains("no entry fee"))) {
 						pricePPForeign = 0;
 						pricePPIndian = 0;
 						break;
-					} else if (feeElementObject.get("lbl").getAsString().trim()
-							.toLowerCase().contains("above")) {
-						if (feeElementObject.get("un").getAsString().trim()
-								.toLowerCase().contains("per person")) {
+					} else if ((feeElementObject.has("lbl"))&&(feeElementObject.get("lbl").getAsString().trim()
+							.toLowerCase().contains("above"))) {
+						if ((feeElementObject.has("un"))&&(feeElementObject.get("un").getAsString().trim()
+								.toLowerCase().contains("per person"))) {
+							if(feeElementObject.has("pmn")){
+							pricePPForeign = feeElementObject.get("pmn")
+									.getAsInt();
+							
+							pricePPIndian = feeElementObject.get("pmn")
+									.getAsInt();
+							}
+							break;
+						} else {
+							if(feeElementObject.has("un")){
+							System.out.println("New per person:"
+									+ feeElementObject.get("un").getAsString());
+							}
+							if(feeElementObject.has("pmn")){
+							System.out.println("price per person:"
+									+ feeElementObject.get("pmn").getAsInt());
+							}
+						}
+					} else if ((feeElementObject.has("lbl"))&&(feeElementObject.get("lbl").getAsString().trim()
+							.toLowerCase().contains("adults"))) {
+						if ((feeElementObject.has("un"))&&(feeElementObject.get("un").getAsString().trim()
+								.toLowerCase().contains("per person"))&&((feeElementObject.has("pmn")))) {
 							pricePPForeign = feeElementObject.get("pmn")
 									.getAsInt();
 							pricePPIndian = feeElementObject.get("pmn")
 									.getAsInt();
 							break;
 						} else {
+							if(feeElementObject.has("un")){
 							System.out.println("New per person:"
 									+ feeElementObject.get("un").getAsString());
+							}
+							if(feeElementObject.has("pmn")){
 							System.out.println("price per person:"
 									+ feeElementObject.get("pmn").getAsInt());
+							}
 						}
-					} else if (feeElementObject.get("lbl").getAsString().trim()
-							.toLowerCase().contains("adults")) {
-						if (feeElementObject.get("un").getAsString().trim()
-								.toLowerCase().contains("per person")) {
-							pricePPForeign = feeElementObject.get("pmn")
-									.getAsInt();
-							pricePPIndian = feeElementObject.get("pmn")
-									.getAsInt();
-							break;
-						} else {
-							System.out.println("New per person:"
-									+ feeElementObject.get("un").getAsString());
-							System.out.println("price per person:"
-									+ feeElementObject.get("pmn").getAsInt());
-						}
-					} else if (feeElementObject.get("lbl").getAsString().trim()
-							.toLowerCase().isEmpty()) {
+					} else if ((feeElementObject.has("lbl"))&&(feeElementObject.get("lbl").getAsString().trim()
+							.toLowerCase().isEmpty())&&((feeElementObject.has("pmn")))) {
 						pricePPForeign = feeElementObject.get("pmn").getAsInt();
 						pricePPIndian = feeElementObject.get("pmn").getAsInt();
 					} else {
+						if((feeElementObject.has("lbl"))){
 						System.out.println("New Label:"
 								+ feeElementObject.get("lbl").getAsString());
+						}
+						if(feeElementObject.has("un")){
 						System.out.println("per person:"
 								+ feeElementObject.get("un").getAsString());
+						}
+						if(feeElementObject.has("pmn")){
 						System.out.println("price per person:"
 								+ feeElementObject.get("pmn").getAsInt());
+						}
 					}
 
 				}
 			}
 
 			int time2Cover = 0;
-			;
-			if (dataObject.has("tt")) {
+			if (dataObject.has("tt")&&(!dataObject.get("tt").isJsonNull())) {
 				String time2CoverString = dataObject.get("tt").getAsString();
 				time2Cover = getAvgTime2Cover(time2CoverString);
 			}
+			System.out.println("nameOfPlace:"+nameOfPlace);
+			 System.out.println("category:"+category);
+			  System.out.println("latitude:"+latitude);
+			  System.out.println("longitude:"+longitude);
+			  System.out.println("description:"+description);
+			  System.out.println("photoLink:"+photoLink);
+			  System.out.println("placeHoursString:"+placeHoursString);
+			  System.out.println("unescoHeritage:"+unescoHeritage);
+			  System.out.println("address:"+address);
+			  System.out.println("pincode:"+pincode);
+			  System.out.println("numRatingSources:"+numRatingSources);
+			  System.out.println("score:"+score);
+			  System.out.println("pricePPIndian:"+pricePPIndian);
+			  System.out.println("pricePPForeign:"+pricePPForeign);
+			  System.out.println("time2Cover:"+time2Cover);
+			  System.out.println("cityName:"+ixigoServiceURL.getCityName());
 
 			IxigoJsonDto ixigoJsonDto = new IxigoJsonDto();
 			ixigoJsonDto.setPlaceName(nameOfPlace.toUpperCase());
@@ -368,21 +424,24 @@ public class GetJson {
 			ixigoJsonDto.setDescription(description);
 			ixigoJsonDto.setPhotoLink(photoLink);
 			ixigoJsonDto.setDayHourList(dayHourList);
-			ixigoJsonDto.setUnescoHeritage(unescoHeritage);
+			ixigoJsonDto.setUnescoHeritage(Byte.parseByte(unescoHeritage));
 			ixigoJsonDto.setAddress(address);
-			ixigoJsonDto.setPincode(pincode);
+			if(!pincode.equals("")){
+			ixigoJsonDto.setPincode(Integer.parseInt(pincode));
+			}
+			else
+			{
+				ixigoJsonDto.setPincode(-1);
+			}
 			ixigoJsonDto.setNumRatingSources(numRatingSources);
 			ixigoJsonDto.setScore(score);
 			ixigoJsonDto.setAdultCharge(pricePPIndian);
 			ixigoJsonDto.setForeignerCharge(pricePPForeign);
 			ixigoJsonDto.setTime2Cover(time2Cover);
-
+			ixigoJsonDto.setCityName(ixigoServiceURL.getCityName());
+					
 			//Transfer data into database
-			
-			
-			
-			
-			// System.out.println(ixigoJsonDto);
+			TransferIxigoJsonData.transferData(ixigoJsonDto,sessionFactory);
 
 			String inFile = "count:" + count + "\n";
 			inFile = ixigoJsonDto.toString();
@@ -437,8 +496,39 @@ public class GetJson {
 		dataReader.endArray(); // ending ']' of Documents
 		// final '}'
 		dataReader.close();
-	}
+		
+		
+	}//end try block
+		catch (Exception e) {
 
+			exceptionUrls=ixigoServiceURL.getCityName()+","+ixigoServiceURL.getIxigoCityID()+","+new Date()+"\n";
+			System.out.println(ixigoServiceURL.getIxigoCityURL()+",Error:"+e+",Error Message:"+e.getMessage());
+			exceptionUrls+="Error:"+e+",Error Message:"+e.getMessage()+"\n";		
+			FileOutputStream exception=new FileOutputStream(exceptionUrlsFile,true);
+			@SuppressWarnings("resource")
+			PrintStream exe=new PrintStream(exception);
+			exe.append(exceptionUrls);
+			exe.close();
+			if(exceptionUrls.contains("UnknownHostException"))
+			{	
+				Thread.sleep(300000);//sleep for 5 min
+			}		
+	}
+}
+
+	
+	private static String convertIntoFormat(String timeString)
+	{
+		String pattern="(\\d+)[:](\\d+)([ ]*)(PM|pm|AM|am)(.*)";
+		if(timeString.matches(pattern))
+		{
+			String hour=timeString.replaceAll(pattern, "$1");
+			String min=timeString.replaceAll(pattern, "$2");
+			String AMPM=timeString.replaceAll(pattern, "$4");
+			return (hour+":"+min+" "+AMPM);
+		}
+		return timeString;
+	}
 	private static String getInTimeFormat(String openingTimeString) {
 		SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm:ss");
 		SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
@@ -549,4 +639,38 @@ public class GetJson {
 		return time;
 	}
 
+	public static String buildPlacesToVisitServiceURL(String ixigoCityID)
+	{
+		return("http://www.ixigo.com/rest/content/namedentity/v2/city/id?sort=po&order=dsc&cityId="+ixigoCityID+"&entityId=1&type=Places+To+Visit&limit=0&filterKeys=&filterValues=");
+		
+	}
+	public static String buildThingsToDoServiceURL(String ixigoCityID)
+	{
+		return("http://www.ixigo.com/rest/content/namedentity/v2/city/id?sort=po&order=dsc&cityId="+ixigoCityID+"&entityId=1&type=Things+To+Do&limit=0&filterKeys=&filterValues=");
+	}
+	
+	public static void main(String args[]) throws Exception
+	{
+		File file= new File("ConfigFiles/ixigo/testIDsOfCity.txt");
+		Scanner in = new Scanner(file);
+		String[] resources = {"com/hibernate/Places.hbm.xml","com/hibernate/PlaceImage.hbm.xml","com/hibernate/PlaceCharges.hbm.xml", "com/hibernate/PlaceTimings.hbm.xml", "com/hibernate/City.hbm.xml"};
+		SessionFactory sessionFactory=getHibernateSessionFactory(resources);
+		while(in.hasNext())
+		{
+			String line=in.next();
+			String elements[]=line.split(",");
+			IxigoServiceURL ixigoServiceURL= new IxigoServiceURL();
+			ixigoServiceURL.setCityName(elements[0]);
+			ixigoServiceURL.setIxigoCityID(elements[1]);
+			System.out.println(buildPlacesToVisitServiceURL(elements[1]));
+			//set the url for places to visit
+			ixigoServiceURL.setIxigoCityURL(new URL(buildPlacesToVisitServiceURL(elements[1])));
+			//crawl and set data into db for places to visit
+			getJson(ixigoServiceURL,sessionFactory);
+			//set the url for things to do
+			ixigoServiceURL.setIxigoCityURL(new URL(buildThingsToDoServiceURL(elements[1])));
+			//crawl and set data into db for things to do
+			getJson(ixigoServiceURL,sessionFactory);
+		}
+	}
 }
