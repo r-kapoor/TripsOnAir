@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 11, 2014 11:23:25 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.PlaceCharges" table="Place_Charges" catalog="Holiday">
+        <id name="placeID" type="int">
+            <column name="PlaceID" />
+            <generator class="assigned" />
+        </id>
+        <property name="childCharge" type="int">
+            <column name="ChildCharge" />
+        </property>
+        <property name="adultCharge" type="int">
+            <column name="AdultCharge" />
+        </property>
+        <property name="foreignerCharge" type="int">
+            <column name="ForeignerCharge" />
+        </property>
+    </class>
+</hibernate-mapping>

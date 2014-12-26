@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 11, 2014 11:23:58 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.PlaceTimings" table="PlaceTimings" catalog="Holiday">
+        <id name="timingID" type="int">
+            <column name="Timing_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="placeID" type="int">
+            <column name="PlaceID" />
+        </property>
+        <property name="timeStart" type="java.sql.Time">
+            <column name="TimeStart" />
+        </property>
+        <property name="timeEnd" type="java.sql.Time">
+            <column name="TimeEnd" />
+        </property>
+        <property name="days" type="string">
+            <column name="Days" />
+        </property>
+    </class>
+</hibernate-mapping>

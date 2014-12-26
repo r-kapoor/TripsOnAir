@@ -12,9 +12,10 @@ public class IxigoJsonDto {
 	public double longitude;
 	public String description;
 	public String photoLink;
-	public String unescoHeritage;	
+	public byte unescoHeritage;	
 	public String address;
-	public String pincode;
+	public String cityName;
+	public int pincode;
 	public int time2Cover;
 	public ArrayList<DayHourIxigo> dayHourList= new ArrayList<DayHourIxigo>();
 	public double score;
@@ -72,10 +73,10 @@ public class IxigoJsonDto {
 	public void setPhotoLink(String photoLink) {
 		this.photoLink = photoLink;
 	}
-	public String getUnescoHeritage() {
+	public byte getUnescoHeritage() {
 		return unescoHeritage;
 	}
-	public void setUnescoHeritage(String unescoHeritage) {
+	public void setUnescoHeritage(byte unescoHeritage) {
 		this.unescoHeritage = unescoHeritage;
 	}
 	public String getAddress() {
@@ -84,10 +85,16 @@ public class IxigoJsonDto {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getPincode() {
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	public int getPincode() {
 		return pincode;
 	}
-	public void setPincode(String pincode) {
+	public void setPincode(int pincode) {
 		this.pincode = pincode;
 	}
 	public int getTime2Cover() {
