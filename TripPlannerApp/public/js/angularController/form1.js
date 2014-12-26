@@ -1,4 +1,17 @@
-var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider']);
+angular.module('scrollLoad', []).directive('whenScrolled', function($document,$window,$rootScope) {
+    return function(scope, elm, attr) {
+        var raw = elm[0];
+        $document.bind('scroll', function() {
+            //console.log(raw.scrollTop+":"+$document[0].body.scrollTop +"+"+ $window.innerHeight +">="+ 0.9 * $document[0].body.offsetHeight);
+            if(raw.scrollTop + $window.innerHeight >= 0.9 * $document[0].body.offsetHeight ||
+                $document[0].body.scrollTop + $window.innerHeight >= 0.9 * $document[0].body.offsetHeight) {
+                $rootScope.$emit('scrolled');
+            }
+        });
+    };
+});
+
+var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider','scrollLoad']);
 
 inputModule.run();
 inputModule.controller('form1Controller',  function($scope, $rootScope) {
@@ -34,3 +47,13 @@ inputModule.controller('form1Controller',  function($scope, $rootScope) {
         $scope.isFormPanelCollapsed = true;
     })
   });
+
+function Main($scope) {
+    $scope.items = [];
+
+    var counter = 0;
+    $scope.loadMore = function() {console.log('load more!!');
+    };
+
+    $scope.loadMore();
+}

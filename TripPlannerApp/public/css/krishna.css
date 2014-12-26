@@ -1,0 +1,51 @@
+.wrapper{
+    float:left; /* important */
+    position:relative; /* important(so we can absolutely position the description div */
+}
+.name{
+    position:absolute; /* absolute position (so we can position it where we want)*/
+    bottom:0px; /* position will be on bottom */
+    left:0px;
+    width:100%;
+    /* styling bellow */
+    background-color:black;
+    font-family: 'tahoma';
+    font-size:15px;
+    color:white;
+    opacity:0.6; /* transparency */
+    filter:alpha(opacity=60); /* IE transparency */
+}
+.add-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.name_content{
+    padding:10px;
+    margin:0px;
+}
+@media all and (max-width: 1200px) { /* screen size until 1200px */
+    .name_content {
+        font-size: 1em; /* 1.5x default size */
+    }
+}
+@media all and (max-width: 1000px) { /* screen size until 1000px */
+    .name_content{
+        font-size: 0.9em; /* 1.2x default size */
+    }
+}
+@media all and (max-width: 500px) { /* screen size until 500px */
+    .name_content {
+        font-size: 0.7em; /* 0.8x default size */
+    }
+}
+
+.out-of-budget{
+    color: red;
+    background-color: red;
+}
+
+.selected{
+    opacity: 0.5;
+    cursor: default;
+}

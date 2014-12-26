@@ -4,7 +4,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 //	$scope.destinationCity = null;
 	$scope.isDetailsCollapsed = true;
 	$scope.isOverviewCollapsed = false;
-	$scope.suggestDestinations = false;
+	$scope.isSuggestDestinationsOn = false;
 
     $scope.sliders = {};
     $scope.sliders.sliderValue = 10000;
@@ -53,7 +53,8 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         var endTimeSet=(formData.getTripEndTime()!=null)&&(formData.getTripEndTime().morning == true || formData.getTripEndTime().evening == true);
         var originSet=formData.getOrigin()!=null;
         var destinationSet=formData.getDestinations().length;
-        if(formData.getStartDate() !== null && formData.getEndDate() !== null && startTimeSet && endTimeSet && originSet && destinationSet) {
+        console.log("isSuggestDestinationsOn:"+$scope.isSuggestDestinationsOn);
+        if(formData.getStartDate() !== null && formData.getEndDate() !== null && startTimeSet && endTimeSet && originSet && (destinationSet > 0 || $scope.isSuggestDestinationsOn)) {
             $rootScope.$emit('formComplete');
         }
         else
@@ -201,12 +202,13 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     };
 
 	$scope.setBudgetLimits = function() {
-		if(!$scope.suggestDestinations) {
+		if(!$scope.isSuggestDestinationsOn) {
             var origin = formData.getOrigin();
             var destinations = formData.getDestinations();
             var startDate = formData.getStartDate();
             var endDate = formData.getEndDate();
             if (origin != null && destinations.length != 0 && startDate != null && endDate != null) {
+                console.log('3');
                 var diff = Math.abs(endDate - startDate);
                 var numOfDays = diff / (1000 * 60 * 60 * 24);
                 var deferred = [];
@@ -227,13 +229,17 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                         var latitudes = [];
                         var longitudes = [];
                         var totalDistance = 0;
+                        var destinationsData = formData.getDestinations();
                         angular.forEach(results, function (result, index) {
                             latitudes[index] = result.results[0].geometry.location.lat;
                             longitudes[index] = result.results[0].geometry.location.lng;
                             if (index > 0) {
+                                destinationsData[index-1].Latitude = latitudes[index];
+                                destinationsData[index-1].Longitude = longitudes[index];
                                 totalDistance += parseInt($scope.getDistance(latitudes[index - 1], longitudes[index - 1], latitudes[index], longitudes[index]));
                             }
                         });
+                        formData.setDestinations(destinationsData);
                         totalDistance += parseInt($scope.getDistance(latitudes[0], longitudes[0], latitudes[latitudes.length], longitudes[longitudes.length]));
 
                         var totalFare = $scope.getBudget(origin, destinations, totalDistance, numOfDays);

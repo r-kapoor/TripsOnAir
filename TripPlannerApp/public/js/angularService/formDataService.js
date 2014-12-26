@@ -7,6 +7,20 @@ inputModule.service('formData', function () {
         var tastes=null;
         var tripStartTime = null;
         var tripEndTime = null;
+        var originGeoCoordinates = null;
+        var remainingDistance = 0;
+        function removeDuplicates(){
+            angular.forEach(destinationCities, function(destinationCity,index){
+                for(var i=index+1;i<destinationCities.length;i++)
+                {
+                    if(destinationCity.name.toLowerCase()===destinationCities[i].name.toLowerCase())
+                    {
+                        destinationCities.splice(i,1);
+                        i--;
+                    }
+                }
+            })
+        }
         return {
             getOrigin: function () {
                 return originCity;
@@ -32,13 +46,21 @@ inputModule.service('formData', function () {
             getTripEndTime : function() {
                 return tripEndTime;
             },
+            getOriginGeoCoordinates : function() {
+                return originGeoCoordinates;
+            },
+            getRemainingDistance: function() {
+                return remainingDistance;
+            },
             setOrigin: function(origin) {
                 console.log('Set origin'+origin);
                 originCity = origin;
             },
             setDestinations: function(destinations) {
-                console.log('Set destination'+destinations);
+                console.log('Set destination:'+JSON.stringify(destinations));
                 destinationCities = destinations;
+                removeDuplicates();
+                console.log('After removal:'+JSON.stringify(destinationCities[0]));
             },
             setStartDate: function(start) {
                 console.log('Set Start Date');
@@ -59,6 +81,20 @@ inputModule.service('formData', function () {
             },
             setTripEndTime: function(endTime) {
                 tripEndTime = endTime;
+            },
+            setOriginGeoCoordinates: function(coordinates) {
+                originGeoCoordinates = coordinates;
+            },
+            setRemainingDistance: function(distance) {
+                remainingDistance = distance;
+            },
+            appendDestination: function(destination) {
+                destinationCities.push(destination);
+                removeDuplicates();
+            },
+            concatDestinations: function(destinations) {
+                destinationCities = destinationCities.concat(destinations);
+                removeDuplicates();
             }
         };
     });

@@ -1,7 +1,23 @@
-<div ng-controller="KrishnaController" class="jumbotron" collapse="isSuggestCollapsed">
-
-
-
-
-
+<div ng-controller="KrishnaController" collapse="isSuggestCollapsed" >
+        <div class="col-sm-12">
+                <div ng-repeat="destinationsData in destinations">
+                    <div class="{{getClassCol($index)}}" style="padding: 0;margin-bottom: 0;">
+                     <div class="wrapper">
+                        <a href="#" class="thumbnail {{getSelectedDataClass(destinationsData)}} {{getOutOfBudgetClass(destinationsData)}}" style="margin-bottom: 0;">
+                        <img src="{{destinationsData.Image}}" class="img-responsive" style="width: 100%"/>
+                        </a>
+                         <div class="btn btn-default add-button {{getSelectedDataDisabled(destinationsData)}}" ng-click="destinationSelected($index)">
+                             <i class="glyphicon glyphicon-plus"></i>
+                         </div>
+                    <div class="name">
+                        <p class="name_content">
+                            {{destinationsData.name}}
+                        </p>
+                    </div>
+                    <!--end of description class-->
+                </div>
+                <!--end of wrapper class-->
+            </div>
+                </div><!--end of ng-repeat-->
 </div>
+    </div>

@@ -1,0 +1,32 @@
+<div class="row">
+    <div ng-controller="BhishmaController" collapse="isCarouselCollapsed">
+        <div class="panel panel-primary" style="margin-left: 2%;margin-right: 2%">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center">You may be interested in:</h3>
+            </div>
+            <div class="panel-body">
+        <div class="well" style="margin-bottom: 1px">
+            <carousel interval="myInterval">
+                <slide ng-repeat="suggestionSet in suggestionsAccordingToSelection" active="suggestionSet.active">
+                    <div class="row">
+                        <!--<div class="wrapper">-->
+                        <div ng-repeat="suggestion in suggestionSet.suggestionArray">
+                        <div class="col-xs-3"><a href="#x"><img ng-src="images/agra.jpg" style="margin:auto" class="img-responsive"></a>
+                            <div class="btn btn-default add-button" ng-click="destinationSelected(suggestion)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                            </div>
+                            <div class="name">
+                                <p class="name_content">
+                                    {{suggestion.name}}
+                                </p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </slide>
+            </carousel>
+        </div>
+                </div>
+</div><!--1st row ended"-->
+        </div>
+    </div>
