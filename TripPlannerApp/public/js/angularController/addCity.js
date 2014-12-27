@@ -15,13 +15,12 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
     $scope.triggerOn = 'xyz';
     $scope.getTriggerOn = function() {
         return $scope.triggerOn;
-    }
+    };
 
   $scope.addDestination = function() {
       $scope.destinationCityList.push($scope.destinationCity);
       $scope.destinationCity = null;
       $scope.label="Enter another Destination";
-      console.log("destinationCityList:"+$scope.destinationCityList);
   };
 
     $scope.originSelected = function() {
@@ -29,16 +28,14 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
             $scope.originValid = true;
             console.log($scope.originCity);
             formData.setOrigin($scope.originCity);
-
+            $rootScope.$emit('originSelected');
             $timeout(function() {
                 $("#originId").trigger('xyz');
             }, 0);
             //$scope.triggerOn='xyz';
-            console.log('called');
         }
         else
         {
-            console.log('called1');
             $timeout(function() {
                 $("#originId").trigger('xyz');
             }, 0);
@@ -52,14 +49,13 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
     };
 
     $scope.isOriginValid = function(){
-        console.log($scope.originValid);
         return $scope.originValid;
     };
     $scope.destinationSelected = function() {
-        if($scope.destinationCity!==null && $scope.destinationCity.length!=0 && typeof $scope.originCity === 'object') {
-            console.log($scope.destinationCity);
+        if($scope.destinationCity!==null && $scope.destinationCity.length!=0 && typeof $scope.destinationCity === 'object') {
             $scope.addDestination();
             formData.setDestinations($scope.destinationCityList);
+            $rootScope.$emit('destinationSelected');
             $scope.destinationValid = true;
         }
         else

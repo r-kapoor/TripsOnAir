@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html ng-app="tripdetails.input.app">
+<html ng-app="tripdetails.input.app" when-scrolled>
 <head>
     <script data-require="jquery@*" data-semver="2.1.1" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script data-require="angular.js@1.3.4" data-semver="1.3.4" src="http://code.angularjs.org/1.3.4/angular.js"></script>
@@ -13,12 +13,14 @@
 	<script src="js/angularService/formDataService.js"></script>
 	<script src="js/angularJS/slider.js"></script>
 	<script src="js/angularController/kuber.js"></script>
+    <script src="js/angularController/selectedDestinationsPanel.js"></script>
     <!--TODO:include krishna.js if user click help in choosing dests"-->
     <script src="js/angularController/krishna.js"></script>
+    <script src="js/angularController/bhishma.js"></script>
 
 </head>
 
-<body>
+<body >
 	<div ng-include src="'templates/layouts/global/header.html'"></div>
 	<div style="height:100%" ng-include src="'templates/layouts/home/form1.html'"></div>
 	<!--<div ng-include src="'templates/normalApp.html'"></div>-->
