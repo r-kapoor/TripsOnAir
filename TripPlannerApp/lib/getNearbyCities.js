@@ -11,7 +11,7 @@ function getNearbyCityList(conn,destinations,orgLat,orgLong,category,distRemaini
 	var maxDistance = 250;//The distance between the current and suggested city should not exceed the value
 	var connection=conn.conn();
 	connection.connect();
-	var subQuery='',distanceFromSelectionsSubQuery = '', distanceHavingClause = '', distanceFromOriginSubQuery = '', distanceRemainingHavingClause = '';
+	var subQuery='',distanceFromSelectionsSubQuery = '', distanceMinHavingClause = '', distanceMaxHavingClause = '', distanceFromOriginSubQuery = '', distanceRemainingHavingClause = '';
 
     var numDestinations=destinations.length;
 	var nearTheCity = (start/batchsize)%numDestinations;
@@ -25,16 +25,18 @@ function getNearbyCityList(conn,destinations,orgLat,orgLong,category,distRemaini
 	for(var i=0;i<numDestinations-1;i++)
 	{
 		distanceFromSelectionsSubQuery += ' ( 6371 * acos( cos( radians('+destinations[i].Latitude+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+destinations[i].Longitude+') ) + sin( radians('+destinations[i].Latitude+') ) * sin( radians( Latitude ) ) ) ) AS distance'+i+',';
-		distanceHavingClause += ' (distance'+i+' > 10 AND distance'+i+' < '+maxDistance+') OR ';
+		distanceMinHavingClause += ' (distance'+i+' > 10) AND ';
+        distanceMaxHavingClause += ' (distance'+i+' < '+maxDistance+') OR ';
 	}
 	distanceFromSelectionsSubQuery += ' ( 6371 * acos( cos( radians('+destinations[numDestinations-1].Latitude+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+destinations[numDestinations-1].Longitude+') ) + sin( radians('+destinations[numDestinations-1].Latitude+') ) * sin( radians( Latitude ) ) ) ) AS distance'+(numDestinations-1);
-	distanceHavingClause += ' ( distance'+(numDestinations-1)+' > 10 AND distance'+(numDestinations-1)+' < '+maxDistance+') ';
+	distanceMinHavingClause += ' ( distance'+(numDestinations-1)+' > 10) ';
+    distanceMaxHavingClause += ' ( distance'+(numDestinations-1)+' < '+maxDistance+') ';
 
 	distanceFromOriginSubQuery += ' ( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) ) AS distanceFromOrigin ';
 
 	distanceRemainingHavingClause += ' (distanceFromOrigin + distance'+(numDestinations-1)+' < '+distRemaining+' ) ';
 
-	var queryString='SELECT CityName as name,CityID,Latitude,Longitude,'+ distanceFromSelectionsSubQuery +", "+ distanceFromOriginSubQuery+ ' FROM City WHERE '+subQuery+' HAVING ( '+distanceHavingClause+' AND '+distanceRemainingHavingClause+' ) ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
+	var queryString='SELECT CityName as name,CityID,Latitude,Longitude,'+ distanceFromSelectionsSubQuery +", "+ distanceFromOriginSubQuery+ ' FROM City WHERE '+subQuery+' HAVING ( ( '+distanceMinHavingClause+' ) AND ( '+distanceMaxHavingClause+' ) AND ( '+distanceRemainingHavingClause+' ) ) ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
 
 	connection.query(queryString, function(err, rows, fields) {
 		console.log('Nearby Query:'+queryString);

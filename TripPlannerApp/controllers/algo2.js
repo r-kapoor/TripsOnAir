@@ -100,6 +100,7 @@ module.exports = function(app) {
 		var batchsize = 4;
 		var start = parseInt(req.param('next'));
 		var distRemaining = req.param('distRemaining');
+        var requestId = req.param('requestId');
         console.log("Dest:"+destinations);
         //var destinationsArray = destinations.split(',');
         //destinations = [];
@@ -125,7 +126,8 @@ module.exports = function(app) {
 		getNearbyCity.getNearbyCityList(conn, destinations, orgLat, orgLong, tastesArray,
 				distRemaining, start, batchsize, function(nearbyCityRows) {
 					var model = {
-						NearbyCityList: nearbyCityRows
+						NearbyCityList: nearbyCityRows,
+                        requestId: requestId
 					};
 					// res.render('group', model);
 					res.json(model);
