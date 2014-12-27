@@ -26,6 +26,8 @@ public class TransferIxigoJsonData extends getHibernateSession{
 
 	private static String dataBaseExceptionFile = "target/ixigo/dataBaseException.txt";
 	private static String dataBaseException="";
+	private static String placesExistInDBFile = "target/ixigo/placesExistInDB.txt";
+	private static String alreadyExist="";
 	public static void transferData(IxigoJsonDto ixigoJsonDto,SessionFactory sessionFactory)throws Exception
 	{
 		System.out.println("Begin transfer");
@@ -141,6 +143,17 @@ public class TransferIxigoJsonData extends getHibernateSession{
 					tr = null;
 					isFromIxigoSession.close();
 					isOldAndNotFromIxigo=1;//set the flag
+				}
+				else
+				{
+					//place already exist and from ixigo
+					alreadyExist=new Date()+"";
+					alreadyExist+="\n"+ixigoJsonDto.toString();		
+					FileOutputStream exception=new FileOutputStream(placesExistInDBFile,true);
+					@SuppressWarnings("resource")
+					PrintStream exp=new PrintStream(exception);
+					exp.append(alreadyExist);
+					exp.close();
 				}
 			}
 				//if place is not there in db or if it is there and not from ixigo,then insert place Timings,place Charges,place image

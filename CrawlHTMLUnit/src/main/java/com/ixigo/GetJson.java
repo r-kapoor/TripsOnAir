@@ -35,6 +35,7 @@ public class GetJson extends getHibernateSession{
 
 	private static String outputFile = "target/ixigo/test.txt";
 	private static String exceptionUrlsFile = "target/ixigo/cityUrlException.txt";
+	private static String exceptionDataFile="target/ixigo/dataException.txt";
 
 	public static void getJson(IxigoServiceURL ixigoServiceURL,SessionFactory sessionFactory) throws Exception {
 		System.out.println("--START CRAWLING--");
@@ -64,6 +65,9 @@ public class GetJson extends getHibernateSession{
 		dataReader.beginArray();
 		int count = 0;
 		while (dataReader.hasNext()) {
+			String exceptionData="";
+			String nameOfPlace = "";
+			try{			
 			count++;
 			JsonObject dataObject = parser.parse(dataReader).getAsJsonObject();
 			// JsonObject id = dataObject.get("_id").getAsJsonObject();
@@ -72,7 +76,7 @@ public class GetJson extends getHibernateSession{
 			// JsonArray filenames = doc.getAsJsonArray("Filenames");
 			// do something with the document here
 			// ...
-			String nameOfPlace = "";
+		
 			if (dataObject.has("r")&&(!dataObject.get("r").isJsonNull())) {
 				nameOfPlace = dataObject.get("r").getAsString();
 			}
@@ -486,12 +490,23 @@ public class GetJson extends getHibernateSession{
 			 * System.out.println("pricePPForeign:"+pricePPForeign);
 			 * System.out.println("time2Cover:"+time2Cover);
 			 */
-			FileOutputStream exception = new FileOutputStream(outputFile, true);
+			FileOutputStream output = new FileOutputStream(outputFile, true);
 			@SuppressWarnings("resource")
-			PrintStream exe = new PrintStream(exception);
+			PrintStream exe = new PrintStream(output);
 			exe.append(inFile);
 			exe.close();
+		}//end of inner try block
+		catch(Exception e){
+			exceptionData+=new Date()+"\n";
+			exceptionData+=count+"\n"+"nameOfPlace:"+nameOfPlace;
+			exceptionData+="Error:"+e+",Error Message:"+e.getMessage()+"\n";		
+			FileOutputStream exception=new FileOutputStream(exceptionDataFile,true);
+			@SuppressWarnings("resource")
+			PrintStream exe=new PrintStream(exception);
+			exe.append(exceptionData);
+			exe.close();
 		}
+	}
 
 		dataReader.endArray(); // ending ']' of Documents
 		// final '}'
