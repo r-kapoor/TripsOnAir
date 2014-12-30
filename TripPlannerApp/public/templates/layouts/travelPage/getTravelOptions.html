@@ -1,0 +1,34 @@
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="css/page2Css/reorder.css"/>
+<link rel="stylesheet" type="text/css" href="css/page2Css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="css/page2Css/demo.css" />
+<link rel="stylesheet" type="text/css" href="css/page2Css/icons.css" />
+<link rel="stylesheet" type="text/css" href="css/page2Css/component.css"/>
+<script src="js/jQueryCookie/jquery.cookie.js"></script>
+<script src="js/jqueryTemplate/jquery.tmpl.js"></script>
+<script src="js/callPlaces.js"></script>
+<script src="js/page2JSFunctions/reorderByDrag.js"></script>
+<script src="js/page2JSFunctions/showRoutes.js"></script>
+<script src="js/page2JSFunctions/modernizr.custom.js"></script>
+</head>
+
+<body>
+<div id="placesOrder">
+	<div class="sideBySide">
+		<div class="left">
+		    <ul id="ordered" class="citiesOrder">
+
+			</ul>
+		</div>
+	</div>
+</div>
+<div id="travelOptions" class="container">	
+</div>
+<form id="page3" action="/showPlaces" method="POST">
+<input id ="page3Input" type="text" name="travelData" value=""/>
+<input type="submit" value="Submit">
+</form>	
+</body>

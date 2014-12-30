@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html ng-app="tripdetails.itinerary.app">
+<head>
+    <script data-require="jquery@*" data-semver="2.1.1" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script data-require="angular.js@1.3.4" data-semver="1.3.4" src="http://code.angularjs.org/1.3.4/angular.js"></script>
+	<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+	<script type="text/javascript" src="js/angularController/page3Main.js"></script>
+	<script type="text/javascript" src="js/angularController/shakuni.js"></script>
+	
+</head>
+
+<body >
+	<div ng-controller="itineraryMainController">
+		<div ng-include src="'templates/layouts/global/header.html'"></div>
+			<div class="row">
+				<div class="col-sm-2">
+					<div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showItineraryPanel.html'"></div>
+				</div>
+				<div class="col-sm-10">
+					<div class="row">
+						<div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showHotels.html'"></div>
+					</div>
+					<div class="row">
+						<div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showPlaces.html'"></div>
+					</div>
+				</div>
+			</div>	
+		<div ng-include src="'templates/layouts/global/footer.html'"></div>
+	</div>
+</body>
+
+</html>

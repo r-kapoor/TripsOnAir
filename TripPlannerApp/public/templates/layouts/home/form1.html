@@ -10,7 +10,7 @@
         <div ng-controller="selectedDestinationsPanelController" data-spy="affix" collapse="isSelectedPanelCollapsed">
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
-                    <div class="btn btn-default btn-sm">Submit your destinations</div>
+                    <div class="btn btn-default btn-sm" ng-click="onSubmit()">Submit your destinations</div>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -77,7 +77,7 @@
                                 <div class="panel-body">
                                     <div id='invalid'></div>
 
-                                    <form role="form">
+                                    <form role="form" autocomplete="off">
                                         <div collapse="isOverviewCollapsed">
                                             <div ng-controller="AddCityCtrl">
                                                 <div class="form-group">
@@ -262,9 +262,9 @@
                                             </div>
                                             <div class="col-md-12 text-center">
                                                 <button type="button" class="btn btn-primary" ng-model="singleModel"
-                                                        ng-click="suggestDestinations()" btn-checkbox
+                                                        ng-click="submitOrSuggest()" btn-checkbox
                                                         btn-checkbox-true="1" btn-checkbox-false="0">
-                                                    Single Toggle
+                                                    Submit
                                                 </button>
                                             </div>
                                         </div>

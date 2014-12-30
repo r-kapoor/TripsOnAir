@@ -4,13 +4,13 @@
             "404": "errors/404",
             "500": "errors/500",
             "503": "errors/503"
-        }
-//      "appsec": {
-//        "csrf": true,
+        },
+     "appsec": {
+        "csrf": false
 //        "csp": false,
 //        "p3p": false,
 //        "xframe": "SAMEORIGIN"
-//      },
+     }
 //
 //      "compiler": {
 //          "dust": "templates",

@@ -1,7 +1,5 @@
 'use strict';
 
-var getTravelOptionsModel = require('../models/places');
-
 module.exports = function (app) {
 
     /**
@@ -11,9 +9,9 @@ module.exports = function (app) {
     	
     	console.log("in get travel options");
     	
-    	var model = new getTravelOptionsModel();
-    	res.render('getTravelOptions', model);
-    	
+    	//var model = new getTravelOptionsModel();
+    	//res.render('getTravelOptions', model);
+    	res.sendfile('./public/templates/layouts/travelPage/getTravelOptions.html');
     	/*var origin=req.param("o");
     	var startDate=req.param("stD");
     	var endDate=req.param("enD");
@@ -62,8 +60,8 @@ module.exports = function (app) {
     /**
      * store the session variables
      */
-    app.post('/places', function (req, res) {
-    	res.redirect('/places');
+    app.post('/getOptimizeOrder', function (req, res) {
+    	res.redirect('/getOptimizeOrder');
     });
 
 };

@@ -17,11 +17,17 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
     $scope.sliders.thirdSliderValue = 0;
 
-    $scope.suggestDestinations = function() {
+    $scope.submitOrSuggest = function() {
         formData.setBudget($scope.sliders.sliderValue);
         formData.setTastes($scope.checkModel);
-
-        $rootScope.$emit('suggest');
+        if($scope.isSuggestDestinationsOn)
+        {
+          $rootScope.$emit('suggest');  
+        }
+        else
+         {
+            $rootScope.$emit('submit');
+         }   
     };
 
     $scope.myFormater = function(value) {
@@ -237,6 +243,13 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                                 destinationsData[index-1].Latitude = latitudes[index];
                                 destinationsData[index-1].Longitude = longitudes[index];
                                 totalDistance += parseInt($scope.getDistance(latitudes[index - 1], longitudes[index - 1], latitudes[index], longitudes[index]));
+                            }
+                            else
+                            {
+                                formData.setOriginGeoCoordinates({
+                                    orgLat:latitudes[index],
+                                    orgLong:longitudes[index]
+                                });
                             }
                         });
                         formData.setDestinations(destinationsData);

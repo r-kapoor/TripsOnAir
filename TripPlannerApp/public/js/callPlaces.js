@@ -7,11 +7,11 @@ $(document).ready(function(){
 	var currentURL=document.URL;
 	var pathArray = currentURL.split('?');
 	if(pathArray.length>1){
-		var ajaxQuery = $.getJSON( '/places?'+pathArray[1]);
+		var ajaxQuery = $.getJSON( '/getOptimizeOrder?'+pathArray[1]);
 	}
 	else
 	{
-		var ajaxQuery = $.getJSON( '/places'+$.cookie('getTravelOptions'));
+		var ajaxQuery = $.getJSON( '/getOptimizeOrder'+$.cookie('getTravelOptions'));
 	}
 	//TODO:if cookie not find then redirect to invalid url
 	ajaxQuery.done(function(data) {

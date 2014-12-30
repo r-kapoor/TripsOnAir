@@ -13,7 +13,6 @@ angular.module('scrollLoad', []).directive('whenScrolled', function($document,$w
 
 var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider','scrollLoad']);
 
-inputModule.run();
 inputModule.controller('form1Controller',  function($scope, $rootScope) {
     $scope.title='Plan your Travel';
     $scope.todos = [

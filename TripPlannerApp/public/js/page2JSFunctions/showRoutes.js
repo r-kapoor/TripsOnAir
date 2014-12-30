@@ -19,6 +19,8 @@ function showRoutes()
 		
 		console.log("GotData:"+data);
 		console.log("GotData:"+JSON.stringify(data));
+
+		$("#page3Input").val(JSON.stringify(data));
 		
 		var oneWayData = [
 		                  { CityName: "Delhi", City2City: "Delhi-Bangalore",
