@@ -10,6 +10,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
   $scope.destinationCity = null;
   $scope.destinationCityList=[];
   $scope.label="Enter the Destination";
+  
     $scope.originValid = true;
     $scope.destinationValid=false;
     $scope.triggerOn = 'xyz';
@@ -21,6 +22,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
       $scope.destinationCityList.push($scope.destinationCity);
       $scope.destinationCity = null;
       $scope.label="Enter another Destination";
+      $rootScope.$emit('destinationAdded');
   };
 
     $scope.originSelected = function() {
@@ -52,6 +54,8 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         return $scope.originValid;
     };
     $scope.destinationSelected = function() {
+      console.log("in destinationSelected");
+      console.log(typeof $scope.destinationCity);
         if($scope.destinationCity!==null && $scope.destinationCity.length!=0 && typeof $scope.destinationCity === 'object') {
             $scope.addDestination();
             formData.setDestinations($scope.destinationCityList);

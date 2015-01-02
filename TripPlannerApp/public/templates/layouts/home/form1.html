@@ -114,8 +114,7 @@
                                             </div>
                                             <div class="checkbox text-center">
                                                 <label> <input ng-model="isSuggestDestinationsOn"
-                                                               type="checkbox"><em>Help me choose
-                                                    destinations</em>
+                                                               type="checkbox"><em>{{helpLabel}}</em>
                                                 </label>
                                             </div>
 
@@ -153,16 +152,21 @@
                                                             </div>
                                                         </button>
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-2">
+                                                   <div class="col-sm-2 col-xs-2">
                                                         <div class="btn-group">
-                                                            <label class="btn btn-primary"
+                                                             <div class="row" style="margin-bottom:30%">
+                                                            <label class="btn btn-default btn-xs"
                                                                    ng-model="tripStartTime.morning" btn-checkbox>
-                                                                <i class="glyphicon glyphicon-plus"></i>
+                                                                <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
                                                             </label>
-                                                            <label class="btn btn-primary"
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                            <label class="btn btn-default btn-xs"
                                                                    ng-model="tripStartTime.evening" btn-checkbox>
-                                                                <i class="glyphicon glyphicon-minus"></i>
+                                                                 <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
                                                             </label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 col-sm-4 col-xs-4">
@@ -194,16 +198,21 @@
                                                             </div>
                                                         </button>
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-2">
+                                                    
+                                                     <div class="col-md-2 col-sm-2 col-xs-2">
                                                         <div class="btn-group">
-                                                            <label class="btn btn-primary"
+                                                            <div class="row" style="margin-bottom:30%">
+                                                            <label class="btn btn-default btn-xs "
                                                                    ng-model="tripEndTime.morning" btn-checkbox>
-                                                                <i class="glyphicon glyphicon-plus"></i>
+                                                                 <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
                                                             </label>
-                                                            <label class="btn btn-primary"
+                                                            </div>
+                                                            <div class="row">
+                                                            <label class="btn btn-default btn-xs"
                                                                    ng-model="tripEndTime.evening" btn-checkbox>
-                                                                <i class="glyphicon glyphicon-minus"></i>
+                                                                 <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
                                                             </label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

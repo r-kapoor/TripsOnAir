@@ -5,7 +5,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	$scope.isDetailsCollapsed = true;
 	$scope.isOverviewCollapsed = false;
 	$scope.isSuggestDestinationsOn = false;
-
+    $scope.helpLabel="Help me choose destinations";
     $scope.sliders = {};
     $scope.sliders.sliderValue = 10000;
 
@@ -22,7 +22,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         formData.setTastes($scope.checkModel);
         if($scope.isSuggestDestinationsOn)
         {
-          $rootScope.$emit('suggest');  
+          $rootScope.$emit('suggest');
         }
         else
          {
@@ -52,6 +52,12 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         formData.setTripEndTime($scope.tripEndTime);
         $rootScope.$emit('selectionDone');
     }, true);
+
+
+    $rootScope.$on('destinationAdded',function()
+    {
+     $scope.helpLabel="Help me choose more destinations";
+    });
 
     $rootScope.$on('selectionDone', function checkAndShowOtherInputs() {
 
@@ -208,7 +214,11 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     };
 
 	$scope.setBudgetLimits = function() {
-		if(!$scope.isSuggestDestinationsOn) {
+        console.log("in setBudgetLimits");
+        console.log($scope.isSuggestDestinationsOn);
+        console.log(formData.getDestinations().length);
+		if((!$scope.isSuggestDestinationsOn)||(($scope.isSuggestDestinationsOn)&&(formData.getDestinations().length>0))) {
+            console.log("in if");
             var origin = formData.getOrigin();
             var destinations = formData.getDestinations();
             var startDate = formData.getStartDate();

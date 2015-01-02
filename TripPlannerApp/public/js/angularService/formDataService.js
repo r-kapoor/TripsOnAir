@@ -60,7 +60,6 @@ inputModule.service('formData', function () {
                 console.log('Set destination:'+JSON.stringify(destinations));
                 destinationCities = destinations;
                 removeDuplicates();
-                console.log('After removal:'+JSON.stringify(destinationCities[0]));
             },
             setStartDate: function(start) {
                 console.log('Set Start Date');

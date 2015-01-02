@@ -30,7 +30,7 @@
     }
 }
 @media all and (max-width: 1000px) { /* screen size until 1000px */
-    .name_content{
+    .name_content {
         font-size: 0.9em; /* 1.2x default size */
     }
 }
