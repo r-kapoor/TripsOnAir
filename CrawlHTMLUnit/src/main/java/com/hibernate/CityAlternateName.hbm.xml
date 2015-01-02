@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 31, 2014 4:51:51 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hibernate.CityAlternateName" table="CityAlternateName" catalog="Holiday">
+        <id name="cityId" type="int">
+            <column name="CityID" />
+            <generator class="assigned" />
+        </id>
+        <property name="alternateName" type="java.lang.String">
+            <column name="AlternateName" />
+        </property>
+    </class>
+</hibernate-mapping>

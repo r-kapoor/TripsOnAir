@@ -32,6 +32,9 @@
         <property name="longitude" type="java.lang.Double">
             <column name="Longitude" precision="22" scale="0" />
         </property>
+        <property name="cityImage" type="string">
+            <column name="CityImage" length="10000" />
+        </property>
         <property name="ixigo" type="boolean">
             <column name="Ixigo" not-null="true" />
         </property>

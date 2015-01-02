@@ -15,6 +15,7 @@ public class City implements java.io.Serializable {
 	private float rating;
 	private Double latitude;
 	private Double longitude;
+	private String cityImage;
 	private boolean ixigo;
 	private boolean tripAdvisor;
 
@@ -116,6 +117,14 @@ public class City implements java.io.Serializable {
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getCityImage() {
+		return cityImage;
+	}
+
+	public void setCityImage(String cityImage) {
+		this.cityImage = cityImage;
 	}
 
 	public boolean isIxigo() {
