@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 
-<html ng-app="tripdetails.input.app" when-scrolled>
+<html ng-app="tripdetails.input.app" when-scrolled style="height:100%">
 <head>
-    <script data-require="jquery@*" data-semver="2.1.1" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script data-require="angular.js@1.3.4" data-semver="1.3.4" src="http://code.angularjs.org/1.3.4/angular.js"></script>
 	<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
+	<!--<script src=" https://cdnjs.cloudflare.com/ajax/libs/angular-ui-utils/0.1.1/angular-ui-utils.min.js"></script>-->
 	<script src="js/angularController/form1.js"></script>
 	<script src="js/angularController/datePicker.js"></script>
+	 <script data-require="jquery@*" data-semver="2.1.1" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script type="text/javascript" src="js/angularJS/bootstrap-slider.js"></script>
 	<script src="js/angularController/addCity.js"></script>
 	<script src="js/angularService/cityDataService.js"></script>
@@ -17,14 +19,20 @@
     <!--TODO:include krishna.js if user click help in choosing dests"-->
     <script src="js/angularController/krishna.js"></script>
     <script src="js/angularController/bhishma.js"></script>
+    <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
 
 </head>
 
 <body>
 	<div ng-include src="'templates/layouts/global/header.html'"></div>
-	<div style="height:100%" ng-include src="'templates/layouts/home/form1.html'"></div>
+	<div ng-include src="'templates/layouts/home/form1.html'"></div>
+	<!--<div ng-include src="'templates/layouts/home/promo1.html'"></div>
+	<div ng-include src="'templates/layouts/home/promo2.html'"></div>-->
 	<!--<div ng-include src="'templates/normalApp.html'"></div>-->
-	<div ng-include src="'templates/layouts/global/footer.html'"></div>
+	<div ng-include style="height:100%" src="'templates/layouts/global/footer.html'"></div>
+	
 </body>
 
 </html>
