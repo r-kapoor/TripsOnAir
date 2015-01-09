@@ -59,7 +59,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
         csrf.attr("name","_csrf");
         csrf.attr("value",csrf_token);
         $("body").append(c);*/
-        var body=angular.element(document.querySelectorAll("form"));
+        var body=angular.element(document.querySelectorAll("body"));
         body.append(formElement);
         formElement.submit();
     };
@@ -90,14 +90,14 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
            return {
                 o:origin,
                 dsts:destinationString,
-                stD:startDate,
-                enD:endDate,
-                stT:startTime,
-                enT:endTime,
+                startDate:startDate,
+                endDate:endDate,
+                startTime:startTime,
+                endTime:endTime,
                 budget:budget,
-                tst:tastes,
-                oLat:orgLat,
-                OLong:orgLong,
+                tastes:tastes,
+                orgLat:orgLat,
+                orgLong:orgLong,
                 numP:1
                 }
             }

@@ -24,17 +24,17 @@ function getDestinationsAndStops(travelData)
 					if(segments[k].isMajor==1)
 					{
 						if(firstMajorSegmentStartTime==null){
-							firstMajorSegmentStartTime=segments[k].startTime;
+							firstMajorSegmentStartTime=new Date(segments[k].startTime);
 						}
 						if(t>0)
 						{	
-							stops[t-1].departureTime=segments[k].startTime;
+							stops[t-1].departureTime=new Date(segments[k].startTime);
 							
 						}	
 						stops[t]=
 						{
 							name:segments[k].tName,
-							arrivalTime:segments[k].endTime
+							arrivalTime:new Date(segments[k].endTime)
 						}
 						t++;
 					}	
@@ -43,7 +43,7 @@ function getDestinationsAndStops(travelData)
 			}	
 		}
 		destinationsWiseStops[i]=stops;
-		destinations[i].arrivalTime=lastStop[0].arrivalTime;
+		destinations[i].arrivalTime=new Date(lastStop[0].arrivalTime);
 		if(i>0){
 			destinations[i-1].departureTime=firstMajorSegmentStartTime;
 		}

@@ -26,7 +26,7 @@ function getConnectivity(cities, cityIDs, callback)
 		+' LEFT OUTER JOIN' 
 		+' (SELECT CityIDOrigin, CityIDDestination, NormalizedConnectivity AS RailwayConnectivity FROM City_Connectivity_Between_Railway) f ON (c.CityIDOrigin = f.CityIDOrigin) AND (c.CityIDDestination = f.CityIDDestination);';
 	
-	//console.log(queryString);
+	console.log(queryString);
 	connection.query(queryString, function(err, rows, fields) {
 		if (err)
 		{

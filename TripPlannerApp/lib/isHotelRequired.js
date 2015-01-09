@@ -4,6 +4,7 @@ function isHotelRequired(destinationsAndStops)
 
 	var t1= new Date(destinationsAndStops.destinations[0].arrivalTime);
 	var t2 = new Date(destinationsAndStops.destinations[0].departureTime);
+	var numCitiesHotelRequired=0;
 	console.log(t1.getHoursBetween(t2));
 	//console.log(Date.parse(destinationsAndStops.destinations[0].arrivalTime));
 	//console.log(new Date(Date.parse(destinationsAndStops.destinations[0].arrivalTime)));
@@ -28,7 +29,8 @@ function isHotelRequired(destinationsAndStops)
 		if(hours>=20)
 		{
 			destinationsAndStops.destinations[i].isHotelRequired=1;
-		}
+			numCitiesHotelRequired++;
+		} 
 		else
 		{
 			if((arrTime.getHours()>=23)||(arrTime.getHours()<4))//if between 11 pm to 4 am
@@ -52,6 +54,7 @@ function isHotelRequired(destinationsAndStops)
 			if(hours>=6)
 			{
 				stops[j].isHotelRequired=1;
+				numCitiesHotelRequired++;
 			}
 			else
 			{
@@ -59,6 +62,7 @@ function isHotelRequired(destinationsAndStops)
 			}	
 		}
 	}
+	destinationsAndStops.numOfCitiesWhereHotelRequired=numCitiesHotelRequired;
 }
 
 module.exports.isHotelRequired=isHotelRequired;

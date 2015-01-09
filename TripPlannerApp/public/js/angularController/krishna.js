@@ -38,7 +38,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             return 'col-md-4';
         }
         return 'col-md-6';
-    } ;
+    };
 
     $rootScope.$on('scrolled', function() {
         if($scope.formSubmitted && (!$scope.requestSemaphoreSingleCities || !$scope.requestSemaphoreMultiCities)) {

@@ -16,29 +16,19 @@ module.exports = function (app) {
     	console.log("in get");
     
     	var origin=req.param("o");
-    	var startDate=req.param("stD");
-    	var endDate=req.param("enD");
-    	var tastes=req.param("tst");
+    	var startDate=req.param("startDate");
+    	var endDate=req.param("endDate");
     	var destinations=req.param("dsts");
-    	var budget=req.param("bdg");
-    	var type=req.param("type");
+    	var budget=req.param("budget");
     	
         origin= JSON.parse(origin).name.toUpperCase();
-        tastes=JSON.parse(tastes);
-        var tastesArray = [];
         var destinationsArray=[];
-        for(var i in tastes)
-        {
-            if(tastes[i] === true) {
-                tastesArray.push(i.toUpperCase());
-            }
-        }
+        
         destinations=destinations.split(";");
         for(var i=0;i<destinations.length;i++)
         {
             destinationsArray.push(JSON.parse(destinations[i]).name.toUpperCase());
-        } 
-    	console.log("tastes:"+tastes);
+        }
     	console.log("destinations:"+destinations);
     	console.log("startDate:"+startDate);
     	
@@ -69,8 +59,7 @@ module.exports = function (app) {
     				    	//res.render('places', model);
     				    	res.json(model);
     						});
-    				});
-    	  
+    				});    	  
     });
 
     

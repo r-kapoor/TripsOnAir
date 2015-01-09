@@ -37,7 +37,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 	
 	if(times[0]=="Morning")
 	{	
-		idealStartTime=new Date(dates[0].getTime()+idealStartTimeHours*60000*60);	
+		idealStartTime=new Date(dates[0].getTime()+idealStartMorningTimeHours*60000*60);	
 	}
 	else
 	{
@@ -226,7 +226,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 							{
 								if(idealStartTime.getHours()>=21)
 								{
-									idealStartTime.addDay(1);
+									idealStartTime.addDays(1);
 								}
 								idealStartTime.clearTime();
 								idealStartTime.addHours(5);								
@@ -265,6 +265,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 							//Adding buffer Time
 							idealStartTime.addHours(2);
 						}
+			
 						else
 						{
 							//console.log("Other is:%j",allSegments[k]);

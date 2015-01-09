@@ -11,11 +11,11 @@
         <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
-                    <div class="btn btn-default btn-sm" ng-click="onSubmit()">Submit your destinations</div>
+                    <div id="reponsiveFont" class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-12"><h5>origin:</h5></div>
+                        <div class="col-sm-12"><h5>Origin:</h5></div>
                         <div class="col-sm-12">
                             <div class="wrapper">
                                 <a href="#" class="thumbnail" style="margin-bottom: 0;">
@@ -23,7 +23,7 @@
                                 </a>
 
                                 <div class="name">
-                                    <p class="name_content">
+                                    <p id ="reponsiveFont" class="text-center">
                                         {{origin.name}}
                                     </p>
                                 </div>
@@ -43,7 +43,7 @@
                                     <i class="glyphicon glyphicon-minus"></i>
                                 </div>
                                 <div class="name">
-                                    <p class="name_content">
+                                    <p id="reponsiveFont" class="text-center">
                                         {{getDestinationName(destination)}}
                                     </p>
                                 </div>
@@ -124,7 +124,7 @@
 
                                             <div ng-controller="DatepickerCtrl">
                                                 <div class="row form-group">
-                                                    <div class="col-md-4 col-sm-4 col-xs-4">
+                                                    <div class="col-md-4 col-sm-4 col-xs-4 btn-responsive">
                                                         <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
                                                                 is-open="opened1" min-date="minDate"
                                                                 max-date="'2015-06-22'"
@@ -140,12 +140,12 @@
                                                                 </div>
                                                                 <div class="col-sm-2 col-md-2 col-xs-2">
                                                                     <div class="row">
-                                                                        <div class="col-sm-1 col-md-1 col-xs-1">{{dt1 |
+                                                                        <div class="col-sm-1 col-md-1 col-xs-1 month">{{dt1 |
                                                                             date:'MMM'}}
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
-                                                                        <div class="col-sm-1 col-md-1 col-xs-1">{{dt1 |
+                                                                        <div class="col-sm-1 col-md-1 col-xs-1 day">{{dt1 |
                                                                             date:'EEE'}}
                                                                         </div>
                                                                     </div>
@@ -201,6 +201,7 @@
                                                     </div>
                                                     
                                                      <div class="col-md-2 col-sm-2 col-xs-2">
+                                                        <div class="button-toolbar">
                                                         <div class="btn-group">
                                                             <div class="row" style="margin-bottom:30%">
                                                             <label class="btn btn-default btn-xs "
@@ -208,6 +209,7 @@
                                                                  <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
                                                             </label>
                                                             </div>
+                                                        </div>    
                                                             <div class="row">
                                                             <label class="btn btn-default btn-xs"
                                                                    ng-model="tripEndTime.evening" btn-checkbox>
@@ -255,21 +257,33 @@
 
                                                 </div>
                                             </div>
-                                            <label>Budget Per Person</label>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Budget Per Person</label>
 
-                                            <div class="form-group">
-                                                <!-- <label>Budget</label> -->
-                                                <div class="col-md-12 text-center ">
-                                                    <slider ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"
-                                                            step="{{sliderOptions.step}}"
-                                                            max="{{sliderOptions.max}}"></slider>
-
-
-                                                    {{myFormater(sliders.sliderValue) | currency:"&#8377;"}}
-
-
+                                                    <div class="form-group">
+                                                        <!-- <label>Budget</label> -->
+                                                        <div class="col-sm-9 ">
+                                                            <slider ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"
+                                                                    step="{{sliderOptions.step}}"
+                                                                    max="{{sliderOptions.max}}"></slider>
+                                                            {{myFormater(sliders.sliderValue) | currency:"&#8377;"}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3 col-sm-offset-1 btn-group">       
+                                                    <div class="form-group">
+                                                      <label for="numP">Persons</label>
+                                                      <select class="form-control" id="numP">
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                        <option>3+</option>
+                                                      </select>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        
                                             <div class="col-md-12 text-center">
                                                 <button type="button" class="btn btn-primary" ng-model="singleModel"
                                                         ng-click="submitOrSuggest()" btn-checkbox
@@ -277,11 +291,11 @@
                                                     Submit
                                                 </button>
                                             </div>
-                                        </div>
+                                        
 
-
+</div>
                                     </form>
-
+                                
 
                                     <!--
                                     <table id="inptable">

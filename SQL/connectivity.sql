@@ -57,11 +57,10 @@ GROUP BY CityIDOrigin, CityIDDestination
 --Flight Between City Connectivity
 
 TRUNCATE City_Connectivity_Between_Air;
-SET @dateoftravel = '2014-06-01';
 INSERT INTO City_Connectivity_Between_Air
-SELECT OriginCityID, DestinationID, Count(*) AS Connectivity FROM 
-(SELECT DISTINCT OriginCityID, DestinationID, DepartureTime, ArrivalTime FROM Flight WHERE (DepartureDate = @dateoftravel) AND (Stops = 0)) a
-GROUP BY OriginCityID, DestinationID;
+SELECT OriginCityID, DestinationCityID,SUM(NumberOfTimesInDay),0 FROM 
+(SELECT OriginCityID, DestinationCityID, IF(DaysOfTravel = '0' OR DaysOfTravel = '8', 7, CHAR_LENGTH(DaysOfTravel))/7.0  as NumberOfTimesInDay FROM Flight_Schedule) a
+GROUP BY OriginCityID, DestinationCityID;
 
 --Flight City Connectivity
 
@@ -99,7 +98,7 @@ UPDATE City_Connectivity_Railway
 SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Railway) a);
 
 UPDATE City_Connectivity_Between_Air
-SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Air) a);
+SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Between_Air) a);
 
 UPDATE City_Connectivity_Between_Bus
 SET NormalizedConnectivity = Connectivity/(SELECT MaxConnectivity FROM (SELECT MAX(Connectivity) as MaxConnectivity FROM City_Connectivity_Between_Bus) a);

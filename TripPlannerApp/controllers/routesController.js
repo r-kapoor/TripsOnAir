@@ -6,7 +6,6 @@
 
 var IndexModel = require('../models/index');
 var getDataRome2rio=require('../lib/getDataRome2rio');
-var mergeJson=require('../lib/mergeJson');
 var getRatingRatio=require('../lib/getRatingRatio');
 var conn = require('../lib/database');
 var getDateSets = require('../lib/getDateSets');
@@ -24,30 +23,33 @@ module.exports=function (app){
 	{
 		//Getting the paramters passed
 		var cities=req.param('cities').split(',');
-		var startDate=req.param("stD");
-    	var endDate=req.param("enD");
+		var startDate=req.param("startDate");
+    	var endDate=req.param("endDate");
     	var dates=[new Date(startDate),new Date(endDate)];
-    	var startTime=req.param("stT");
-    	var endTime=req.param("enT");
-    	var times=[startTime,endTime];
+    	var startTime=req.param("startTime");
+    	var endTime=req.param("endTime");
     	var  numPeople=req.param("numP");
-    	var budget = req.param("bdg");
+    	var budget = req.param("budget");
+    	var times=[];
+    	startTime = JSON.parse(startTime);
+        endTime = JSON.parse(endTime);
+        //console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning);
     	
     	//Temporary Fix For time
     	//TODO : Change Time to Integer
-		if(times[0]=="morning")
+		if(startTime.morning)
 		{
 			times[0] = "Morning";
 		}
-		else if(times[0]=="evening")
+		else if(startTime.evening)
 		{
 			times[0] = "Evening";
 		}
-		if(times[1]=="morning")
+		if(endTime.morning)
 		{
 			times[1] = "Morning";
 		}
-		else if(times[1]=="evening")
+		else if(endTime.evening)
 		{
 			times[1] = "Evening";
 		}
@@ -99,6 +101,9 @@ module.exports=function (app){
 				getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times, ratio, numPeople, 
 						getDefaultModeOfTravel.getDefaultModeOfTravel,planTaxiTrip.planTaxiTrip, 
 						function(model){
+							model.userTotalbudget=budget;
+							model.numPeople=numPeople;
+							console.log("budget: "+budget);
 					res.json(model);
 			});
     	});

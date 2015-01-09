@@ -555,20 +555,30 @@ function isDuplicateCab(route1,route2)
 	{
 		//Since cab will be present in these routes.Hence both will be same
 		return true;
-	}	
+	}
 
 	var i=0,j=0;
+	console.log("route1.segments:"+route1.segments);
+
 	while((i<length1)&&(j<length2))
 	{
-		while(route1.segment[i].isMajor==0)
+		console.log("1i:"+i+":route1.segments:"+JSON.stringify(route1.segments[i]));
+		while(i < length1 && route1.segments[i].isMajor==0)
 		{
+			console.log("2i:"+i+":route1.segments:"+JSON.stringify(route1.segments[i]));
 			i++;
 		}	
-		while(route2.segment[j].isMajor==0)
+		while(j < length2 && route2.segments[j].isMajor==0)
 		{
 			j++;
 		}
-		if(isIdenticalSegment(route1.segment[i], route2.segment[j]))
+		if(i==length1 && j==length2) {
+			return true;
+		}
+		if(i==length1 || j==length2) {
+			return false;
+		}
+		if(isIdenticalSegment(route1.segments[i], route2.segments[j]))
 		{
 			i++;
 			j++;
