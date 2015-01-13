@@ -12,7 +12,7 @@ var APP_KEY="R1hcHt58";
  * dest - Destination City
  * callback(err, data) - The JSON data is passed to this function
  */
-function getDataRome2rio(origin,dest,callback)
+function getDataRome2rio(origin,dest,originID,destID,callback)
 {
 	//Getting the request URL for rome2rio
 	var url=getURL(origin,dest);
@@ -25,8 +25,11 @@ function getDataRome2rio(origin,dest,callback)
 	client.registerMethod("jsonMethod", url, "GET");
 	
 	//Calling the rome2rio API
-	client.methods.jsonMethod(function(data,response){	
-		callback(null, JSON.parse(data));
+	client.methods.jsonMethod(function(data,response){
+		var parsedData = JSON.parse(data);
+		parsedData.places[0].cityID = originID;
+		parsedData.places[1].cityID = destID;
+		callback(null, parsedData);
 	});
 }
 

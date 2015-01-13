@@ -31,8 +31,10 @@ module.exports=function (app){
     	var  numPeople=req.param("numP");
     	var budget = req.param("budget");
     	var times=[];
+    	var cityIDs=req.param("cityIDs").split(',');
     	startTime = JSON.parse(startTime);
         endTime = JSON.parse(endTime);
+
         //console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning);
     	
     	//Temporary Fix For time
@@ -68,7 +70,7 @@ module.exports=function (app){
 				if(semaphore[i]==0)
 				{
 					semaphore[i]=1;
-		        	getDataRome2rio.getDataRome2rio(cities[i],cities[i+1],callback);
+		        	getDataRome2rio.getDataRome2rio(cities[i],cities[i+1],cityIDs[i],cityIDs[i+1],callback);
 		        	break;
 				}	
 			}			
@@ -103,7 +105,7 @@ module.exports=function (app){
 						function(model){
 							model.userTotalbudget=budget;
 							model.numPeople=numPeople;
-							console.log("budget: "+budget);
+							//console.log("budget: "+budget);
 					res.json(model);
 			});
     	});

@@ -145,14 +145,17 @@ function showRoutes()
 
 function createQuery()
 {
-	query="cities=";
+	var query="cities=";
+	var cityIDParam="cityIDs=";
 	var items = [];
     $("ul.citiesOrder").children().each(function() {
       var item = $(this).text();
+      var id=$(this).attr('id');
       query+=item+",";
+      cityIDParam+=id+",";
       //items.push(item);
     });
-    return (query.substring(0,(query.length-1)));
+    return (query.substring(0,(query.length-1))+"&"+cityIDParam.substring(0,(cityIDParam.length-1)));
 }
 
 function createScript(attribute)

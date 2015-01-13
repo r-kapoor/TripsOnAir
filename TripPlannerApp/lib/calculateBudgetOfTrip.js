@@ -53,21 +53,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
 							console.log('Not a cab');
 							if(isLastTripWithCab==1)
 							{
-								console.log("isLastTripWithCab==1");
-								//Last part of travel was in cab
-								isLastTripWithCab=0;
-								
-								//TODO: Get Distance from Google / MapQuest API\
-								//if source and destination of taxi are not same then add the direct distance of source and destination to distanceByCab 
-								console.log('firstCabTime:'+firstCabTime);
-								console.log('cabEndTime:'+cabEndTime);
-								firstCabTime.clearTime(); 
-								cabEndTime.clearTime(); 
-								var numOfDaysOfCab=firstCabTime.getDaysBetween(cabEndTime)+1;
-								console.log('numOfDaysOfCab:'+numOfDaysOfCab);
-								var totalBudgetOfThisCab = calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab,startSegment);
-								console.log('totalBudgetOfThisCab:'+totalBudgetOfThisCab);
-								totalBudgetofCabs += totalBudgetOfThisCab;
+								calculateCabBudgetOfLastTrip();
 							}
 							totalBudgetOfTrip += allSegments[k].indicativePrice.price;
 						}
@@ -77,7 +63,28 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
 		}	
 		
 	}
+	if(isLastTripWithCab == 1) {
+		calculateCabBudgetOfLastTrip();
+	}
 	totalBudgetOfTrip += totalBudgetofCabs;
+
+	function calculateCabBudgetOfLastTrip() {
+		console.log("isLastTripWithCab==1");
+		//Last part of travel was in cab
+		isLastTripWithCab=0;
+		
+		//TODO: Get Distance from Google / MapQuest API\
+		//if source and destination of taxi are not same then add the direct distance of source and destination to distanceByCab 
+		console.log('firstCabTime:'+firstCabTime);
+		console.log('cabEndTime:'+cabEndTime);
+		firstCabTime.clearTime(); 
+		cabEndTime.clearTime(); 
+		var numOfDaysOfCab=firstCabTime.getDaysBetween(cabEndTime)+1;
+		console.log('numOfDaysOfCab:'+numOfDaysOfCab);
+		var totalBudgetOfThisCab = calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab,startSegment);
+		console.log('totalBudgetOfThisCab:'+totalBudgetOfThisCab);
+		totalBudgetofCabs += totalBudgetOfThisCab;
+	}
 	
 	console.log('TOTAL BUDGET OF TRIP:'+totalBudgetOfTrip);
 	var completeTrip = {

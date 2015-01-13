@@ -109,7 +109,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 					var isRecommendedRoute = 1;
 					for(var k = 0; k < allSegments.length; k++)
 					{
-						if(allSegments[k].vehicle)
+						if(allSegments[k].isMajor == 1 && allSegments[k].vehicle)
 						{
 							if(allSegments[k].vehicle == "train")//A part of this route is a train
 							{

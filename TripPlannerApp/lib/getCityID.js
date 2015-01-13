@@ -9,9 +9,10 @@ function getCityID(cityNames, callback)
 	var cityIDs = Array.apply(null, new Array(numberOfCities)).map(Number.prototype.valueOf,-1);
 	var citiesString = '';
 	citiesString += ' \''+cityNames.join('\', \'')+'\' ';
+	//citiesString = citiesString.toUpperCase();
 	//console.log("citiesString:"+citiesString);
 	var queryString = 'SELECT CityID, CityName FROM City WHERE CityName IN ('+citiesString+')';	
-	//console.log(queryString);
+	console.log("getCityID query:"+queryString);
 	connection.query(queryString, function(err, rows, fields) {
 		if (err)
 		{

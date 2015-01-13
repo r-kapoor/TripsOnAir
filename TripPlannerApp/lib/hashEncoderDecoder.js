@@ -51,8 +51,25 @@ function encodeHotelID(ID){
 	}
 }
 
+function decodeCityID(cityID){
+	if(!Array.isArray(cityID))
+	{
+		return parseInt(hashidscity.decode(cityID));
+	}
+	else
+	{
+		cityIDdecoded = [];
+		for(var i = 0; i < cityID.length; i++)
+		{
+			cityIDdecoded.push(decodeCityID(cityID[i]));
+		}
+		return cityIDdecoded;
+	}
+}
+
 module.exports.encodeCityID = encodeCityID;
 module.exports.encodeGroupID = encodeGroupID;
 module.exports.encodeHotelID = encodeHotelID;
+module.exports.decodeCityID = decodeCityID;
 
 

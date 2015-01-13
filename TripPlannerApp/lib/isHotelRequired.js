@@ -51,7 +51,11 @@ function isHotelRequired(destinationsAndStops)
 			var arrTime=new Date(stops[j].arrivalTime);
 			var departTime=new Date(stops[j].departureTime);
 			var hours=arrTime.getHoursBetween(departTime);
-			if(hours>=6)
+			//Hack to force it to take hotel
+			stops[j].isHotelRequired=1;
+			numCitiesHotelRequired++;
+			//End of hack
+			/*if(hours>=6)
 			{
 				stops[j].isHotelRequired=1;
 				numCitiesHotelRequired++;
@@ -59,7 +63,7 @@ function isHotelRequired(destinationsAndStops)
 			else
 			{
 				stops[j].isHotelRequired=0;
-			}	
+			}*/
 		}
 	}
 	destinationsAndStops.numOfCitiesWhereHotelRequired=numCitiesHotelRequired;
