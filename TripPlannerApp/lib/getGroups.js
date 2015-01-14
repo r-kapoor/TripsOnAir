@@ -7,17 +7,14 @@ var hashidEncoder =  require('../lib/hashEncoderDecoder');
 //var Hashids=require('hashids');
 //var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
 //var hashidscity = new Hashids("encrypting the cityid", 8);
-function getGroupList(conn,orgLat,orgLong,category,range,start,batchsize,callback) {
+function getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,callback) {
 
 	var connection=conn.conn();
 	connection.connect();
 	var subQuery='';
 	var DistScale=0.3;
-	for(var i=0;i<(category.length-1);i++)
-	{
-		subQuery+='(GroupCategory like "%' +category[i]+ '%") OR ';
-	}
-	subQuery+='(GroupCategory like "%' +category[category.length-1]+ '%")';
+	
+	subQuery+='(Taste & '+connection.escape(taste.tasteInteger)+'!=0 ) AND (Taste & '+connection.escape(taste.familyFriendsInteger)+'!=0 )';
 
 	/*var queryString='SELECT GroupName, PopularName, GroupID, DistFactor, CityName, c.CityID, Latitude, Longitude FROM'
 		+ '(SELECT GroupName,PopularName,a.GroupID, DistFactor, b.CityID FROM'

@@ -292,13 +292,15 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	};
 
 	$scope.checkModel = {
-		adventure: false,
-		wild: false,
-    	culture: false,
-    	religious: false,
-    	romantic: false
+	RELIGIOUS   : false,
+    ADVENTURE   : false,
+    BEACHES     : false,
+    LANDMARKS   : false,
+    NATURE      : false,
+    LIVE_EVENTS : false,
+    HILL_STATION: false,
+    ROMANTIC    : false,
+    FAMILY      : false,
+    FRIENDS     : false
   	};
-
-
-
 });

@@ -10,6 +10,7 @@ var getCity = require('../lib/getCities');
 var getGroup = require('../lib/getGroups');
 var getRange = require('../lib/getRange');
 var getNearbyCity = require('../lib/getNearbyCities');
+var tasteObjectToInteger = require('../lib/UtilityFunctions/tasteObjectToInteger');
 
 module.exports = function(app) {
 
@@ -31,18 +32,13 @@ module.exports = function(app) {
         startTime = JSON.parse(startTime);
         endTime = JSON.parse(endTime);
         tastes = JSON.parse(tastes);
-        var tastesArray = [];
-        for(var i in tastes)
-        {
-            if(tastes[i] === true) {
-                tastesArray.push(i.toUpperCase());
-            }
-        }
-        console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning+","+tastesArray);
+        var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
+        
+        console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning+","+tastes);
 		// Get the range of travel according to user budget and number of days
 		getRange.getRange(budget, startDate, startTime, endDate, endTime, function(range) {
 			console.log('range ' + range);
-			getCity.getCityList(conn, orgLat, orgLong, tastesArray, range, start, batchsize, function(City) {
+			getCity.getCityList(conn, orgLat, orgLong, tastes, range, start, batchsize, function(City) {
 				var model = {
 					CityList: City,
 					orgLat: orgLat,
@@ -71,15 +67,10 @@ module.exports = function(app) {
         startTime = JSON.parse(startTime);
         endTime = JSON.parse(endTime);
         tastes = JSON.parse(tastes);
-        var tastesArray = [];
-        for(var i in tastes)
-        {
-            if(tastes[i] === true) {
-                tastesArray.push(i.toUpperCase());
-            }
-        }
+        var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
+        
 		getRange.getRange(budget, startDate, startTime, endDate, endTime, function(range) {
-			getGroup.getGroupList(conn, orgLat, orgLong, tastesArray, range, start, batchsize, function(groupRows) {
+			getGroup.getGroupList(conn, orgLat, orgLong, tastes, range, start, batchsize, function(groupRows) {
 				var model = {
 					GroupList: groupRows,
                     orgLat: orgLat,
@@ -116,14 +107,9 @@ module.exports = function(app) {
             destinations.push(destination);
         }
         tastes = JSON.parse(tastes);
-        var tastesArray = [];
-        for(var i in tastes)
-        {
-            if(tastes[i] === true) {
-                tastesArray.push(i.toUpperCase());
-            }
-        }
-		getNearbyCity.getNearbyCityList(conn, destinations, orgLat, orgLong, tastesArray,
+        var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
+        
+		getNearbyCity.getNearbyCityList(conn, destinations, orgLat, orgLong, tastes,
 				distRemaining, start, batchsize, function(nearbyCityRows) {
 					var model = {
 						NearbyCityList: nearbyCityRows,
