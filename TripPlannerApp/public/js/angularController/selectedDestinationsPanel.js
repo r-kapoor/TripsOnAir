@@ -5,13 +5,15 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
     $scope.origin = null;
     $scope.destinationCityList = [];
     $scope.isSelectedPanelCollapsed = true;
-
+    $scope.submitItinerary=true;
+    $scope.destinationLabel=true;
     $rootScope.$on('originSelected', function onOriginSelected() {
         $scope.isSelectedPanelCollapsed = false;
         $scope.origin = formData.getOrigin();
     });
 
     $rootScope.$on('destinationSelected', function onOriginSelected() {
+        $scope.destinationLabel=false;
         $scope.destinationCityList = formData.getDestinations();
     });
 
@@ -26,6 +28,10 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
                 formData.setDestinations($scope.destinationCityList);
             }
         });
+        if(formData.getDestinations().length==0)
+           {
+              $scope.destinationLabel=true;
+           } 
         $rootScope.$emit('destinationRemoved');
     };
 

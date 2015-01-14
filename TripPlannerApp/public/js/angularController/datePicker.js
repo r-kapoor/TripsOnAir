@@ -26,6 +26,46 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
         $rootScope.$emit('selectionDone');
   };
 
+$scope.startMorningTime = function(){
+
+  var startEveningTimeId=angular.element(document.querySelector("#startEveningTimeId"));
+  if(startEveningTimeId.hasClass("active"))
+  {
+     startEveningTimeId.removeClass("active");
+     $scope.tripStartTime.evening=false;
+  }
+}
+
+$scope.startEveningTime = function(){
+
+  var startMorningTimeId=angular.element(document.querySelector("#startMorningTimeId"));
+  if(startMorningTimeId.hasClass("active"))
+  {
+     startMorningTimeId.removeClass("active");
+     $scope.tripStartTime.morning=false;
+  }
+}
+
+$scope.endMorningTime = function(){
+
+  var endEveningTimeId=angular.element(document.querySelector("#endEveningTimeId"));
+  if(endEveningTimeId.hasClass("active"))
+  {
+     endEveningTimeId.removeClass("active");
+      $scope.tripEndTime.evening=false;
+  }
+}
+
+$scope.endEveningTime = function(){
+
+  var endMorningTimeId=angular.element(document.querySelector("#endMorningTimeId"));
+  if(endMorningTimeId.hasClass("active"))
+  {
+     endMorningTimeId.removeClass("active");
+      $scope.tripEndTime.morning=false;
+  }
+}
+
   // Disable weekend selection
   $scope.disabled = function(date, mode) {
     return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );

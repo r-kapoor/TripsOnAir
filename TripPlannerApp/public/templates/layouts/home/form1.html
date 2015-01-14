@@ -11,7 +11,7 @@
         <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
             <div class="panel panel-primary">
                 <div class="panel-heading text-center">
-                    <div id="reponsiveFont" class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>
+                    <div id="reponsiveFont" ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -30,7 +30,7 @@
                                 <!--end of description class-->
                             </div>
                         </div>
-                        <div class="col-sm-12"><h5>Destinations:</h5></div>
+                        <div class="col-sm-12" ng-hide="destinationLabel"><h5>Destination(s):</h5></div>
                         <div ng-repeat="destination in destinationCityList">
                         <div class="col-sm-12">
                             <div class="wrapper">
@@ -76,34 +76,30 @@
                                     <h4 class="panel-title">{{title}}</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <div id='invalid'></div>
+                                    <!--<div id='invalid'></div>-->
 
                                     <form role="form" autocomplete="off">
                                         <div collapse="isOverviewCollapsed">
                                             <div ng-controller="AddCityCtrl">
-                                                <div class="form-group">
-                                                    <!-- <label for="originCity">Origin City</label> -->
-                                                    <input type="text" id="originId" ng-model="originCity"
-                                                           ng-blur="originSelected()"
-                                                           tooltip="Please Enter Correct Value"
-                                                           tooltip-trigger="{{getTriggerOn()}}"
-                                                           tooltip-placement="right"
-                                                           placeholder="Enter the origin"
-                                                           typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)"
-                                                           class="form-control">
-                                                </div>
-                                                <div class="form-group">
+                                                
+                                                    <div class="form-group" id="originId">
+                                                        <!-- <label for="originCity">Origin City</label> -->
+                                                        <input type="text" ng-model="originCity"
+                                                               ng-blur="originSelected()"
+                                                               placeholder="Enter the origin"
+                                                               typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)"
+                                                               class="form-control" aria-describedby="inputError2Status">
+                                                    </div>
+                                                
+                                                <div class="form-group" id="destinationId">
                                                     <div class="input-group">
                                                         <!--<label for="Destcity1">Destination</label>-->
                                                         <input ng-model="destinationCity"
                                                                ng-blur="destinationSelected()" class="form-control"
-                                                               tooltip="Please Enter Correct Value"
-                                                               tooltip-trigger="{{{true: '', false: 'blur'}[isDestinationValid()]}}"
-                                                               tooltip-placement="right"
                                                                placeholder="{{label}}"
                                                                typeahead="city as city.name for city in cities | filter:{name:$viewValue} | orderBy: byMatch($viewValue)">
 
-                                                        <div class="input-group-addon " ng-click="addDestination()"><i
+                                                        <div class="input-group-addon " ng-click="destinationSelected()"><i
                                                             class="glyphicon glyphicon-plus"></i></div>
                                                     </div>
                                                     <h5 class="text-center">
@@ -156,15 +152,15 @@
                                                    <div class="col-sm-2 col-xs-2">
                                                         <div class="btn-group">
                                                              <div class="row" style="margin-bottom:30%">
-                                                            <label class="btn btn-default btn-xs"
-                                                                   ng-model="tripStartTime.morning" btn-checkbox>
+                                                            <label id="startMorningTimeId" class="btn btn-default btn-xs"
+                                                                   ng-model="tripStartTime.morning" btn-checkbox ng-click="startMorningTime()">
                                                                 <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
                                                             </label>
                                                             </div>
                                                             
                                                             <div class="row">
-                                                            <label class="btn btn-default btn-xs"
-                                                                   ng-model="tripStartTime.evening" btn-checkbox>
+                                                            <label id="startEveningTimeId" class="btn btn-default btn-xs"
+                                                                   ng-model="tripStartTime.evening" btn-checkbox ng-click="startEveningTime()">
                                                                  <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
                                                             </label>
                                                             </div>
@@ -204,15 +200,15 @@
                                                         <div class="button-toolbar">
                                                         <div class="btn-group">
                                                             <div class="row" style="margin-bottom:30%">
-                                                            <label class="btn btn-default btn-xs "
-                                                                   ng-model="tripEndTime.morning" btn-checkbox>
+                                                            <label id="endMorningTimeId" class="btn btn-default btn-xs "
+                                                                   ng-model="tripEndTime.morning" btn-checkbox ng-click="endMorningTime()">
                                                                  <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
                                                             </label>
                                                             </div>
                                                         </div>    
                                                             <div class="row">
-                                                            <label class="btn btn-default btn-xs"
-                                                                   ng-model="tripEndTime.evening" btn-checkbox>
+                                                            <label id="endEveningTimeId" class="btn btn-default btn-xs"
+                                                                   ng-model="tripEndTime.evening" btn-checkbox ng-click="endEveningTime()">
                                                                  <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
                                                             </label>
                                                             </div>
