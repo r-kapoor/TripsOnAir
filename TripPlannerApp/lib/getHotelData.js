@@ -2,7 +2,7 @@
 	var getCityID = require('../lib/getCityID');
 	var hashidEncoder =  require('../lib/hashEncoderDecoder');
 
-	function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection) {
+	function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,hotelDataCallback) {
 		
 		var CityIDsWhereHotelIsRequired=[];
 		var HotelsInStops=[];
@@ -162,11 +162,9 @@
 					}
 					console.log("LastStop with hotel:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));	
 			  }
-				//callback(rows);
+				hotelDataCallback(destinationsAndStops);
 		});
 			connection.end();
-
-
 			}
 		}
 

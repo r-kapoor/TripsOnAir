@@ -8,7 +8,6 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     $scope.helpLabel="Help me choose destinations";
     $scope.sliders = {};
     $scope.sliders.sliderValue = 10000;
-
     $scope.sliderOptions = {
         min: null,
         max: 100000,
@@ -20,6 +19,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     $scope.submitOrSuggest = function() {
         formData.setBudget($scope.sliders.sliderValue);
         formData.setTastes($scope.checkModel);
+        formData.setNumPersons($scope.numPersons);
         if($scope.isSuggestDestinationsOn)
         {
           $rootScope.$emit('suggest');

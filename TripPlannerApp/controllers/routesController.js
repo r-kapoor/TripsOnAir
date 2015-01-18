@@ -12,6 +12,7 @@ var getDateSets = require('../lib/getDateSets');
 var getTrainData=require('../lib/getTrainData');
 var getDefaultModeOfTravel=require('../lib/getDefaultModeOfTravel');
 var planTaxiTrip=require('../lib/planTaxiTrip');
+var tasteObjectToInteger=require('../lib/UtilityFunctions/tasteObjectToInteger');
 
 var async  = require('async');
 
@@ -22,6 +23,7 @@ module.exports=function (app){
 	app.get('/showRoutes',function(req,res)
 	{
 		//Getting the paramters passed
+		console.log('In show routes');
 		var cities=req.param('cities').split(',');
 		var startDate=req.param("startDate");
     	var endDate=req.param("endDate");
@@ -34,7 +36,9 @@ module.exports=function (app){
     	var cityIDs=req.param("cityIDs").split(',');
     	startTime = JSON.parse(startTime);
         endTime = JSON.parse(endTime);
-
+		var tastes =JSON.parse(req.param('tastes'));
+        var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
+        console.log('In show routes');
         //console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning);
     	
     	//Temporary Fix For time
@@ -59,7 +63,7 @@ module.exports=function (app){
 		
 		//Array of functions to be called in parallel
 		var fns=[];
-		
+		console.log('In show routes');
 		//Array of flags which enable each function in the array to be called with different values
 		var semaphore=Array.apply(null, new Array(cities.length-1)).map(Number.prototype.valueOf, 0);
 		
@@ -75,7 +79,7 @@ module.exports=function (app){
 				}	
 			}			
         };
-        
+        console.log('In show routes');
         //Pushing the functions in an array
 		for(var i=0;i<cities.length-1;i++)
 		{	
@@ -93,6 +97,7 @@ module.exports=function (app){
 			fns,
 	        //callback
             function(err, results) {
+            	console.log('In show routes');
 				//Extracting the rating ratios from the results array, as async returns all the parameters in the results array
 				var ratio=results[results.length-1];
 				
@@ -103,8 +108,10 @@ module.exports=function (app){
 				getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times, ratio, numPeople, 
 						getDefaultModeOfTravel.getDefaultModeOfTravel,planTaxiTrip.planTaxiTrip, 
 						function(model){
+							console.log('In show routes');
 							model.userTotalbudget=budget;
 							model.numPeople=numPeople;
+							model.tastes=tastes;
 							//console.log("budget: "+budget);
 					res.json(model);
 			});

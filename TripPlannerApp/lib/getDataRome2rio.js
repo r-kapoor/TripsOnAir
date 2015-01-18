@@ -24,8 +24,10 @@ function getDataRome2rio(origin,dest,originID,destID,callback)
 	client = new Client();
 	client.registerMethod("jsonMethod", url, "GET");
 	
+	console.log('Calling rome2rio');
 	//Calling the rome2rio API
 	client.methods.jsonMethod(function(data,response){
+		console.log('got data from rome2rio');
 		var parsedData = JSON.parse(data);
 		parsedData.places[0].cityID = originID;
 		parsedData.places[1].cityID = destID;

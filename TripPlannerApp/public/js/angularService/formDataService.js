@@ -9,6 +9,7 @@ inputModule.service('formData', function () {
         var tripEndTime = null;
         var originGeoCoordinates = null;
         var remainingDistance = 0;
+        var numPersons=1;
         function removeDuplicates(){
             angular.forEach(destinationCities, function(destinationCity,index){
                 for(var i=index+1;i<destinationCities.length;i++)
@@ -49,6 +50,9 @@ inputModule.service('formData', function () {
             getOriginGeoCoordinates : function() {
                 return originGeoCoordinates;
             },
+            getNumPersons : function(){
+                 return numPersons;   
+            },
             getRemainingDistance: function() {
                 return remainingDistance;
             },
@@ -80,6 +84,9 @@ inputModule.service('formData', function () {
             },
             setTripEndTime: function(endTime) {
                 tripEndTime = endTime;
+            },
+            setNumPersons: function(numOfPersons){
+                numPersons = numOfPersons;    
             },
             setOriginGeoCoordinates: function(coordinates) {
                 originGeoCoordinates = coordinates;

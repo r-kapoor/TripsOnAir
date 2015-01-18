@@ -5,7 +5,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
     $scope.origin = null;
     $scope.destinationCityList = [];
     $scope.isSelectedPanelCollapsed = true;
-    $scope.submitItinerary=true;
+    $scope.submitItinerary=false;
     $scope.destinationLabel=true;
     $rootScope.$on('originSelected', function onOriginSelected() {
         $scope.isSelectedPanelCollapsed = false;
@@ -91,7 +91,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
             //console.log(JSON.stringify(data));
             var orgLat=formData.getOriginGeoCoordinates().orgLat;
             var orgLong=formData.getOriginGeoCoordinates().orgLong;
-
+            var numP = formData.getNumPersons();
 
            return {
                 o:origin,
@@ -104,7 +104,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
                 tastes:tastes,
                 orgLat:orgLat,
                 orgLong:orgLong,
-                numP:1
+                numP:numP
                 }
             }
 });

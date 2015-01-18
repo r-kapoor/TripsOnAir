@@ -90,7 +90,6 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 					var updatedDaysOfTravel="";
 					for(var j=0;j<daysofTravelArray.length;j++)
 					{
-						console.log()
 						updatedDaysOfTravel+=parseInt(daysofTravelArray[j])+(rows[i].OriginDay-1);
 					}
 					console.log("updatedDaysOfTravel:"+updatedDaysOfTravel);

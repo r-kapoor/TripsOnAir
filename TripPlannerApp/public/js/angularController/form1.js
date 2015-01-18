@@ -14,7 +14,7 @@ angular.module('scrollLoad', []).directive('whenScrolled', function($document,$w
 var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider','scrollLoad']);
 
 inputModule.controller('form1Controller',  function($scope, $rootScope) {
-    $scope.title='Plan your Travel';
+    $scope.title='Plan your Trip';
     $scope.todos = [
       {text:'learn angular', done:true},
       {text:'build an angular app', done:false}];

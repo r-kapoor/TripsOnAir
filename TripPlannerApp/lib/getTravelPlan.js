@@ -94,7 +94,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 										
 									}*/
 									if(isMajorCounter==1)
-									{	
+									{
 										currentStartDate=new Date(dateSet.dateStart[i].getTime());
 									}
 									else
@@ -105,15 +105,19 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 									var minTrainTime;
 									while(currentStartDate.isBefore(dateSet.dateEnd[i]))
 									{
+										console.log('In while currentStartDate:'+currentStartDate+", trainData[l].DaysOfTravel:"+trainData[l].DaysOfTravel);
 										if(runsOnSameDay(currentStartDate,trainData[l].DaysOfTravel))
 										{
+											console.log('runs on same day');
 											if(currentStartDate.equals(dateSet.dateStart[i]))
 											{
+												console.log('equals dateStart');
 												if((currentStartDate.getHours()+":"+currentStartDate.getMinutes())<trainData[l].OriginDepartureTime)
 												{
 													var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
 													if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 													{
+														console.log('currentTrainTime='+currentTrainTime);
 														minTrainTime = currentTrainTime;
 														minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));														
 													}
@@ -121,12 +125,14 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 											}
 											else if(currentStartDate.equals(dateSet.dateEnd[i]))
 											{
+												console.log('equals dateEnd');
 												//This is the end date
 												if((currentStartDate.getHours()+":"+currentStartDate.getMinutes())>trainData[l].OriginDepartureTime)
 												{
 													var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
 													if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 													{
+														console.log('1currentTrainTime='+currentTrainTime);
 														minTrainTime = currentTrainTime;
 														minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));														
 													}
@@ -134,10 +140,11 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 											}
 											else
 											{
-
+												console.log('is somewhere i n between');
 												var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
 												if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
 												{
+													console.log('2currentTrainTime='+currentTrainTime);
 													minTrainTime = currentTrainTime;
 													minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));														
 												}
@@ -151,6 +158,8 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 									{
 										minTrainTimeDifference = minDateSetTrainTimeDifference;
 										minTrain = trainData[l];
+										console.log("minTrainTime="+minTrainTime);
+										console.log("minTrainTimeDifference="+minTrainTimeDifference);
 										minTrainDateOfTravel = minTrainTime;
 										minTrainIndex = l;
 									}
@@ -166,6 +175,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 							console.log("Takes Train:\n%j",allSegments[k].trainData[minTrainIndex]);
 							if(isMajorCounter==1)
 							{
+								console.log("minTrainDateOfTravel:"+minTrainDateOfTravel);
 								idealStartTime=new Date(minTrainDateOfTravel.getTime());
 							}
 							console.log("At time:"+idealStartTime);
@@ -309,10 +319,13 @@ function runsOnSameDay(currentDate,TrainDaysOfTravel)
 		return true;
 	}
 	var TrainDaysOfTravelArray=TrainDaysOfTravel.split("");
-	
-	if(TrainDaysOfTravelArray.indexOf(currentDate.getDay()+1)!=-1)
+	console.log("TrainDaysOfTravelArray:"+TrainDaysOfTravelArray+" currentDate.getDay()+1:"+(currentDate.getDay()+1));
+	var currentDay = currentDate.getDay()+1;
+	if(TrainDaysOfTravelArray.indexOf(currentDay.toString())!=-1)
 	{
+		console.log('true');
 		return true;
 	}
+	console.log('false');
 	return false;
 }
