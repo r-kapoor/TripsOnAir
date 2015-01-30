@@ -27,7 +27,6 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
   };
 
 $scope.startMorningTime = function(){
-
   var startEveningTimeId=angular.element(document.querySelector("#startEveningTimeId"));
   if(startEveningTimeId.hasClass("active"))
   {
@@ -57,7 +56,6 @@ $scope.endMorningTime = function(){
 }
 
 $scope.endEveningTime = function(){
-
   var endMorningTimeId=angular.element(document.querySelector("#endMorningTimeId"));
   if(endMorningTimeId.hasClass("active"))
   {

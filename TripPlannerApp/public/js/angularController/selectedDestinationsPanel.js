@@ -15,6 +15,8 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
     $rootScope.$on('destinationSelected', function onOriginSelected() {
         $scope.destinationLabel=false;
         $scope.destinationCityList = formData.getDestinations();
+        var element = angular.element(document.querySelector("#destinationsPanel"));
+        $scope.$broadcast('reinit-pane',"destinationsPanel");
     });
 
     $scope.getDestinationName = function(destination) {
@@ -33,6 +35,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
               $scope.destinationLabel=true;
            } 
         $rootScope.$emit('destinationRemoved');
+        //$scope.$broadcast('reinit-pane',"destinationsPanel");
     };
 
     function toTitleCase(str)
@@ -77,7 +80,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
             var endDate=formData.getEndDate();
             //console.log(startDate+":"+endDate);
             var startTime=JSON.stringify(formData.getTripStartTime());
-            var endTime=JSON.stringify(formData.getTripStartTime());
+            var endTime=JSON.stringify(formData.getTripEndTime());
             //console.log("stTime:"+JSON.stringify(startTime));
             var budget=formData.getBudget();
             var tastes=JSON.stringify(formData.getTastes());

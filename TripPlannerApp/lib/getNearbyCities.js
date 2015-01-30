@@ -6,21 +6,23 @@
 var Hashids=require('hashids');
 var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
 var hashidscity = new Hashids("encrypting the cityid", 8);
-function getNearbyCityList(conn,destinations,orgLat,orgLong,category,distRemaining,start,batchsize,callback) {
+function getNearbyCityList(conn,destinations,orgLat,orgLong,taste,distRemaining,start,batchsize,callback) {
 
 	var maxDistance = 250;//The distance between the current and suggested city should not exceed the value
 	var connection=conn.conn();
 	connection.connect();
-	var subQuery='',distanceFromSelectionsSubQuery = '', distanceMinHavingClause = '', distanceMaxHavingClause = '', distanceFromOriginSubQuery = '', distanceRemainingHavingClause = '';
+	var subQuery,distanceFromSelectionsSubQuery = '', distanceMinHavingClause = '', distanceMaxHavingClause = '', distanceFromOriginSubQuery = '', distanceRemainingHavingClause = '';
 
     var numDestinations=destinations.length;
 	var nearTheCity = (start/batchsize)%numDestinations;
 
-	for(var i=0;i<(category.length-1);i++)
+	/*for(var i=0;i<(category.length-1);i++)
 	{
 		subQuery+='(Category like "' +category[i]+ '%") OR ';
-	}
-	subQuery+='(Category like "' +category[category.length-1]+ '%")';
+	}*/
+	//subQuery+='(Category like "' +category[category.length-1]+ '%")';
+
+	subQuery='(Taste & '+connection.escape(taste.tasteInteger)+'!=0 ) AND (Taste & '+connection.escape(taste.familyFriendsInteger)+'!=0 )';
 
 	for(var i=0;i<numDestinations-1;i++)
 	{

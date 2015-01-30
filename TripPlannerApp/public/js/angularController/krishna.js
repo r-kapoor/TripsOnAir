@@ -230,6 +230,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         });
         formData.setRemainingDistance($scope.range - $scope.originToLastSelectedCityDistance);
         $rootScope.$emit('destinationSelected');
+        //$rootScope.$emit('reint-pane');
     };
 
     $rootScope.$on('destinationRemoved', function onDestinationRemoved() {
@@ -238,8 +239,10 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     });
 
     $rootScope.$on('destinationSelectedFromCarousel', function onDestinationSelectedFromCarousel() {
+        console.log("carousel selection:");
         $scope.markSelectedDestinations();
         $scope.markOutOfBudgetDestinations();
+        $rootScope.$broadcast('reinit-pane',"destinationsPanel");
     });
 
     /**
