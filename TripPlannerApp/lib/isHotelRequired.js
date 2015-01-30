@@ -17,12 +17,12 @@ function isHotelRequired(destinationsAndStops)
 
 	for(var i=0;i<destinationsAndStops.destinations.length;i++)
 	{
-		
+
 		//var arrTime = Date.parse(destinationsAndStops.destinations[i].arrivalTime);
 		var arrTime=new Date(destinationsAndStops.destinations[i].arrivalTime);
 		var departTime=new Date(destinationsAndStops.destinations[i].departureTime);
 		//var departTime = Date.parse(destinationsAndStops.destinations[i].departureTime);
-		
+
 		//departTime.getHoursBetween(arrTime);
 		var hours = arrTime.getHoursBetween(departTime);
 		destinationsAndStops.destinations[i].isHotelRequired=0;//By default
@@ -30,7 +30,7 @@ function isHotelRequired(destinationsAndStops)
 		{
 			destinationsAndStops.destinations[i].isHotelRequired=1;
 			numCitiesHotelRequired++;
-		} 
+		}
 		else
 		{
 			if((arrTime.getHours()>=23)||(arrTime.getHours()<4))//if between 11 pm to 4 am
@@ -40,7 +40,7 @@ function isHotelRequired(destinationsAndStops)
 					destinationsAndStops.destinations[i].isHotelRequired=1;
 				}
 			}
-		}	
+		}
 	}
 
 	for(var i=0;i<destinationsAndStops.destinationsWiseStops.length;i++)
@@ -51,11 +51,11 @@ function isHotelRequired(destinationsAndStops)
 			var arrTime=new Date(stops[j].arrivalTime);
 			var departTime=new Date(stops[j].departureTime);
 			var hours=arrTime.getHoursBetween(departTime);
-			//Hack to force it to take hotel
+			/*//Hack to force it to take hotel
 			stops[j].isHotelRequired=1;
 			numCitiesHotelRequired++;
-			//End of hack
-			/*if(hours>=6)
+			//End of hack*/
+			if(hours>=6)
 			{
 				stops[j].isHotelRequired=1;
 				numCitiesHotelRequired++;
@@ -63,7 +63,7 @@ function isHotelRequired(destinationsAndStops)
 			else
 			{
 				stops[j].isHotelRequired=0;
-			}*/
+			}
 		}
 	}
 	destinationsAndStops.numOfCitiesWhereHotelRequired=numCitiesHotelRequired;
