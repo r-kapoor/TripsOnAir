@@ -9,6 +9,7 @@ var async  = require('async');
 var selectPlaces = require('../lib/selectPlaces');
 var clone= require('../lib/UtilityFunctions/cloneJSON');
 var getDayWisePlaces = require('../lib/getDayWisePlaces');
+var getOptimizedItinerary = require('../lib/getOptimizedItinerary');
 module.exports = function(app) {
 
 	app.get('/planItinerary', function(req, res) {
@@ -65,6 +66,7 @@ async.parallel(
                 connection.end();
                 var destinationAndStops = selectPlaces.selectPlaces(results[0], results[1]);
                 getDayWisePlaces.getDayWisePlaces(destinationAndStops);
+                getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
             });
 
 	});//app.get

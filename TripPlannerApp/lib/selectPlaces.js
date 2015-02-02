@@ -71,7 +71,7 @@ function setMinimumPlacesToBeCovered(destinationAndStops) {
 }
 function selectSetOfPlaces(destinationAndStops) {
     console.log("In selectSetOfPlaces");
-    var speed = 25; //In km/hr
+    var speed = 15; //In km/hr
     var addPlacesToArray = function () {
         console.log("In addPlacesToArray");
         console.log('destination.timeSpentOnVisiting:'+destination.timeSpentOnVisiting);
@@ -138,6 +138,13 @@ function selectSetOfPlaces(destinationAndStops) {
                         break;
                     }
                     else {
+                        var distance = getDistance.getDistance(destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude, currentPlace.Latitude, currentPlace.Longitude);
+                        var timeSpentOnTravelling = (distance / speed) * 60;
+                       // console.log('distance:'+distance);
+                        //console.log('timeSpentOnTravelling:'+timeSpentOnTravelling);
+                        var estimatedDurationOfPlace = timeSpentOnTravelling + currentPlace.Time2Cover;
+                        //console.log('currentPlace.Time2Cover:'+currentPlace.Time2Cover);
+                        currentPlace.estimatedDurationOfPlace = estimatedDurationOfPlace;
                         thingsToDoSelected.push(currentPlace);
                     }
                 }
