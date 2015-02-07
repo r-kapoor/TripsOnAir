@@ -9,11 +9,13 @@ var tasteMapping = {
 	LIVE_EVENTS	: 0x20,
 	HILL_STATION: 0x40,
 	ROMANTIC	: 0x200
-}
+};
 var familyFriendsMapping={
 	FAMILY		: 0x80,
 	FRIENDS		: 0x100
-}
+};
+var allTastes = 639;
+var allFamilyFriends = 384
 
 function tasteObjectToInteger(tasteObject)
 {
@@ -35,12 +37,12 @@ function tasteObjectToInteger(tasteObject)
     //if user has not entered any taste
     if(tasteInteger==0)
     {
-    	tasteInteger=~tasteInteger;
+    	tasteInteger=allTastes;
     }
     if(familyFriendsInteger==0)
     {
-    	familyFriendsInteger=~familyFriendsInteger;
-    }	
+    	familyFriendsInteger=allFamilyFriends;
+    }
     return {
     	tasteInteger:tasteInteger,
     	familyFriendsInteger:familyFriendsInteger

@@ -3,13 +3,13 @@
 	var hashidEncoder =  require('../lib/hashEncoderDecoder');
 
 	function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,hotelDataCallback) {
-		
+
 		var CityIDsWhereHotelIsRequired=[];
 		var HotelsInStops=[];
 		var numOfDaysInHotel = 0;
 		console.log("hotelBudget:"+hotelBudget);
 		for(var i=0;i<destinationsAndStops.destinations.length;i++)
-		{	
+		{
 			//console.log("TESTING");
 			if(destinationsAndStops.destinations[i].isHotelRequired==1)
 			{
@@ -73,7 +73,7 @@
 						}
 					}
 				}
-			}	
+			}
 
 		var queryString="";
 		var hotelData=[];
@@ -103,15 +103,15 @@
 						//console.log("1cityIDIndex:"+cityIDIndex);
 						if(hotelData[cityIDIndex]==undefined)
 						{
-							console.log("Curent Hotel is not present for cityID"+rows[i].CityID);
+							//console.log("Curent Hotel is not present for cityID"+rows[i].CityID);
 							hotelData[cityIDIndex]=rows[i];
-							console.log("HotelData added!!");
+							//console.log("HotelData added!!");
 						}
 						else
 						{
 							if(isHotelInBudget(rows[i].Price,rows[i].MaxPersons,perDayHotelBudget,numOfPeople))
 							{
-								console.log("Hotel Is already there and is in budget");
+								//console.log("Hotel Is already there and is in budget");
 									if(rows[i].Rating>hotelData[cityIDIndex].Rating)
 									{
 										hotelData[cityIDIndex]=rows[i];
@@ -119,23 +119,23 @@
 							}
 							else
 							{
-								console.log("Hotel Is already there and is NOT in budget")
+								//console.log("Hotel Is already there and is NOT in budget")
 								if(rows[i].Price<hotelData[cityIDIndex].Price)
 								{
 										hotelData[cityIDIndex]=rows[i];
 								}
-							}	
+							}
 						}
 			    	}
 			    	var k=0;
 			    	for(var i=0;i<destinationsAndStops.destinations.length;i++)
-					{	
+					{
 						//console.log("CityIDsWhereHotelIsRequired:"+CityIDsWhereHotelIsRequired);
 						console.log("destinationsAndStops.destinations[i].cityID:"+destinationsAndStops.destinations[i].cityID);
 						var cityIDIndex=CityIDsWhereHotelIsRequired.indexOf(destinationsAndStops.destinations[i].cityID);
 						//console.log("cityIDIndex:"+cityIDIndex);
 						if(cityIDIndex!=-1){
-							console.log("in hotelDetails:"+JSON.stringify(hotelData[cityIDIndex]));
+							//console.log("in hotelDetails:"+JSON.stringify(hotelData[cityIDIndex]));
 							destinationsAndStops.destinations[i].hotelDetails=hotelData[cityIDIndex];
 						}
 					}
@@ -145,7 +145,7 @@
 							var stopsArray = destinationsAndStops.destinationsWiseStops[i];
 							for(var d=0;d<stopsArray.length; d++) {
 								//console.log("decodedCityIDsWhereHotelIsRequired:"+decodedCityIDsWhereHotelIsRequired);
-								console.log("destinationsAndStops.destinationsWiseStops[i].cityID:"+stopsArray[d].cityID);	
+								//console.log("destinationsAndStops.destinationsWiseStops[i].cityID:"+stopsArray[d].cityID);
 								var cityIDIndex=decodedCityIDsWhereHotelIsRequired.indexOf(stopsArray[d].cityID);
 								if(cityIDIndex!=-1){
 									stopsArray[d].hotelDetails=hotelData[cityIDIndex];
@@ -160,11 +160,11 @@
 						console.log("destinations with Hotels:"+JSON.stringify(destinationsAndStops.destinations[i]));
 						console.log("stops with hotel:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[i]));
 					}
-					console.log("LastStop with hotel:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));	
+					console.log("LastStop with hotel:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));
 			  }
-				hotelDataCallback(destinationsAndStops);
+				hotelDataCallback(null, destinationsAndStops);
 		});
-			connection.end();
+			//connection.end();
 			}
 		}
 
@@ -179,7 +179,7 @@
 			else
 			{
 				return false;
-			}		
+			}
 		}
 		else
 		{
@@ -190,8 +190,8 @@
 			else
 			{
 				return false;
-			}	
-		}	
+			}
+		}
 
 	}
 

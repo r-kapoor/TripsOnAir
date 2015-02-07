@@ -5,3 +5,5 @@ TripPlannerApp/npm-debug.log
 .metadata/**
 CrawlHTMLUnit/.metadata/
 TripPlannerApp/.settings
+#WebStorm metadata
+TripPlannerApp/.idea/

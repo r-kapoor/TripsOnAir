@@ -6,11 +6,14 @@ var isHotelRequired=require('../lib/isHotelRequired');
 var getHotelData=require('../lib/getHotelData');
 var getOrderedPlaces= require('../lib/getOrderedPlaces');
 var async  = require('async');
+var selectPlaces = require('../lib/selectPlaces');
 var clone= require('../lib/UtilityFunctions/cloneJSON');
+var getDayWisePlaces = require('../lib/getDayWisePlaces');
+var getOptimizedItinerary = require('../lib/getOptimizedItinerary');
 module.exports = function(app) {
 
 	app.get('/planItinerary', function(req, res) {
-
+        console.log('plan itinerary called');
 		var connection=conn.conn();
 		connection.connect();
 		var travelData=JSON.parse(req.session.travelData);
@@ -24,21 +27,22 @@ module.exports = function(app) {
 		}
 		else
 		{
-			travelData=travelData.withoutTaxiRome2rioData;	
-		}	
-
+			travelData=travelData.withoutTaxiRome2rioData;
+		}
+        console.log('plan itinerary called1');
 		var destinationsAndStops=getDestinationsAndStops.getDestinationsAndStops(travelData);
+        console.log('plan itinerary called2');
 		var destinationsForPlaces=clone.clone(destinationsAndStops);
 		isHotelRequired.isHotelRequired(destinationsAndStops);
-		
-			for(var i=0;i<destinationsAndStops.destinations.length;i++)
+        console.log(JSON.stringify(destinationsAndStops));
+			/*for(var i=0;i<destinationsAndStops.destinations.length;i++)
 			{
 				console.log("destinations:"+JSON.stringify(destinationsAndStops.destinations[i]));
 				console.log("stops:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[i]));
-			}
-			console.log("LastStop:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));
+			}*/
+			//console.log("LastStop:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));
 
-			
+
 async.parallel(
 			[
 				function hotelDataIfHotelRequired(hotelDataCallback){
@@ -48,6 +52,9 @@ async.parallel(
 						var hotelBudget=(totalBudget-travelData.TravelBudget)/2;
 						getHotelData.getHotelData(destinationsAndStops,hotelBudget, numOfPeople,connection,hotelDataCallback);
 					}
+                    else {
+                        hotelDataCallback(null, destinationsAndStops);
+                    }
 				},
 				function placesData(placesDataCallback){
 						getOrderedPlaces.getOrderedPlaces(destinationsForPlaces,tastes,connection,placesDataCallback);
@@ -56,8 +63,11 @@ async.parallel(
 			],
 	        //callback
             function(err, results) {
-
+                connection.end();
+                var destinationAndStops = selectPlaces.selectPlaces(results[0], results[1]);
+                getDayWisePlaces.getDayWisePlaces(destinationAndStops);
+                getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
             });
 
 	});//app.get
-}
+};
