@@ -9,107 +9,116 @@ require('nconf-redis');
 
 function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
 {
-	//console.log("calling calculateBudgetOfTrip:%j",rome2RioData);
-	var firstCabTime, cabEndTime ,totalBudgetofCabs = 0,isLastTripWithCab = 0, totalBudgetOfTrip = 0, totalBudgetOfMinor = 0,distanceByCab=0, startSegment;
-	var startTimeOfTrip, endTimeOfTrip;
-	for(var i=0;i<rome2RioData.length;i++)
-	{
-		//console.log("i:"+i);
-		var allRoutes=rome2RioData[i].routes;
-		for(var j=0;j<allRoutes.length;j++)
-		{
-			if(allRoutes[j].isDefault && allRoutes[j].isDefault == 1)
-			{
-				//console.log("j:"+j);
-				var allSegments=allRoutes[j].segments;
-				for(var k=0;k<allSegments.length;k++)
-				{
-					//console.log("k:"+k);
-					if(!startTimeOfTrip)
-					{
-						startTimeOfTrip = allSegments[k].startTime;
-					}
-					endTimeOfTrip = allSegments[k].endTime;
-					if(allSegments[k].isMajor == 1)
-					{
-						console.log("isMajor");
-						if(allSegments[k].subkind=="cab")
-						{
-							//cab is coming for first Time
-							if(isLastTripWithCab==0)
-							{
-								console.log('cab is coming for first Time');
-								firstCabTime=new Date(allSegments[k].startTime.getTime());
-								isLastTripWithCab=1;
-								startSegment = allSegments[k];
-							}
-							console.log('cab is coming');
-							cabEndTime=new Date(allSegments[k].endTime.getTime());
-							distanceByCab+=allSegments[k].distance;
-						}
-						else
-						{
-							//Not a cab
-							console.log('Not a cab');
-							if(isLastTripWithCab==1)
-							{
-								calculateCabBudgetOfLastTrip();
-							}
-							totalBudgetOfTrip += allSegments[k].indicativePrice.price;
-						}
-					}
-				}
-			}
-		}	
-		
-	}
-	if(isLastTripWithCab == 1) {
-		calculateCabBudgetOfLastTrip();
-	}
-	totalBudgetOfTrip += totalBudgetofCabs;
+    var completeTrip;
+    if(rome2RioData == null) {
+        //No trip possible
+        console.log('TRIP IS NOT POSSIBLE');
+        completeTrip = null;
+    }
+    else {
+        //console.log("calling calculateBudgetOfTrip:%j",rome2RioData);
+        var firstCabTime, cabEndTime ,totalBudgetofCabs = 0,isLastTripWithCab = 0, totalBudgetOfTrip = 0, totalBudgetOfMinor = 0,distanceByCab=0, startSegment;
+        var startTimeOfTrip, endTimeOfTrip;
+        for(var i=0;i<rome2RioData.length;i++)
+        {
+            //console.log("i:"+i);
+            var allRoutes=rome2RioData[i].routes;
+            for(var j=0;j<allRoutes.length;j++)
+            {
+                if(allRoutes[j].isDefault && allRoutes[j].isDefault == 1)
+                {
+                    //console.log("j:"+j);
+                    var allSegments=allRoutes[j].segments;
+                    for(var k=0;k<allSegments.length;k++)
+                    {
+                        //console.log("k:"+k);
+                        if(!startTimeOfTrip)
+                        {
+                            startTimeOfTrip = allSegments[k].startTime;
+                        }
+                        endTimeOfTrip = allSegments[k].endTime;
+                        if(allSegments[k].isMajor == 1)
+                        {
+                            console.log("isMajor");
+                            if(allSegments[k].subkind=="cab")
+                            {
+                                //cab is coming for first Time
+                                if(isLastTripWithCab==0)
+                                {
+                                    console.log('cab is coming for first Time');
+                                    firstCabTime=new Date(allSegments[k].startTime.getTime());
+                                    isLastTripWithCab=1;
+                                    startSegment = allSegments[k];
+                                }
+                                console.log('cab is coming');
+                                cabEndTime=new Date(allSegments[k].endTime.getTime());
+                                distanceByCab+=allSegments[k].distance;
+                            }
+                            else
+                            {
+                                //Not a cab
+                                console.log('Not a cab');
+                                if(isLastTripWithCab==1)
+                                {
+                                    calculateCabBudgetOfLastTrip();
+                                }
+                                totalBudgetOfTrip += allSegments[k].indicativePrice.price;
+                            }
+                        }
+                    }
+                }
+            }
 
-	function calculateCabBudgetOfLastTrip() {
-		console.log("isLastTripWithCab==1");
-		//Last part of travel was in cab
-		isLastTripWithCab=0;
-		
-		//TODO: Get Distance from Google / MapQuest API\
-		//if source and destination of taxi are not same then add the direct distance of source and destination to distanceByCab 
-		console.log('firstCabTime:'+firstCabTime);
-		console.log('cabEndTime:'+cabEndTime);
-		firstCabTime.clearTime(); 
-		cabEndTime.clearTime(); 
-		var numOfDaysOfCab=firstCabTime.getDaysBetween(cabEndTime)+1;
-		console.log('numOfDaysOfCab:'+numOfDaysOfCab);
-		var totalBudgetOfThisCab = calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab,startSegment);
-		console.log('totalBudgetOfThisCab:'+totalBudgetOfThisCab);
-		totalBudgetofCabs += totalBudgetOfThisCab;
-	}
-	
-	console.log('TOTAL BUDGET OF TRIP:'+totalBudgetOfTrip);
-	var completeTrip = {
-			TravelBudget : totalBudgetOfTrip,
-			startTimeOfTrip : new Date(startTimeOfTrip.getTime()),
-			endTimeOfTrip : new Date(endTimeOfTrip.getTime()),
-			rome2RioData : rome2RioData
-	}
-	if(totalBudgetofCabs == 0)
-	{
-		completeTrip.isCabTrip = 0;
-	}
-	else
-	{
-		completeTrip.isCabTrip = 1;
-	}
-	var fs = require('fs');
-	fs.writeFile("totalbudget.txt",JSON.stringify(completeTrip), function(err) {
-	    if(err) {
-	        console.log(err);
-	    } else {
-	        console.log("The file was saved!");
-	    }
-	});
-	callback(null, completeTrip);
+        }
+        if(isLastTripWithCab == 1) {
+            calculateCabBudgetOfLastTrip();
+        }
+        totalBudgetOfTrip += totalBudgetofCabs;
+
+        function calculateCabBudgetOfLastTrip() {
+            console.log("isLastTripWithCab==1");
+            //Last part of travel was in cab
+            isLastTripWithCab=0;
+
+            //TODO: Get Distance from Google / MapQuest API\
+            //if source and destination of taxi are not same then add the direct distance of source and destination to distanceByCab
+            console.log('firstCabTime:'+firstCabTime);
+            console.log('cabEndTime:'+cabEndTime);
+            firstCabTime.clearTime();
+            cabEndTime.clearTime();
+            var numOfDaysOfCab=firstCabTime.getDaysBetween(cabEndTime)+1;
+            console.log('numOfDaysOfCab:'+numOfDaysOfCab);
+            var totalBudgetOfThisCab = calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab,startSegment);
+            console.log('totalBudgetOfThisCab:'+totalBudgetOfThisCab);
+            totalBudgetofCabs += totalBudgetOfThisCab;
+        }
+
+        console.log('TOTAL BUDGET OF TRIP:'+totalBudgetOfTrip);
+        completeTrip = {
+            TravelBudget : totalBudgetOfTrip,
+            startTimeOfTrip : new Date(startTimeOfTrip.getTime()),
+            endTimeOfTrip : new Date(endTimeOfTrip.getTime()),
+            rome2RioData : rome2RioData
+        };
+        if(totalBudgetofCabs == 0)
+        {
+            completeTrip.isCabTrip = 0;
+        }
+        else
+        {
+            completeTrip.isCabTrip = 1;
+        }
+    }
+    console.log('Calling Callback');
+    callback(null, completeTrip);
+    var fs = require('fs');
+    fs.writeFile("totalbudget.txt",JSON.stringify(completeTrip), function(err) {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log("The file was saved!");
+        }
+    });
 }
 
 function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
@@ -119,7 +128,7 @@ function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
 	//Estimated local travel km per day
 	var localTravelKm=100;
 	//var distance = Math.max(numOfDaysOfCab*perDayNumberOfKilometers, distanceByCab+localTravelKm*numOfDaysOfCab);
-	
+
 	var cabOperatorsArray = [];
 	for(var i = 0; i < carOfPreferenceDetails.MinimumKmPerDay.length; i++)
 	{
@@ -152,7 +161,7 @@ function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
 			cabOperatorsArray.push(cabOperator);
 		}
 	}
-	
+
 	var minimumCabPrice = -1;
 	var minIndex = 0;
 	for(var i = 0; i < cabOperatorsArray.length; i++)
@@ -195,7 +204,7 @@ function getFarePerKmPerIndividual(numPeople)
 		   }
 		   console.log('Configuration saved successfully.');
 		 });*/
-	
+
 	var fareDetails = nconf.get('FareDetails');
 	//TODO : Choose a car depending on the budget of the user
 	var carOfPreference = "Bus";
@@ -223,9 +232,9 @@ function getFarePerKmPerIndividual(numPeople)
 	{
 		carOfPreference = "MiniBus";
 	}
-	
+
 	var carOfPreferenceDetails = fareDetails[carOfPreference];
-	
+
 	return {
 		CarSegment:carOfPreference,
 		FareDetails:carOfPreferenceDetails,

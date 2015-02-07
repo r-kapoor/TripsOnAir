@@ -16,6 +16,7 @@
     "adaro": "^0.1.5",
     "dustjs-helpers": "^1.1.1",
     "dustjs-linkedin": "^2.0.3",
+    "ejson": "^2.0.1",
     "express": "~3.4.4",
     "graphs": "^2.0.0",
     "hashids": "^1.0.1",

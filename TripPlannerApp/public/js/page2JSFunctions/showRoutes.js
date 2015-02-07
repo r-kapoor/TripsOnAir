@@ -12,16 +12,20 @@ function showRoutes()
 	var query=createQuery();
 	//console.log("query:"+query);
 	var ajaxQuery = $.getJSON('/showRoutes?'+query+"&"+urlAttrs);
-	
+
 	console.log("query:"+'/showRoutes?'+query+"&"+urlAttrs);
-	
+
 	ajaxQuery.done(function(data) {
-		
+
+        if(data.tripNotPossible!=undefined && data.tripNotPossible==1)
+        {
+            console.log("TRIP IS NOT POSSIBLE");
+        }
 		console.log("GotData:"+data);
 		console.log("GotData:"+JSON.stringify(data));
 
 		$("#page3Input").val(JSON.stringify(data));
-		
+
 		var oneWayData = [
 		                  { CityName: "Delhi", City2City: "Delhi-Bangalore",
 		                	RouteOfTravelData:[
@@ -35,14 +39,14 @@ function showRoutes()
 								{
 									uniqueId:"2",
 									routeName:"train",
-									stopsArray:[{stops:"delhi",duration:"1hr",price:"1200rs"},{stops:"mumbai1"},{stops:"bangalore"}]	
+									stopsArray:[{stops:"delhi",duration:"1hr",price:"1200rs"},{stops:"mumbai1"},{stops:"bangalore"}]
 								},
 								{
 									uniqueId:"3",
 									routeName:"bus",
-                          			stopsArray:[{stops:"delhi",duration:"1hr",price:"1200rs"},{stops:"mumbai2"},{stops:"bangalore"}]	
+                          			stopsArray:[{stops:"delhi",duration:"1hr",price:"1200rs"},{stops:"mumbai2"},{stops:"bangalore"}]
 								}
-								]  
+								]
 		                  },
 		                  { CityName: "Bangalore", City2City: "Bangalore-Chennai",
 		                	  RouteOfTravelData:[
@@ -54,15 +58,15 @@ function showRoutes()
 		         								{
 		         									uniqueId:"5",
 		         									routeName:"train",
-		         									stopsArray:[{stops:"delhi"},{stops:"mumbai1"},{stops:"bangalore"}]	
+		         									stopsArray:[{stops:"delhi"},{stops:"mumbai1"},{stops:"bangalore"}]
 		         								},
 		         								{
 		         									uniqueId:"6",
 		                                   		routeName:"bus",
-		                                   			stopsArray:[{stops:"delhi"},{stops:"mumbai2"},{stops:"bangalore"}]	
+		                                   			stopsArray:[{stops:"delhi"},{stops:"mumbai2"},{stops:"bangalore"}]
 		         								}
-		         								]		                  
-		                  
+		         								]
+
 		                  },
 		                  { CityName: "Chennai", City2City: "Chennai-Delhi",
 		                	  RouteOfTravelData:[
@@ -74,53 +78,53 @@ function showRoutes()
 		         								{
 		         									uniqueId:"8",
 		         									routeName:"train",
-		         									stopsArray:[{stops:"delhi"},{stops:"mumbai1"},{stops:"bangalore"}]	
+		         									stopsArray:[{stops:"delhi"},{stops:"mumbai1"},{stops:"bangalore"}]
 		         								},
 		         								{
 		         									uniqueId:"9",
 		                                   		routeName:"bus",
-		                                   			stopsArray:[{stops:"delhi"},{stops:"mumbai2"},{stops:"bangalore"}]	
+		                                   			stopsArray:[{stops:"delhi"},{stops:"mumbai2"},{stops:"bangalore"}]
 		         								}
-		         								]  
-		                  
-		                  
+		         								]
+
+
 		                  }
 		              ];
 		var returnRouteData = [{CityName: "Delhi"}];
-		
+
 		var RouteOfTravelData=[{
 											routeName:"fly",
 											stopsArray:[{stops:"delhi"},{stops:"mumbai"},{stops:"bangalore"}]
 										},
 		                               {
 											routeName:"train",
-											stopsArray:[{stops:"delhi"},{stops:"mumbai1"},{stops:"bangalore"}]	
+											stopsArray:[{stops:"delhi"},{stops:"mumbai1"},{stops:"bangalore"}]
 		                            	},
 		                               {
 		                            		routeName:"bus",
-		                            			stopsArray:[{stops:"delhi"},{stops:"mumbai2"},{stops:"bangalore"}]	
+		                            			stopsArray:[{stops:"delhi"},{stops:"mumbai2"},{stops:"bangalore"}]
 		                            	}
 		                            	];
-		
-		
+
+
 		//var markup = "<li><b>${first}</b> (${last})</li>";
 		var commonTemplate=getCommonTemplate();
 		$(commonTemplate).appendTo("#travelOptions");
 		var oneWayRouteTemplate=getOneWayRouteTemplate();
 		$.template( "oneWayRouteTemplate", oneWayRouteTemplate);
 		$.tmpl( "oneWayRouteTemplate", oneWayData ).appendTo("#common-template-ui");
-		
+
 		var returnRouteTemplate=getReturnRouteTemplate();
 		$.template( "returnRouteTemplate", returnRouteTemplate);
 		$.tmpl( "returnRouteTemplate", returnRouteData).appendTo("#common-template-ui");
-		
-		
+
+
 		var collapseRouteOfTravelTemplate=getCollapseRouteOfTravelTemplate();
 		$.template( "collapseRouteOfTravelTemplate",collapseRouteOfTravelTemplate);
-		
+
 		var modeOfTravelTemplate=getModeOfTravelTemplate();
 		$.template( "modeOfTravelTemplate",modeOfTravelTemplate);
-		
+
 		for(var i=0;i<oneWayData.length;i++)
 		{
 			var City2CityId=oneWayData[i].City2City;
@@ -130,11 +134,11 @@ function showRoutes()
 				//var routeNameId = oneWayData[i].RouteOfTravelData[j].routeName;
 				$.tmpl( "modeOfTravelTemplate",oneWayData[i].RouteOfTravelData[j].stopsArray).insertAfter("#"+oneWayData[i].RouteOfTravelData[j].uniqueId);
 			}
-		}	
+		}
 		console.log("data:"+JSON.stringify(oneWayData[0].RouteOfTravelData[0].stopsArray));
 		console.log('hello');
 		//$.tmpl( "modeOfTravelTemplate",oneWayData[0].RouteOfTravelData[0].stopsArray).appendTo("#1");
-		
+
 		//$.template( "clientTemplate", markup);
 		/*$.tmpl( "clientTemplate", clientData ).appendTo("#travelOptions");*/
 		createScript('classie');
@@ -167,7 +171,7 @@ function createScript(attribute)
 
 function createMetaData()
 {
-	
+
 	var E2=document.createElement('meta');
 	E2.setAttribute('http-equiv','X-UA-Compatible');
 	E2.setAttribute('content','IE=edge,chrome=1');
@@ -176,12 +180,12 @@ function createMetaData()
 	Element.setAttribute('name','viewport');
 	Element.setAttribute('content','width=device-width, initial-scale=1.0');
 	/*var Element='<meta charset="UTF-8" />'
-	+'<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">' 
+	+'<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">'
 	+'<meta name="viewport" content="width=device-width, initial-scale=1.0">';*/
 	document.head.appendChild(Element);
-	
-	
-	
+
+
+
 }
 
 
@@ -196,15 +200,15 @@ function getRouteTemplate()
 			+'<div class="mp-level">'
 				+'<h2 class="icon icon-world">Trip Overview</h2>'
 				+'<ul>'
-				
-				
+
+
 					+'<li class="icon icon-arrow-left">'
 						+'<a class="icon icon-display" href="#">Devices</a>'
 						+'<div class="mp-level">'
 							+'<h2 class="icon icon-display">Devices</h2>'
 							+'<a class="mp-back" href="#">back</a>'
 							+'<ul>'
-							
+
 								+'<li class="icon icon-arrow-left">'
 									+'<a class="icon icon-phone" href="#">Mobile Phones</a>'
 									+'<div class="mp-level">'
@@ -218,7 +222,7 @@ function getRouteTemplate()
 										+'</ul>'
 									+'</div>'
 								+'</li>'
-								
+
 								+'<li class="icon icon-arrow-left">'
 									+'<a class="icon icon-tv" href="#">Televisions</a>'
 									+'<div class="mp-level">'
@@ -251,11 +255,11 @@ function getRouteTemplate()
 					+'</li>'
 				+'<li><a class="icon icon-photo" href="#">Collections</a></li>'
 				+'<li><a class="icon icon-wallet" href="#">Credits</a></li>'
-				
-				
-				
+
+
+
 				+'</ul>'
-					
+
 				+'	</div>'
 				+'</nav>'
 				+'<!-- /mp-menu -->'
@@ -276,12 +280,12 @@ function getRouteTemplate()
 	+'</div><!-- /container -->';
 	//+'<script src="js/page2JSFunctions/classie.js"></script>'
 	//+'<script src="js/page2JSFunctions/mlpushmenu.js"></script>';
-	
+
 	return template;
 }
 
 function getCommonTemplate(){
-	
+
 	var template='<!-- Push Wrapper -->'
 		+'<div class="mp-pusher" id="mp-pusher">'
 
@@ -291,7 +295,7 @@ function getCommonTemplate(){
 					+'<h2 class="icon icon-world">Trip Overview</h2>'
 					+'<ul id="common-template-ui">'
 					+'</ul>'
-					
+
 					+'	</div>'
 					+'</nav>'
 					+'<!-- /mp-menu -->'
@@ -309,9 +313,9 @@ function getCommonTemplate(){
 					+'</div>'
 				+'</div><!-- /scroller -->'
 			+'</div><!-- /pusher -->'
-	
+
 	return template;
-	
+
 }
 
 
