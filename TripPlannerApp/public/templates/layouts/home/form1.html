@@ -274,10 +274,13 @@
                                                         <div class="form-group">
                                                             <!-- <label>Budget</label> -->
                                                             <div class="col-sm-9 ">
-                                                                <slider ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"
+                                                              <!--<slider id="budgetSlider" ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"
                                                                         step="{{sliderOptions.step}}"
                                                                         max="{{sliderOptions.max}}"></slider>
-                                                                {{myFormater(sliders.sliderValue) | currency:"&#8377;"}}
+                                                                {{myFormater() | currency:"&#8377;"}}-->
+
+                                                               <input ng-model="value"  type="text" id="mySlider1" slider options="options" />
+                                                                {{value}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -285,7 +288,7 @@
                                                         <div class="form-group">
                                                           <label for="numP">Persons</label>
                                                           <select ng-model="numPersons" class="form-control" id="numP">
-                                                            <option>1</option>
+                                                            <option value="1" selected>1</option>
                                                             <option>2</option>
                                                             <option>3</option>
                                                             <option>4</option>

@@ -11,7 +11,7 @@ angular.module('scrollLoad', []).directive('whenScrolled', function($document,$w
     };
 });
 
-var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap', 'ui.bootstrap-slider','scrollLoad','ngJScrollPane']);
+var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap','ngSlider','scrollLoad','ngJScrollPane']);
 
 inputModule.controller('form1Controller',  function($scope, $rootScope) {
     $scope.title='Plan your Trip';

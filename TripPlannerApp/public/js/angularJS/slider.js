@@ -22,7 +22,7 @@ angular.module('ui.bootstrap-slider', [])
 
                 var options = {};
                 if (attrs.sliderid) options.id = attrs.sliderid;
-                if (attrs.min) options.min = parseFloat(attrs.min);
+                if (attrs.min){options.min = parseFloat(attrs.min);}
                 if (attrs.max) options.max = parseFloat(attrs.max);
                 if (attrs.step) options.step = parseFloat(attrs.step);
                 if (attrs.precision) options.precision = parseFloat(attrs.precision);
@@ -37,7 +37,7 @@ angular.module('ui.bootstrap-slider', [])
                             options.value = parseFloat(attrs.value);
                         }
                     }
-
+//console.log("options.value:"+options.value);
                 }
                 if (attrs.range) options.range = attrs.range === 'true';
                 if (attrs.selection) options.selection = attrs.selection;
@@ -46,7 +46,7 @@ angular.module('ui.bootstrap-slider', [])
                 if (attrs.tooltipsplit) options.tooltip_split = attrs.tooltipsplit === 'true';
                 if (attrs.handle) options.handle = attrs.handle;
                 if (attrs.reversed) options.reversed = attrs.reversed === 'true';
-                if (attrs.enabled) options.enabled = attrs.enabled === 'true';
+                if (attrs.enabled) options.enabled = attrs.enabled === 'false';
                 if (attrs.naturalarrowkeys) options.natural_arrow_keys = attrs.naturalarrowkeys === 'true';
                 if (attrs.formater) options.formater = $scope.$eval(attrs.formater);
 
@@ -59,6 +59,7 @@ angular.module('ui.bootstrap-slider', [])
 
                 slider.on(updateEvent, function(ev) {
                     ngModelCtrl.$setViewValue(ev.value);
+                    console.log("on event:"+ev.value);
                     $timeout(function() {
                         $scope.$apply();
                     });
@@ -66,14 +67,18 @@ angular.module('ui.bootstrap-slider', [])
 
                 $scope.$watch(attrs.ngModel, function(value) {
                     if (value || value === 0) {
+                        console.log("$watch:"+value);
+                        //console.log("attr element in slider:"+$(element[0]).getAttribute('min'));
                         slider.slider('setValue', value, false);
                     }
                 });
-
-                /*$scope.$watch(attrs.min, function(value) {
-                    options.min = parseFloat(attrs.min);
+ 
+                $scope.$watch(attrs, function() {
+                   // console.log("in watch of min:"+value+","+attrs.min);
+                    console.log("attr element:"+$(element[0]).attr('min'));
+                    options.min = parseFloat("5000");
                     slider = $(element[0]).slider(options);
-                });*/
+                },true);
 
                 if (angular.isDefined(attrs.ngDisabled)) {
                     $scope.$watch(attrs.ngDisabled, function(value) {

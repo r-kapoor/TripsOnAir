@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div id="travelOptions" class="container">
+<div id="travelOptions" class="templateContainer">
 
     <div class="mp-pusher" id="mp-pusher">
 
@@ -7,20 +7,27 @@
     <nav id="mp-menu" class="mp-menu">
         <div class="mp-level">
             <h2 class="icon icon-world">Trip Overview</h2>
-            <ul id="common-template-ui">
-
-                <li><a class="icon icon-photo" href="#">Bangalore</a></li>
-                <a class="icon icon-display" href="#">modes</a>
-                <div class="mp-level">
-                    <h2 class="icon icon-display">Mumbai</h2>
-                    <ul id="test">
-                        </ul>
-                    </div>
-                </li>
+           
+            <div ng-controller="sarthiController" >
+                <div collapse="submitOrderCollapsed">
+                    <div id="reponsiveFont" class="btn btn-default btn-xs btn-responsive" ng-click="showRoutes()">Submit</div>
+                    Testing
+                </div>
+               <div collapse="isRouteCollapsed">
+                    <ul id="common-template-ui">
+                    <li><a class="icon icon-photo" href="#">Bangalore</a></li>
+                    <a class="icon icon-display" href="#">modes</a>
+                    <div class="mp-level">
+                        <h2 class="icon icon-display">Mumbai</h2>
+                            <ul id="test">
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
-
-            	</div>
-        </nav>
+                </div>    
+            </div>
+        </div>
+    </nav>
     <!-- /mp-menu -->
 
     <div class="scroller">
@@ -30,7 +37,8 @@
                 </header>
             <div class="content clearfix">
                 <div class="block block-40 clearfix">
-                    	<p><a href="#" id="trigger" class="menu-trigger">Open/Close Menu</a></p>
+                        <p><a href="#" id="trigger" class="menu-trigger">Open/Close Menu</a></p>
+
                     </div>
                 </div>
             </div>

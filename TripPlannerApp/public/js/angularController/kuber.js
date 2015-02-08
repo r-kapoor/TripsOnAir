@@ -6,7 +6,25 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	$scope.isOverviewCollapsed = false;
 	$scope.isSuggestDestinationsOn = false;
     $scope.helpLabel="Help me choose destinations";
-    $scope.sliders = {};
+      $scope.value = "5000";
+      $scope.options = {       
+        from: 5000,
+        to: 100000,
+        step: 100,
+        dimension: " Rs",
+        css: {
+          background: {"background-color": "silver"},
+          before: {"background-color": "purple"},
+          default: {"background-color": "white"},
+          after: {"background-color": "green"},
+          pointer: {"background-color": "red"}          
+        }        
+      };
+
+      $scope.$watch('value', function(){
+        return $scope.value;
+      });
+   /*$scope.sliders = {};
     $scope.sliders.sliderValue = 10000;
     $scope.sliderOptions = {
         min: null,
@@ -14,10 +32,10 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         step: 100
     };
 
-    $scope.sliders.thirdSliderValue = 0;
+    $scope.sliders.thirdSliderValue = 0;*/
 
     $scope.submitOrSuggest = function() {
-        formData.setBudget($scope.sliders.sliderValue);
+        formData.setBudget($scope.value);
         formData.setTastes($scope.checkModel);
         formData.setNumPersons($scope.numPersons);
         if($scope.isSuggestDestinationsOn)
@@ -30,9 +48,34 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
          }   
     };
 
-    $scope.myFormater = function(value) {
-        return value;
-    };
+   /* $scope.$watch('sliderOptions.min', function() {
+        console.log("min:"+$scope.sliderOptions.min);
+        return $scope.sliderOptions.min;
+    });*/
+
+/*$scope.$watch('sliderOptions.min', function() {
+                   // console.log("in watch of min:"+value+","+attrs.min);
+                   var element = angular.element(document.querySelector("#budgetSlider"));
+                    console.log("attr element in kuber"+$(element[0]).attr('min'));
+                    var options={};
+                    options.min = parseFloat("5000");
+                    slider = $(element[0]).slider(options);
+                });*/
+
+    /*$scope.myFormater = function() {
+
+        var budgetElement=angular.element(document.querySelector("#budgetSlider"));
+       // console.log("budgetElement:"+angular.element(document.querySelector("#budgetSlider")));
+       var value= budgetElement.attr("value");
+       //console.log("Formatter value:"+value);
+        return  value;
+    };*/
+
+    /*$scope.$watch('sliders.sliderValue', function() {
+                    console.log("in watch of kuber:"+$scope.sliders.sliderValue);
+                    //options.min = parseFloat("5000");
+                    //slider = $(element[0]).slider(options);
+                });*/
 
     $scope.tripStartTime = {
         morning : false,
@@ -267,11 +310,12 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
                         var totalFare = $scope.getBudget(origin, destinations, totalDistance, numOfDays);
 
-
-                        $scope.sliderOptions.min = parseInt(totalFare);
+                        $scope.options.from=parseInt(totalFare);
+                        $scope.value = $scope.options.from;
+                        //$scope.sliderOptions.min = parseInt(totalFare);
                         //$scope.$render();
-                        console.log($scope.sliderOptions.min);
-                        $scope.sliders.sliderValue = $scope.sliderOptions.min;
+                        //console.log($scope.sliderOptions.min);
+                        //$scope.sliders.sliderValue = $scope.sliderOptions.min;
 
                     },
                     function onQueryFailure(result) {
