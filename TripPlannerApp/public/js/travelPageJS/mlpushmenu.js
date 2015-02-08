@@ -79,6 +79,7 @@
 			backClass : 'mp-back'
 		},
 		_init : function() {
+			console.log("in init");
 			// if menu is open or not
 			this.open = false;
 			// level depth
@@ -111,7 +112,7 @@
 					console.log("parent:"+hasParent( ev.target, self.el.id ));
 						if( self.open && !hasParent( ev.target, self.el.id ) ) {
 						console.log("5");
-							bodyClickFn( this );
+							bodyClickFn( this.el.id );
 						}
 					} );
 			console.log("open2:"+self.open);
