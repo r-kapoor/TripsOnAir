@@ -1,8 +1,9 @@
 /**
  * Created by rkapoor on 08/02/15.
  */
-var routesMapModule = angular.module('tripdetails.routes.map.app', []);
-routesMapModule.controller('mapController',  function($scope) {
+//var routesMapModule = angular.module('tripdetails.routes.map.app', []);
+//routesMapModule.controller('mapController',  function($scope) {
+routesModule.controller('mapController',  function($scope) {
     $scope.zoomConstants = {
         COUNTRY: 5,
         CITY: 12

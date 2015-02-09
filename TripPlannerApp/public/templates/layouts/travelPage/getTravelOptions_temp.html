@@ -11,13 +11,17 @@
     <script src="js/bootstrapJS/ui-bootstrap.min.js"></script>
     <!--<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>-->
    <link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
     <script src="js/angularController/travelPageAngularController/routesApp.js"></script>
     <script src="js/angularController/travelPageAngularController/sarathi.js"></script>
+    <script src="js/angularController/travelPageAngularController/sanjaya.js"></script>
+    <script src="js/angularService/travelPageAngularService/orderedCitiesService.js"></script>
     <!--<link rel="stylesheet" href="css/page2Css/reorder.css"/>-->
     <!-- <link rel="stylesheet" type="text/css" href="css/page2Css/normalize.css" /> -->
     <link rel="stylesheet" type="text/css" href="css/page2Css/demo.css" />
     <link rel="stylesheet" type="text/css" href="css/page2Css/icons.css" />
     <link rel="stylesheet" type="text/css" href="css/page2Css/component.css"/>
+    <link rel="stylesheet" href="css/travelPage/map.css">
     <!--<script src="js/jQueryCookie/jquery.cookie.js"></script>-->
     <!--<script src="js/jqueryTemplate/jquery.tmpl.js"></script>-->
     <!--<script src="js/oldJqueryJS/callPlaces.js"></script>-->
@@ -27,7 +31,8 @@
 </head>
 <body>
     <!-- <div ng-include src="'templates/layouts/global/header.html'"></div> -->
-    <div style="height:inherit" ng-include src="'templates/layouts/travelPage/routes.html'"></div>
+
+    <div ng-include src="'templates/layouts/travelPage/routes.html'"></div>
     <!-- <div ng-include style="height:100%" src="'templates/layouts/global/footer.html'"></div> -->
 </body>
 
