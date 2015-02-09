@@ -1,9 +1,28 @@
 routesModule.controller('sarthiController', function($scope, $rootScope, $http, $q, $location, orderedCities) {
 
+    $scope.checked1=true;
+     $scope.checked2=true;
     $scope.cities = [{name: "AA"}];
     var defaultRouteData = null;
     var alternateRouteData = null;
     var pathArray = [];
+
+    $scope.pageSlide = function(){
+        $scope.checked1=!$scope.checked1;
+        $scope.checked2=!$scope.checked2;
+    }
+
+    $scope.showModes = function(){
+        console.log("in show modes");
+         $scope.checked1=true;
+    }
+    $scope.test = function(){
+        console.log("in test function");
+        if($scope.checked1)
+        {
+            $scope.checked1=false;
+        }
+    }
     angular.element(document).ready(function () {
         console.log('Calling getOptimizedOrder');
         var currentURL = $location.absUrl();
