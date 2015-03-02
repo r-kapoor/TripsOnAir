@@ -2,8 +2,8 @@
  * Created by rkapoor on 08/02/15.
  */
 //var routesMapModule = angular.module('tripdetails.routes.map.app', []);
-//routesMapModule.controller('mapController',  function($scope) {
-routesModule.controller('mapController',  function($scope) {
+//routesMapModule.controller('mapController',  function($scope, $window) {
+routesModule.controller('sanjayaController',  function($scope, $window) {
     $scope.zoomConstants = {
         COUNTRY: 5,
         CITY: 12
@@ -40,15 +40,29 @@ routesModule.controller('mapController',  function($scope) {
                 zoom: $scope.zoom,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
+            console.log('Map Initialized');
             $scope.map = new google.maps.Map(mapCanvas, mapOptions);
             $scope.addMarker(markerPosition);
             $scope.addMarker(markerPosition1);
+            console.log('Map Initialized');
             $scope.showRoute(markerPosition, markerPosition1);
             $scope.showPath(encodedPath);
+            console.log('Map Initialized');
             $scope.showFlightPath(markerPosition, markerPosition1);
+            console.log('Map Initialized');
         }
-        google.maps.event.addDomListener(window, 'load', initialize);
+        angular.element(window).ready(function () {
+            initialize();
+        });
+        //google.maps.event.addDomListener($window, 'load', initialize);
+        //initialize();
+        google.maps.event.addDomListener(window, "resize", function() {
+            var center = $scope.map.getCenter();
+            google.maps.event.trigger($scope.map, "resize");
+            $scope.map.setCenter(center);
+        });
     };
+
     function setAllMap() {
         console.log('setAllMap');
         for (var i = 0; i < markers.length; i++) {

@@ -7,22 +7,38 @@
     <!--<script data-require="jquery@*" data-semver="2.1.1" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
     <!--<script data-require="angular.js@1.3.4" data-semver="1.3.4" src="http://code.angularjs.org/1.3.4/angular.js"></script>-->
    <!--  // <script src="js/jqueryJS/jquery.min.js"></script> -->
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
     <script src="js/angularJS/angular.min.js"></script>
     <script src="js/bootstrapJS/ui-bootstrap.min.js"></script>
+
+
     <!--<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>-->
-   <link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/travelPage/surya.css">
+
     <script src="js/angularController/travelPageAngularController/routesApp.js"></script>
+    <script src="js/angularController/travelPageAngularController/surya.js"></script>
     <script src="js/angularController/travelPageAngularController/sarathi.js"></script>
     <script src="js/angularController/travelPageAngularController/sanjaya.js"></script>
     <script src="js/angularService/travelPageAngularService/orderedCitiesService.js"></script>
     <script src="js/angularJS/angular-pageslide-directive.js"></script>
+    <script src="js/angularJS/ngDraggable.js"></script>
+
+
+
     <!--<link rel="stylesheet" href="css/page2Css/reorder.css"/>-->
     <!-- <link rel="stylesheet" type="text/css" href="css/page2Css/normalize.css" /> -->
     <!-- <link rel="stylesheet" type="text/css" href="css/page2Css/demo.css" />
     <link rel="stylesheet" type="text/css" href="css/page2Css/icons.css" />
     <link rel="stylesheet" type="text/css" href="css/page2Css/component.css"/> -->
+
+
     <link rel="stylesheet" href="css/travelPage/map.css">
+
+
     <!--<script src="js/jQueryCookie/jquery.cookie.js"></script>-->
     <!--<script src="js/jqueryTemplate/jquery.tmpl.js"></script>-->
     <!--<script src="js/oldJqueryJS/callPlaces.js"></script>-->
@@ -32,7 +48,7 @@
 </head>
 <body>
     <!-- <div ng-include src="'templates/layouts/global/header.html'"></div> -->
-
+    <div ng-include src="'templates/layouts/travelPage/reorder.html'"></div>
     <div ng-include src="'templates/layouts/travelPage/routes.html'"></div>
     <!-- <div ng-include style="height:100%" src="'templates/layouts/global/footer.html'"></div> -->
 </body>

@@ -4,141 +4,125 @@
     .ng-pageslide{
         background: #eee;
     }
+    .ng-travel{
+        background: #bbbbbb;
+    }
 </style>
+<div ng-controller="routesController">
+    <div style="overflow: visible">
 
-<div ng-controller="sarthiController">
-<!-- <div class="row">
-    <div class="col-sm-3"> -->
-<!--         <div class="page-header text-center">
-           <h1><small>Trip Overview</small></h1>     
+        <div ng-controller="sarthiController">
+
+            <pageslide ps-open="isTravelPanelOpen" ps-size="400px" ps-side="left" ps-class="ng-travel">
+                <!--<div ng-hide="loader">-->
+                <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
+                <!--</div>-->
+                <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
+                    <p>
+                    <div class="page-header text-center">
+                        <h1><small>Trip Overview</small></h1>
+                    </div>
+                    <div ng-repeat="leg in legs">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {{getSourceCityName($index)}}
+                            </div>
+                        </div>
+                        <div ng-repeat="segment in leg.defaultRoute.segments">
+                            <div ng-if="segment.isMajor != 0">
+                                <div class="panel panel-default travel-panel" ng-href='#' ng-click="openTravelModesPanel(leg)">
+                                    <div class="panel-body">
+                                        <div class="col-xs-3">
+                                            <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="row">
+                                                {{getDateFormatted(segment) | date:'mediumDate'}}
+                                            </div>
+                                            <div class="row">
+                                                {{getDateFormatted(segment) | date:'EEE'}}
+                                            </div>
+                                            <div class="row">
+                                                {{getDuration(segment)}}
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {{getDateFormatted(segment) | date:'shortTime'}}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {{getPrice(segment) | currency:"&#8377;"}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            VIA {{getStopName($index, leg.defaultRoute)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="$last">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    {{getDestinationCityName($index)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                </div>
+            </pageslide>
+            <pageslide ps-open="isTravelModesPanelOpen" ps-side="left">
+                <div>
+                    <div class="page-header text-center">
+                        <h1><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h1>
+                    </div>
+                    <div class="row">
+                        <div ng-repeat="route in routes">
+                            <div ng-repeat="segment in route.segments">
+                                <div ng-if="segment.isMajor != 0">
+                                    <div class="panel panel-default" ng-href='#'>
+                                        <div class="panel-body">
+                                            <div class="col-xs-2">
+                                                <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <div class="row">
+                                                    {{getDateFormatted(segment) | date:'mediumDate'}}
+                                                </div>
+                                                <div class="row">
+                                                    {{getDateFormatted(segment) | date:'EEE'}}
+                                                </div>
+                                                <div class="row">
+                                                    {{getDuration(segment)}}
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                {{getDateFormatted(segment) | date:'shortTime'}}
+                                            </div>
+                                            <div class="col-xs-2">
+                                                {{getPrice(segment) | currency:"&#8377;"}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="segment.majorIndex != route.majorCount">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                VIA {{getStopName($index, route)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </pageslide>
+            <div class="col-sm-9">
+                <div id="map-canvas" ng-controller="sanjayaController"></div>
+            </div>
         </div>
- -->
-  <div id="reponsiveFont" class="btn btn-default btn-xs btn-responsive" ng-click="pageSlide()">Submit</div>
-
-<pageslide ps-open="checked2" ps-size="400px" >
-    <div ng-click="test()">
-        <p>
-           <table class="table table-striped">
-            <tr>
-               <td> Bangalore </td> 
-            </tr>
-            <tr>
-               <td> Modes </td> 
-            </tr> 
-            <tr>
-               <td> chennai </td> 
-            </tr> 
-            <tr>
-               <td> Modes </td> 
-            </tr>  
-            <tr>
-               <td> Bangalore </td> 
-            </tr> 
-            </table>
-        </p>
     </div>
- </pageslide>     
- <pageslide ps-open="checked1">
-    <div>
-        <p>
-            Testing2
-        </p>
-    </div>
- </pageslide>
-    <!-- </div>
-    <div class="col-sm-9">
-        <div id="map-canvas" ng-controller="mapController"></div>
-    </div>
-
-
-
-
-
-</div> -->
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <!-- <!-- <div id="travelOptions" class="templateContainer">
-
-    <div class="mp-pusher" id="mp-pusher">
-
-        <!-- mp-menu -->
-       <!--  <nav id="mp-menu" class="mp-menu">
-            <div class="mp-level">
-                <h2 class="icon icon-world">Trip Overview</h2>
-
-                <div ng-controller="sarthiController" >
-                    <div collapse="submitOrderCollapsed">
-                        <div id="reponsiveFont" class="btn btn-default btn-xs btn-responsive" ng-click="showRoutes()">Submit</div>
-                        Testing
-                    </div>
-                    <div collapse="isRouteCollapsed">
-                        <ul id="common-template-ui">
-                            <div ng-repeat="city in cities">
-                                <div class="city-list icon icon-photo">{{city.name}}</div>
-                            </div> -->
-                            <!--<li class="icon icon-arrow-left">-->
-                            <!--<a class="icon icon-display" href="#">modes</a>-->
-                            <!--<div class="mp-level">-->
-                                <!--<h2 style="color: #fff" class="icon icon-display">Bangalore-Chennai</h2>-->
-                                <!--<a class="mp-back" href="#">back</a>-->
-                                <!--<ul id="Bangalore-Chennai">-->
-                                    <!--</ul>-->
-                                <!--</div>-->
-                            <!--</li>-->
-     <!--                    </ul>
-                    </div>
-                </div>
-            </div>
-        </nav> -->
-        <!-- /mp-menu -->
-
-        <!-- <div class="scroller">
-            <div class="block block-40 clearfix">
-                <p><a href="#" id="trigger" class="menu-trigger" style="z-index: 1">Open/Close Menu</a></p>
-
-            </div>
-            <div class="scroller-inner"> -->
-                <!--<header class="codrops-header">-->
-                <!--<h1>Google Map <span>show destinations</span></h1>-->
-                <!--</header>-->
-                <!-- <div id="map-canvas" ng-controller="mapController">
-                    <div class="content clearfix">
-
-                    </div>
-                </div>
-            </div> -->
-       <!--  </div> --><!-- /scroller -->
-    <!-- </div> --><!-- /pusher -->
-<!-- </div> -->
-<!-- <script src="js/travelPageJS/classie.js"></script>
-<script src="js/travelPageJS/mlpushmenu.js"></script> --> 

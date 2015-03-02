@@ -3,7 +3,7 @@ var cityIDs = [];
 var minWeight = 0;
 $(document).ready(function(){
 	console.log("URL:"+document.URL);
-	
+
 	var currentURL=document.URL;
 	var pathArray = currentURL.split('?');
 	if(pathArray.length>1){
@@ -26,20 +26,20 @@ $(document).ready(function(){
   		{/trip}
 		<li id="{OriginID}">{OriginName}</li>
 		*/
-		
+
 		//var data1 = [{CityName:"PATNITOP",CityID:33},{CityName:"GULMARG",CityID:31}];
-		var markupWithReorder = '<li style="cursor:pointer" class="source cityBorder" id="${CityID}">${CityName}</li>';
+		var markupWithReorder = '<li style="cursor:pointer" class="source " id="${CityID}">${CityName}</li>';
 		var markupWithoutReorder = '<li class="cityBorder" id="${OriginID}">${OriginName}</li>';
-		// Compile the markup as a named template
+		// Compile the markup as a named templatecityBorder
 	    $.template( "orderTemplate", markupWithReorder );
-	    $.template( "WOOrderTemplate", markupWithoutReorder );	    
+	    $.template( "WOOrderTemplate", markupWithoutReorder );
 	    // the rendered HTML
 	    $.tmpl( "WOOrderTemplate", data ).appendTo( "#ordered" );
 	    $.tmpl( "orderTemplate", data.trip ).appendTo( "#ordered" );
 	    $.tmpl( "WOOrderTemplate", data ).appendTo( "#ordered" );
-	
+
 	    var button='<button id="orderSubmit" type="button" onclick="showRoutes()">ShowRoutes</button>';
 	    $(button).appendTo("#placesOrder");
-	
+
 	});
 });

@@ -6,6 +6,7 @@ routesModule.service('orderedCities', function () {
     var originCity = null;
     var weightArray = [];
     var minimumWeight = 0;
+    var pathArray=[];
 
     return {
         getOrderedDestinationCities: function() {
@@ -20,6 +21,9 @@ routesModule.service('orderedCities', function () {
         getMinimumWeight: function() {
             return minimumWeight;
         },
+        getPathArray: function(){
+            return pathArray;
+        },
         setOrderedDestinationCities: function(orderedCities) {
             orderedDestinationCities = orderedCities;
         },
@@ -31,6 +35,9 @@ routesModule.service('orderedCities', function () {
         },
         setMinimumWeight: function(minWeight) {
             minimumWeight = minWeight;
+        },
+        setPathArray: function(path){
+            pathArray = path;
         }
     };
 });
