@@ -2,7 +2,7 @@
 
 module.exports = function(app) {
 
-	app.post('/showPlaces', function(req, res) {
+	app.post('/showPlacesAndHotels', function(req, res) {
 
 		console.log("TravelData called");
 		var travelData=req.param('travelData');
