@@ -3,6 +3,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.isTravelPanelOpen=false;
     $scope.isTravelModesPanelOpen=false;
 
+    $scope.isTripPanelSetCollapsed = false;
+    $scope.isModeDetailsPanelOpen = true;
+
     $scope.loader = false;
     $scope.isTravelPanelDataHidden = true;
     $scope.cities = [];
@@ -39,14 +42,15 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }, 400);
     }
 
-    $scope.openTravelModesPanel = function(leg) {
-        $scope.isTravelModesPanelOpen = true;
+    $scope.openTravelModesPanel = function(leg, clickEvent) {
+        $scope.isTravelModesPanelOpen = !$scope.isTravelModesPanelOpen;
         $scope.currentLeg = leg;
         $scope.routes = leg.routes;
-        var travelPanel=angular.element(document.querySelector(".travel-panel"));
-        travelPanel.removeAttr('ng-click');
-        var travelPageSlide=angular.element(document.querySelector(".travel-pageslide"));
-        travelPageSlide.attr('ng-click','closeOtherPanels(1)');
+        clickEvent.stopPropagation();
+        //var travelPanel=angular.element(document.querySelector(".travel-panel"));
+        //travelPanel.removeAttr('ng-click');
+        //var travelPageSlide=angular.element(document.querySelector(".travel-pageslide"));
+        //travelPageSlide.attr('ng-click','closeOtherPanels(1)');
     };
 
     $scope.getSourceCityFromLeg = function(){
@@ -197,19 +201,36 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     };
 
     $scope.closeOtherPanels =function(panelNo){
-        console.log("in close other panels");
         if(panelNo==1){
             //travel panel clicked
+            console.log('travel panel clicked');
             if($scope.isTravelModesPanelOpen){
                 $scope.isTravelModesPanelOpen=false;
-                var travelPanel=angular.element(document.querySelector(".travel-panel"));
-                travelPanel.attr('ng-click','openTravelModesPanel(leg)');
-                var travelPageSlide=angular.element(document.querySelector(".travel-pageslide"));
-                travelPageSlide.removeAttr('ng-click');
             }
         }
         else if(panelNo==2){
             //travel modes panel clicked
         }
+        console.log("in close other panels");
+    };
+
+    $scope.showOtherTrip = function() {
+        $scope.isTripPanelSetCollapsed = true;
+        console.log('Panel Collapsed');
+        $timeout(function openCollapsedPanelSet(){
+            var swapRouteData = alternateRouteData;
+            alternateRouteData = defaultRouteData;
+            defaultRouteData = swapRouteData;
+            getAttributesFromRouteData(defaultRouteData);
+            console.log('Panel Opened');
+            $scope.isTripPanelSetCollapsed = false;
+        },1000);
+    };
+
+    function simpleKeys (original) {
+        return Object.keys(original).reduce(function (obj, key) {
+            obj[key] = typeof original[key] === 'object' ? '{ ... }' : original[key];
+            return obj;
+        }, {});
     }
 });

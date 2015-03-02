@@ -17,100 +17,173 @@
                 <!--<div ng-hide="loader">-->
                 <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
                 <!--</div>-->
-                <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
-                    <p>
-                    <div class="page-header text-center">
-                        <h1><small>Trip Overview</small></h1>
-                    </div>
-                    <div ng-repeat="leg in legs">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                {{getSourceCityName($index)}}
+                <div class="panel panel-default" style="height: 100vh"  ng-click="closeOtherPanels(1)">
+
+                    <div class="panel-body">
+                        <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
+                            <p>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading text-center">
+                                    <h3>Trip Overview</h3>
+                                </div>
                             </div>
-                        </div>
-                        <div ng-repeat="segment in leg.defaultRoute.segments">
-                            <div ng-if="segment.isMajor != 0">
-                                <div class="panel panel-default travel-panel" ng-href='#' ng-click="openTravelModesPanel(leg)">
+                            <!--<div class="page-header text-center">-->
+                            <!--<h1><small>Trip Overview</small></h1>-->
+                            <!--</div>-->
+                            <div ng-repeat="leg in legs" collapse="isTripPanelSetCollapsed">
+                                <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <div class="col-xs-3">
-                                            <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="row">
-                                                {{getDateFormatted(segment) | date:'mediumDate'}}
+                                        {{getSourceCityName($index)}}
+                                    </div>
+                                </div>
+                                <div ng-repeat="segment in leg.defaultRoute.segments">
+                                    <div ng-if="segment.isMajor != 0" ng-href='#' ng-click="openTravelModesPanel(leg, $event)">
+                                        <div class="panel panel-default travel-panel">
+                                            <div class="panel-body travel-panel-body">
+                                                <div class="col-xs-3">
+                                                    <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <div class="row">
+                                                        {{getDateFormatted(segment) | date:'mediumDate'}}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{getDateFormatted(segment) | date:'EEE'}}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{getDuration(segment)}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    {{getDateFormatted(segment) | date:'shortTime'}}
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    {{getPrice(segment) | currency:"&#8377;"}}
+                                                </div>
                                             </div>
-                                            <div class="row">
-                                                {{getDateFormatted(segment) | date:'EEE'}}
-                                            </div>
-                                            <div class="row">
-                                                {{getDuration(segment)}}
-                                            </div>
                                         </div>
-                                        <div class="col-xs-3">
-                                            {{getDateFormatted(segment) | date:'shortTime'}}
-                                        </div>
-                                        <div class="col-xs-3">
-                                            {{getPrice(segment) | currency:"&#8377;"}}
+                                        <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body stop-panel-body">
+                                                    VIA {{getStopName($index, leg.defaultRoute)}}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount">
+                                <div ng-if="$last">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
-                                            VIA {{getStopName($index, leg.defaultRoute)}}
+                                            {{getDestinationCityName($index)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default" ng-click="showOtherTrip()">
+                                <div class="panel-heading">
+                                    We suggest you check out multi-city taxi for this trip!
+                                </div>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </pageslide>
+            <pageslide ps-open="isTravelModesPanelOpen" ps-side="left" ps-size="350px">
+                <div class="panel panel-default" style="height: 100vh"  ng-click="closeOtherPanels(2)">
+
+                    <div class="panel-body">
+                        <div class="page-header text-center">
+                            <h1><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h1>
+                        </div>
+                        <div class="row">
+                            <div ng-repeat="route in routes">
+                                <div ng-repeat="segment in route.segments">
+                                    <div ng-if="segment.isMajor != 0">
+                                        <div class="panel panel-default" ng-href='#'>
+                                            <div class="panel-body">
+                                                <div class="col-xs-2">
+                                                    <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="row">
+                                                        {{getDateFormatted(segment) | date:'mediumDate'}}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{getDateFormatted(segment) | date:'EEE'}}
+                                                    </div>
+                                                    <div class="row">
+                                                        {{getDuration(segment)}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    {{getDateFormatted(segment) | date:'shortTime'}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    {{getPrice(segment) | currency:"&#8377;"}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-if="segment.majorIndex != route.majorCount">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    VIA {{getStopName($index, route)}}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div ng-if="$last">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    {{getDestinationCityName($index)}}
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    </p>
                 </div>
             </pageslide>
-            <pageslide ps-open="isTravelModesPanelOpen" ps-side="left">
-                <div>
-                    <div class="page-header text-center">
-                        <h1><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h1>
-                    </div>
-                    <div class="row">
-                        <div ng-repeat="route in routes">
-                            <div ng-repeat="segment in route.segments">
-                                <div ng-if="segment.isMajor != 0">
-                                    <div class="panel panel-default" ng-href='#'>
-                                        <div class="panel-body">
-                                            <div class="col-xs-2">
-                                                <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
-                                            </div>
-                                            <div class="col-xs-2">
-                                                <div class="row">
-                                                    {{getDateFormatted(segment) | date:'mediumDate'}}
-                                                </div>
-                                                <div class="row">
-                                                    {{getDateFormatted(segment) | date:'EEE'}}
-                                                </div>
-                                                <div class="row">
-                                                    {{getDuration(segment)}}
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-2">
-                                                {{getDateFormatted(segment) | date:'shortTime'}}
-                                            </div>
-                                            <div class="col-xs-2">
-                                                {{getPrice(segment) | currency:"&#8377;"}}
-                                            </div>
-                                        </div>
+            <pageslide ps-open="isModeDetailsPanelOpen" ps-side="left" ps-size="300px">
+                <div class="panel panel-default" style="height: 100vh">
+                    <div class="panel-body">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        Shatabdi Express
                                     </div>
-                                    <div ng-if="segment.majorIndex != route.majorCount">
-                                        <div class="panel panel-default">
-                                            <div class="panel-body">
-                                                VIA {{getStopName($index, route)}}
+                                    <div class="col-xs-4">
+                                        12451
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    Bangalore City Junction (SBC) - Hazrat Nizamuddin (NZM)
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-10">
+                                        <div class="row">
+                                            <div class="col-xs-5">
+                                                <div class="row">
+                                                    Feb 12
+                                                </div>
+                                                <div class="row">
+                                                    Mon
+                                                </div>
+                                                <div class="row">
+                                                    12:30
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-5">
+                                                <div class="row">
+                                                    Feb 22
+                                                </div>
+                                                <div class="row">
+                                                    Wed
+                                                </div>
+                                                <div class="row">
+                                                    14:30
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                Rs 2300
                                             </div>
                                         </div>
                                     </div>
