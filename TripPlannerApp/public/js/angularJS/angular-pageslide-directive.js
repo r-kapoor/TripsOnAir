@@ -28,13 +28,13 @@ pageslideDirective.directive('pageslide', [
                 param.size = attrs.psSize || '300px';
                 param.zindex = attrs.psZindex || 1000;
                 param.className = attrs.psClass || 'ng-pageslide';
-                
+
                 /* DOM manipulation */
                 var content = null;
                 var slider = null;
 
                 if (!attrs.href && el.children() && el.children().length) {
-                    content = el.children()[0];  
+                    content = el.children()[0];
                 } else {
 
                     var targetId = (attrs.href || attrs.psTarget).substr(1);
@@ -46,9 +46,9 @@ pageslideDirective.directive('pageslide', [
                         slider.id = 'pageslide-target-' + targetId;
                     }
                 }
-                
+
                 // Check for content
-                if (!content) 
+                if (!content)
                     throw new Error('You have to elements inside the <pageslide> or you have not specified a target href');
 
                 slider = slider || document.createElement('div');
@@ -65,25 +65,25 @@ pageslideDirective.directive('pageslide', [
 
                 switch (param.side){
                     case 'right':
-                        slider.style.height = attrs.psCustomHeight || '100%'; 
+                        slider.style.height = attrs.psCustomHeight || '100%';
                         slider.style.top = attrs.psCustomTop ||  '0px';
                         slider.style.bottom = attrs.psCustomBottom ||  '0px';
                         slider.style.right = attrs.psCustomRight ||  '0px';
                         break;
                     case 'left':
-                        slider.style.height = attrs.psCustomHeight || '100%';   
+                        slider.style.height = attrs.psCustomHeight || '100%';
                         slider.style.top = attrs.psCustomTop || '0px';
                         slider.style.bottom = attrs.psCustomBottom || '0px';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         break;
                     case 'top':
-                        slider.style.width = attrs.psCustomWidth || '100%';   
+                        slider.style.width = attrs.psCustomWidth || '100%';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         slider.style.top = attrs.psCustomTop || '0px';
                         slider.style.right = attrs.psCustomRight || '0px';
                         break;
                     case 'bottom':
-                        slider.style.width = attrs.psCustomWidth || '100%'; 
+                        slider.style.width = attrs.psCustomWidth || '100%';
                         slider.style.bottom = attrs.psCustomBottom || '0px';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         slider.style.right = attrs.psCustomRight || '0px';
@@ -101,16 +101,16 @@ pageslideDirective.directive('pageslide', [
                         content.style.display = 'none';
                         switch (param.side){
                             case 'right':
-                                slider.style.width = '0px'; 
+                                slider.style.width = '0px';
                                 break;
                             case 'left':
                                 slider.style.width = '0px';
                                 break;
                             case 'top':
-                                slider.style.height = '0px'; 
+                                slider.style.height = '0px';
                                 break;
                             case 'bottom':
-                                slider.style.height = '0px'; 
+                                slider.style.height = '0px';
                                 break;
                         }
                     }
@@ -122,16 +122,16 @@ pageslideDirective.directive('pageslide', [
                     if (slider.style.width !== 0 && slider.style.width !== 0){
                         switch (param.side){
                             case 'right':
-                                slider.style.width = param.size; 
+                                slider.style.width = param.size;
                                 break;
                             case 'left':
-                                slider.style.width = param.size; 
+                                slider.style.width = param.size;
                                 break;
                             case 'top':
-                                slider.style.height = param.size; 
+                                slider.style.height = param.size;
                                 break;
                             case 'bottom':
-                                slider.style.height = param.size; 
+                                slider.style.height = param.size;
                                 break;
                         }
                         setTimeout(function(){
@@ -201,7 +201,7 @@ pageslideDirective.directive('pageslide', [
                 if (el[0].addEventListener) {
                     el[0].addEventListener('click',function(e){
                         e.preventDefault();
-                        psOpen(slider,param);                    
+                        psOpen(slider,param);
                     });
 
                     if (close_handler){
@@ -214,7 +214,7 @@ pageslideDirective.directive('pageslide', [
                     // IE8 Fallback code
                     el[0].attachEvent('onclick',function(e){
                         e.returnValue = false;
-                        psOpen(slider,param);                    
+                        psOpen(slider,param);
                     });
 
                     if (close_handler){
