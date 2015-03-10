@@ -91,6 +91,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
             var totalBudgetOfThisCab = calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab,startSegment);
             console.log('totalBudgetOfThisCab:'+totalBudgetOfThisCab);
             totalBudgetofCabs += totalBudgetOfThisCab;
+            startSegment.indicativePrice.price = totalBudgetofCabs;
         }
 
         console.log('TOTAL BUDGET OF TRIP:'+totalBudgetOfTrip);
@@ -178,7 +179,7 @@ function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
 			Cars:carOfPreferenceDetails.FareDetails.Cars,
 			Seats:carOfPreferenceDetails.FareDetails.Seats,
 			CabOperators:cabOperatorsArray
-	}
+	};
 	segment.CabDetails = cabDetails;
 	return minimumCabPrice;
 }

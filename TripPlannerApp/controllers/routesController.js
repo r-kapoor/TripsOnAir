@@ -10,9 +10,13 @@ var getRatingRatio=require('../lib/getRatingRatio');
 var conn = require('../lib/database');
 var getDateSets = require('../lib/getDateSets');
 var getTrainData=require('../lib/getTrainData');
-var getDefaultModeOfTravel=require('../lib/getDefaultModeOfTravel');
+var getFlightData=require('../lib/getFlightData');
+var planAllModesTrip = require('../lib/planAllModesTrip');
 var planTaxiTrip=require('../lib/planTaxiTrip');
 var tasteObjectToInteger=require('../lib/UtilityFunctions/tasteObjectToInteger');
+var chooseMajorDefault = require('../lib/chooseMajorDefault');
+var cloneJSON=require('../lib/UtilityFunctions/cloneJSON');
+var combineTrainAndFlightData = require('../lib/combineTrainAndFlightData');
 require('date-utils');
 var async  = require('async');
 
@@ -22,27 +26,28 @@ var tripNotPossibleResponse = function (res) {
     };
     res.json(model);
 };
+
 module.exports=function (app){
 
     var model = new IndexModel();
 
-	app.get('/showRoutes',function(req,res)
-	{
-		//Getting the paramters passed
-		console.log('In show routes');
-		var cities=req.param('cities').split(',');
-		var startDate=req.param("startDate");
-    	var endDate=req.param("endDate");
-    	var dates=[new Date(startDate),new Date(endDate)];
-    	var startTime=req.param("startTime");
-    	var endTime=req.param("endTime");
-    	var  numPeople=req.param("numP");
-    	var budget = req.param("budget");
-    	var times=[];
-    	var cityIDs=req.param("cityIDs").split(',');
-    	startTime = JSON.parse(startTime);
+    app.get('/showRoutes',function(req,res)
+    {
+        //Getting the paramters passed
+        console.log('In show routes');
+        var cities=req.param('cities').split(',');
+        var startDate=req.param("startDate");
+        var endDate=req.param("endDate");
+        var dates=[new Date(startDate),new Date(endDate)];
+        var startTime=req.param("startTime");
+        var endTime=req.param("endTime");
+        var numPeople=req.param("numP");
+        var budget = req.param("budget");
+        var times=[];
+        var cityIDs=req.param("cityIDs").split(',');
+        startTime = JSON.parse(startTime);
         endTime = JSON.parse(endTime);
-		var tastes =JSON.parse(req.param('tastes'));
+        var tastes =JSON.parse(req.param('tastes'));
         var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
         console.log('In show routes');
         //console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning);
@@ -68,7 +73,7 @@ module.exports=function (app){
 			times[1] = "Evening";
 		}
 
-
+    //console.log("Time[0]:"+times[0]+","+"Time[1]:"+times[1]);
 		//Array of functions to be called in parallel
 		var fns=[];
 		console.log('In show routes');
@@ -96,6 +101,7 @@ module.exports=function (app){
 
 		//Pushing the getRatingRatio function so that it gets the ratings of the destinations in parallel
 		fns.push(function (callback){
+            console.log("rating ratio callback:"+callback);
 			getRatingRatio.getRatingRatio(conn,cities.slice(1,cities.length-1),callback);
 			});
 
@@ -118,24 +124,62 @@ module.exports=function (app){
                 }
                 else {
                     //Getting the schedules of the trains from db. All the travel planning logic is called in the callbacks of this function
-                    getTrainData.getTrainData(conn, results.slice(0,results.length-1), dateSet, budget, dates, times, ratio, numPeople,
-                        getDefaultModeOfTravel.getDefaultModeOfTravel,planTaxiTrip.planTaxiTrip,
-                        function(model){
-                            if(model == null) {
-                                tripNotPossibleResponse(res);
-                            }
-                            else {
-                                console.log('In show routes');
-                                model.userTotalbudget=budget;
-                                model.numPeople=numPeople;
-                                model.tastes=tastes;
-                                //console.log("budget: "+budget);
-                                res.json(model);
-                            }
-                        });
+                    async.parallel([
+                            function (callbackData) {
+                                getFlightData.getFlightData(conn, results.slice(0, results.length - 1), dateSet, budget, dates, times, ratio, numPeople,
+                                    callbackData);
+                            },
+                            function (callbackData) {
+                                if (callbackData == undefined) {
+                                    console.log('UNDEFINED');
+                                }
+                                else {
+                                    getTrainData.getTrainData(conn, results.slice(0, results.length - 1), dateSet, budget, dates, times, ratio, numPeople,
+                                        callbackData);
+                                }
+                            }],
+                        function (err, results) {
+
+                            //Reference for both train and flight data is same. Now Combining the isRecommendedRoute part
+                            var rome2RioData = combineTrainAndFlightData.combineTrainAndFlightData(results[0]);
+
+                            async.parallel(
+                                [
+                                    function (callback) {
+                                        planAllModesTrip.planAllModesTrip(cloneJSON.clone(rome2RioData), dateSet, budget, dates, times, ratio, results[1].lengthOfRoutesArray, results[1].indexOfDrive, numPeople, callback);
+                                    },
+                                    function (callback) {
+
+                                        planTaxiTrip.planTaxiTrip(conn, rome2RioData, numPeople, budget, dateSet, dates, times, ratio, callback);
+                                    }],
+                                //callback
+                                function (err, results) {
+
+                                    chooseMajorDefault.chooseMajorDefault(results, dates, times, budget, responseFunction);
+
+                                });
+
+
+                            function responseFunction(model) {
+                                if (model == null) {
+                                    tripNotPossibleResponse(res);
+                                }
+                                else {
+                                    console.log('In show routes');
+                                    model.userTotalbudget = budget;
+                                    model.numPeople = numPeople;
+                                    model.tastes = tastes;
+                                    //console.log("budget: "+budget);
+                                    res.json(model);
+                                }
+                            };
+                        }
+                    );
                 }
 
     	    }
         );
 	});
 }
+
+

@@ -4,7 +4,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.isTravelModesPanelOpen=false;
 
     $scope.isTripPanelSetCollapsed = false;
-    $scope.isModeDetailsPanelOpen = true;
+    $scope.isModeDetailsPanelOpen = false;
 
     $scope.loader = false;
     $scope.isTravelPanelDataHidden = true;
@@ -14,7 +14,11 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.currentLeg = null;
 
     $scope.routes = [];
+    $scope.trains = [];
+    $scope.flights = [];
 
+    $scope.isTrainClicked = false;
+    $scope.isFlightClicked = false;
     var defaultRouteData = null;
     var alternateRouteData = null;
 
@@ -51,6 +55,16 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         //travelPanel.removeAttr('ng-click');
         //var travelPageSlide=angular.element(document.querySelector(".travel-pageslide"));
         //travelPageSlide.attr('ng-click','closeOtherPanels(1)');
+    };
+
+    $scope.openModeDetailsPanel = function(segment, clickEvent) {
+        $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
+        if(segment.kind == "train") {
+            $scope.isTrainClicked = true;
+            initializeTrainDates(segment.trainData);
+            $scope.trains = segment.trainData;
+        }
+        clickEvent.stopPropagation();
     };
 
     $scope.getSourceCityFromLeg = function(){
@@ -102,10 +116,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                         /*
                             hack
                          */
-                        //defaultRouteData = data.withoutTaxiRome2rioData;
-                        //alternateRouteData = data.withTaxiRome2rioData;
-                        defaultRouteData = data.withTaxiRome2rioData;
-                        alternateRouteData = data.withoutTaxiRome2rioData;
+                        defaultRouteData = data.withoutTaxiRome2rioData;
+                        alternateRouteData = data.withTaxiRome2rioData;
+                        //defaultRouteData = data.withTaxiRome2rioData;
+                        //alternateRouteData = data.withoutTaxiRome2rioData;
                     }
                     getAttributesFromRouteData(defaultRouteData);
                 }
@@ -158,16 +172,16 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
 
     $scope.getModeIcon = function(segment) {
         if(segment.kind == "flight") {
-            return "glyphicon-plane";
+            return "glyphicons-39-airplane";
         }
         else if(segment.kind == "car") {
-            return "glyphicon-eye-open";
+            return "glyphicons-6-car";
         }
         else if(segment.kind == "train") {
-            return "glyphicon-plus";
+            return "glyphicons-15-train";
         }
         else if(segment.kind == "bus") {
-            return "glyphicon-minus";
+            return "glyphicons-32-bus";
         }
         else {
             return "glyphicon-asterisk";
@@ -183,8 +197,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     };
 
     $scope.getDuration = function(segment) {
-        var duration = segment.duration;
-        var hours = parseInt(parseInt(duration)/60);
+        var duration = parseInt(segment.duration);
+        var hours = parseInt(duration/60);
         var minutes = duration%60;
         var returnString = "";
         if(hours > 0) {
@@ -210,6 +224,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
         else if(panelNo==2){
             //travel modes panel clicked
+            console.log('travel modes panel clicked');
+            if($scope.isModeDetailsPanelOpen) {
+                $scope.isModeDetailsPanelOpen = false;
+            }
         }
         console.log("in close other panels");
     };
@@ -233,4 +251,107 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             return obj;
         }, {});
     }
+
+    $scope.getPanelClass = function(train) {
+        if(train.isFinal != undefined && train.isFinal == 1) {
+            return "panel-danger";
+        }
+        return "panel-info";
+    };
+
+    $scope.addToTrip = function() {
+
+    };
+
+
+    /*
+    * This is the part dealing with datepicker
+     */
+
+    function initializeTrainDates(trainData){
+        for(var i = 0; i < trainData.length; i++){
+            var trainDate;
+            //console.log('trainData[i].dateLimits:'+trainData[i].dateLimits[0]);
+            if(trainData[i].dateLimits.length > 1) {
+                trainData[i].dateLimits.sort(function(a,b) {
+                    a = new Date(a);
+                    b = new Date(b);
+                    a.getTime() - b.getTime();
+                });
+                if(trainData.isFinal != undefined && trainData.isFinal == 1){
+                    trainDate = {
+                        dt:trainData.startTime,
+                        opened:false,
+                        disabled:false,
+                        minDate:trainData[i].dateLimits[0],
+                        maxDate:trainData[i].dateLimits[trainData[i].dateLimits.length-1]
+                    };
+                }
+                trainDate = {
+                    dt:null,
+                    opened:false,
+                    disabled:false,
+                    minDate:trainData[i].dateLimits[0],
+                    maxDate:trainData[i].dateLimits[trainData[i].dateLimits.length-1]
+                };
+            }
+            else if(trainData[i].dateLimits.length == 1) {
+                trainDate = {
+                    dt:trainData[i].dateLimits[0],
+                    opened:false,
+                    disabled:true,
+                    minDate:trainData[i].dateLimits[0],
+                    maxDate:trainData[i].dateLimits[0]
+                };
+            }
+            else {
+                trainDate = {
+                    dt:null,
+                    opened:false,
+                    disabled:false,
+                    minDate:null,
+                    maxDate:null
+                }
+            }
+            $scope.trainDate.push(trainDate);
+        }
+    }
+
+    $scope.trainDate=[];
+
+    $scope.clear = function () {
+        //$scope.dt = 'Select';
+    };
+
+    $scope.toggleMin = function() {
+        $scope.minDate = $scope.minDate ? null : new Date();
+    };
+
+    $scope.toggleMin();
+
+    $scope.open = function($event,index) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        for(var i = 0; i < $scope.trainDate.length; i++) {
+            console.log("i:"+i+",in:"+index);
+            if(i == index) {
+                $scope.trainDate[i].opened = true;
+            }
+            else {
+                $scope.trainDate[i].opened = false;
+            }
+        }
+    };
+
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
+
+    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[1];
+
+    /**
+     * End of Datepicker
+     */
 });

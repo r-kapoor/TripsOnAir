@@ -41,7 +41,8 @@
                                         <div class="panel panel-default travel-panel">
                                             <div class="panel-body travel-panel-body">
                                                 <div class="col-xs-3">
-                                                    <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
+                                                    <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+                                                    <!--<i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>-->
                                                 </div>
                                                 <div class="col-xs-3">
                                                     <div class="row">
@@ -101,10 +102,10 @@
                             <div ng-repeat="route in routes">
                                 <div ng-repeat="segment in route.segments">
                                     <div ng-if="segment.isMajor != 0">
-                                        <div class="panel panel-default" ng-href='#'>
+                                        <div class="panel panel-default" ng-href='#' ng-click="openModeDetailsPanel(segment, $event)">
                                             <div class="panel-body">
                                                 <div class="col-xs-2">
-                                                    <i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>
+                                                    <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="row">
@@ -142,48 +143,120 @@
             <pageslide ps-open="isModeDetailsPanelOpen" ps-side="left" ps-size="300px">
                 <div class="panel panel-default" style="height: 100vh">
                     <div class="panel-body">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-8">
-                                        Shatabdi Express
+                        <div ng-if="isTrainClicked" ng-repeat="train in trains">
+                            <div ng-if="train.isRecommended != 0" class="panel {{getPanelClass(train)}}">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            {{train.TrainName}}
+                                        </div>
+                                        <div class="col-xs-4">
+                                            {{train.TrainNo}}
+                                        </div>
                                     </div>
-                                    <div class="col-xs-4">
-                                        12451
+                                    <div class="row text-center">
+                                        {{train.OriginStationCode}} - {{train.DestStationCode}}
                                     </div>
                                 </div>
-                                <div class="row text-center">
-                                    Bangalore City Junction (SBC) - Hazrat Nizamuddin (NZM)
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-10">
+                                            <div class="row text-center">
+                                                <div class="col-xs-5">
+                                                    <div class="row">
+                                                        {{train.OriginDepartureTime}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-5">
+                                                    <div class="row">
+                                                        {{train.DestArrivalTime}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    {{train.fare | currency:"&#8377;"}}
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 10%">
+                                                <div class="col-xs-8">
+                                                    <button datepicker-popup="dd-MMMM-yyyy" ng-model="trainDate[$index].dt"
+                                                            is-open="trainDate[$index].opened" min-date="trainDate[$index].minDate"
+                                                            max-date="trainDate[$index].maxDate"
+                                                            datepicker-options="dateOptions" ng-required="true"
+                                                            close-text="Close" ng-click="open($event,$index)" ng-disabled="trainDate[$index].disabled">
+                                                        <div class="row">
+                                                            <div class="col-xs-2 h5">
+                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                            </div>
+                                                            <div class="col-xs-2 h5">{{(trainDate[$index].dt | date:'dd') || 'Select'}}
+                                                            </div>
+                                                            <div class="col-xs-4">
+                                                                <div class="row">
+                                                                    <div class="col-xs-2 month">{{trainDate[$index].dt |
+                                                                        date:'MMM'}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-2 day">{{trainDate[$index].dt |
+                                                                        date:'EEE'}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="btn btn-primary" ng-click="addToTrip()">Add To Trip</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-xs-10">
-                                        <div class="row">
-                                            <div class="col-xs-5">
-                                                <div class="row">
-                                                    Feb 12
+                        </div>
+                        <div ng-if="isFlightClicked" ng-repeat="flight in flights">
+                            <div ng-if="train.isRecommendedTrain != 0" class="panel {{getPanelClass(train)}}">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            {{train.TrainName}}
+                                        </div>
+                                        <div class="col-xs-4">
+                                            {{train.TrainNo}}
+                                        </div>
+                                    </div>
+                                    <div class="row text-center">
+                                        {{train.OriginStationCode}} - {{train.DestStationCode}}
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-10">
+                                            <div class="row">
+                                                <div class="col-xs-5">
+                                                    <div class="row">
+                                                        Feb 12
+                                                    </div>
+                                                    <div class="row">
+                                                        Mon
+                                                    </div>
+                                                    <div class="row">
+                                                        {{train.OriginDepartureTime}}
+                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    Mon
+                                                <div class="col-xs-5">
+                                                    <div class="row">
+                                                        Feb 22
+                                                    </div>
+                                                    <div class="row">
+                                                        Wed
+                                                    </div>
+                                                    <div class="row">
+                                                        {{train.DestArrivalTime}}
+                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    12:30
+                                                <div class="col-xs-2">
+                                                    Rs 2300
                                                 </div>
-                                            </div>
-                                            <div class="col-xs-5">
-                                                <div class="row">
-                                                    Feb 22
-                                                </div>
-                                                <div class="row">
-                                                    Wed
-                                                </div>
-                                                <div class="row">
-                                                    14:30
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-2">
-                                                Rs 2300
                                             </div>
                                         </div>
                                     </div>
