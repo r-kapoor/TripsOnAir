@@ -28,6 +28,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * @author rajat
  * Crawl railways data from cleartrip
  * Starting Link:https://www.cleartrip.com/trains/list?page=1
+ * IMP: If crawled again, then remove train data with train No = 12493, 12494
  */
 
 public class CrawlIndianRail extends getHibernateSession {
@@ -209,27 +210,27 @@ public class CrawlIndianRail extends getHibernateSession {
 				    	{
 				    		dayNo+="1";
 				    	}
-				    	else if(day[i].trim().equals("T"))
+				    	else if(day[i].trim().equals("M"))
 				    	{
 				    		dayNo+="2";
 				    	}
-				    	else if(day[i].trim().equals("W"))
+				    	else if(day[i].trim().equals("T"))
 				    	{
 				    		dayNo+="3";
 				    	}
-				    	else if(day[i].trim().equals("Th"))
+				    	else if(day[i].trim().equals("W"))
 				    	{
 				    		dayNo+="4";
 				    	}
-				    	else if(day[i].trim().equals("F"))
+				    	else if(day[i].trim().equals("Th"))
 				    	{
 				    		dayNo+="5";
 				    	}
-				    	else if(day[i].trim().equals("Sa"))
+				    	else if(day[i].trim().equals("F"))
 				    	{
 				    		dayNo+="6";
 				    	}
-				    	else if(day[i].trim().equals("M"))
+				    	else if(day[i].trim().equals("Sa"))
 				    	{
 				    		dayNo+="7";
 				    	}
