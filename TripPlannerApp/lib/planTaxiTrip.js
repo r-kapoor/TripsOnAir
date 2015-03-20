@@ -501,11 +501,11 @@ function taxiModifiedRome2RioData(rome2RioData,carRouteDetails)
                                 if(carRouteDetails[l].ddpDetailsUpdated==0)
                                 {
                                     var speed=40;//km per hour
-                                    if(carRouteDetails[i].oldKind=="flight")
+                                    if(carRouteDetails[l].oldKind=="flight")
                                     {
                                         speed= 25;
                                     }
-                                    else if(carRouteDetails[i].oldKind=="train")
+                                    else if(carRouteDetails[l].oldKind=="train")
                                     {
                                         speed=35;
                                     }

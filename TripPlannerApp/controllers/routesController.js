@@ -169,6 +169,7 @@ module.exports=function (app){
                                     model.userTotalbudget = budget;
                                     model.numPeople = numPeople;
                                     model.tastes = tastes;
+                                    model.dateSet = dateSet;
                                     //console.log("budget: "+budget);
                                     res.json(model);
                                 }

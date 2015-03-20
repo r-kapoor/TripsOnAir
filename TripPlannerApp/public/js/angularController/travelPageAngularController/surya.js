@@ -15,6 +15,7 @@ routesModule.controller('suryaController', function($scope, $rootScope, $http, $
         $scope.originCity=orderedCities.getOriginCity();
         $scope.loader=true;
         $scope.reorderList=false;
+        $rootScope.$emit("plotCities");
     });
 
     $scope.onDropComplete = function (index, obj, evt) {
@@ -22,6 +23,7 @@ routesModule.controller('suryaController', function($scope, $rootScope, $http, $
         var otherIndex = $scope.draggableObjects.indexOf(obj);
         $scope.draggableObjects[index] = obj;
         $scope.draggableObjects[otherIndex] = otherObj;
+        $rootScope.$emit('plotCities');
     };
 
     angular.element(document).ready(function () {
@@ -33,10 +35,7 @@ routesModule.controller('suryaController', function($scope, $rootScope, $http, $
             $http.get('/getOptimizeOrder?'+pathArray[1]).success(function(data,status){
                     console.log("getOptimizeOrder response:"+JSON.stringify(data));
                     orderedCities.setOrderedDestinationCities(data.trip);
-                    orderedCities.setOriginCity({
-                        CityName: data.OriginName,
-                        CityID: data.OriginID
-                    });
+                    orderedCities.setOriginCity(data.origin);
                     orderedCities.setWeightArray(data.weight);
                     orderedCities.setMinimumWeight(data.minWeight);
                     orderedCities.setPathArray(pathArray);

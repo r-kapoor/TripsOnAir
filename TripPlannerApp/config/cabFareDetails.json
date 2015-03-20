@@ -1,174 +1,176 @@
 {
-  "FareDetails": {
-    "Mini": {
-      "Cars": "Tata Indica",
-      "Seats":4,
-      "OperatorPrices": [
+    "FareDetails": [
         {
-          "Operator": "TaxiForSure",
-          "Price": 9
+            "SegmentType":"Mini",
+            "Cars": "Tata Indica",
+            "Seats":4,
+            "OperatorPrices": [
+                {
+                    "Operator": "TaxiForSure",
+                    "PricePerKm": 9
+                },
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 9.5
+                }
+            ]
         },
         {
-          "Operator": "Savaari",
-          "Price": 9.5
+            "SegmentType":"Sedan",
+            "Cars": "Tata Indigo, Dezire, Fusion, Ikon, Accent",
+            "Seats":4,
+            "OperatorPrices": [
+                {
+                    "Operator": "TaxiForSure",
+                    "PricePerKm": 10.5
+                },
+                {
+                    "Operator": "CarzOnRent",
+                    "PricePerKm": 12
+                },
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 11
+                }
+            ]
+        },
+        {
+            "SegmentType":"SmallSUV",
+            "Cars": "Innova 6 Seater, Xylo",
+            "Seats":6,
+            "OperatorPrices": [
+                {
+                    "Operator": "TaxiForSure",
+                    "PricePerKm": 13
+                },
+                {
+                    "Operator": "CarzOnRent",
+                    "PricePerKm": 16
+                },
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 13.5
+                }
+            ]
+        },
+        {
+            "SegmentType":"LargeSUV",
+            "Cars": "Innova 7 Seater",
+            "Seats":7,
+            "OperatorPrices": [
+                {
+                    "Operator": "TaxiForSure",
+                    "PricePerKm": 14
+                },
+                {
+                    "Operator": "CarzOnRent",
+                    "PricePerKm": 16
+                },
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 14
+                }
+            ]
+        },
+        {
+            "SegmentType":"Business",
+            "Cars": "Corolla, Elantra, Cruze",
+            "Seats":4,
+            "OperatorPrices": [
+                {
+                    "Operator": "CarzOnRent",
+                    "PricePerKm": 19.5
+                },
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 24.5
+                }
+            ]
+        },
+        {
+            "SegmentType":"Premium",
+            "Cars": "Accord, Camry, Mercedes-C",
+            "Seats":4,
+            "OperatorPrices": [
+                {
+                    "Operator": "CarzOnRent",
+                    "PricePerKm": 26.5
+                },
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 46
+                }
+            ]
+        },
+        {
+            "SegmentType":"Luxury",
+            "Cars": "Mercedes-E",
+            "Seats":4,
+            "OperatorPrices": [
+                {
+                    "Operator": "Savaari",
+                    "PricePerKm": 76
+                }
+            ]
+        },
+        {
+            "SegmentType":"TempoTraveller",
+            "Cars": "TempoTraveller",
+            "Seats":14,
+            "OperatorPrices": [
+                {
+                    "Operator": "Local Tours and Travels",
+                    "PricePerKm": 17
+                }
+            ]
+        },
+        {
+            "SegmentType":"MiniBus",
+            "Cars": "MiniBus",
+            "Seats":25,
+            "OperatorPrices": [
+                {
+                    "Operator": "Local Tours and Travels",
+                    "PricePerKm": 23
+                }]
+        },
+        {
+            "SegmentType":"Bus",
+            "Cars": "Bus",
+            "Seats":40,
+            "OperatorPrices": [
+                {
+                    "Operator": "Local Tours and Travels",
+                    "PricePerKm": 30
+                }]
         }
-      ]
-    },
-    "Sedan": {
-      "Cars": "Tata Indigo, Dezire, Fusion, Ikon, Accent",
-      "Seats":4,
-      "OperatorPrices": [
-        {
-          "Operator": "TaxiForSure",
-          "Price": 10.5
+    ],
+    "Driver": {
+        "TaxiForSure": {
+            "Price": 200
         },
-        {
-          "Operator": "CarzOnRent",
-          "Price": 12
+        "CarzOnRent": {
+            "Price": 250
         },
-        {
-          "Operator": "Savaari",
-          "Price": 11
+        "Savaari": {
+            "Price": 300
+        },
+        "Local Tours and Travels": {
+            "Price": 350
         }
-      ]
     },
-    "SmallSUV": {
-      "Cars": "Innova 6 Seater, Xylo",
-      "Seats":6,
-      "OperatorPrices": [
-        {
-          "Operator": "TaxiForSure",
-          "Price": 13
+    "MinimumKmPerDay": {
+        "TaxiForSure":{
+            "Distance": 300
         },
-        {
-          "Operator": "CarzOnRent",
-          "Price": 16
+        "CarzOnRent":{
+            "Distance": 250
         },
-        {
-          "Operator": "Savaari",
-          "Price": 13.5
-        }
-      ]
-    },
-    "LargeSUV": {
-      "Cars": "Innova 7 Seater",
-      "Seats":7,
-      "OperatorPrices": [
-        {
-          "Operator": "TaxiForSure",
-          "Price": 14
+        "Savaari":{
+            "Distance": 250
         },
-        {
-          "Operator": "CarzOnRent",
-          "Price": 16
-        },
-        {
-          "Operator": "Savaari",
-          "Price": 14
+        "Local Tours and Travels":{
+            "Distance": 250
         }
-      ]
-    },
-    "Business": {
-      "Cars": "Corolla, Elantra, Cruze",
-      "Seats":4,
-      "OperatorPrices": [
-        {
-          "Operator": "CarzOnRent",
-          "Price": 19.5
-        },
-        {
-          "Operator": "Savaari",
-          "Price": 24.5
-        }
-      ]
-    },
-    "Premium": {
-      "Cars": "Accord, Camry, Mercedes-C",
-      "Seats":4,
-      "OperatorPrices": [
-        {
-          "Operator": "CarzOnRent",
-          "Price": 26.5
-        },
-        {
-          "Operator": "Savaari",
-          "Price": 46
-        }
-      ]
-    },
-    "Luxury": {
-      "Cars": "Mercedes-E",
-      "Seats":4,
-      "OperatorPrices": [
-        {
-          "Operator": "Savaari",
-          "Price": 76
-        }
-      ]
-    },
-    "TempoTraveller": {
-      "Cars": "TempoTraveller",
-      "Seats":14,
-      "OperatorPrices": [
-        {
-          "Operator": "Local Tours and Travels",
-          "Price": 17
-        }
-      ]
-    },
-    "MiniBus": {
-      "Cars": "MiniBus",
-      "Seats":25,
-      "OperatorPrices": [
-         {
-        	 "Operator": "Local Tours and Travels",
-             "Price": 23
-         }]
-    },
-    "Bus": {
-      "Cars": "Bus",
-      "Seats":40,
-      "OperatorPrices": [
-        {
-          "Operator": "Local Tours and Travels",
-          "Price": 30
-        }]
     }
-  },
-  "Driver": [
-    {
-      "Operator": "TaxiForSure",
-      "Price": 200
-    },
-    {
-      "Operator": "CarzOnRent",
-      "Price": 250
-    },
-    {
-      "Operator": "Savaari",
-      "Price": 300
-    },
-    {
-        "Operator": "Local Tours and Travels",
-        "Price": 350
-    }
-  ],
-  "MinimumKmPerDay": [
-    {
-      "Operator": "TaxiForSure",
-      "Distance": 300
-    },
-    {
-      "Operator": "CarzOnRent",
-      "Distance": 250
-    },
-    {
-      "Operator": "Savaari",
-      "Distance": 250
-    },
-    {
-        "Operator": "Local Tours and Travels",
-        "Distance": 250
-    }
-  ]
 }

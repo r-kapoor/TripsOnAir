@@ -1,0 +1,21 @@
+.cab-route {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.final-cab-segment{
+    color: #70f753;
+    border-color: #6ff14f;
+}
+
+.budget {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 2;
+}
+.recommendation{
+    position: absolute;
+    right: 0px;
+    z-index: 2;
+}

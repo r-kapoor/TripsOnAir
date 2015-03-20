@@ -13,7 +13,7 @@ function getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,callback) 
 	connection.connect();
 	var subQuery='';
 	var DistScale=0.3;
-	
+
 	subQuery+='(Taste & '+connection.escape(taste.tasteInteger)+'!=0 ) AND (Taste & '+connection.escape(taste.familyFriendsInteger)+'!=0 )';
 
 	/*var queryString='SELECT GroupName, PopularName, GroupID, DistFactor, CityName, c.CityID, Latitude, Longitude FROM'
@@ -22,7 +22,7 @@ function getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,callback) 
 		+'AS distance FROM Groups WHERE (GroupCategory like '+subQuery+') HAVING distance < '+range+' ORDER BY GroupRating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+')'
 		+'AS a JOIN (SELECT * FROM GroupsCity) AS b ON (a.GroupID = b.GroupID)) AS c JOIN (SELECT CityID, CityName, Latitude, Longitude FROM City) AS d ON(c.CityID = d.CityID);';
 */
-	var queryString='SELECT GroupName, PopularName as name, GroupID, DistFactor, CityName, c.CityID, Latitude, Longitude,GroupRating as Rating,GroupImage as Image FROM'
+	var queryString='SELECT GroupName, PopularName, GroupID, DistFactor, CityName, c.CityID, Latitude, Longitude,GroupRating as Rating,GroupImage as Image FROM'
 		+ '(SELECT GroupName,PopularName,a.GroupID, DistFactor, b.CityID,GroupRating,GroupImage FROM'
 		+'(SELECT GroupName,PopularName,GroupID, DistFactor,GroupRating,GroupImage,(( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) )+('+DistScale+'*DistFactor))'
 		+'AS distance FROM Groups WHERE ('+subQuery+') HAVING distance < '+range+' ORDER BY GroupRating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+')'

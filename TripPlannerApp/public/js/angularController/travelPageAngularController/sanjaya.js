@@ -3,7 +3,7 @@
  */
 //var routesMapModule = angular.module('tripdetails.routes.map.app', []);
 //routesMapModule.controller('mapController',  function($scope, $window) {
-routesModule.controller('sanjayaController',  function($scope, $window) {
+routesModule.controller('sanjayaController',  function($scope,$rootScope, $window,orderedCities) {
     $scope.zoomConstants = {
         COUNTRY: 5,
         CITY: 12
@@ -26,7 +26,11 @@ routesModule.controller('sanjayaController',  function($scope, $window) {
     //    Longitude: position.coords.longitude
     //};
 
+    var directionsDisplay;
+
     var markers = [];
+    var infowindows = [];
+    var routePaths = [];
     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     $scope.map;
 
@@ -42,13 +46,13 @@ routesModule.controller('sanjayaController',  function($scope, $window) {
             };
             console.log('Map Initialized');
             $scope.map = new google.maps.Map(mapCanvas, mapOptions);
-            $scope.addMarker(markerPosition);
-            $scope.addMarker(markerPosition1);
+            //$scope.addMarker(markerPosition);
+            //$scope.addMarker(markerPosition1);
             console.log('Map Initialized');
-            $scope.showRoute(markerPosition, markerPosition1);
-            $scope.showPath(encodedPath);
+            //$scope.showRoute(markerPosition, markerPosition1);
+            //$scope.showPath(encodedPath);
             console.log('Map Initialized');
-            $scope.showFlightPath(markerPosition, markerPosition1);
+            // $scope.showFlightPath(markerPosition, markerPosition1);
             console.log('Map Initialized');
         }
         angular.element(window).ready(function () {
@@ -70,21 +74,48 @@ routesModule.controller('sanjayaController',  function($scope, $window) {
             markers[i].setMap($scope.map);
         }
     }
+
+    function removeAllMarkers() {
+        for(var i = 0; i < infowindows.length; i++) {
+            infowindows[i].setMap(null);
+        }
+        infowindows = [];
+        for(var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+    }
+
     $scope.initializeMap();
-    $scope.addMarker = function(position) {
+    $scope.addMarker = function(position, char) {
         console.log('addMarker');
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(position.Latitude, position.Longitude),
+            map: $scope.map,
+            icon:'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+char+'|FF0000|000000'
+        });
+        var infowindow =  new google.maps.InfoWindow({
+            content: position.CityName,
             map: $scope.map
         });
-        //markers.push(marker);
+        infowindow.close();
+        google.maps.event.addListener(marker, 'mouseover', function() {
+            infowindow.open($scope.map, this);
+        });
+// assuming you also want to hide the infowindow when user mouses-out
+        google.maps.event.addListener(marker, 'mouseout', function() {
+            infowindow.close();
+        });
+        markers.push(marker);
+        infowindows.push(infowindow);
         //setAllMap();
     };
-    $scope.showRoute = function(originPosition, destinationPosition) {
+    $scope.showRoute = function(originPosition, destinationPosition,waypoints) {
         var directionsService = new google.maps.DirectionsService();
         var directionsRequest = {
             origin: new google.maps.LatLng(originPosition.Latitude, originPosition.Longitude),
             destination: new google.maps.LatLng(destinationPosition.Latitude, destinationPosition.Longitude),
+            waypoints:waypoints,
             travelMode: google.maps.DirectionsTravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.METRIC
         };
@@ -95,26 +126,142 @@ routesModule.controller('sanjayaController',  function($scope, $window) {
                 //console.log('Response:'+JSON.stringify(response));
                 if (status == google.maps.DirectionsStatus.OK)
                 {
-                    new google.maps.DirectionsRenderer({
-                        map: $scope.map,
-                        directions: response
-                    });
+                    removeRoute();
+                    directionsDisplay = new google.maps.DirectionsRenderer(
+                        {
+                            suppressMarkers :true,
+                            map : $scope.map,
+                            directions : response
+                        });
+                    //directionsDisplay.suppressMarkers = true;
+                    //directionsDisplay.map = $scope.map;
+                    //directionsDisplay.directions = response;
+                    //{
+                    //    map: $scope.map,
+                    //    directions: response
+                    //});
+
                 }
             }
         );
     };
-    $scope.showPath = function(pathString) {
-        var path = new google.maps.Polyline({
-            path: google.maps.geometry.encoding.decodePath(pathString),
-            map:$scope.map
-        });
+
+    var lineSymbol = {
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
     };
-    $scope.showFlightPath = function(originPosition, destinationPosition) {
-        var line = new google.maps.Polyline({
-            path: [new google.maps.LatLng(originPosition.Latitude, originPosition.Longitude),
-                new google.maps.LatLng(destinationPosition.Latitude, destinationPosition.Longitude)],
-            map: $scope.map
-        });
+    $scope.showPath = function(pathString, showArrow) {
+        var path;
+        if(showArrow) {
+            path = new google.maps.Polyline({
+                path: google.maps.geometry.encoding.decodePath(pathString),
+                icons:[{
+                    icon:lineSymbol,
+                    offset:"70%",
+                    repeat:'0'
+                }],
+                map:$scope.map
+            });
+        }
+        else {
+            path = new google.maps.Polyline({
+                path: google.maps.geometry.encoding.decodePath(pathString),
+                map:$scope.map
+            });
+        }
+        routePaths.push(path);
+    };
+    $scope.showFlightPath = function(originPosition, destinationPosition, showArrow) {
+        var line;
+        if(showArrow) {
+            line = new google.maps.Polyline({
+                path: [new google.maps.LatLng(originPosition.Latitude, originPosition.Longitude),
+                    new google.maps.LatLng(destinationPosition.Latitude, destinationPosition.Longitude)],
+                icons:[{
+                    icon:lineSymbol,
+                    offset:"70%",
+                    repeat:'0'
+                }],
+                map: $scope.map
+            });
+        }
+        else {
+            line = new google.maps.Polyline({
+                path: [new google.maps.LatLng(originPosition.Latitude, originPosition.Longitude),
+                    new google.maps.LatLng(destinationPosition.Latitude, destinationPosition.Longitude)],
+                map: $scope.map
+            });
+        }
+        routePaths.push(line);
     };
     //$scope.addMarker();
+
+
+    var removeRoute = function () {
+        if (directionsDisplay != undefined || directionsDisplay != null) {
+            directionsDisplay.setMap(null);
+            directionsDisplay = null;
+        }
+    };
+
+    var removeRoutePaths = function() {
+        for(var i = 0; i < routePaths.length; i++) {
+            routePaths[i].setMap(null);
+            routePaths[i] = null;
+        }
+        routePaths = [];
+    };
+
+
+    $rootScope.$on('plotCities', function plotCities(event, data) {
+        removeAllMarkers();
+        var originCity=orderedCities.getOriginCity();
+        $scope.addMarker(originCity,'A');
+        var destinations = orderedCities.getOrderedDestinationCities();
+        var waypoints =[];
+        for(var i =0;i<destinations.length;i++)
+        {
+            $scope.addMarker(destinations[i], String.fromCharCode('A'.charCodeAt() + i+1));
+            //if(i==0)
+            //{
+            //    $scope.showRoute(originCity,destinations[i]);
+            //}
+            //else
+            //{
+            //    $scope.showRoute(destinations[i-1],destinations[i]);
+            //}
+            //if(i==destinations.length-1)
+            //{
+            //    $scope.showRoute(destinations[i],originCity);
+            //}
+            waypoints.push({
+                location: new google.maps.LatLng(destinations[i].Latitude, destinations[i].Longitude),
+                stopover:true
+            });
+        }
+        $scope.showRoute(originCity,originCity,waypoints);
+
+    });
+
+    $rootScope.$on('showSegment', function onShowSegment(event, segment) {
+        console.log('In show segment:'+JSON.stringify(segment));
+        var showArrow = false;
+        if(segment.isMajor == 1) {
+            showArrow = true;
+        }
+        if(segment.path != undefined) {
+            $scope.showPath(segment.path, showArrow);
+        }
+        else{
+            $scope.showFlightPath(segment.sAirport, segment.tAirport, showArrow);
+        }
+    });
+
+    $rootScope.$on('showTravelPanel', function onShowTravelPanel(){
+        removeRoute();
+    });
+
+    $rootScope.$on('removeSegments', function onRemoveSegments() {
+        removeRoutePaths();
+    });
+
 });

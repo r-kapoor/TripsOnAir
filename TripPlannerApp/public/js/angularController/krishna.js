@@ -128,7 +128,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 groupIDs.push(data.GroupID);
                 data.CityDataFromGroup = [];
                 data.CityDataFromGroup.push({
-                    name:data.CityName,
+                    CityName:data.CityName,
                     CityID:data.CityID,
                     Latitude:data.Latitude,
                     Longitude:data.Longitude,
@@ -140,11 +140,13 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 delete data.Latitude;
                 delete data.Longitude;
                 delete data.Rating;
+                data.CityName = data.PopularName;
+                delete data.PopularName;
                 groupsList.push(data);
             }
             else {
                 groupsList[groupIDs.indexOf(data.GroupID)].CityDataFromGroup.push({
-                    name:data.CityName,
+                    CityName:data.CityName,
                     CityID:data.CityID,
                     Latitude:data.Latitude,
                     Longitude:data.Longitude,
@@ -209,7 +211,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     };
 
     $scope.locationQueryString = function(city) {
-        return 'http://maps.googleapis.com/maps/api/geocode/json?address='+city.name+'&sensor=true';
+        return 'http://maps.googleapis.com/maps/api/geocode/json?address='+city.CityName+'&sensor=true';
     };
 
 
@@ -260,7 +262,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 for(var i = 0; i < suggestedDestination.CityDataFromGroup.length; i++) {
                     var isPresent = false;
                     for(var j = 0; j < selectedDestinations.length; j++) {
-                        if(suggestedDestination.CityDataFromGroup[i].name.toLowerCase() === selectedDestinations[j].name.toLowerCase()) {
+                        if(suggestedDestination.CityDataFromGroup[i].CityName.toLowerCase() === selectedDestinations[j].CityName.toLowerCase()) {
                             isPresent = true;
                         }
                     }
@@ -286,7 +288,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 for(var  i = 0; i < selectedDestinations.length; i++) {
                     //console.log("selectedDestinations:"+JSON.stringify(selectedDestinations));
                     //console.log(i+": Suggested:"+JSON.stringify(suggestedDestination));
-                    if(selectedDestinations[i].name.toLowerCase() === suggestedDestination.name.toLowerCase()) {
+                    if(selectedDestinations[i].CityName.toLowerCase() === suggestedDestination.CityName.toLowerCase()) {
                         isSelected = true;
                     }
                 }
@@ -344,7 +346,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                             suggestedDestination.CityDataFromGroup[suggestedDestination.CityDataFromGroup.length - 1].Longitude,
                             $scope.orgLat, $scope.orgLong
                         )));
-                console.log(suggestedDestination.name+":1totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
+                console.log(suggestedDestination.CityName+":1totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
                 if(totalEstimatedDistance > $scope.range) {
                     console.log("red");
                     suggestedDestination.outOfBudget = 'out-of-budget';
@@ -357,7 +359,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             else {
                 var totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance + parseInt(calcDist(endLat, endLong, suggestedDestination.Latitude, suggestedDestination.Longitude)) +
                 parseInt(calcDist(suggestedDestination.Latitude, suggestedDestination.Longitude, $scope.orgLat, $scope.orgLong)));
-                console.log(suggestedDestination.name+":2totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
+                console.log(suggestedDestination.CityName+":2totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
                 if(totalEstimatedDistance > $scope.range) {
                     suggestedDestination.outOfBudget = 'out-of-budget';
                 }

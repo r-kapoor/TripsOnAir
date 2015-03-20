@@ -133,6 +133,19 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
                             }
                             allSegments[k].flightData=flightData;
                             countOfVehicleFlight++;
+                            for(var airportIndex in rome2RioData[i].airports) {
+                                var airport = rome2RioData[i].airports[airportIndex];
+                                if(airport.code == allSegments[k].sCode) {
+                                    allSegments[k].sAirport = airport;
+                                    airport.Latitude = airport.pos.split(',')[0];
+                                    airport.Longitude = airport.pos.split(',')[1];
+                                }
+                                else if(airport.code == allSegments[k].tCode) {
+                                    allSegments[k].tAirport = airport;
+                                    airport.Latitude = airport.pos.split(',')[0];
+                                    airport.Longitude = airport.pos.split(',')[1];
+                                }
+                            }
                         }
                     }
                     if(isRecommendedRoute==1)
