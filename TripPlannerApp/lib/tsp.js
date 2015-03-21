@@ -180,8 +180,9 @@ function getOrderUsingTsp(err, results, callback) {
 	city = cities[0];
 	//tripOrder.push(city);
 	console.log("Min Weight:"+minWeight);
-
-	callback(tripOrder,cities[0], weight, minWeight);
+	cityIDs=hashidEncoder.encodeCityID(cityIDs);
+console.log("cityIDs..."+cityIDs);
+	callback(tripOrder,cities[0], weight, minWeight,cityIDs);
 }
 
 function getWeight(trip, weight)

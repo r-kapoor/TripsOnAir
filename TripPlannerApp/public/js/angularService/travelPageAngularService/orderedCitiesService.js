@@ -7,6 +7,7 @@ routesModule.service('orderedCities', function () {
     var weightArray = [];
     var minimumWeight = 0;
     var pathArray=[];
+    var cityIDs=[];
 
     return {
         getOrderedDestinationCities: function() {
@@ -24,6 +25,9 @@ routesModule.service('orderedCities', function () {
         getPathArray: function(){
             return pathArray;
         },
+        getCityIDs : function(){
+            return cityIDs;
+        },
         setOrderedDestinationCities: function(orderedCities) {
             orderedDestinationCities = orderedCities;
         },
@@ -38,6 +42,9 @@ routesModule.service('orderedCities', function () {
         },
         setPathArray: function(path){
             pathArray = path;
+        },
+        setCityIDs: function(ID){
+            cityIDs = ID;
         }
     };
 });

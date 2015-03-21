@@ -19,6 +19,20 @@ routesModule.directive('postRepeat', function($timeout) {
                     $scope.$emit('initialize-pane',"travelModesPanel");
                 }
             },1000);
+            $timeout(function (){
+                if(element.class=="panel-trainMode"){
+                    console.log("in panel-trainMode");
+                    console.log("scrollHeightTrainMode:"+$("#transcludeTrainPanel").get(0).scrollHeight);
+                    $scope.$emit('initialize-pane',"trainPanel");
+                }
+            },1000);
+             $timeout(function (){
+                if(element.class=="panel-flightMode"){
+                    console.log("in panel-flightMode");
+                    console.log("scrollHeightFlightMode:"+$("#transcludeFlightPanel").get(0).scrollHeight);
+                    $scope.$emit('initialize-pane',"flightPanel");
+                }
+            },1000);
         }
     };
 });
@@ -127,9 +141,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             console.log("startTime:"+segment.startTime);
             initializeVehicleDates(segment.flightData,segment.startTime);
             $scope.flights = segment.flightData;
-            $timeout(function() {
-                $scope.isFlightClicked = true;
-            }, 500);
+             $scope.isFlightClicked = true;
+            // $timeout(function() {
+            //     $scope.isFlightClicked = true;
+            // }, 500);
         }
         else if(segment.kind="car"){
             if(segment.subkind != undefined && segment.subkind == "cab") {
