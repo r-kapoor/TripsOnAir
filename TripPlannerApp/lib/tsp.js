@@ -13,10 +13,10 @@ function getOrderUsingTsp(err, results, callback) {
 		throw err;
 	}
 	console.log('tsp called');
-	
+
 	var TimeFactor = 200000; // 55.56 Hours as time factor. The time is to be divided by this factor to get the road connectivity
-	
-	
+
+
 	//Validating the Inputs
 	var distanceMatrix = results[0].distance;
 	console.log('distance matrix');
@@ -27,7 +27,7 @@ function getOrderUsingTsp(err, results, callback) {
 			console.log("i:"+i+":j:"+j+":"+distanceMatrix[i][j]);
 		}
 	}
-	
+
 	var timeMatrix = results[0].time;
 	console.log('time matrix');
 	for(var i = 0; i < timeMatrix.length; i++)
@@ -37,7 +37,7 @@ function getOrderUsingTsp(err, results, callback) {
 			console.log("i:"+i+":j:"+j+":"+timeMatrix[i][j]);
 		}
 	}
-	
+
 	var connectivities = results[1][0];
 	/*console.log('connectivities');
 	for(var i = 0; i < connectivities.length; i++)
@@ -47,21 +47,21 @@ function getOrderUsingTsp(err, results, callback) {
 			console.log("i:"+i+":j:"+j+":"+connectivities[i][j]);
 		}
 	}*/
-	
+
 	var cities = results[1][1];
 	/*console.log('cities');
 	for(var i = 0; i < cities.length; i++)
 	{
 		console.log('i:'+i+':'+cities[i]);
 	}*/
-	
+
 	var cityIDs = results[1][2];
 	/*console.log('city ids');
 	for(var i = 0; i < cityIDs.length; i++)
 	{
 		console.log('i:'+i+':'+cityIDs[i]);
 	}*/
-	
+
 	var numberOfCities = cityIDs.length;
 	//Adding the Road Connectivity calculated using Time to get Total connectivity
 	for(var i = 0 ; i < numberOfCities ; i++)
@@ -78,7 +78,7 @@ function getOrderUsingTsp(err, results, callback) {
 			}
 		}
 	}
-	
+
 	console.log('connectivities');
 	for(var i = 0; i < connectivities.length; i++)
 	{
@@ -87,7 +87,7 @@ function getOrderUsingTsp(err, results, callback) {
 			console.log("i:"+i+":j:"+j+":"+connectivities[i][j]);
 		}
 	}
-	
+
 	//Inputs
 	//var origin = {name: 'Pilani'};
 	//var dest1 = {name: 'Delhi'};
@@ -102,13 +102,13 @@ function getOrderUsingTsp(err, results, callback) {
 	{
 		weight[i] = Array.apply(null, new Array(numberOfCities)).map(Number.prototype.valueOf, 0);
 	}
-	
+
 	//var cities = [];
 	//cities.push(origin);
 	//cities.push(dest1);
 	//cities.push(dest2);
 	//cities.push(dest3);
-	
+
 	for(var i=0; i < numberOfCities; i++)
 	{
 		for(var j=0; j < numberOfCities; j++)
@@ -118,8 +118,8 @@ function getOrderUsingTsp(err, results, callback) {
 			weight[i][j] = distanceMatrix[i][j]/connectivities[i][j];
 			//console.log('Weight from '+cities[i].name+' to '+cities[j].name+'='+weight[i][j]);
 		}
-	}	
-	
+	}
+
 	console.log('weight');
 	for(var i = 0; i < weight.length; i++)
 	{
@@ -128,7 +128,7 @@ function getOrderUsingTsp(err, results, callback) {
 			console.log("i:"+i+":j:"+j+":"+weight[i][j]);
 		}
 	}
-	
+
 	var permArr = [];
 	var usedChars = [];
 	var weightOfTrip = 0;
@@ -164,24 +164,24 @@ function getOrderUsingTsp(err, results, callback) {
 	var permuted = permute(permutationArray);
 	//console.log(permuted);
 	//console.log(permuted.length);
-	
+
 	var tripOrder = [];
 	console.log("Best Trip:"+minTrip);
 	console.log(cities[0]);
-	var city = {CityName:cities[0], CityID:hashidEncoder.encodeCityID(cityIDs[0])};
+	var city = cities[0];
 	//tripOrder.push(city);
 	for(var i = 0; i < minTrip.length; i++)
 	{
 		console.log(cities[minTrip[i]]);
-		city = {CityName:cities[minTrip[i]], CityID:hashidEncoder.encodeCityID(cityIDs[minTrip[i]])};
+		city = cities[minTrip[i]];
 		tripOrder.push(city);
 	}
 	console.log(cities[0]);
-	city = {CityName:cities[0], CityID:hashidEncoder.encodeCityID(cityIDs[0])};
+	city = cities[0];
 	//tripOrder.push(city);
 	console.log("Min Weight:"+minWeight);
-	
-	callback(tripOrder, cities[0], hashidEncoder.encodeCityID(cityIDs[0]), weight, cities, hashidEncoder.encodeCityID(cityIDs), minWeight);
+
+	callback(tripOrder,cities[0], weight, minWeight);
 }
 
 function getWeight(trip, weight)

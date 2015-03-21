@@ -4,8 +4,8 @@
 
 
 require('date-utils');
-var nconf=require('nconf');
-require('nconf-redis');
+var cabFareDetails = require('../config/cabFareDetails.json');
+var clone = require('../lib/UtilityFunctions/cloneJSON');
 
 function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
 {
@@ -17,7 +17,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
     }
     else {
         //console.log("calling calculateBudgetOfTrip:%j",rome2RioData);
-        var firstCabTime, cabEndTime ,totalBudgetofCabs = 0,isLastTripWithCab = 0, totalBudgetOfTrip = 0, totalBudgetOfMinor = 0,distanceByCab=0, startSegment;
+        var firstCabTime, cabEndTime ,totalBudgetofCabs = 0,isLastTripWithCab = 0, totalBudgetOfTrip = 0, totalBudgetOfMinor = 0,distanceByCab=0, startSegment, endSegment;
         var startTimeOfTrip, endTimeOfTrip;
         for(var i=0;i<rome2RioData.length;i++)
         {
@@ -49,10 +49,13 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
                                     firstCabTime=new Date(allSegments[k].startTime.getTime());
                                     isLastTripWithCab=1;
                                     startSegment = allSegments[k];
+                                    startSegment.startCabTrip = 1;
                                 }
                                 console.log('cab is coming');
                                 cabEndTime=new Date(allSegments[k].endTime.getTime());
                                 distanceByCab+=allSegments[k].distance;
+                                endSegment = allSegments[k];
+                                allSegments[k].indicativePrice.price = 0;
                             }
                             else
                             {
@@ -60,6 +63,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
                                 console.log('Not a cab');
                                 if(isLastTripWithCab==1)
                                 {
+                                    endSegment.endCabTrip = 1;
                                     calculateCabBudgetOfLastTrip();
                                 }
                                 totalBudgetOfTrip += allSegments[k].indicativePrice.price;
@@ -71,6 +75,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
 
         }
         if(isLastTripWithCab == 1) {
+            endSegment.endCabTrip = 1;
             calculateCabBudgetOfLastTrip();
         }
         totalBudgetOfTrip += totalBudgetofCabs;
@@ -91,6 +96,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
             var totalBudgetOfThisCab = calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab,startSegment);
             console.log('totalBudgetOfThisCab:'+totalBudgetOfThisCab);
             totalBudgetofCabs += totalBudgetOfThisCab;
+            startSegment.indicativePrice.price = totalBudgetofCabs;
         }
 
         console.log('TOTAL BUDGET OF TRIP:'+totalBudgetOfTrip);
@@ -124,88 +130,63 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
 function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
 {
 	console.log("inside calculateCabBudget");
-	var carOfPreferenceDetails=getFarePerKmPerIndividual(numPeople);
-	//Estimated local travel km per day
-	var localTravelKm=100;
-	//var distance = Math.max(numOfDaysOfCab*perDayNumberOfKilometers, distanceByCab+localTravelKm*numOfDaysOfCab);
 
-	var cabOperatorsArray = [];
-	for(var i = 0; i < carOfPreferenceDetails.MinimumKmPerDay.length; i++)
-	{
-		var operatorFound = 0;
-		var cabOperator = carOfPreferenceDetails.MinimumKmPerDay[i];
-		//console.log("cabOperator %j",cabOperator);
-		cabOperator.DistanceForPriceComputation = Math.max(numOfDaysOfCab*cabOperator.Distance, distanceByCab + localTravelKm*numOfDaysOfCab);
-		for(var j = 0; j < carOfPreferenceDetails.FareDetails.OperatorPrices.length; j++)
-		{
-			if(cabOperator.Operator == carOfPreferenceDetails.FareDetails.OperatorPrices[j].Operator)
-			{
-				cabOperator.ActualCabPrice = carOfPreferenceDetails.FareDetails.OperatorPrices[j].Price * cabOperator.DistanceForPriceComputation;
-				cabOperator.PricePerKm = carOfPreferenceDetails.FareDetails.OperatorPrices[j].Price;
-				operatorFound = 1;
-				break;
-			}
-		}
-		if(operatorFound == 1)
-		{
-			for(var j = 0; j < carOfPreferenceDetails.Driver.length; j++)
-			{
-				if(cabOperator.Operator == carOfPreferenceDetails.Driver[j].Operator)
-				{
-					cabOperator.ActualCabPrice += carOfPreferenceDetails.Driver[j].Price * numOfDaysOfCab;
-					cabOperator.ActualCabPrice /= numPeople;
-					cabOperator.Driver = carOfPreferenceDetails.Driver[j].Price;
-					break;
-				}
-			}
-			cabOperatorsArray.push(cabOperator);
-		}
-	}
+    //Estimated local travel km per day
+    var localTravelKm=120;
+
+    var carSegmentArray = [];
+    var carOfPreference=getCarOfPreference(numPeople);
+
+    var cabFareDetailsClone = clone.clone(cabFareDetails);
+    var fareDetails = cabFareDetailsClone.FareDetails;
+    var minimumKmPerDay = cabFareDetailsClone.MinimumKmPerDay;
+    var driver = cabFareDetailsClone.Driver;
+    for(var fareDetailIndex in fareDetails) {
+        var fareDetail = fareDetails[fareDetailIndex];
+        if(fareDetail.Seats <= Math.max(1.5*numPeople, 4)) {
+            if(fareDetail.SegmentType == carOfPreference) {
+                fareDetail.isFinal = 1;
+            }
+            fareDetail.NumberOfCabs = Math.max(parseInt(numPeople / fareDetail.Seats), 1);
+            for(var operatorIndex in fareDetail.OperatorPrices) {
+                var operatorDetails = fareDetail.OperatorPrices[operatorIndex];
+                operatorDetails.MinimumKmPerDay = minimumKmPerDay[operatorDetails.Operator].Distance;
+                operatorDetails.Driver = driver[operatorDetails.Operator].Price;
+
+                operatorDetails.DistanceForPriceComputation = Math.max(numOfDaysOfCab * operatorDetails.MinimumKmPerDay, distanceByCab + localTravelKm*numOfDaysOfCab);
+                operatorDetails.ActualTotalCabPrice = (operatorDetails.DistanceForPriceComputation * operatorDetails.PricePerKm + numOfDaysOfCab * operatorDetails.Driver) * fareDetail.NumberOfCabs;
+                operatorDetails.ActualCabPrice = parseInt(operatorDetails.ActualTotalCabPrice / numPeople);
+            }
+            carSegmentArray.push(fareDetail);
+        }
+    }
 
 	var minimumCabPrice = -1;
-	var minIndex = 0;
-	for(var i = 0; i < cabOperatorsArray.length; i++)
-	{
-		if(minimumCabPrice == -1 || minimumCabPrice > cabOperatorsArray[i].ActualCabPrice)
-		{
-			minimumCabPrice = cabOperatorsArray[i].ActualCabPrice;
-			minIndex = i;
-		}
-	}
-	cabOperatorsArray[minIndex].isDefault = 1;
-	var cabDetails = {
-			CarSegment:carOfPreferenceDetails.CarSegment,
-			Cars:carOfPreferenceDetails.FareDetails.Cars,
-			Seats:carOfPreferenceDetails.FareDetails.Seats,
-			CabOperators:cabOperatorsArray
-	}
-	segment.CabDetails = cabDetails;
+	var minOperator = null;
+
+    for(var fareDetailIndex in carSegmentArray) {
+        var fareDetail = fareDetails[fareDetailIndex];
+        if(fareDetail.isFinal != undefined && fareDetail.isFinal == 1) {
+            for(var operatorIndex in fareDetail.OperatorPrices) {
+                var operatorDetails = fareDetail.OperatorPrices[operatorIndex];
+                if(minimumCabPrice == -1 || operatorDetails.ActualCabPrice < minimumCabPrice ) {
+                    minimumCabPrice = operatorDetails.ActualCabPrice;
+                    minOperator = operatorDetails;
+                }
+            }
+        }
+    }
+console.log("minOperator:"+JSON.stringify(minOperator));
+    minOperator.isFinal = 1;
+    //fareDetail.fare = minimumCabPrice;
+
+	segment.CabDetails = carSegmentArray;
 	return minimumCabPrice;
 }
 
 
-function getFarePerKmPerIndividual(numPeople)
+function getCarOfPreference(numPeople)
 {
-	console.log("Inside farePerKm fn");
-	//nconf.use('file',{file:'../config/cabFareDetails.json'});
-	//nconf.load();
-	//nconf.use('file', { file: './config/cabFareDetails.json' });
-	nconf.file({ file: './config/cabFareDetails.json' });
-	nconf.load();
-	//nconf.set('name', 'Avian');
-	//nconf.set('dessert:name', 'Ice Cream');
-	//nconf.set('dessert:flavor', 'chocolate');
-
-	//console.log(nconf.get('dessert'));
-	/*nconf.save(function (err) {
-		   if (err) {
-		     console.error(err.message);
-		     return;
-		   }
-		   console.log('Configuration saved successfully.');
-		 });*/
-
-	var fareDetails = nconf.get('FareDetails');
 	//TODO : Choose a car depending on the budget of the user
 	var carOfPreference = "Bus";
 	if(numPeople <= 2)
@@ -232,14 +213,6 @@ function getFarePerKmPerIndividual(numPeople)
 	{
 		carOfPreference = "MiniBus";
 	}
-
-	var carOfPreferenceDetails = fareDetails[carOfPreference];
-
-	return {
-		CarSegment:carOfPreference,
-		FareDetails:carOfPreferenceDetails,
-		Driver:nconf.get('Driver'),
-		MinimumKmPerDay:nconf.get('MinimumKmPerDay')
-	}
+    return carOfPreference;
 }
 module.exports.calculateBudgetOfTrip=calculateBudgetOfTrip;

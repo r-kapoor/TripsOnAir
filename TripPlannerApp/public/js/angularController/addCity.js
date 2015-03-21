@@ -10,7 +10,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
   $scope.destinationCity = null;
   $scope.destinationCityList=[];
   $scope.label="Enter the Destination";
-  
+
     $scope.originValid = true;
     $scope.destinationValid=false;
     $scope.triggerOn = 'xyz';
@@ -18,7 +18,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         return $scope.triggerOn;
     };
 
-  $scope.addDestination = function() {  
+  $scope.addDestination = function() {
         $scope.destinationCityList.push($scope.destinationCity);
         $scope.destinationCity = null;
         $scope.label="Enter another Destination";
@@ -30,6 +30,10 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
             $scope.originValid = true;
             console.log($scope.originCity);
             formData.setOrigin($scope.originCity);
+            formData.setOriginGeoCoordinates({
+                orgLat:$scope.originCity.Latitude,
+                orgLong:$scope.originCity.Longitude
+            });
             var orgElm=angular.element(document.querySelector("#originId"));
             if(orgElm.hasClass("has-error"))
             {
@@ -88,7 +92,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
 
   $scope.byMatch = function(viewValue) {
     return function(city) {
-      if(city.name.substr(0, viewValue.length).toLowerCase() == viewValue.toLowerCase()) {
+      if(city.CityName.substr(0, viewValue.length).toLowerCase() == viewValue.toLowerCase()) {
         return -10+city.tier;
       }
       return city.tier;

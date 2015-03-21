@@ -20,7 +20,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
     });
 
     $scope.getDestinationName = function(destination) {
-        return toTitleCase(destination.name);
+        return toTitleCase(destination.CityName);
     };
 
     $scope.destinationRemoved = function(removedDestination) {
@@ -33,7 +33,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
         if(formData.getDestinations().length==0)
            {
               $scope.destinationLabel=true;
-           } 
+           }
         $rootScope.$emit('destinationRemoved');
         //$scope.$broadcast('reinit-pane',"destinationsPanel");
     };
@@ -89,7 +89,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
             {
                    destinationString+=JSON.stringify(destinations[i])+";";
 
-            } 
+            }
             destinationString+=JSON.stringify(destinations[destinations.length-1]);
             //console.log(JSON.stringify(data));
             var orgLat=formData.getOriginGeoCoordinates().orgLat;

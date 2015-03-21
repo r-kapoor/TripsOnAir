@@ -38,7 +38,7 @@ function getNearbyCityList(conn,destinations,orgLat,orgLong,taste,distRemaining,
 
 	distanceRemainingHavingClause += ' (distanceFromOrigin + distance'+(numDestinations-1)+' < '+distRemaining+' ) ';
 
-	var queryString='SELECT CityName as name,CityID,Latitude,Longitude,'+ distanceFromSelectionsSubQuery +", "+ distanceFromOriginSubQuery+ ' FROM City WHERE '+subQuery+' HAVING ( ( '+distanceMinHavingClause+' ) AND ( '+distanceMaxHavingClause+' ) AND ( '+distanceRemainingHavingClause+' ) ) ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
+	var queryString='SELECT CityName,CityID,Latitude,Longitude,'+ distanceFromSelectionsSubQuery +", "+ distanceFromOriginSubQuery+ ' FROM City WHERE '+subQuery+' HAVING ( ( '+distanceMinHavingClause+' ) AND ( '+distanceMaxHavingClause+' ) AND ( '+distanceRemainingHavingClause+' ) ) ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
 
 	connection.query(queryString, function(err, rows, fields) {
 		console.log('Nearby Query:'+queryString);

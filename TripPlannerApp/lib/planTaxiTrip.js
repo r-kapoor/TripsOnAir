@@ -172,8 +172,17 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 							destination:destination,
 							duration:allSegments[k].duration,
 							distance:allSegments[k].distance,
-							path:allSegments[k].path
+							path:allSegments[k].path,
+                            oldKind:allSegments[k].kind
 						};
+                    if(allSegments[k].kind!=undefined && allSegments[k].kind=="car")
+                    {
+                        carRouteDetails.ddpDetailsUpdated =1;
+                    }
+                    else
+                    {
+                        carRouteDetails.ddpDetailsUpdated =0;
+                    }
 					console.log("The next route coming is :"+carRouteDetails.source+","+carRouteDetails.destination);
 					var routeHasBeenAdded = 0;
 					var routeAlreadyAdded = 0;
@@ -192,11 +201,12 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 											route:j,
 											segment:k
 										});
-										if(allSegments[k].subkind &&allSegments[k].subkind == "taxi")
+										if(allSegments[k].kind!=undefined &&allSegments[k].kind == "car")
 										{
 											carRouteDetailsArray[p][q].duration = carRouteDetails.duration;
 											carRouteDetailsArray[p][q].distance = carRouteDetails.distance;
 											carRouteDetailsArray[p][q].path = carRouteDetails.path;
+                                            carRouteDetailsArray[p][q].ddpDetailsUpdated=1;
 										}
 									}
 								}
@@ -488,6 +498,19 @@ function taxiModifiedRome2RioData(rome2RioData,carRouteDetails)
 										tPos:rome2RioData[i].routes[j].segments[k].tPos,
 										path:carRouteDetails[l].path
 								}
+                                if(carRouteDetails[l].ddpDetailsUpdated==0)
+                                {
+                                    var speed=40;//km per hour
+                                    if(carRouteDetails[l].oldKind=="flight")
+                                    {
+                                        speed= 25;
+                                    }
+                                    else if(carRouteDetails[l].oldKind=="train")
+                                    {
+                                        speed=35;
+                                    }
+                                    cabSegment.duration = (cabSegment.distance/speed)*60;//in minutes
+                                }
 								rome2RioData[i].routes[j].segments.splice(k,1,cabSegment);
 							}
 						}

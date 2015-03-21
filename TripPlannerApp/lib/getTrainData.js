@@ -1,13 +1,14 @@
 /*
- * Gets the schedules of the trains 
+ * Gets the schedules of the trains
  */
 
 var extractStationCode=require('../lib/extractStationCode');
-var chooseMajorDefault=require('../lib/chooseMajorDefault');
 var cloneJSON=require('../lib/UtilityFunctions/cloneJSON');
+var getValidDateLimits = require('../lib/UtilityFunctions/getValidDateLimits');
+var trainFareDetails = require('../config/trainFareDetails.json');
 var async  = require('async');
 
-function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,numPeople,callbackDefaultModeOfTravel,callbackPlanTaxiTrip, callbackResponse) {
+function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,numPeople, callback) {
 	console.log('TRAIN times:'+times);
 	var connection=conn.conn();
 	connection.connect();
@@ -16,10 +17,10 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 	var numOfTravels = rome2RioData.length;
 	var trainDateSetObjectArray=[];
 	var lengthOfRoutesArray=[];
-	//Duration of origin city to train station has to be added in the dateSet for that train 
+	//Duration of origin city to train station has to be added in the dateSet for that train
 
 	//maintain index of drive,if any, for the routes
-	var indexOfDrive=[];	
+	var indexOfDrive=[];
 	for(var i = 0; i < numOfTravels; i++)
 	{
 		var allRoutes = rome2RioData[i].routes;
@@ -34,7 +35,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 			if(allRoutes[j].name=="Drive")
 			{
 				indexOfDrive[i]=j;
-			}	
+			}
 			var allSegments = allRoutes[j].segments;
 			var durBeforeTrain=0;
 			for(var k = 0; k < allSegments.length; k++)
@@ -46,7 +47,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 					{
 						var dateSetAccToTrain={
 								dateStart:new Date(dateSet.dateStart[i].getTime() + durBeforeTrain*60000),
-								dateEnd:new Date(dateSet.dateEnd[i].getTime() + durBeforeTrain*60000),
+								dateEnd:new Date(dateSet.dateEnd[i].getTime() + durBeforeTrain*60000)
 						}
 						var sourceStation = allSegments[k].sName;
 						var destinationStation = allSegments[k].tName;
@@ -75,7 +76,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 		+' ('+queryString+') trip'
 		+' ON (train.TrainNo = trip.TrainNo);';
 	console.log('QUERY for trains:'+fullQueryString);
-	
+
 	connection.query(fullQueryString, function(err, rows, fields) {
 		if (err)
 		{
@@ -100,7 +101,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 			//Iterating the array of rome2rio objects
 			for(var i = 0; i < numOfTravels; i++)
 			{
-				console.log("i:"+i);
+				//console.log("i:"+i);
 				var allRoutes = rome2RioData[i].routes;
 				for(var j = 0; j < allRoutes.length; j++)
 				{
@@ -118,8 +119,8 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 								var destinationStationCode = extractStationCode.extractStationCode(destinationStation);
 								var startDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateStart;
 								var endDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateEnd;
-								var startTime=startDate.getHours()+":"+startDate.getMinutes();
-								var endTime=endDate.getHours()+":"+endDate.getMinutes();
+                                var startTime=startDate.toFormat("HH24")+":"+startDate.toFormat("MI")+":00";
+                                var endTime=endDate.toFormat("HH24")+":"+endDate.toFormat("MI")+":00";
 								var atLeastATrain=0;
 								var trainData=[];
 								//Iterate the train rows from the database to check whether there are trains on the possible days:times
@@ -128,16 +129,19 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 									{
 										var daysofTravelArray=rows[t].DaysOfTravel.split("");
 										var OriginDepartureTime=rows[t].OriginDepartureTime;
-										if(isTrainInDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime))
+                                        var trainDateLimits = getValidDateLimits.getValidDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime);
+										if(trainDateLimits.length > 0)
 										{
 											atLeastATrain=1;
 											console.log("Train found:"+rows[t].TrainName+":"+rows[t].TrainNo);
-											rows[t].isRecommendedTrain=1;
+											rows[t].isRecommended=1;
 										}
 										else
 										{
-											rows[t].isRecommendedTrain=0;
-										}	
+											rows[t].isRecommended=0;
+										}
+                                        rows[t].fare=getTrainFare(rows[t].Distance,rows[t].Type,rows[t].OriginDepartureTime, rows[t].DestArrivalTime, rows[t].OriginDay, rows[t].DestDay );
+                                        rows[t].dateLimits = trainDateLimits;
 										trainData.push(rows[t]);
 							    	}
 								}
@@ -145,7 +149,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 								{
 									allSegments[k].isRecommendedSegment=1;
 									isRecommendedRoute = 1;
-									
+
 								}
 								else
 								{
@@ -154,39 +158,29 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 								}
 								allSegments[k].trainData=trainData;
 								countOfVehicleTrain++;
-								
+
 							}
 						}
 					}
 					if(isRecommendedRoute==1)
 					{
-						 allRoutes[j].isRecommendedRoute=1;
+						 allRoutes[j].isRecommendedRouteTrain=1;
 					}
 					else
 					{
-						allRoutes[j].isRecommendedRoute=0;
-					}	
+						allRoutes[j].isRecommendedRouteTrain=0;
+					}
 				}
 			}
-			
+
 	    }
-	
-		async.parallel(
-				[
-				 function (callback){
-					callbackDefaultModeOfTravel(cloneJSON.clone(rome2RioData),dateSet,budget,dates, times,ratingRatio,lengthOfRoutesArray,indexOfDrive,numPeople,callback);
-				},
-				function (callback){
-				 	
-					callbackPlanTaxiTrip(conn,rome2RioData,numPeople,budget,dateSet,dates, times, ratingRatio,callback);
-				}],
-	            //callback
-	            function(err, results) {
-				
-					chooseMajorDefault.chooseMajorDefault(results,dates,times,budget,callbackResponse);
-					
-				});
-		
+        var result = {
+            rome2RioData:rome2RioData,
+            lengthOfRoutesArray:lengthOfRoutesArray,
+            indexOfDrive:indexOfDrive
+        };
+        callback(null, result);
+
 	});
 	connection.end();
 
@@ -196,73 +190,92 @@ module.exports.getTrainData = getTrainData;
 
 function getTrainDateSetObject(originStationCode,destStationCode,dateSet)
 {
-	return {			
+	return {
 		destStationCode:destStationCode,
 		originStationCode:originStationCode,
 		dateSet:dateSet
-	}; 
+	};
 }
 
+function getTrainFare(distance,type,originDepartureTime, destinationArrivalTime, originDay, destinationDay){
+    //console.log("Type of train:"+type+","+"distance:"+distance);
+    var distanceIndex;
+    var fare;
+    distance = distance -1;
+    if(distance<=300){
+        distanceIndex=parseInt(parseInt(distance)/5);
+    }
+    else if(distance<=1000){
+        distanceIndex=60 + parseInt(parseInt(distance-300)/10);
+    }
+    else if(distance<=2500){
+        distanceIndex = 130 + parseInt(parseInt(distance-1000)/25);
+    }
+    else{
+        distanceIndex = 190 + parseInt(parseInt(distance-2500)/50);
+    }
 
-function isTrainInDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime)
-{
-	console.log("Checking for limits");
-	console.log("startDate,enddate:,startTime,endTime,OriginDeptTime"+startDate+","+endDate+","+startTime+","+endTime+","+OriginDepartureTime);
-	console.log("daysofTravelArray:"+daysofTravelArray);
-	
-	if(daysofTravelArray[0]==0)
-	{
-		return true;
-	}
-	
-	for(var i=0;i<daysofTravelArray.length;i++)
-	{
-		var stDate=new Date(startDate.getTime());
-		var enDate=new Date(endDate.getTime());
-		while(true)
-		{
-			if(stDate.getDate()>enDate.getDate())
-			{
-				break;
-			}
-			
-			if((stDate.getDay()+1)==daysofTravelArray[i])//+1 as getDay returns 0-6 days;train run on the current date
-			{
-				if(stDate.getDate()==startDate.getDate())//current date is start date
-				{
-					if(startTime<OriginDepartureTime)//train is departing after start time
-					{
-						if(stDate.getDate()==enDate.getDate())//current date is also end date
-						{
-							if(OriginDepartureTime<endTime)//train is departing before end time
-							{
-								return true;
-							}
-						}
-						else
-						{
-							return true;
-						}	
-						
-					}					
-				}
-				else if(stDate.getDate()==enDate.getDate())//if current date is end date
-				{
-					if(OriginDepartureTime<endTime)//train is departing before end time
-					{
-						return true;
-					}				
-				}	
-				else//current date is between start date and end date
-				{
-					return true;
-				}	
-				
-			}
-		//train doesn't run on the current date	
-			stDate.setDate(stDate.getDate()+1);
-		}
-	}
-	// train doesn't run between date set
-	return false;
+    if(type==null){
+        type="EXPRESS";
+    }
+
+
+    if(type=="GARIB RATH"){
+        fare = trainFareDetails["GARIB RATH"]["3A"][distanceIndex];
+    }
+    else if((type=="RAJDHANI")||(type=="DURONTO")){
+        fare = trainFareDetails["RAJDHANI"]["3A"][distanceIndex];
+    }
+    else if(type == "SHATABDI"){
+        fare = trainFareDetails["SHATABDI"]["CC"][distanceIndex];
+    }
+    else if(type=="JAN SHATABDI"){
+        fare = trainFareDetails["JAN SHATABDI"]["CC"][distanceIndex];
+    }
+    else if(type=="SUPERFAST"){
+        fare = trainFareDetails.EXPRESS["3A"][distanceIndex];
+    }
+    else
+    {
+        fare=trainFareDetails.EXPRESS["3A"][distanceIndex];
+    }
+    //add reservation charges and service tax
+    fare+=(fare*trainFareDetails.SERVICETAXPERCENT["3A"])/100;
+    if(type!="EXPRESS"){
+        fare+=trainFareDetails.SUPERFASTCHARGES["3A"];
+    }
+    fare+=trainFareDetails.RESERVATIONCHARGES["3A"];
+
+    var cateringCharges = 0;
+    //adding the catering charges
+    if((type == "RAJDHANI") || (type == "DURONTO") || (type == "SHATABDI")) {
+        if(destinationDay==originDay){
+            for(var i in trainFareDetails.CATERINGTIMINGS) {
+                if((trainFareDetails.CATERINGTIMINGS[i] > originDepartureTime)&&(trainFareDetails.CATERINGTIMINGS[i] < destinationArrivalTime)) {
+                    cateringCharges+=trainFareDetails.CATERINGCHARGES["3A"][i];
+                }
+            }
+        }
+        else {
+            var numberOfFullDays = destinationDay - originDay - 1;
+            cateringCharges += numberOfFullDays * trainFareDetails.CATERINGCHARGES["3A"].Total;
+            for (var i in trainFareDetails.CATERINGTIMINGS) {
+                if (trainFareDetails.CATERINGTIMINGS[i] > originDepartureTime) {
+                    cateringCharges += trainFareDetails.CATERINGCHARGES["3A"][i];
+                }
+                if (trainFareDetails.CATERINGTIMINGS[i] < destinationArrivalTime) {
+                    cateringCharges += trainFareDetails.CATERINGCHARGES["3A"][i];
+                }
+            }
+        }
+    }
+    fare+=cateringCharges;
+    fare=parseInt(fare);
+    //fare in multiple of 5
+    if(fare%5!=0){
+        fare=parseInt(fare/5)*5+5;
+    }
+
+    //console.log("train Fare:"+fare);
+    return fare;
 }

@@ -7,7 +7,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	$scope.isSuggestDestinationsOn = false;
     $scope.helpLabel="Help me choose destinations";
       $scope.value = "5000";
-      $scope.options = {       
+      $scope.options = {
         from: 5000,
         to: 100000,
         step: 100,
@@ -17,8 +17,8 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
           before: {"background-color": "purple"},
           default: {"background-color": "white"},
           after: {"background-color": "green"},
-          pointer: {"background-color": "red"}          
-        }        
+          pointer: {"background-color": "red"}
+        }
       };
 
       $scope.$watch('value', function(){
@@ -45,7 +45,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         else
          {
             $rootScope.$emit('submit');
-         }   
+         }
     };
 
    /* $scope.$watch('sliderOptions.min', function() {
@@ -209,16 +209,17 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                 travelFare += 8000;
             }
         }
+        console.log('travelFare:'+travelFare);
         return travelFare;
     };
 
     $scope.getFareFromTier = function(tier) {
         switch(tier){
-        case "1":
+        case 1:
             return 1500;
-        case "2":
+        case 2:
             return 1000;
-        case "3":
+        case 3:
             return 750;
         }
     };
@@ -229,21 +230,24 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         var numOfDaysInEachCity = Math.ceil(numOfDays / cities.length); //Equally dividing the days in each city
 
         angular.forEach(cities, function(city, indexCity) {
-            if(city.tier) {
+            if(city.tier != undefined) {
                 accommodationFoodFare += numOfDaysInEachCity * $scope.getFareFromTier(city.tier);
                 count++;
             }
         });
         while(count < cities.length) {
             //Assuming all rest cities are from tier 3
-            accommodationFoodFare += $scope.getFareFromTier("3");
+            accommodationFoodFare += $scope.getFareFromTier(3);
             count++;
         }
+        console.log('accommodationFoodFare:'+accommodationFoodFare);
         return accommodationFoodFare;
     };
 
     $scope.getBudget = function(origin,destinations,totalDistance,numOfDays)
     {
+        console.log(totalDistance,numOfDays);
+        console.log(destinations[0]);
         var fare=0;
 
         //Add the Approximate Travel Fare
@@ -274,12 +278,12 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                 var promise = [];
                 deferred[0] = $q.defer();
                 promise[0] = deferred[0].promise;
-                $scope.getLocation($scope.locationQueryString(origin.name), deferred[0]);
+                $scope.getLocation($scope.locationQueryString(origin.CityName), deferred[0]);
 
                 angular.forEach(destinations, function (destination, index) {
                     deferred[index + 1] = $q.defer();
                     promise[index + 1] = deferred[index + 1].promise;
-                    $scope.getLocation($scope.locationQueryString(destination.name), deferred[index + 1]);
+                    $scope.getLocation($scope.locationQueryString(destination.CityName), deferred[index + 1]);
                 });
 
                 $q.all(promise)
@@ -306,10 +310,12 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                             }
                         });
                         formData.setDestinations(destinationsData);
-                        totalDistance += parseInt($scope.getDistance(latitudes[0], longitudes[0], latitudes[latitudes.length], longitudes[longitudes.length]));
+                        console.log(latitudes, longitudes, latitudes.length, longitudes.length);
+                        totalDistance += parseInt($scope.getDistance(latitudes[0], longitudes[0], latitudes[latitudes.length-1], longitudes[longitudes.length-1]));
 
                         var totalFare = $scope.getBudget(origin, destinations, totalDistance, numOfDays);
 
+                        console.log('totalFare:'+totalFare);
                         $scope.options.from=parseInt(totalFare);
                         $scope.value = $scope.options.from;
                         //$scope.sliderOptions.min = parseInt(totalFare);
@@ -325,7 +331,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
             }
             else {
                 console.log('Some Problem with the inputs. Opening the upper part to fix them');
-                console.log(origin.name+','+destinations+','+startDate+','+endDate);
+                console.log(origin.CityName+','+destinations+','+startDate+','+endDate);
                 $scope.isDetailsCollapsed = true;
                 $scope.isOverviewCollapsed = false;
             }

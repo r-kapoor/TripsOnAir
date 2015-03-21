@@ -12,9 +12,9 @@ function getCityList(conn,orgLat,orgLong,taste,range,start,batchsize,callback) {
 	connection.connect();
 	var subQuery='';
 	range=range/2;//Range is round trip but we need here for one side
-	
+
 	subQuery+='(Taste & '+connection.escape(taste.tasteInteger)+'!=0 ) AND (Taste & '+connection.escape(taste.familyFriendsInteger)+'!=0 )';
-	var queryString='SELECT CityName as name,CityID,Latitude,Longitude,State, Description, Rating,CityImage as Image,( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) ) AS distance FROM City WHERE '+subQuery+' HAVING distance < '+range+' ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
+	var queryString='SELECT CityName,CityID,Latitude,Longitude,State, Description, Rating,CityImage as Image,( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) ) AS distance FROM City WHERE '+subQuery+' HAVING distance < '+range+' ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
 
 	connection.query(queryString, function(err, rows, fields) {
 		if (err)
