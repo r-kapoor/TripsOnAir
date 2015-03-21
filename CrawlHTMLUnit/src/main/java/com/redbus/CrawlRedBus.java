@@ -20,9 +20,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 /**
  * Crawls redbus
- * SampleFlow:
- * 
- * 
  * @author rajat
  *
  */
@@ -162,9 +159,8 @@ public class CrawlRedBus extends HtmlUnitWebClient{
 		
 		//Write the links into the file
 		FileOutputStream CityLinkStream = new FileOutputStream(cityLinksFile);
-		PrintStream printLinks	= new PrintStream(cityLinks);
-		printLinks.println(CityLinkStream);
-		printLinks.close();
-	    
+		PrintStream printLinks	= new PrintStream(CityLinkStream);
+		printLinks.println(cityLinks);
+		printLinks.close();	    
 	}
 }

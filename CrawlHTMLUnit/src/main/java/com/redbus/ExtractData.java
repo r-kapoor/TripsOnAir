@@ -20,7 +20,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 /**
  * 
  * Crawls the main link of redBus
- * Sample Url to crawl : http://www.redbus.in/Booking/SelectBus.aspx?fromCityId=551&toCityId=1167&doj=31-Mar-2014&busType=Any&opId=0
+ * Sample Url to crawl : http://www.redbus.in/bus-tickets/bangalore-ooty.aspx
  * @author rajat
  *
  */
@@ -33,11 +33,11 @@ public class ExtractData extends HtmlUnitWebClient{
 	private static String exceptionMsg = "";
 	private static String exceptionFile = "target/redbus/routeException.txt";
 	private static String exceptionmsgFile = "target/redbus/routeExceptionMsg.txt";
-	private static String routesFile = "ConfigFiles/redbus/routeLinks.txt";
+	private static String routesFile = "ConfigFiles/redbus/routeLinksTest.txt";
 	
 	public static void getBusData(URL url)throws Exception
 	{
-		String operatorName="",busType="",departureTime="",arrivalTime="",duration="",rating="",ratingText="",fare="";
+		String operatorName="";
 		String originId="unknown",destId="unknown",originName="unknown",destName="unknown";
 		try{
 		
@@ -54,16 +54,16 @@ public class ExtractData extends HtmlUnitWebClient{
 		{
 			originId=sourceE.getAttribute("name");
 			originName=sourceE.getAttribute("value");
-			System.out.println("originId "+originId);
-			System.out.println("originName "+originName);
+			//System.out.println("originId "+originId);
+			//System.out.println("originName "+originName);
 		}
 		
 		if((destE!=null)&&(destE.hasAttribute("name")))
 		{
 			destId=destE.getAttribute("name");
 			destName=destE.getAttribute("value");
-			System.out.println("destId "+destId);
-			System.out.println("destName "+destName);
+			//System.out.println("destId "+destId);
+			//System.out.println("destName "+destName);
 		}
 		
 		
@@ -79,6 +79,7 @@ public class ExtractData extends HtmlUnitWebClient{
 				while(rowItr.hasNext())
 				{
 					String var[] = new String[7];int i=0;
+					String busType="",departureTime="",arrivalTime="",rating="",ratingText="",fare="",duration="";
 					DomElement rowE=rowItr.next();
 					if((rowE!=null)&&(rowE.getAttribute("class").contains("TBRow"))&&(rowE.hasChildNodes()))
 					{
@@ -93,38 +94,42 @@ public class ExtractData extends HtmlUnitWebClient{
 								String nameType[]=var[i].split("\n");
 								operatorName=nameType[0];
 								busType=nameType[1];
-								System.out.println("operatorName "+operatorName);
-								System.out.println("busType "+busType);
+//								System.out.println("operatorName "+operatorName);
+//								System.out.println("busType "+busType);
 							}
 							else if(i==1)
 							{
 								departureTime=var[i];
-								System.out.println("departureTime "+departureTime);
+								//System.out.println("departureTime "+departureTime);
 							}
 							else if(i==2)
 							{
 								arrivalTime=var[i];
-								System.out.println("arrivalTime "+arrivalTime);
+								//System.out.println("arrivalTime "+arrivalTime);
 							}
 							else if(i==3)
 							{
 								duration = var[i];
-								System.out.println("duration "+duration);
+								//System.out.println("duration "+duration);
 							}
 							else if(i==4)
 							{
 								fare = var[i];
-								System.out.println("fare "+fare);
+								//System.out.println("fare "+fare);
 							}
 							else if(i==5)
 							{
-								String rateNumber[]=var[i].split("\n");
-								rating=rateNumber[0];
-								ratingText = rateNumber[1];
-								System.out.println("rating "+rating);
-								System.out.println("ratingText "+ratingText);
+								if(!var[i].toLowerCase().contains("no ratings"))
+								{	
+									String rateNumber[]=var[i].split("\n");
+									rating=rateNumber[0].replaceAll("[^0-9.]", "");
+									ratingText = rateNumber[1];
+								}
+//								System.out.println("rating "+rating);
+//								System.out.println("ratingText "+ratingText);
 							}
-							
+							i++;
+						}	
 							//String departureDate = "2014-02-24";//YYYY-MM-DD
 							String source = "RedBus";
 							
@@ -143,10 +148,7 @@ public class ExtractData extends HtmlUnitWebClient{
 							redBusDto.setDestination(destName.toUpperCase());
 							//redBusDto.setDepartureDate(departureDate);
 							
-							TransferDataRedBus.transferData(redBusDto, statement);
-							i++;
-							
-						}
+							TransferDataRedBus.transferData(redBusDto, statement);				
 					}
 				}
 			}	
@@ -172,10 +174,8 @@ public class ExtractData extends HtmlUnitWebClient{
 }
 	
 	public static void main(String[] args) throws Exception {
-		
 		 //URL url = new URL("http://www.redbus.in/bus-tickets/bangalore-hyderabad.aspx"); 
-		Scanner in = new Scanner(new File("routesFile"));
-		
+		Scanner in = new Scanner(new File(routesFile));
 		while(in.hasNext())
 		{
 			String link=in.next().replace("\\", "/");
