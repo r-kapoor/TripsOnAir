@@ -1,3 +1,28 @@
+routesModule.directive('postRepeat', function($timeout) {
+    return function($scope,$rootScope, element, $attrs) {
+        console.log("testing....");
+        console.log("element:"+element.class);
+
+        if ($scope.$last){
+            $timeout(function (){
+                if(element.class=="panel-travel")
+                {
+                    console.log("in panel-travel");
+                    console.log("scrollHeightTravel:"+$("#transcludeTravelPanel")[0].scrollHeight);
+                    $scope.$emit('initialize-pane',"travelPanel");
+                }
+            },10);
+            $timeout(function (){
+                if(element.class=="panel-travelMode"){
+                    console.log("in panel-travelMode");
+                    console.log("scrollHeightTravelModes:"+$("#transcludeTravelModesPanel").get(0).scrollHeight);
+                    $scope.$emit('initialize-pane',"travelModesPanel");
+                }
+            },1000);
+        }
+    };
+});
+
 routesModule.controller('sarthiController', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout) {
 
     $scope.isTravelPanelOpen=false;
