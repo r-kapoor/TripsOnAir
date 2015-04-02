@@ -1,10 +1,130 @@
-    <div ng-controller="shakuniController">
-        <div class="panel panel-primary" style="margin-left: 2%;margin-right: 2%">
-            <div class="panel-heading">
-                <h3 class="panel-title text-center">Your Itinerary</h3>
-            </div>
-            <div class="panel-body">
+<div>
+    <!--<div class="panel panel-primary" style="margin-left: 2%;margin-right: 2%">-->
+        <!--<div class="panel-heading">-->
+            <!--<h3 class="panel-title text-center">Your Itinerary</h3>-->
+        <!--</div>-->
+        <!--<div class="panel-body">-->
 
-            </div>
-        </div>
-    </div>
+        <!--</div>-->
+    <!--</div>-->
+    <nav>
+        <ul class="pager">
+            <li><a href="#">Previous</a></li>
+            <li>26 March 2015</li>
+            <li><a href="#">Next</a></li>
+        </ul>
+    </nav>
+    <timeline>
+        <timeline-node ng-if="currentDestination != null" side="right">
+            <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.lastMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+            </timeline-badge>
+            <timeline-panel>
+                <timeline-heading>
+                    <timeline-title>{{getArrivalTitleText(currentDestination.lastMajorSegment)}}</timeline-title>
+                    <p>
+                        <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{currentDestination.arrivalTime | date:'shortTime'}}</small>
+                    </p>
+                </timeline-heading>
+            </timeline-panel>
+        </timeline-node>
+        <timeline ng-repeat="dateItinerary in currentDestination.dateWiseItinerary">
+            <timeline-node ng-if="currentDestination.hotelDetails != undefined && dateItinerary.dateWisePlaceData.typeOfDay == 0">
+                <timeline-badge class="info"><i class="glyphicon glyphicon-home"></i>
+                </timeline-badge>
+                <timeline-panel>
+                    <timeline-heading>
+                        <timeline-title>{{currentDestination.hotelDetails.Name}}</timeline-title>
+                        <div class="row">
+                            <p>
+                                <small class="text-muted" style="margin-left: 4%"> Single Room Rent Per Day {{currentDestination.hotelDetails.Price | currency:"&#8377;"}} </small>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p>
+                                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index, true) | date:'shortTime'}} </small>
+                                </p>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p>
+                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;"}} per person</large>
+                                </p>
+                            </div>
+                        </div>
+                    </timeline-heading>
+                </timeline-panel>
+            </timeline-node>
+
+            <timeline-node ng-repeat="permValue in dateItinerary.permutation" side="right" ng-drop="true" ng-drop-success="onDropComplete($data,$event)"  ng-drag="true" ng-drag-data="obj" ng-drag-success="onDragComplete($data,$event)" ng-center-anchor="true">
+                <timeline-badge class="info"><i class="glyphicon glyphicon-eye-open"></i>
+                </timeline-badge>
+                <timeline-panel>
+                    <timeline-heading>
+                        <timeline-title>{{dateItinerary.dateWisePlaceData.placesData[permValue].Name}}</timeline-title>
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <p>
+                                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{dateItinerary.dateWisePlaceData.placesData[permValue].placeArrivalTime | date:'shortTime'}} - {{dateItinerary.dateWisePlaceData.placesData[permValue].placeDepartureTime | date:'shortTime'}} </small>
+                                </p>
+                            </div>
+                            <div ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].AdultCharge > 0" class="col-xs-4 text-right">
+                                <p>
+                                    <large> {{dateItinerary.dateWisePlaceData.placesData[permValue].AdultCharge | currency:"&#8377;"}}</large>
+                                </p>
+                            </div>
+                        </div>
+                    </timeline-heading>
+
+                    <timeline-content>
+                        <div class="col-xs-6">
+                            <img class="img-responsive" src="http://www.freeimages.com/assets/183333/1833326510/wood-weel-1444183-m.jpg">
+                        </div>
+                        <div class="col-xs-6 description-wrap">
+                            <p>{{dateItinerary.dateWisePlaceData.placesData[permValue].Description}}</p>
+                        </div>
+
+                    </timeline-content>
+                </timeline-panel>
+            </timeline-node>
+            <timeline-node ng-if="currentDestination.hotelDetails != undefined">
+                <timeline-badge class="info"><i class="glyphicon glyphicon-home"></i>
+                </timeline-badge>
+                <timeline-panel>
+                    <timeline-heading>
+                        <timeline-title>{{currentDestination.hotelDetails.Name}}</timeline-title>
+                        <div class="row">
+                            <p>
+                                <small class="text-muted" style="margin-left: 4%"> Single Room Rent Per Day {{currentDestination.hotelDetails.Price | currency:"&#8377;"}} </small>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p>
+                                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index) | date:'shortTime'}} </small>
+                                </p>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p>
+                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;"}} per person</large>
+                                </p>
+                            </div>
+                        </div>
+                    </timeline-heading>
+                </timeline-panel>
+            </timeline-node>
+        </timeline>
+
+        <timeline-node ng-if="currentDestination != null" side="right">
+            <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.firstMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+            </timeline-badge>
+            <timeline-panel>
+                <timeline-heading>
+                    <timeline-title>{{getDepartureTitleText(currentDestination.firstMajorSegment)}}</timeline-title>
+                    <p>
+                        <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{currentDestination.departureTime | date:'shortTime'}}</small>
+                    </p>
+                </timeline-heading>
+            </timeline-panel>
+        </timeline-node>
+    </timeline>
+</div>

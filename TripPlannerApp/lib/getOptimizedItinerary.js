@@ -3,7 +3,7 @@
  */
 require('date-utils');
 var clone = require('../lib/UtilityFunctions/cloneJSON');
-var SPEED = 20; //20 km/hr
+var SPEED = 15; //20 km/hr
 var MEAL_START_TIME = [480, 720, 1140]; //8AM, 12 Noon, 7PM
 var MEAL_END_TIME = [600, 900, 1320]; //10AM, 3PM, 10PM
 var MEAL_START_TIME_STRING = ['08:00:00', '12:00:00', '19:00:00']; //8AM, 12 Noon, 7PM
@@ -29,6 +29,7 @@ function getOptimizedItinerary(destinationAndStops) {
                 dateWiseItinerary.push(getDayWiseItinerary(dateWisePlaces[dateIndex], destination, dateWiseItinerary[dateIndex - 1]));
             }
         }
+        destination.dateWiseItinerary = dateWiseItinerary;
     }
 }
 
@@ -271,8 +272,8 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
         else {
             console.log('No places to be visited');
             //No places to be visited this day
-            var distance = getDistance.getDistance(parseFloat(destination.LocationOfArrival.split(',')[0]),
-                parseFloat(destination.LocationOfArrival.split(',')[1]),
+            var distance = getDistance.getDistance(destination.LocationOfArrival.Latitude,
+                destination.LocationOfArrival.Longitude,
                 destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude);
             var timeInMinutes = ( distance * 60 )/SPEED;
             dateWisePlaceData.endSightSeeingTime = destination.arrivalTime.clone().addMinutes(timeInMinutes);

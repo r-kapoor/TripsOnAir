@@ -1,0 +1,108 @@
+<div class="col-xs-6">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" ng-model="place.Name" class="form-control" id="name">
+    </div>
+    <div class="form-group">
+        <label for="type">Type:</label>
+        <input type="text" ng-model="place.Type" class="form-control" id="type">
+    </div>
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" ng-model="place.Address" class="form-control" id="address">
+    </div>
+    <div class="form-group">
+        <label for="pinCode">PinCode:</label>
+        <input type="text" ng-model="place.PinCode" class="form-control" id="pinCode">
+    </div>
+    <div class="form-group">
+        <label for="phoneNo">PhoneNo:</label>
+        <input type="text" ng-model="place.PhoneNo" class="form-control" id="phoneNo">
+    </div>
+    <div class="form-group">
+        <label for="cityID">CityID:</label>
+        <input type="text" ng-model="place.CityID" class="form-control" id="cityID">
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea type="text" ng-model="place.Description" rows="5" class="form-control" id="description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="score">Score:</label>
+        <input type="text" ng-model="place.Score" class="form-control" id="score">
+    </div>
+    <div class="form-group">
+        <label for="scoreSources">ScoreSources:</label>
+        <input type="text" ng-model="place.ScoreSources" class="form-control" id="scoreSources">
+    </div>
+    <div class="form-group">
+        <label for="broad-category">Broad_Category:</label>
+        <input type="text" ng-model="place.Broad_Category" class="form-control" id="broad-category">
+    </div>
+    <div class="form-group">
+        <label for="website">Website:</label>
+        <input type="text" ng-model="place.Website" class="form-control" id="website">
+    </div>
+    <div class="form-group">
+        <label for="latitude">Latitude:</label>
+        <input type="text" ng-model="place.Latitude" class="form-control" id="latitude">
+    </div>
+    <div class="form-group">
+        <label for="longitude">Longitude:</label>
+        <input type="text" ng-model="place.Longitude" class="form-control" id="longitude">
+    </div>
+    <div class="form-group">
+        <label for="Time2Cover">Time2Cover:</label>
+        <input type="text" ng-model="place.Time2Cover" class="form-control" id="Time2Cover">
+    </div>
+    <div class="form-group">
+        <label for="UnescoHeritage">UnescoHeritage:</label>
+        <input type="text" ng-model="place.UnescoHeritage" class="form-control" id="UnescoHeritage">
+    </div>
+    <div class="form-group">
+        <label for="Ixigo">Ixigo:</label>
+        <input type="text" ng-model="place.Ixigo" class="form-control" id="Ixigo">
+    </div>
+    <div class="form-group">
+        <label for="TripAdvisor">TripAdvisor:</label>
+        <input type="text" ng-model="place.TripAdvisor" class="form-control" id="TripAdvisor">
+    </div>
+</div>
+<div class="col-xs-6">
+    <h3>Taste:</h3>
+    <label ng-repeat="(taste,presence) in place.Taste" class="checkbox-inline"><input type="checkbox" ng-model="place.Taste[taste]">{{taste}}</label>
+    <h3>Charges:</h3>
+    <div class="form-group">
+        <label for="ChildCharge">ChildCharge:</label>
+        <input type="text" ng-model="place.ChildCharge" class="form-control" id="ChildCharge">
+    </div>
+    <div class="form-group">
+        <label for="AdultCharge">AdultCharge:</label>
+        <input type="text" ng-model="place.AdultCharge" class="form-control" id="AdultCharge">
+    </div>
+    <div class="form-group">
+        <label for="ForeignerCharge">ForeignerCharge:</label>
+        <input type="text" ng-model="place.ForeignerCharge" class="form-control" id="ForeignerCharge">
+    </div>
+    <h3>Timings:</h3>
+    <div ng-repeat="placeTiming in place.PlaceTimings">
+        <div class="form-group">
+            <label for="TimeStart">TimeStart:</label>
+            <input type="text" ng-model="placeTiming.TimeStart" class="form-control" id="TimeStart">
+        </div>
+        <div class="form-group">
+            <label for="TimeEnd">TimeEnd:</label>
+            <input type="text" ng-model="placeTiming.TimeEnd" class="form-control" id="TimeEnd">
+        </div>
+        <div class="form-group">
+            <label for="Days">Days:</label>
+            <input type="text" ng-model="placeTiming.Days" class="form-control" id="Days">
+        </div>
+    </div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+    <div>
+        <button type="button" class="btn btn-default" ng-click="submit()">Submit the changes</button>
+        <button type="button" class="btn btn-default" ng-click="getPlaceDetails()">Reload</button>
+        <button type="button" class="btn btn-default" ng-click="nextPlace()">Next</button>
+    </div>
+</div>
