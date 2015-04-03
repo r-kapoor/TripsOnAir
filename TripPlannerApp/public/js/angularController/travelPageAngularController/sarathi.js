@@ -82,6 +82,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     var dateSet = null;
     var outOfBudgetFactor = 0.7;
     var minimumTimeSpentInCityInHours = 4;
+    var travelData=null;
 
     $scope.pageSlide = function(){
         $scope.checked1=!$scope.checked1;
@@ -230,6 +231,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                     showCurrentRouteOnMap();
                     showBudget(data.userTotalbudget);
                     $scope.isBudgetPanelOpen = true;
+                    travelData  = data;
                 }
             }
         );
@@ -868,5 +870,23 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
-
+    /**
+     * Submit Button
+     */
+    $scope.submitTravel = function(){
+        console.log("submitTravel");
+        defaultRouteData.isMajorDefault=1;
+        alternateRouteData.isMajorDefault=0;
+        travelData = JSON.stringify(travelData);
+        var formElement=angular.element('<form\>');
+        formElement.attr("action","/"+'showPlacesAndHotels');
+        formElement.attr("method","POST");
+        var d=angular.element("<input type='hidden'/>");
+        d.attr("name","travelData");
+        d.attr("value",travelData);
+        formElement.append(d);
+        var body=angular.element(document.querySelectorAll("body"));
+        body.append(formElement);
+        formElement.submit();
+    };
 });

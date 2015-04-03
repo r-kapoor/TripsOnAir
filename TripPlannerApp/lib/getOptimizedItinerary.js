@@ -3,7 +3,7 @@
  */
 require('date-utils');
 var clone = require('../lib/UtilityFunctions/cloneJSON');
-var SPEED = 20; //20 km/hr
+var SPEED = 15; //20 km/hr
 var MEAL_START_TIME = [480, 720, 1140]; //8AM, 12 Noon, 7PM
 var MEAL_END_TIME = [600, 900, 1320]; //10AM, 3PM, 10PM
 var MEAL_START_TIME_STRING = ['08:00:00', '12:00:00', '19:00:00']; //8AM, 12 Noon, 7PM
@@ -11,6 +11,7 @@ var MEAL_END_TIME_STRING = ['10:00:00', '15:00:00', '22:00:00']; //10AM, 3PM, 10
 var MEAL_DURATION = [90, 120, 120]; //1.5 hrs for breakfast, 2 hrs for both lunch and dinner
 var MEAL_CONSTANTS = ['BREAKFAST', 'LUNCH', 'DINNER'];
 var REST_TIME = 480; //8 hrs
+var TIME2COVER_RATIO = 0.75;
 var getDistance = require('../lib/UtilityFunctions/getDistance');
 function getOptimizedItinerary(destinationAndStops) {
     console.log('---------------------In getOptimizedItinerary---------------------');
@@ -29,6 +30,7 @@ function getOptimizedItinerary(destinationAndStops) {
                 dateWiseItinerary.push(getDayWiseItinerary(dateWisePlaces[dateIndex], destination, dateWiseItinerary[dateIndex - 1]));
             }
         }
+        destination.dateWiseItinerary = dateWiseItinerary;
     }
 }
 
@@ -163,7 +165,7 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                 else {
                     console.log('Place open but not enough time:'+(-1*lagTime));
                     //The place is open but not enough time. Hence checking if time = 75% of time2Cover
-                    if ((-1 * lagTime) > (0.75 * placesData[placeIndex].Time2Cover)) {
+                    if ((-1 * lagTime) > (TIME2COVER_RATIO * placesData[placeIndex].Time2Cover)) {
                         console.log('Covering in less time');
                         //Place can still be covered in less time
                         placesData[placeIndex].placeArrivalTime = startTime.clone();
@@ -207,7 +209,7 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                 else {
                     console.log('Place open but not enough time:'+(-1*lagTime));
                     //The place is open but not enough time. Hence checking if time = 75% of time2Cover
-                    if ((-1 * lagTime) > (0.75 * placesData[placeIndex].Time2Cover)) {
+                    if ((-1 * lagTime) > (TIME2COVER_RATIO * placesData[placeIndex].Time2Cover)) {
                         console.log('Covering in less time');
                         //Place can still be covered in less time
                         placesData[placeIndex].placeArrivalTime = startTime.clone();
@@ -271,8 +273,8 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
         else {
             console.log('No places to be visited');
             //No places to be visited this day
-            var distance = getDistance.getDistance(parseFloat(destination.LocationOfArrival.split(',')[0]),
-                parseFloat(destination.LocationOfArrival.split(',')[1]),
+            var distance = getDistance.getDistance(destination.LocationOfArrival.Latitude,
+                destination.LocationOfArrival.Longitude,
                 destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude);
             var timeInMinutes = ( distance * 60 )/SPEED;
             dateWisePlaceData.endSightSeeingTime = destination.arrivalTime.clone().addMinutes(timeInMinutes);

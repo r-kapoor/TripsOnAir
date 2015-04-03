@@ -67,6 +67,19 @@ async.parallel(
                 var destinationAndStops = selectPlaces.selectPlaces(results[0], results[1]);
                 getDayWisePlaces.getDayWisePlaces(destinationAndStops);
                 getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
+                destinationAndStops.userTotalbudget = totalBudget;
+                destinationAndStops.numPeople = numOfPeople;
+                destinationAndStops.tastes = tastes;
+
+                res.json(destinationAndStops);
+                var fs = require('fs');
+                fs.writeFile("AfterItineraryPlanning.txt", JSON.stringify(destinationAndStops), function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("The file was saved!");
+                    }
+                });
             });
 
 	});//app.get

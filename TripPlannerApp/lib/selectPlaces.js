@@ -3,6 +3,7 @@
  */
 require('date-utils');
 getDistance = require('../lib/UtilityFunctions/getDistance');
+var SPEED = 15; //In km/hr
 function selectPlaces(destinationAndStops, placesData) {
     for(var i=0;i<destinationAndStops.destinations.length;i++)
     {
@@ -17,14 +18,23 @@ function selectPlaces(destinationAndStops, placesData) {
             destinationAndStops.destinations[i].startLocationPosition = {
                 Latitude : destinationAndStops.destinations[i].hotelDetails.Latitude,
                 Longitude : destinationAndStops.destinations[i].hotelDetails.Longitude
-            }
+            };
+            var distance = getDistance.getDistance(destinationAndStops.destinations[i].LocationOfArrival.Latitude,
+                destinationAndStops.destinations[i].LocationOfArrival.Longitude,
+                destinationAndStops.destinations[i].startLocationPosition.Latitude, destinationAndStops.destinations[i].startLocationPosition.Longitude);
+            var timeInMinutes = ( distance * 60 )/SPEED;
+            var arrivalTime = destinationAndStops.destinations[i].arrivalTime.clone();
+            destinationAndStops.destinations[i].hotelDetails.checkInTime = arrivalTime.addMinutes(timeInMinutes);
+            distance = getDistance.getDistance(destinationAndStops.destinations[i].LocationOfDeparture.Latitude,
+                destinationAndStops.destinations[i].LocationOfDeparture.Longitude,
+                destinationAndStops.destinations[i].startLocationPosition.Latitude, destinationAndStops.destinations[i].startLocationPosition.Longitude);
+            timeInMinutes = ( distance * 60 )/SPEED;
+            var departureTime = destinationAndStops.destinations[i].departureTime.clone();
+            destinationAndStops.destinations[i].hotelDetails.checkOutTime = departureTime.addMinutes(-timeInMinutes);
         }
         else {
             //No hotel present in the city. So the person would not be starting from the hotel but from the position he lands in the city
-            destinationAndStops.destinations[i].startLocationPosition = {
-                Latitude : parseFloat(destinationAndStops.destinations[i].LocationOfArrival.split(',')[0]),
-                Longitude : parseFloat(destinationAndStops.destinations[i].LocationOfArrival.split(',')[1])
-            }
+            destinationAndStops.destinations[i].startLocationPosition = destinationAndStops.destinations[i].LocationOfArrival;
         }
     }
     setMinimumPlacesToBeCovered(destinationAndStops);
@@ -44,7 +54,7 @@ function setMinimumPlacesToBeCovered(destinationAndStops) {
                 timeSpentOnVisiting = durationSpentInHours / 2;
             }
             else {
-                console.log("No hotel Required and less than 24hs in city")
+                console.log("No hotel Required and less than 24hs in city");
                 timeSpentOnVisiting = durationSpentInHours * (3/4);
             }
         }
@@ -71,7 +81,6 @@ function setMinimumPlacesToBeCovered(destinationAndStops) {
 }
 function selectSetOfPlaces(destinationAndStops) {
     console.log("In selectSetOfPlaces");
-    var speed = 15; //In km/hr
     var addPlacesToArray = function () {
         console.log("In addPlacesToArray");
         console.log('destination.timeSpentOnVisiting:'+destination.timeSpentOnVisiting);
@@ -81,7 +90,7 @@ function selectSetOfPlaces(destinationAndStops) {
             console.log('currentPlaceIndex:'+currentPlaceIndex);
             var currentPlace = destination.places[currentPlaceIndex];
             var distance = getDistance.getDistance(destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude, currentPlace.Latitude, currentPlace.Longitude);
-            var timeSpentOnTravelling = (distance / speed) * 60;
+            var timeSpentOnTravelling = (distance / SPEED) * 60;
             console.log('distance:'+distance);
             console.log('timeSpentOnTravelling:'+timeSpentOnTravelling);
             var estimatedDurationOfPlace = timeSpentOnTravelling + currentPlace.Time2Cover;
@@ -139,7 +148,7 @@ function selectSetOfPlaces(destinationAndStops) {
                     }
                     else {
                         var distance = getDistance.getDistance(destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude, currentPlace.Latitude, currentPlace.Longitude);
-                        var timeSpentOnTravelling = (distance / speed) * 60;
+                        var timeSpentOnTravelling = (distance / SPEED) * 60;
                        // console.log('distance:'+distance);
                         //console.log('timeSpentOnTravelling:'+timeSpentOnTravelling);
                         var estimatedDurationOfPlace = timeSpentOnTravelling + currentPlace.Time2Cover;

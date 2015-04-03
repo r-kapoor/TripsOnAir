@@ -15,7 +15,7 @@ var familyFriendsMapping={
 	FRIENDS		: 0x100
 };
 var allTastes = 639;
-var allFamilyFriends = 384
+var allFamilyFriends = 384;
 
 function tasteObjectToInteger(tasteObject)
 {
@@ -49,4 +49,34 @@ function tasteObjectToInteger(tasteObject)
     };
 }
 
+function tasteIntegerToObject(tasteInteger) {
+    var tasteObject = {
+        RELIGIOUS   : false,
+        ADVENTURE   : false,
+        BEACHES     : false,
+        LANDMARKS   : false,
+        NATURE      : false,
+        LIVE_EVENTS : false,
+        HILL_STATION: false,
+        ROMANTIC    : false,
+        FAMILY      : false,
+        FRIENDS     : false
+    };
+
+    for(var i in tasteObject) {
+        if((i.toUpperCase() == "FAMILY")||(i.toUpperCase() == "FRIENDS")) {
+            if(parseInt(familyFriendsMapping[i] & tasteInteger) != 0) {
+                tasteObject[i] = true;
+            }
+        }
+        else{
+            if(parseInt(tasteMapping[i] & tasteInteger) != 0){
+                tasteObject[i] = true;
+            }
+        }
+    }
+    return tasteObject;
+}
+
 module.exports.tasteObjectToInteger=tasteObjectToInteger;
+module.exports.tasteIntegerToObject=tasteIntegerToObject;

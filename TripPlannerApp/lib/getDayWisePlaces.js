@@ -11,9 +11,11 @@ function getDayWisePlaces(destinationAndStops) {
     {
         var arrivalTime=destinationAndStops.destinations[i].arrivalTime;
         var departureTime = destinationAndStops.destinations[i].departureTime;
+        var checkInTime = destinationAndStops.destinations[i].hotelDetails.checkInTime;
+        var checkOutTime = destinationAndStops.destinations[i].hotelDetails.checkOutTime;
         //var numOfDays= arrivalTime.getDaysBetween(departureTime);
         var isHotelRequired = destinationAndStops.destinations[i].isHotelRequired;
-        var daysAndDatesInDestination=getDaysAndDatesInDestination(arrivalTime,departureTime,isHotelRequired);
+        var daysAndDatesInDestination=getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,checkOutTime,isHotelRequired);
 
         destinationAndStops.destinations[i].thingsToDoSelected.sort(comparePlaces);
         destinationAndStops.destinations[i].placesSelected.sort(comparePlaces);
@@ -96,7 +98,7 @@ function getDayWisePlaces(destinationAndStops) {
 
 }
 
-function getDaysAndDatesInDestination(arrivalTime,departureTime,isHotelRequired)
+function getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,checkOutTime,isHotelRequired)
 {
     var datesInDestination = [];
     var hourOfArrival=arrivalTime.toFormat("HH24");
@@ -105,10 +107,19 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,isHotelRequired)
     var startDay=arrivalTime.getDay()+1;
     var arrivalTimeClone = arrivalTime.clone();
     var departureTimeClone = departureTime.clone();
+    var checkInTimeClone = null;
+    var checkOutTimeClone = null;
+    if(checkInTime != undefined){
+        checkInTimeClone = checkInTime.clone();
+    }
+    if(checkOutTime != undefined){
+        checkOutTimeClone = checkOutTime.clone();
+    }
     var daysInDestination = "";
     //typeOfDay - 0 = ArrivalDay, 1 = InBetweenDay, 2 = departureDay, 3 = both 0 and 2
     if(isHotelRequired)
     {
+
         if(hourOfArrival>=19) {
             var dateObject = {
                 typeOfDay: 0,
@@ -120,14 +131,14 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,isHotelRequired)
         else if(hourOfArrival >= 12) {
             var dateObject = {
                 typeOfDay: 0,
-                startSightSeeingTime: arrivalTimeClone.addHours(2)
+                startSightSeeingTime: checkInTimeClone.addHours(2)
             };
             datesInDestination.push(dateObject);
         }
         else {
             var dateObject = {
                 typeOfDay: 0,
-                startSightSeeingTime: arrivalTimeClone.addHours(4)
+                startSightSeeingTime: checkInTimeClone.addHours(3)
             };
             datesInDestination.push(dateObject);
         }
@@ -143,11 +154,11 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,isHotelRequired)
     var endSightSeeingTime = null;
     if(isHotelRequired) {
         if(hourOfDeparture > 9) {
-            endSightSeeingTime = departureTimeClone.addHours(-5);
+            endSightSeeingTime = checkOutTimeClone.addHours(-4);
         }
     }
     else {
-        endSightSeeingTime = departureTimeClone.addHours(-3);
+        endSightSeeingTime = checkOutTimeClone.addHours(-2);
     }
 
     var numOfDays= 0;
