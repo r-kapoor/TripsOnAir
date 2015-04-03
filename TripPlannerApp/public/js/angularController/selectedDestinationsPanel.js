@@ -1,6 +1,24 @@
 /**
  * Created by rkapoor on 21/12/14.
  */
+
+inputModule.directive('postRepeat', function($timeout) {
+    return function($scope,$rootScope, element, $attrs) {
+        console.log("element:"+element.class);
+
+        if ($scope.$last){
+            $timeout(function (){
+                if(element.class=="panel-selectedDestinations")
+                {
+                    console.log("panel-selectedDestinations");
+                    console.log("scrollHeight:"+$("#transcludeDestinationsPanel")[0].scrollHeight);
+                    $scope.$emit('initialize-pane',"destinationsPanel");
+                }
+            });
+        }
+    };
+});
+
 inputModule.controller('selectedDestinationsPanelController', function($scope, $rootScope, $http, $q, formData, cityData) {
     $scope.origin = null;
     $scope.destinationCityList = [];
@@ -15,8 +33,24 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
     $rootScope.$on('destinationSelected', function onOriginSelected() {
         $scope.destinationLabel=false;
         $scope.destinationCityList = formData.getDestinations();
-        var element = angular.element(document.querySelector("#destinationsPanel"));
-        $scope.$broadcast('reinit-pane',"destinationsPanel");
+       // var element = angular.element(document.querySelector("#destinationsPanel"));
+        var lastDestID =  $scope.destinationCityList[$scope.destinationCityList.length-1].CityID;
+        console.log("last city ID:"+lastDestID);
+        var element = angular.element(document.querySelector("#"+lastDestID));
+        element.scrollIntoView();
+        //var offset=element.offset();
+        //var ele=jQuery('#'+lastDestID).position();
+        //console.log("offset:"+ele);
+       //console.log("ele in dest:"+element);
+       //var top= jQuery('#'+lastDestID).offset();
+        //var top=element.prop('offsetTop');
+        //console.log("top:"+$scope.origin.CityID.offset());
+
+       // console.log("last city Element:"+element);
+       // $scope.pane.scrollToElement("#"+lastDestID, true, true);
+        //$scope.pane.scrollToBottom(true);
+        //$scope.pane.scrollByY(80,true);
+       //$scope.$broadcast('reinit-pane',"destinationsPanel");
     });
 
     $scope.getDestinationName = function(destination) {
@@ -35,6 +69,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
               $scope.destinationLabel=true;
            }
         $rootScope.$emit('destinationRemoved');
+        $scope.$emit('initialize-pane',"destinationsPanel");
         //$scope.$broadcast('reinit-pane',"destinationsPanel");
     };
 
