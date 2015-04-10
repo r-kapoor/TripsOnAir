@@ -229,27 +229,59 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                 console.log('placeArrivalTime:'+placesData[placeIndex].placeArrivalTime);
                 console.log('placeDepartureTime:'+placesData[placeIndex].placeDepartureTime);
 
-
+                var isPlaceRemoved = false;
                 if(isDepartureDate){
-                    if(Date.compare(placesData[placeIndex].placeArrivalTime,dateWisePlaceData.endSightSeeingTime)>1){
+                    if(Date.compare(placesData[placeIndex].placeArrivalTime,dateWisePlaceData.endSightSeeingTime)==1){
+                        //1 means endSightSeeingTime < placeArrivalTime
+                        isPlaceRemoved = true;
                         placesPermutation.splice(j, 1);
                         j--;
-                        placeIndex = placesPermutation[j];
+                        if(j == -1){
+                            placeIndex = -1;
+                        }
+                        else {
+                            placeIndex = placesPermutation[j];
+                        }
+                        if(placesPermutation.length == 0) {
+                            //No Places Left For this day
+                            dateWisePlaceData.startSightSeeingTime = null;
+                            dateWisePlaceData.endSightSeeingTime = null;
+                            dateWisePlaceData.noPlacesVisited = 1;
+                        }
                     }
-                    else if(Date.compare(placesData[placeIndex].placeDepartureTime,dateWisePlaceData.endSightSeeingTime)>1)
+                    else if(Date.compare(placesData[placeIndex].placeDepartureTime,dateWisePlaceData.endSightSeeingTime)==1)
                     {
-                        placesData[placeIndex].placeDepartureTime=dateWisePlaceData.endSightSeeingTime;
+                        //1 means endSightSeeingTime < placeDepartureTime
+                        distance = getDistance.getDistance(placesData[placesPermutation[j]].Latitude, placesData[placesPermutation[j]].Longitude,
+                            destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude);
+                        timeInMinutes = ( distance * 60 ) / SPEED;
+                        placesData[placeIndex].placeDepartureTime=dateWisePlaceData.endSightSeeingTime.clone().addMinutes(-timeInMinutes);
+                        if(placesData[placeIndex].placeArrivalTime.getMinutesBetween(placesData[placeIndex].placeDepartureTime) < TIME2COVER_RATIO * placesData[placeIndex].Time2Cover){
+                            isPlaceRemoved = true;
+                            placesPermutation.splice(j, 1);
+                            j--;
+                            placeIndex = placesPermutation[j];
+                            if(placesPermutation.length == 0) {
+                                //No Places Left For this day
+                                dateWisePlaceData.startSightSeeingTime = null;
+                                dateWisePlaceData.endSightSeeingTime = null;
+                                dateWisePlaceData.noPlacesVisited = 1;
+                            }
+                        }
                     }
                 }
 
-                var mealRequired = checkWhichMealRequired(placesData[placeIndex].placeDepartureTime, dateWisePlaceData.hadMeals);
-                if (mealRequired != -1) {
-                    fixMealTime(mealRequired, placesData, placeIndex, dateWisePlaceData.hadMeals);
-                    placesPermutation.splice(j + 1, 0, placesData.length - 1);
-                    j++;
+                if(!isPlaceRemoved) {
+                    //No place was removed
+                    var mealRequired = checkWhichMealRequired(placesData[placeIndex].placeDepartureTime, dateWisePlaceData.hadMeals);
+                    if (mealRequired != -1) {
+                        fixMealTime(mealRequired, placesData, placeIndex, dateWisePlaceData.hadMeals);
+                        placesPermutation.splice(j + 1, 0, placesData.length - 1);
+                        j++;
+                    }
                 }
 
-                if (j == placesPermutation.length - 1) {
+                if (!isDepartureDate && (j == placesPermutation.length - 1)) {
                     console.log('This is the last place of the day');
                     //This is the last place of the day
                     distance = getDistance.getDistance(placesData[placesPermutation[j]].Latitude, placesData[placesPermutation[j]].Longitude,
@@ -328,7 +360,8 @@ function fixMealTime(mealRequired, placesData, placeIndex, hadMeals) {
         Time2Cover: MEAL_DURATION[mealRequired],
         placeArrivalTime:placesData[placeIndex].placeDepartureTime,
         placeDepartureTime:placesData[placeIndex].placeDepartureTime.clone().addMinutes(MEAL_DURATION[mealRequired]),
-        PlaceTimings: placeTimings
+        PlaceTimings: placeTimings,
+        isMeal: 1
     };
     console.log('Had '+MEAL_CONSTANTS[mealRequired]);
     console.log('placeArrivalTime:'+mealPlace.placeArrivalTime);

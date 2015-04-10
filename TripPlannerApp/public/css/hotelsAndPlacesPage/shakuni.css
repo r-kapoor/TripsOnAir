@@ -1,3 +1,7 @@
-.current-destination {
+.stop-click {
+    cursor: move;
+}
 
+.cursor-click {
+    cursor: pointer;
 }
