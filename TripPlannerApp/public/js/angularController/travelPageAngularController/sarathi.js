@@ -142,15 +142,16 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             console.log("startTime:"+segment.startTime);
             initializeVehicleDates(segment.flightData,segment.startTime);
             $scope.flights = segment.flightData;
-             $scope.isFlightClicked = true;
-            // $timeout(function() {
-            //     $scope.isFlightClicked = true;
-            // }, 500);
+            // $scope.isFlightClicked = true;
+             $timeout(function() {
+                 $scope.isFlightClicked = true;
+             }, 500);
         }
         else if(segment.kind="car"){
             if(segment.subkind != undefined && segment.subkind == "cab") {
                 if(custom != undefined) {
                     if(custom == 'cabOperator') {
+                        console.log("CAB OPERATOR CLICKED");
                         $scope.isTravelModesPanelOpen = false;
                         $scope.isCabOperatorClicked = true;
                         $scope.cabDetails = segment.CabDetails;

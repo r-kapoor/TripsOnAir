@@ -181,9 +181,7 @@
                 <pageslide ps-open="isModeDetailsPanelOpen" ps-side="left" ps-size="300px">
                     <div class="panel panel-default" style="height: 100vh">
                         <div class="panel-body">
-                            <div scroll-pane scroll-config="paneConfig" id="trainPanel" style="width:280px;height:100vh">
-                                <div id="transcludeTrainPanel">
-                                        <div class="panel-trainMode" ng-if="isTrainClicked" ng-repeat="train in trains" post-repeat>
+                                        <div class="panel-trainMode" ng-if="isTrainClicked" ng-repeat="train in trains">
                                 <div ng-if="train.isRecommended != 0" class="panel {{getPanelClass(train)}}">
                                     <div class="panel-heading">
                                         <div class="row">
@@ -330,8 +328,7 @@
                                     </div>
                                 </div>
                             </div>
-                         </div>
-                            </div>
+
                             <div  ng-if="isCabClicked">
                                 <div class = "panel panel-default">
                                 <div class="panel-body">
