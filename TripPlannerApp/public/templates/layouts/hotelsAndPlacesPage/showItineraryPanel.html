@@ -55,10 +55,18 @@
                 </timeline-panel>
             </timeline-node>
 
-            <timeline-node ng-repeat="permValue in dateItinerary.permutation" side="right" ng-drop="true" ng-drop-success="onDropComplete($data,$event)"  ng-drag="true" ng-drag-data="obj" ng-drag-success="onDragComplete($data,$event)" ng-center-anchor="true">
+
+            <timeline-node ng-repeat="permValue in dateItinerary.permutation track by $index" side="right" ng-drop="true" ng-drop-success="onDropComplete($data,$event, permValue, dateItinerary)"  ng-drag="true" ng-drag-data="obj" ng-drag-success="onDragComplete($data,$event)" ng-center-anchor="true" ng-drag-move="dragMove()">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-eye-open"></i>
                 </timeline-badge>
-                <timeline-panel>
+                <timeline-panel ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceHolder != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceHolder">
+                    <timeline-heading>
+                        <p>
+                            <small class="text-muted"> Drop Here to Add </small>
+                        </p>
+                    </timeline-heading>
+                </timeline-panel>
+                <timeline-panel ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceHolder == undefined || !dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceHolder">
                     <timeline-heading>
                         <timeline-title>{{dateItinerary.dateWisePlaceData.placesData[permValue].Name}}</timeline-title>
                         <div class="row">
@@ -86,7 +94,8 @@
                     </timeline-content>
                 </timeline-panel>
             </timeline-node>
-            <timeline-node ng-if="currentDestination.hotelDetails != undefined">
+
+            <timeline-node ng-if="currentDestination.hotelDetails != undefined && !(dateItinerary.dateWisePlaceData.noPlacesVisited != undefined && dateItinerary.dateWisePlaceData.noPlacesVisited == 1)">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-home"></i>
                 </timeline-badge>
                 <timeline-panel>

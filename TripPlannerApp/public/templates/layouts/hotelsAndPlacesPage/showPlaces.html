@@ -17,13 +17,13 @@
 </div>
 <div class="col-xs-12">
     <div ng-if="leftPanel=='places'" ng-repeat="place in allPlaces">
-        <div class="col-xs-4" style="padding: 0;margin-bottom: 0;">
+        <div class="col-xs-4" style="padding: 0;margin-bottom: 0;" ng-class="stopClickClass" ng-drag="true" ng-drag-data="place" ng-click="showPlaceDetails()">
             <div class="wrapper">
-                <a href="#" class="thumbnail" style="margin-bottom: 0;">
+                <a class="thumbnail" style="margin-bottom: 0;">
                     <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
                 </a>
-                <div class="btn btn-default add-button">
-                    <i class="glyphicon glyphicon-move"></i>
+                <div class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)">
+                    <i class="glyphicon glyphicon-plus"></i>
                 </div>
                 <div class="name">
                     <p class="name_content">
