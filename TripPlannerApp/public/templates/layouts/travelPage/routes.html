@@ -44,23 +44,25 @@
                                                     {{getSourceCityName($index)}}
                                                 </div>
                                             </div>
-                                            <div ng-repeat="segment in leg.defaultRoute.segments">
-                                                <div ng-if="segment.isMajor != 0" ng-href='#' ng-click="openTravelModesPanel(leg, $event, $parent.$parent.$index)">
-                                                    <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, route, $event,'cabOperator')">
-                                                        <div ng-repeat="cabDetail in segment.CabDetails">
-                                                            <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info">
-                                                                <div class="panel-heading">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-4">
-                                                                            {{cabDetail.SegmentType}}
-                                                                        </div>
-                                                                        <div ng-repeat="cabOperator in cabDetail.OperatorPrices">
-                                                                            <div ng-if="cabOperator.isFinal != undefined && cabOperator.isFinal == 1">
-                                                                                <div class="col-xs-4">
-                                                                                    {{cabOperator.Operator}}
-                                                                                </div>
-                                                                                <div class="col-xs-4">
-                                                                                    {{cabOperator.ActualCabPrice}}
+                                            <div class="panel panel-default">
+                                                <div ng-repeat="segment in leg.defaultRoute.segments">
+                                                    <div ng-if="segment.isMajor != 0" ng-href='#' ng-click="openTravelModesPanel(leg, $event, $parent.$parent.$index)">
+                                                        <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, route, $event,'cabOperator')">
+                                                            <div ng-repeat="cabDetail in segment.CabDetails">
+                                                                <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info segment-hover">
+                                                                    <div class="panel-heading">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-4">
+                                                                                {{cabDetail.SegmentType}}
+                                                                            </div>
+                                                                            <div ng-repeat="cabOperator in cabDetail.OperatorPrices">
+                                                                                <div ng-if="cabOperator.isFinal != undefined && cabOperator.isFinal == 1">
+                                                                                    <div class="col-xs-4">
+                                                                                        {{cabOperator.Operator}}
+                                                                                    </div>
+                                                                                    <div class="col-xs-4">
+                                                                                        {{cabOperator.ActualCabPrice}}
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -68,37 +70,37 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div ng-if="isSegmentShown(segment,leg)" class="panel panel-default travel-panel {{getRouteClass(segment)}}">
-                                                        <div class="panel-body travel-panel-body">
-                                                            <div class="col-xs-3">
-                                                                <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
-                                                                <!--<i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>-->
-                                                            </div>
-                                                            <div class="col-xs-3">
-                                                                <div class="row">
-                                                                    {{getDateFormatted(segment) | date:'mediumDate'}}
+                                                        <div ng-if="isSegmentShown(segment,leg)" class="travel-panel {{getRouteClass(segment)}} segment-hover">
+                                                            <div class="panel-body travel-panel-body">
+                                                                <div class="col-xs-2">
+                                                                    <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+                                                                    <!--<i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>-->
                                                                 </div>
-                                                                <div class="row">
-                                                                    {{getDateFormatted(segment) | date:'EEE'}}
+                                                                <div class="col-xs-4">
+                                                                    <div class="row">
+                                                                        {{getDateFormatted(segment) | date:'mediumDate'}}
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        {{getDateFormatted(segment) | date:'EEE'}}
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        {{getDuration(segment)}}
+                                                                    </div>
                                                                 </div>
-                                                                <div class="row">
-                                                                    {{getDuration(segment)}}
+                                                                <div class="col-xs-3">
+                                                                    {{getDateFormatted(segment) | date:'shortTime'}}
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xs-3">
-                                                                {{getDateFormatted(segment) | date:'shortTime'}}
-                                                            </div>
-                                                            <div class="col-xs-3">
-                                                                {{getPrice(segment) | currency:"&#8377;"}}
+                                                                <div class="col-xs-3">
+                                                                    {{getPrice(segment) | currency:"&#8377;"}}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount && isViaShown(segment)">
-                                                        <div class="panel panel-default">
-                                                            <div class="panel-body stop-panel-body">
-                                                                VIA {{getStopName($index, leg.defaultRoute)}}
-                                                            </div>
+                                                        <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount && isViaShown(segment)">
+                                                            <!--<div class="panel panel-default">-->
+                                                                <div class="panel-body stop-panel-body">
+                                                                    VIA {{getStopName($index, leg.defaultRoute)}}
+                                                                </div>
+                                                            <!--</div>-->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -127,43 +129,46 @@
                 </pageslide>
                 <pageslide ps-open="isTravelModesPanelOpen" ps-side="left" ps-size="350px">
                     <div class="panel panel-default" style="height: 100vh"  ng-click="closeOtherPanels(2)">
-
                         <div class="panel-body">
                             <div class="page-header text-center">
-                                <h1><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h1>
+                                <h2><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h2>
+                                <small>{{routes.length}} ways of Travel</small>
                             </div>
 
                             <div scroll-pane scroll-config="paneConfig" id="travelModesPanel" style="width:330px;height:100vh">
                                 <div id="transcludeTravelModesPanel">
                                     <div class="panel-travelMode" ng-repeat="route in routes" post-repeat>
-                                        <div ng-repeat="segment in route.segments">
-                                            <div ng-if="segment.isMajor != 0">
-                                                <div class="panel panel-default" ng-href='#' ng-click="openModeDetailsPanel(segment,route, $event,'cabTimings')">
-                                                    <div class="panel-body">
-                                                        <div class="col-xs-2">
-                                                            <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="row">
-                                                                {{getDateFormatted(segment) | date:'mediumDate'}}
+                                        <div class="panel panel-default">
+                                            <div ng-repeat="segment in route.segments">
+                                                <div ng-if="segment.isMajor != 0">
+                                                    <div class="segment-hover" ng-href='#' ng-click="openModeDetailsPanel(segment,route, $event,'cabTimings')">
+                                                        <div class="panel-body">
+                                                            <div class="col-xs-1">
+                                                                <div ng-if="segment.majorIndex==0">
+                                                                    {{$parent.$parent.$parent.$index+1}}.
+                                                                </div>
                                                             </div>
-                                                            <div class="row">
-                                                                {{getDateFormatted(segment) | date:'EEE'}}
+                                                            <div class="col-xs-2">
+                                                                <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
                                                             </div>
-                                                            <div class="row">
-                                                                {{getDuration(segment)}}
+                                                            <div class="col-xs-5">
+                                                                <div class="row">
+                                                                    {{getDateFormatted(segment) | date:'mediumDate'}}
+                                                                </div>
+                                                                <div class="row">
+                                                                    {{getDateFormatted(segment) | date:'EEE'}}
+                                                                    {{getDateFormatted(segment) | date:'shortTime'}}
+                                                                </div>
+                                                                <div class="row">
+                                                                    {{getDuration(segment)}}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            {{getDateFormatted(segment) | date:'shortTime'}}
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            {{getPrice(segment) | currency:"&#8377;"}}
+                                                            <div class="col-xs-2">
+                                                                {{getPrice(segment) | currency:"&#8377;"}}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div ng-if="segment.majorIndex != route.majorCount">
-                                                    <div class="panel panel-default">
+                                                    <div ng-if="segment.majorIndex != route.majorCount">
                                                         <div class="panel-body">
                                                             VIA {{getStopName($index, route)}}
                                                         </div>
@@ -172,7 +177,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
