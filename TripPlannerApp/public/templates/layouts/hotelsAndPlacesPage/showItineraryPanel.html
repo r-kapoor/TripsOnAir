@@ -56,7 +56,7 @@
             </timeline-node>
 
 
-            <timeline-node ng-repeat="permValue in dateItinerary.permutation track by $index" side="right" ng-drop="true" ng-drop-success="onDropComplete($data,$event, $index, dateItinerary)"  ng-drag="false" ng-drag-data="obj" ng-drag-success="onDragComplete($data,$event)" ng-center-anchor="true" ng-drag-move="dragMove()">
+            <timeline-node ng-repeat="permValue in dateItinerary.permutation track by $index" side="right" ng-drop="true" ng-drop-success="onDropComplete($data,$event, $index, $parent.$index)"  ng-drag="true" ng-drag-data="{isSwap: true, permutationIndex: $index, dateItineraryIndex: $parent.$index}" ng-drag-success="onDragComplete($data,$event)" ng-center-anchor="true" ng-drag-move="dragMove()">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-eye-open"></i>
                 </timeline-badge>
                 <timeline-panel style="border: dashed" ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1">

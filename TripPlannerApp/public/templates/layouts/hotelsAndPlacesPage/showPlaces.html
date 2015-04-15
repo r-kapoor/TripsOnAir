@@ -17,7 +17,7 @@
 </div>
 <div class="col-xs-12">
     <div ng-if="leftPanel=='places'" ng-repeat="place in allPlaces">
-        <div class="col-xs-4" style="padding: 0;margin-bottom: 0;" ng-class="stopClickClass" ng-drag="true" ng-drag-data="place" ng-click="showPlaceDetails()">
+        <div class="col-xs-4" style="padding: 0;margin-bottom: 0;" ng-class="stopClickClass" ng-drag="true" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showPlaceDetails()">
             <div class="wrapper">
                 <a class="thumbnail" style="margin-bottom: 0;">
                     <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
