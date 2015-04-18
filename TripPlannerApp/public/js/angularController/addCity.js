@@ -5,6 +5,20 @@ inputModule.config(function($tooltipProvider){
     });
 });
 
+inputModule.filter('filterByOrigin',function()
+{
+    return function (items,origin) {
+        var filtered = [];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.CityID!=origin.CityID) {
+                filtered.push(item);
+            }
+        }
+        return filtered;
+    };
+});
+
 inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, cityData, formData) {
   $scope.originCity = null;
   $scope.destinationCity = null;
@@ -98,6 +112,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
       return city.tier;
     }
   };
+
 
   $rootScope.$on('formComplete', function setCities(event, data) {
     formData.setOrigin($scope.originCity);
