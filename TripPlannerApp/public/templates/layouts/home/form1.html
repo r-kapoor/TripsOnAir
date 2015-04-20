@@ -1,17 +1,17 @@
-    <!DOCTYPE html>
-    <script type="text/ng-template" id="customTemplate.html">
-        <a style="width:100%">
-            <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
-        </a>
-    </script>
-    <link rel="stylesheet" type="text/css" href="css/home/inputs.css">
-    <div class="container-fluid jumbotron background-image img-responsive" style="height: 90vh">
-        <div class="row">
-            <div class="col-sm-2">
+<!DOCTYPE html>
+<script type="text/ng-template" id="customTemplate.html">
+    <a style="width:100%">
+        <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    </a>
+</script>
+<link rel="stylesheet" type="text/css" href="css/home/inputs.css">
+<div class="container-fluid jumbotron background-image img-responsive" style="height: 90vh">
+    <div class="row">
+        <div class="col-sm-2">
             <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
                 <div class="panel panel-primary" style="height: 80vh">
                     <div class="panel-heading text-center">
-                            <div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>
+                        <div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>
                     </div>
 
                     <div class="panel-body">
@@ -34,350 +34,336 @@
                             <div class="col-sm-12" ng-hide="destinationLabel"><h5>Destination(s):</h5></div>
 
 
-                            <div scroll-pane scroll-config="paneConfig" id="destinationsPanel" style="width:100%;height:43vh">
-                                <div id="transcludeDestinationsPanel" class="col-sm-12">
-                                        <div ng-repeat="destination in destinationCityList" class="panel-selectedDestinations" post-repeat>
-                                            <!--<div class="col-sm-12">-->
-                                                <div id={{destination.CityID}} class="wrapper">
-                                                    <a href="#" class="thumbnail" style="margin-bottom: 0;">
-                                                        <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                                    </a>
+                            <div style="width:100%;height:43vh">
+                                <div id="transcludeDestinationsPanel" class="scrollbar-outer" mac-scroll>
+                                    <div ng-repeat="destination in destinationCityList">
+                                        <!--<div class="col-sm-12">-->
+                                        <div id={{destination.CityID}} class="wrapper">
+                                            <a href="#" class="thumbnail" style="margin-bottom: 0;">
+                                                <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
+                                            </a>
 
-                                                    <div class="btn btn-default add-button" ng-click="destinationRemoved(destination)">
-                                                        <!-- ng-click="{{destinationSelected($index)}}"-->
-                                                        <i class="glyphicon glyphicon-minus"></i>
-                                                    </div>
-                                                    <div class="name">
-                                                        <p class="text-center">
-                                                            {{getDestinationName(destination)}}
-                                                        </p>
-                                                    </div>
-                                                    <!--end of description class-->
-                                                </div>
-                                            <!--</div>-->
+                                            <div class="btn btn-default add-button" ng-click="destinationRemoved(destination)">
+                                                <!-- ng-click="{{destinationSelected($index)}}"-->
+                                                <i class="glyphicon glyphicon-minus"></i>
+                                            </div>
+                                            <div class="name">
+                                                <p class="text-center">
+                                                    {{getDestinationName(destination)}}
+                                                </p>
+                                            </div>
+                                            <!--end of description class-->
                                         </div>
+                                        <!--</div>-->
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                </div>
-                </div>
-            </div>
-            </div>
-            <!--<div class="col-sm-1">-->
-
-            <!--</div>-->
-            <div class="col-sm-10">
-                <div class="row">
-                    <div>
-                        <div style="height:100%" ng-include src="'templates/layouts/home/suggestionsAccordingToSelection.html'"></div>
                     </div>
                 </div>
-                <div ng-controller="form1Controller" collapse="isFormPanelCollapsed">
+            </div>
+        </div>
+        <!--<div class="col-sm-1">-->
 
-                    <div class="row">
-                        <div class="col-sm-2"></div>
-                        <div ng-controller="KuberController">
-                            <div class="col-sm-6">
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">{{title}}</h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <!--<div id='invalid'></div>-->
+        <!--</div>-->
+        <div class="col-sm-10">
+            <div class="row">
+                <div>
+                    <div style="height:100%" ng-include src="'templates/layouts/home/suggestionsAccordingToSelection.html'"></div>
+                </div>
+            </div>
+            <div ng-controller="form1Controller" collapse="isFormPanelCollapsed">
 
-                                        <form role="form" autocomplete="off">
-                                            <div collapse="isOverviewCollapsed">
-                                                <div ng-controller="AddCityCtrl">
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div ng-controller="KuberController">
+                        <div class="col-sm-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">{{title}}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <!--<div id='invalid'></div>-->
 
-                                                        <div class="form-group" id="originId">
-                                                            <!-- <label for="originCity">Origin City</label> -->
-                                                            <input type="text" ng-model="originCity"
-                                                                   ng-blur="originSelected()"
-                                                                   placeholder="Enter the origin"
-                                                                   typeahead="city as city.CityName for city in cities | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)"
-                                                                   class="form-control" aria-describedby="inputError2Status">
-                                                        </div>
+                                    <form role="form" autocomplete="off">
+                                        <div collapse="isOverviewCollapsed">
+                                            <div ng-controller="AddCityCtrl">
 
-                                                    <div class="form-group" id="destinationId">
-                                                        <div class="input-group">
-                                                            <!--<label for="Destcity1">Destination</label>-->
-                                                            <input ng-model="destinationCity"
-                                                                   ng-blur="destinationSelected()" class="form-control"
-                                                                   placeholder="{{label}}"
-                                                                   typeahead="city as city.CityName for city in cities | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)">
+                                                <div class="form-group" id="originId">
+                                                    <!-- <label for="originCity">Origin City</label> -->
+                                                    <input type="text" ng-model="originCity"
+                                                           ng-blur="originSelected()"
+                                                           placeholder="Enter the origin"
+                                                           typeahead="city as city.CityName for city in cities | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)"
+                                                           class="form-control" aria-describedby="inputError2Status">
+                                                </div>
 
-                                                            <div class="input-group-addon " ng-click="destinationSelected()"><i
-                                                                class="glyphicon glyphicon-plus"></i></div>
-                                                        </div>
-                                                        <h5 class="text-center">
-                                                            -- OR --
-                                                        </h5>
+                                                <div class="form-group" id="destinationId">
+                                                    <div class="input-group">
+                                                        <!--<label for="Destcity1">Destination</label>-->
+                                                        <input ng-model="destinationCity"
+                                                               ng-blur="destinationSelected()" class="form-control"
+                                                               placeholder="{{label}}"
+                                                               typeahead="city as city.CityName for city in cities | filterByOrigin:originCity | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)">
 
-
+                                                        <div class="input-group-addon " ng-click="destinationSelected()"><i
+                                                            class="glyphicon glyphicon-plus"></i></div>
                                                     </div>
-                                                </div>
-                                                <div class="checkbox text-center">
-                                                    <label> <input ng-model="isSuggestDestinationsOn"
-                                                                   type="checkbox"><em>{{helpLabel}}</em>
-                                                    </label>
-                                                </div>
+                                                    <h5 class="text-center">
+                                                        -- OR --
+                                                    </h5>
 
-                                                <!--<button type="submit" class="btn btn-default">Submit</button>-->
-                                                <label></label>
 
-                                                <div ng-controller="DatepickerCtrl">
-                                                    <div class="row form-group">
-                                                        <div class="col-md-4 col-sm-4 col-xs-4 btn-responsive">
-                                                            <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
-                                                                    is-open="opened1" min-date="minDate"
-                                                                    max-date="'2015-06-22'"
-                                                                    datepicker-options="dateOptions" ng-required="true"
-                                                                    close-text="Close" ng-click="open($event,'opened1')"
-                                                                    ng-change="startDateSelected()">
-                                                                <div class="row">
-                                                                    <div class="col-sm-1 col-md-1 col-xs-1 h4">
-                                                                        <i class="glyphicon glyphicon-calendar"></i>
-                                                                    </div>
-                                                                    <div class="col-sm-1 col-md-1 col-xs-1 h4">{{dt1 |
-                                                                        date:'dd' }}
-                                                                    </div>
-                                                                    <div class="col-sm-2 col-md-2 col-xs-2">
-                                                                        <div class="row">
-                                                                            <div class="col-sm-1 col-md-1 col-xs-1 month">{{dt1 |
-                                                                                date:'MMM'}}
-                                                                            </div>
+                                                </div>
+                                            </div>
+                                            <div class="checkbox text-center">
+                                                <label> <input ng-model="isSuggestDestinationsOn"
+                                                               type="checkbox"><em>{{helpLabel}}</em>
+                                                </label>
+                                            </div>
+
+                                            <!--<button type="submit" class="btn btn-default">Submit</button>-->
+                                            <label></label>
+
+                                            <div ng-controller="DatepickerCtrl">
+                                                <div class="row form-group">
+                                                    <div class="col-md-4 col-sm-4 col-xs-4 btn-responsive">
+                                                        <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
+                                                                is-open="opened1" min-date="minDate"
+                                                                max-date="'2015-06-22'"
+                                                                datepicker-options="dateOptions" ng-required="true"
+                                                                close-text="Close" ng-click="open($event,'opened1')"
+                                                                ng-change="startDateSelected()">
+                                                            <div class="row">
+                                                                <div class="col-sm-1 col-md-1 col-xs-1 h4">
+                                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                                </div>
+                                                                <div class="col-sm-1 col-md-1 col-xs-1 h4">{{dt1 |
+                                                                    date:'dd' }}
+                                                                </div>
+                                                                <div class="col-sm-2 col-md-2 col-xs-2">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-1 col-md-1 col-xs-1 month">{{dt1 |
+                                                                            date:'MMM'}}
                                                                         </div>
-                                                                        <div class="row">
-                                                                            <div class="col-sm-1 col-md-1 col-xs-1 day">{{dt1 |
-                                                                                date:'EEE'}}
-                                                                            </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-1 col-md-1 col-xs-1 day">{{dt1 |
+                                                                            date:'EEE'}}
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </button>
-                                                        </div>
-                                                       <div class="col-sm-2 col-xs-2">
-                                                            <div class="btn-group">
-                                                                 <div class="row" style="margin-bottom:30%">
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-sm-2 col-xs-2">
+                                                        <div class="btn-group">
+                                                            <div class="row" style="margin-bottom:30%">
                                                                 <label id="startMorningTimeId" class="btn btn-default btn-xs"
                                                                        ng-model="tripStartTime.morning" btn-checkbox ng-click="startMorningTime()">
                                                                     <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
                                                                 </label>
-                                                                </div>
+                                                            </div>
 
-                                                                <div class="row">
+                                                            <div class="row">
                                                                 <label id="startEveningTimeId" class="btn btn-default btn-xs"
                                                                        ng-model="tripStartTime.evening" btn-checkbox ng-click="startEveningTime()">
-                                                                     <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
+                                                                    <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
                                                                 </label>
-                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 col-sm-4 col-xs-4">
-                                                            <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt2"
-                                                                    is-open="opened2" min-date="minDate1"
-                                                                    max-date="'2015-06-22'" datepicker-options="dateOptions"
-                                                                    ng-required="true" close-text="Close"
-                                                                    ng-click="open($event,'opened2')"
-                                                                    ng-change="endDateSelected()">
-                                                                <div class="row">
-                                                                    <div class="col-sm-2 col-md-2 col-xs-2 h4">
-                                                                        <i class="glyphicon glyphicon-calendar"></i>
-                                                                    </div>
-                                                                    <div class="col-sm-2 col-md-2 col-xs-2 {{heading}}">
-                                                                        {{(dt2 | date:'dd') || 'Select'}}
-                                                                    </div>
-                                                                    <div class="col-sm-2 col-md-2 col-xs-2">
-                                                                        <div class="row">
-                                                                            <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 |
-                                                                                date:'MMM' }}
-                                                                            </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4 col-xs-4">
+                                                        <button datepicker-popup="dd-MMMM-yyyy" ng-model="dt2"
+                                                                is-open="opened2" min-date="minDate1"
+                                                                max-date="'2015-06-22'" datepicker-options="dateOptions"
+                                                                ng-required="true" close-text="Close"
+                                                                ng-click="open($event,'opened2')"
+                                                                ng-change="endDateSelected()">
+                                                            <div class="row">
+                                                                <div class="col-sm-2 col-md-2 col-xs-2 h4">
+                                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                                </div>
+                                                                <div class="col-sm-2 col-md-2 col-xs-2 {{heading}}">
+                                                                    {{(dt2 | date:'dd') || 'Select'}}
+                                                                </div>
+                                                                <div class="col-sm-2 col-md-2 col-xs-2">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 |
+                                                                            date:'MMM' }}
                                                                         </div>
-                                                                        <div class="row">
-                                                                            <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 |
-                                                                                date:'EEE'}}
-                                                                            </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 |
+                                                                            date:'EEE'}}
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </button>
-                                                        </div>
+                                                            </div>
+                                                        </button>
+                                                    </div>
 
-                                                         <div class="col-md-2 col-sm-2 col-xs-2">
-                                                            <div class="button-toolbar">
+                                                    <div class="col-md-2 col-sm-2 col-xs-2">
+                                                        <div class="button-toolbar">
                                                             <div class="btn-group">
                                                                 <div class="row" style="margin-bottom:30%">
-                                                                <label id="endMorningTimeId" class="btn btn-default btn-xs "
-                                                                       ng-model="tripEndTime.morning" btn-checkbox ng-click="endMorningTime()">
-                                                                     <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
-                                                                </label>
+                                                                    <label id="endMorningTimeId" class="btn btn-default btn-xs "
+                                                                           ng-model="tripEndTime.morning" btn-checkbox ng-click="endMorningTime()">
+                                                                        <img ng-src="images/glyphicons-sun.png" style="margin:auto" class="img-responsive">
+                                                                    </label>
                                                                 </div>
                                                             </div>
-                                                                <div class="row">
+                                                            <div class="row">
                                                                 <label id="endEveningTimeId" class="btn btn-default btn-xs"
                                                                        ng-model="tripEndTime.evening" btn-checkbox ng-click="endEveningTime()">
-                                                                     <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
+                                                                    <img ng-src="images/glyphicons-moon.png" style="margin:auto" class="img-responsive">
                                                                 </label>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div collapse="isDetailsCollapsed">
-                                                <label>Choose Interests</label>
-                                                <div class="form-group ">
-                                                    <div class="btn-group">
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.RELIGIOUS"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.ADVENTURE"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.BEACHES" btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.LANDMARKS"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.NATURE"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.LIVE_EVENTS"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.HILL_STATION"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.ROMANTIC"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.FAMILY"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                        <label class="btn btn-primary btn-lg" ng-model="checkModel.FRIENDS"
-                                                               btn-checkbox>
-                                                            <i class="glyphicon glyphicon-plus"></i>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <label>Budget Per Person</label>
-
-                                                        <div class="form-group">
-                                                            <!-- <label>Budget</label> -->
-                                                            <div class="col-sm-9 ">
-                                                              <!--<slider id="budgetSlider" ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"
-                                                                        step="{{sliderOptions.step}}"
-                                                                        max="{{sliderOptions.max}}"></slider>
-                                                                {{myFormater() | currency:"&#8377;"}}-->
-
-                                                               <input ng-model="value"  type="text" id="mySlider1" slider options="options" />
-                                                                {{value}}
-                                                            </div>
+                                        </div>
+                                        <div class="text-center" collapse="isDetailsCollapsed">
+                                            <label>Choose Interests</label>
+                                            <div class="form-group">
+                                                <div class="btn-group well">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.RELIGIOUS"
+                                                                   btn-checkbox>
+                                                                <img src="images/religious.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.ADVENTURE"
+                                                                   btn-checkbox>
+                                                                <img src="images/adventure.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.BEACHES" btn-checkbox>
+                                                                <img src="images/beach.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.LANDMARKS"
+                                                                   btn-checkbox>
+                                                                <img src="images/landmark.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.NATURE"
+                                                                   btn-checkbox>
+                                                                <img src="images/nature.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-2 btn-group col-sm-offset-1" style="padding-left:0px;">
-                                                        <div class="form-group">
-                                                          <label for="numP">Persons</label>
-                                                          <select ng-model="numPersons" class="form-control" id="numP">
-                                                            <option value="1" selected>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                            <option>4</option>
-                                                            <option>5</option>
-                                                            <option>6</option>
-                                                            <option>7</option>
-                                                            <option>8</option>
-                                                            <option>9</option>
-                                                            <option>10</option>
-                                                            <option>11</option>
-                                                            <option>12</option>
-                                                            <option>13</option>
-                                                            <option>14</option>
-                                                            <option>15</option>
-                                                          </select>
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.LIVE_EVENTS"
+                                                                   btn-checkbox>
+                                                                <img src="images/liveEvents.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.HILL_STATION"
+                                                                   btn-checkbox>
+                                                                <img src="images/hillStation.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.ROMANTIC"
+                                                                   btn-checkbox>
+                                                                <img src="images/romantic.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.FAMILY"
+                                                                   btn-checkbox>
+                                                                <img src="images/family.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
+                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.FRIENDS"
+                                                                   btn-checkbox>
+                                                                <img src="images/friends.png" class="img-responsive" style="width: 100%"/>
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                                <div class="col-md-12 text-center">
-                                                    <button type="button" class="btn btn-primary" ng-model="singleModel"
-                                                            ng-click="submitOrSuggest()" btn-checkbox
-                                                            btn-checkbox-true="1" btn-checkbox-false="0">
-                                                        Submit
-                                                    </button>
+                                        <div class="well">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <div class="row">
+                                                        <label>Budget Per Person :</label> {{value | currency:"&#8377;"}}
+                                                    </div>
+
+                                                    <slider id="budgetSlider" ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"
+                                                            step="{{sliderOptions.step}}"
+                                                            max="{{sliderOptions.max}}"></slider>
+                                                    {{myFormater() | currency:"&#8377;"}}
+
+                                                    <input ng-model="value"  type="text" id="mySlider1" slider options="options" />
                                                 </div>
+                                                <div class="col-sm-3">
+                                                    <label for="numP">Persons</label>
+                                                    <select ng-model="numPersons" class="form-control" id="numP">
+                                                        <option value="1" selected>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                        <option>4</option>
+                                                        <option>5</option>
+                                                        <option>6</option>
+                                                        <option>7</option>
+                                                        <option>8</option>
+                                                        <option>9</option>
+                                                        <option>10</option>
+                                                        <option>11</option>
+                                                        <option>12</option>
+                                                        <option>13</option>
+                                                        <option>14</option>
+                                                        <option>15</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-sm-2 col-sm-offset-1" style="padding-left:0px;">-->
+                                        <!--<div class="form-group">-->
+                                        <!--<label for="numP">Persons</label>-->
+                                        <!--<select ng-model="numPersons" class="form-control" id="numP">-->
+                                        <!--<option value="1" selected>1</option>-->
+                                        <!--<option>2</option>-->
+                                        <!--<option>3</option>-->
+                                        <!--<option>4</option>-->
+                                        <!--<option>5</option>-->
+                                        <!--<option>6</option>-->
+                                        <!--<option>7</option>-->
+                                        <!--<option>8</option>-->
+                                        <!--<option>9</option>-->
+                                        <!--<option>10</option>-->
+                                        <!--<option>11</option>-->
+                                        <!--<option>12</option>-->
+                                        <!--<option>13</option>-->
+                                        <!--<option>14</option>-->
+                                        <!--<option>15</option>-->
+                                        <!--</select>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
 
-    </div>
-                                        </form>
-
-
-                                        <!--
-                                        <table id="inptable">
-                                            <tr id="TextBoxDiv">
-                                                <td ><label>Origin : </label></td>
-                                                <td><input type='text' class="typeahead tt-query" id='origin' autocomplete="off" spellcheck="false"></td>
-                                            </tr>
-                                            <tr id="TextBoxDiv1">
-                                                <td><label>Destination #1 : </label></td>
-                                                <td><input type='text' class="typeahead tt-query destination" id='textbox1'></td>
-                                                <td></td>
-                                                <td><div id="addButton" style="cursor:pointer" >Add</div></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                <form>
-                                                <input type="checkbox" name="" value="" onclick="choose()"> OR Let us choose your destinations<br>
-                                                </form></td>
-                                            </tr>
-                                        </table>
-                                    -->
-
-
-                                    </div>
-                                </div>
-
+                                        <div class="col-md-12 text-center">
+                                        <button type="button" class="btn btn-primary" ng-model="singleModel"
+                                        ng-click="submitOrSuggest()" btn-checkbox
+                                        btn-checkbox-true="1" btn-checkbox-false="0">
+                                        Submit
+                                        </button>
+                                        </div>
+                                        </div>
+                                </form>
                             </div>
-
                         </div>
-
-
-                        <!--
-                <p>Start Date: <input type="text" id="startdate"></p>
-                <select id="stTime" name="startTime">
-                <option value="morning">Morning</option>
-                <option value="evening">Evening</option>
-                </select>
-                <p>End Date: <input type="text" id="enddate" onchange="geolocation()"></p>
-                <select id ="endTime" name="EndTime">
-                <option value="morning">Morning</option>
-                <option value="evening">Evening</option>
-                </select>
-                -->
-
-
-                        <!--container-->
                     </div>
-                    <!--jumbotron-->
                 </div>
-                <div class="row">
-                    <div style="height:100%" ng-include src="'templates/layouts/home/destinationsSuggest.html'"></div>
-                </div>
+                <!--container-->
             </div>
-            <!--main wrapping-->
-
+            <!--jumbotron-->
+        </div>
+        <div class="row">
+            <div style="height:100%" ng-include src="'templates/layouts/home/destinationsSuggest.html'"></div>
         </div>
     </div>
+    <!--main wrapping-->
+
+</div>
+</div>
