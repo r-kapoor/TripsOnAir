@@ -187,9 +187,36 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         return $scope.currentLeg.places[1].name;
     };
 
+    angular.element(window).ready(function () {
+        console.log('Calling Routes in Sarathi');
+        var currentURL = $location.absUrl();
+        var pathArray = currentURL.split('?');
+        var destinations = getParameterByName('dsts').split(";");
+        var originCity  =  getParameterByName('o');
+        var citiesString = "";
+        var cityIDsString = "";
+        if((pathArray.length>1) && (destinations.length==1))
+        {
+            //only one destination
+            console.log("only one destination from input");
+            $scope.isTravelPanelOpen = true;
+            originCity = JSON.parse(originCity);
+            destinations = JSON.parse(destinations);
+            citiesString+="cities="+originCity.CityName+","+destinations.CityName+","+originCity.CityName;
+            cityIDsString+="cityIDs="+originCity.CityID+","+destinations.CityID+","+originCity.CityName;
+            getRoutes(citiesString,cityIDsString,pathArray);
+        }
+    });
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
     $rootScope.$on('showTravelPanel', function onShowTravelPanel(event, data) {
         console.log('function called');
-
         openPanel();
         //Call showRoutes
         var orderedDestinationCities = orderedCities.getOrderedDestinationCities();
@@ -205,38 +232,42 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
         citiesString += originCity.CityName;
         cityIDsString += originCity.CityID;
+        getRoutes(citiesString,cityIDsString,pathArray);
+    });
+
+    function getRoutes(citiesString,cityIDsString,pathArray)
+    {
         var queryString = "/showRoutes?"+citiesString+"&"+cityIDsString+"&"+pathArray[1];
         $http.get(queryString).success(function(data,status){
-                $scope.loader = true;
-                $scope.isTravelPanelDataHidden = false;
-                console.log("showRoutes response:"+JSON.stringify(data));
-                if(data.tripNotPossible != undefined && data.tripNotPossible == 1) {
-                    console.log('Page NOT FOUND');
+            $scope.loader = true;
+            $scope.isTravelPanelDataHidden = false;
+            console.log("showRoutes response:"+JSON.stringify(data));
+            if(data.tripNotPossible != undefined && data.tripNotPossible == 1) {
+                console.log('Page NOT FOUND');
+            }
+            else {
+                dateSet = data.dateSet;
+                if(data.withoutTaxiRome2rioData.isMajorDefault == 1) {
+                    defaultRouteData = data.withoutTaxiRome2rioData;
+                    alternateRouteData = data.withTaxiRome2rioData;
                 }
                 else {
-                    dateSet = data.dateSet;
-                    if(data.withoutTaxiRome2rioData.isMajorDefault == 1) {
-                        defaultRouteData = data.withoutTaxiRome2rioData;
-                        alternateRouteData = data.withTaxiRome2rioData;
+                    /*
+                     hack
+                     */
+                    defaultRouteData = data.withoutTaxiRome2rioData;
+                    alternateRouteData = data.withTaxiRome2rioData;
+                    //defaultRouteData = data.withTaxiRome2rioData;
+                    //alternateRouteData = data.withoutTaxiRome2rioData;
                     }
-                    else {
-                        /*
-                            hack
-                         */
-                        defaultRouteData = data.withoutTaxiRome2rioData;
-                        alternateRouteData = data.withTaxiRome2rioData;
-                        //defaultRouteData = data.withTaxiRome2rioData;
-                        //alternateRouteData = data.withoutTaxiRome2rioData;
-                    }
-                    getAttributesFromRouteData(defaultRouteData);
-                    showCurrentRouteOnMap();
-                    showBudget(data.userTotalbudget);
-                    $scope.isBudgetPanelOpen = true;
-                    travelData  = data;
-                }
+                getAttributesFromRouteData(defaultRouteData);
+                showCurrentRouteOnMap();
+                showBudget(data.userTotalbudget);
+                $scope.isBudgetPanelOpen = true;
+                travelData  = data;
             }
-        );
-    });
+        });
+    }
 
     function getAttributesFromRouteData(routeData) {
         var rome2rioData = routeData.rome2RioData;

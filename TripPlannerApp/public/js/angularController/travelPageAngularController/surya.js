@@ -1,7 +1,7 @@
 /**
  * Created by rkapoor on 26/02/15.
  */
-routesModule.controller('suryaController', function($scope, $rootScope, $http, $q, $location, orderedCities) {
+routesModule.controller('suryaController', function($scope, $rootScope, $http, $q, $location, orderedCities, $window) {
 
     $scope.reorderPanel=true;
     $scope.loader=false;
@@ -37,7 +37,7 @@ console.log("weightArray:"+weightArray);
         {
             var cityIDStart=$scope.draggableObjects[i-1].CityID;
             var cityIDEnd=$scope.draggableObjects[i].CityID;
-    
+
             var startIndex=cityIDs.indexOf(cityIDStart);
             var endIndex=cityIDs.indexOf(cityIDEnd);
             currentOrderWeight+=weightArray[startIndex][endIndex];
@@ -58,12 +58,21 @@ console.log("weightArray:"+weightArray);
         $rootScope.$emit('plotCities');
     };
 
-    angular.element(document).ready(function () {
+    $scope.showRoutes=function(){
+        console.log('show routes');
+        $scope.reorderPanel = false;
+        $rootScope.$emit('showTravelPanel');
+    };
+
+        angular.element(window).ready(function () {
         console.log('Calling getOptimizedOrder');
         var currentURL = $location.absUrl();
         console.log('url:'+currentURL);
         pathArray = currentURL.split('?');
-        if(pathArray.length>1){
+        var destinations = getParameterByName('dsts').split(";");
+
+        console.log("pathArray:"+JSON.stringify(pathArray[1]));
+        if((pathArray.length>1) && (destinations.length>1)){
             $http.get('/getOptimizeOrder?'+pathArray[1]).success(function(data,status){
                     console.log("getOptimizeOrder response:"+JSON.stringify(data));
                     orderedCities.setOrderedDestinationCities(data.trip);
@@ -77,16 +86,28 @@ console.log("weightArray:"+weightArray);
                 }
             );
         }
+        else if((pathArray.length>1) && (destinations.length==1))
+        {
+            ////$scope.$broadcast('showTravelPanel');
+            ////only one destination
+            //console.log("only one destination");
+            //$scope.showRoutes();
+            //$scope.reorderPanel = false;
+            //$rootScope.$emit('showTravelPanel');
+        }
         else {
             console.log('Page NOT FOUND');
         }
     });
 
-    $scope.showRoutes=function(){
-        $scope.reorderPanel = false;
-        $rootScope.$emit('showTravelPanel');
-    };
 
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 
 
 });
