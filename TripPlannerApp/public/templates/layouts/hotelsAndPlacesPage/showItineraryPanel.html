@@ -27,7 +27,7 @@
                 </timeline-heading>
             </timeline-panel>
         </timeline-node>
-        <timeline ng-repeat="dateItinerary in currentDestination.dateWiseItinerary">
+        <timeline ng-repeat="dateItinerary in currentDestination.dateWiseItinerary" ng-init="parentIndex=$index">
             <timeline-node ng-if="currentDestination.hotelDetails != undefined && dateItinerary.dateWisePlaceData.typeOfDay == 0">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-home"></i>
                 </timeline-badge>
@@ -64,7 +64,7 @@
                         <timeline-title class="col-xs-10">
 
                         </timeline-title>
-                        <div class="col-xs-2" ng-click="removePlaceHolder(dateItinerary,$index)">
+                        <div class="col-xs-2" ng-click="removePlaceHolder(dateItinerary,$index,parentIndex)">
                             <i class="glyphicon glyphicon-remove"></i>
                         </div>
                     </timeline-heading>
@@ -79,12 +79,12 @@
                                 <timeline-title>{{dateItinerary.dateWisePlaceData.placesData[permValue].Name}}</timeline-title>
                             </div>
                             <div ng-if="!dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming && (dateItinerary.dateWisePlaceData.placesData[permValue].hasWarning || !isPlaceTimingsCorrect(dateItinerary.dateWisePlaceData.placesData[permValue]))" class="col-xs-1" >
-                                <i style="color: #901918" tooltip="{{dateItinerary.dateWisePlaceData.placesData[permValue].warningMessage}}" tooltip-placement="left" class="glyphicon glyphicon-exclamation-sign"></i>
+                                <i style="color: #901918" tooltip="{{dateItinerary.dateWisePlaceData.placesData[permValue].warningMessage}}" class="glyphicon glyphicon-exclamation-sign"></i>
                             </div>
-                            <div class="col-xs-1" ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming" ng-click="setUserTimings(dateItinerary,$parent.$index,$index)">
+                            <div class="col-xs-1" ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming" ng-click="setUserTimings(dateItinerary,parentIndex,$index)">
                                 <i style="color: #3f903f" class="glyphicon glyphicon-ok"></i>
                             </div>
-                            <div ng-if="!dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming" class="col-xs-1" ng-click="removePlace(dateItinerary,$index)">
+                            <div ng-if="!dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming" class="col-xs-1" ng-click="removePlace(dateItinerary,parentIndex,$index)">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </div>
                             <div ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming" class="col-xs-1" ng-click="disableChangeTimings(dateItinerary,$index)">
