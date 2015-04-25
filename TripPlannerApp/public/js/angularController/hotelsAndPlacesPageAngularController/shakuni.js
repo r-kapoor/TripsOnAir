@@ -12,6 +12,15 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.currentDestination = null;
 
     $scope.stopClickClass = 'cursor-click';
+
+    $scope.currentStartTime = new Date();
+    $scope.currentEndTime = new Date();
+
+    $scope.hstep = 1;
+    $scope.mstep = 15;
+    $scope.ismeridian = true;
+    $scope.isFixItinerary = true;
+
     var SPEED = 15;//km/hr
     var RATIO = 0.75;
     var MORNING_CHECK_IN_DURATION = 2;//hrs
@@ -264,13 +273,412 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
     };
 
+    $scope.getTimeToPlaceText = function(dateItinerary, index){
+        var originPosition;
+        if(index == 0){
+            originPosition = {
+                name:"Hotel",
+                Latitude:$scope.currentDestination.hotelDetails.Latitude,
+                Longitude:$scope.currentDestination.hotelDetails.Longitude
+            }
+        }
+        else {
+            originPosition = {
+                name: dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index - 1]].Name,
+                Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index - 1]].Latitude,
+                Longitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index - 1]].Longitude
+            }
+        }
+        var destinationPosition = {
+            Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].Latitude,
+            Longitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].Longitude
+        };
+        var time = getTimeFromPlaces(originPosition, destinationPosition);
+        var formattedTime = formatTime(time);
+        if(formattedTime != ""){
+            return "Approx Travel Time From "+originPosition.name + " is "+formattedTime;
+        }
+        return "";
+    };
+
+    $scope.getTimeFromPlaceText = function(dateItinerary, index) {
+        var originPosition = {
+            Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].Latitude,
+            Longitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].Longitude
+        };
+        var destinationPosition;
+        if(index == dateItinerary.permutation.length - 1){
+            destinationPosition = {
+                name:"Hotel",
+                Latitude:$scope.currentDestination.hotelDetails.Latitude,
+                Longitude:$scope.currentDestination.hotelDetails.Longitude
+            }
+        }
+        else {
+            destinationPosition = {
+                name: dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index + 1]].Name,
+                Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index + 1]].Latitude,
+                Longitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index + 1]].Longitude
+            }
+        }
+        var time = getTimeFromPlaces(originPosition, destinationPosition);
+        var formattedTime = formatTime(time);
+        if(formattedTime != ""){
+            return "Approx Travel Time To "+destinationPosition.name + " is "+formattedTime;
+        }
+        return "";
+    };
+
+    function getTimeFromPlaces(originPosition, destinationPosition){
+        var distance = getDistance(originPosition.Latitude, originPosition.Longitude, destinationPosition.Latitude, destinationPosition.Longitude);
+        var time = distance/SPEED;
+        return time;
+    }
+
+    function formatTime(time){
+        var hours = 0, mins = 0;
+        if(time > 1) {
+            hours =  Math.floor(time);
+            mins = Math.floor(time*60 - hours*60);
+        }
+        else{
+            mins = Math.floor(time*60);
+        }
+        if(hours > 0 && mins > 0){
+            return hours+"h "+mins+"m";
+        }
+        else if(hours > 0){
+            return hours + "h";
+        }
+        else if(mins > 0){
+            return mins + "m";
+        }
+        return "";
+    }
+
+    $scope.enableChangeTimings = function(dateItinerary,index)
+    {
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].isChangeTiming = true;
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone = new Date(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime);
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone = new Date(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime);
+    };
+
+    $scope.setUserTimings= function(dateItinerary,dateItineraryIndex,index){
+        console.log(dateItinerary);
+        fixItineraryOnChangeTimings(dateItinerary,dateItineraryIndex,index);
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone;
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone;
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].isChangeTiming = false;
+    };
+
+    $scope.disableChangeTimings = function(dateItinerary,index){
+        dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].isChangeTiming = false;
+    };
+
+    $scope.isPlaceTimingsCorrect = function(place){
+        var warningMessage;
+        if(place.placeArrivalTime == undefined || place.placeDepartureTime == undefined){
+            warningMessage = "Timings are not set";
+        }
+        else {
+            var selectedPlaceTimingIndex = -1;
+            for(var placeTimingIndex = 0; placeTimingIndex < place.PlaceTimings.length; placeTimingIndex++){
+                if(place.PlaceTimings[placeTimingIndex].isSelected != undefined && place.PlaceTimings[placeTimingIndex].isSelected == 1){
+                    selectedPlaceTimingIndex = placeTimingIndex;
+                }
+            }
+            if(selectedPlaceTimingIndex == -1){
+                warningMessage = "No selected place timings";
+            }
+            else {
+                var timeStart = $scope.getDateFromString(place.PlaceTimings[selectedPlaceTimingIndex].TimeStart, place.placeArrivalTime);
+                var timeEnd = $scope.getDateFromString(place.PlaceTimings[selectedPlaceTimingIndex].TimeEnd, place.placeDepartureTime);
+                if(getTimeFromDate(place.placeArrivalTime) < getTimeFromDate(timeStart) || getTimeFromDate(place.placeDepartureTime > getTimeFromDate(timeEnd))){
+                    warningMessage = "The place is not open at the timings";
+                }
+            }
+        }
+        //console.log('Warning Message:'+warningMessage);
+        if(warningMessage != undefined){
+            place.warningMessage = warningMessage;
+            return false;
+        }
+        return true;
+    };
+
+    function fixItineraryOnChangeTimings(dateItinerary,dateItineraryIndex,index){
+        var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+        var placeArrivalTime = place.placeArrivalTime;
+        var placeDepartureTime = place.placeDepartureTime;
+        var hotel = $scope.currentDestination.hotelDetails;
+        var distanceToPlace = getDistance(hotel.Latitude,hotel.Longitude,place.Latitude,place.Longitude);
+        var timeToPlace = distanceToPlace/SPEED;
+
+        if(getTimeFromDate(place.placeArrivalTimeClone)>getTimeFromDate(place.placeDepartureTimeClone))
+        {
+            alert('Arrival Time cannot be ahead of Departure Time');
+        }
+        if($scope.isFixItinerary)
+        {
+            if(dateItinerary.permutation.length==1)
+            {
+                //only one place
+                dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTimeClone) - timeToPlace*HOURS_TO_MILLISECONDS);
+                if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) >(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime)))
+                {
+                    //No need to fix itinerary on this side
+                }
+                else if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) < (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime)))
+                {
+                    isSufficientTimeInHotel(dateItinerary,dateItineraryIndex,0);
+                }
+
+                dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTimeClone) + timeToPlace*HOURS_TO_MILLISECONDS);
+                if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) <(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime)))
+                {
+                    //No need to fix itinerary on this side
+                }
+                else if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) > (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime)))
+                {
+                    isSufficientTimeInHotel(dateItinerary,dateItineraryIndex,1);
+                }
+            }
+            else if(index==0) {
+                //first element
+                dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTimeClone) - timeToPlace * HOURS_TO_MILLISECONDS);
+                if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) > (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime))) {
+                    //No need to fix itinerary on this side
+                }
+                else if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) < (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime))) {
+                    isSufficientTimeInHotel(dateItinerary, dateItineraryIndex, 0);
+                }
+
+                var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];
+                if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
+                    previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
+                    previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
+                    fixPostPlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel, index);
+                }
+            }
+            else if(index==dateItinerary.permutation.length-1)
+            {
+                //last place
+                if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
+                    //set endSightSeeingTime
+                    dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTimeClone)+timeToPlace*HOURS_TO_MILLISECONDS);
+
+                    if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) > (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
+                        isSufficientTimeInHotel(dateItinerary,dateItineraryIndex,1);
+                    }
+                    else if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) < (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
+                        //No need to fix
+                    }
+                }
+                if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime))) {
+                    var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+                    previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
+                    previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
+                    fixPrePlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel, index);
+                }
+            }
+            else
+            {
+                //normal place
+                if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime))) {
+                    var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+                    previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
+                    previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
+                    fixPrePlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel,index);
+                }
+
+                if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
+                    var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+                    previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
+                    previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
+                    fixPostPlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel, index);
+                }
+            }
+        }
+    }
+
+
+    function fixPrePlaceItinerary(dateItinerary,place,dateItineraryIndex,hotel, placeIndex)
+    {
+        for(var reverseIndex = placeIndex-1;reverseIndex>=0;reverseIndex--)
+        {
+            var currentPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[reverseIndex]];
+            var distanceFromPreviousPlace = getDistance(currentPlace.Latitude,currentPlace.Longitude,place.Latitude,place.Longitude);
+            var timeFromPreviousPlace = distanceFromPreviousPlace/SPEED;
+            currentPlace.placeDepartureTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeFromPreviousPlace*HOURS_TO_MILLISECONDS);
+            currentPlace.placeArrivalTime = new Date(getTimeFromDate(currentPlace.placeDepartureTime) - currentPlace.Time2Cover*MINUTES_TO_MILLISECONDS);
+            place = currentPlace;
+        }
+        var firstPlaceOfDay = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];
+        var distanceToHotel = getDistance(firstPlaceOfDay.Latitude,firstPlaceOfDay.Longitude,hotel.Latitude,hotel.Longitude);
+        var timeToHotel = distanceToHotel/SPEED;
+        dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(firstPlaceOfDay.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
+        isSufficientTimeInHotel(dateItinerary,dateItineraryIndex,0);
+
+    }
+
+    function fixPostPlaceItinerary(dateItinerary,place,dateItineraryIndex,hotel, placeIndex)
+    {
+        for(var ItrIndex =placeIndex+1; ItrIndex<dateItinerary.permutation.length;ItrIndex++)
+        {
+            var currentPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[ItrIndex]];
+            var distanceFromPreviousPlace = getDistance(place.Latitude,place.Longitude,currentPlace.Latitude,currentPlace.Longitude);
+            var timeFromPreviousPlace = distanceFromPreviousPlace/SPEED;
+            currentPlace.placeArrivalTime = new Date(getTimeFromDate(place.placeDepartureTime)+timeFromPreviousPlace*HOURS_TO_MILLISECONDS);
+            currentPlace.placeDepartureTime = new Date(getTimeFromDate(currentPlace.placeArrivalTime) + currentPlace.Time2Cover*MINUTES_TO_MILLISECONDS);
+            place = currentPlace;
+        }
+        var endPlaceOFDay = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[dateItinerary.permutation.length-1]];
+        var distanceToHotel = getDistance(endPlaceOFDay.Latitude,endPlaceOFDay.Longitude,hotel.Latitude,hotel.Longitude);
+        var timeToHotel = distanceToHotel/SPEED;
+        dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(endPlaceOFDay.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
+        isSufficientTimeInHotel(dateItinerary,dateItineraryIndex,1);
+    }
+
+    //typeOfHotelState: 0 means depart from hotel for sightSeeing, 1 means arrive at hotel after sightseeing
+    function isSufficientTimeInHotel(dateItinerary,dateItineraryIndex,typeOfHotelState)
+    {
+        var typeOfDay = dateItinerary.dateWisePlaceData.typeOfDay;
+        var hotelCheckInTime = $scope.currentDestination.hotelDetails.checkInTime;
+        var hotelCheckOutTime = $scope.currentDestination.hotelDetails.checkOutTime;
+        var startSightSeeingTime = dateItinerary.dateWisePlaceData.startSightSeeingTime;
+        var endSightSeeingTime = dateItinerary.dateWisePlaceData.endSightSeeingTime;
+        var nextDateItinerary;
+        var previousDateItinerary;
+        var hotelExitTime;
+
+        if(($scope.currentDestination.dateWiseItinerary.length-1)!=dateItineraryIndex)
+        {
+            nextDateItinerary = $scope.currentDestination.dateWiseItinerary[dateItineraryIndex+1];
+        }
+
+        if(dateItineraryIndex!=0)
+        {
+            previousDateItinerary = $scope.currentDestination.dateWiseItinerary[dateItineraryIndex-1];
+        }
+
+        if(typeOfDay==0||typeOfDay==3)
+        {
+            if(typeOfHotelState==0)
+            {
+                //depart from hotel
+                if((getTimeFromDate(startSightSeeingTime) - getTimeFromDate(hotelCheckInTime)) < MORNING_CHECK_IN_DURATION*RATIO*HOURS_TO_MILLISECONDS)
+                {
+                    alert("You have less time in Hotel");
+                }
+            }
+            else
+            {
+                if(nextDateItinerary!=undefined)
+                {
+                    hotelExitTime = nextDateItinerary.dateWisePlaceData.startSightSeeingTime;
+                    //arrive at hotel after sightSeeing
+                    if(nextDateItinerary.dateWisePlaceData.typeOfDay == 2)
+                    {
+                        if(nextDateItinerary.dateWisePlaceData.noPlacesVisited!=undefined && (nextDateItinerary.dateWisePlaceData.noPlacesVisited==1))
+                        {
+                            hotelExitTime = $scope.currentDestination.hotelDetails.checkOutTime;
+                        }
+                    }
+
+                }
+                else
+                {
+                    hotelExitTime = $scope.currentDestination.hotelDetails.checkOutTime;
+                }
+
+                if((getTimeFromDate(hotelExitTime) - getTimeFromDate(endSightSeeingTime)) < REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
+                {
+                    alert("You have less time in Hotel");
+                }
+            }
+        }
+        else if(typeOfDay ==1)
+        {
+            //normal day
+            if(typeOfHotelState==0)
+            {
+                checkPreviousNightRestTime(previousDateItinerary,startSightSeeingTime,hotelCheckInTime);
+            }
+            else
+            {
+                //arrive at hotel after sightSeeing
+                if(nextDateItinerary!=undefined)
+                {
+                    hotelExitTime = nextDateItinerary.dateWisePlaceData.startSightSeeingTime;
+                    if(nextDateItinerary.dateWisePlaceData.typeOfDay == 2)
+                    {
+                        if(nextDateItinerary.dateWisePlaceData.noPlacesVisited!=undefined && (nextDateItinerary.dateWisePlaceData.noPlacesVisited==1))
+                        {
+                            hotelExitTime = $scope.currentDestination.hotelDetails.checkOutTime;
+                        }
+                    }
+                }
+                else
+                {
+                    hotelExitTime = $scope.currentDestination.hotelDetails.checkOutTime;
+                }
+
+                if((getTimeFromDate(hotelExitTime) - getTimeFromDate(endSightSeeingTime)) < REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
+                {
+                    alert("You have less time in Hotel");
+                }
+            }
+        }
+        else if(typeOfDay ==2||typeOfDay==3)
+        {
+            if(typeOfHotelState==0)
+            {
+                checkPreviousNightRestTime(previousDateItinerary,startSightSeeingTime,hotelCheckInTime);
+            }
+            else
+            {
+                if(getTimeFromDate(hotelCheckOutTime) - getTimeFromDate(endSightSeeingTime)<REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
+                {
+                    alert("You have less time in Hotel");
+                }
+            }
+        }
+    }
+
+    function checkPreviousNightRestTime(previousDateItinerary,startSightSeeingTime,hotelCheckInTime)
+    {
+        if(previousDateItinerary!=undefined)
+        {
+            if(previousDateItinerary.dateWisePlaceData.noPlacesVisited!=undefined && previousDateItinerary.dateWisePlaceData.noPlacesVisited==1)
+            {
+                if((getTimeFromDate(startSightSeeingTime) - getTimeFromDate(hotelCheckInTime))< REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
+                {
+                    alert("You have less time in Hotel");
+                }
+            }
+            else
+            {
+                if(getTimeFromDate(startSightSeeingTime) - getTimeFromDate(previousDateItinerary.dateWisePlaceData.endSightSeeingTime)<REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
+                {
+                    alert("You have less time in Hotel");
+                }
+            }
+        }
+        else
+        {
+            if((getTimeFromDate(startSightSeeingTime) - getTimeFromDate(hotelCheckInTime))< REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
+            {
+                alert("You have less time in Hotel");
+            }
+        }
+    }
 
     function replaceAdjacentPlaces(dateItinerary,index1,index2,place1,place2)
     {
         var distanceBetweenPlaces = getDistance(place1.Latitude,place1.Longitude,place2.Latitude,place2.Longitude);
         var timeBetweenPlaces = distanceBetweenPlaces/SPEED;
         var hotel = $scope.currentDestination.hotelDetails;
-        var distanceToPlace1 = getDistance(hotel.Latitude,hotel.Longitude,place1.Latitude,place2.Longitude);
+        var distanceToPlace1 = getDistance(hotel.Latitude,hotel.Longitude,place1.Latitude,place1.Longitude);
         var distanceToPlace2 = getDistance(hotel.Latitude,hotel.Longitude,place2.Latitude,place2.Longitude);
         var timeToPlace1 = distanceToPlace1/SPEED;
         var timeToPlace2 = distanceToPlace2/SPEED;
@@ -577,7 +985,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     else {
                         //the place is closed at departure time
                         var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
-                        place.placeDepartureTime = getDateFromString(place.PlaceTimings[timingIndex], oldPlace.placeArrivalTime);
+                        place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex], oldPlace.placeArrivalTime);
                         place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
                     }
                 }
@@ -586,17 +994,17 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     var nearestTiming = place.PlaceTimings[nearestTimingIndex];
                     if(getTimeOfDayInMinutesFromDate(oldPlace.placeArrivalTime) > getTimeOfDayInMinutesFromString(nearestTiming.TimeEnd)){
                         //The current time is after place closes
-                        place.placeDepartureTime = getDateFromString(nearestTiming.TimeEnd, oldPlace.placeArrivalTime);
+                        place.placeDepartureTime = $scope.getDateFromString(nearestTiming.TimeEnd, oldPlace.placeArrivalTime);
                         place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
                     }
                     else {
                         //The current time is before the place opens
-                        place.placeArrivalTime = getDateFromString(nearestTiming.TimeStart, oldPlace.placeArrivalTime);
+                        place.placeArrivalTime = $scope.getDateFromString(nearestTiming.TimeStart, oldPlace.placeArrivalTime);
                         place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
                     }
                 }
                 dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
-                dateItinerary.dateWiseItinerary.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
+                dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
             }
             if(index == 0){
                 //This is the first place of the day
@@ -611,7 +1019,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime,place.Time2Cover);
                     if(checkIfClosedAtPlaceTiming(place.PlaceTimings[openingTimeIndex],place.placeArrivalTime))
                     {
-                        place.placeArrivalTime = getDateFromString(place.PlaceTimings[openingTimeIndex].TimeStart,place.placeDepartureTime);
+                        place.placeArrivalTime = $scope.getDateFromString(place.PlaceTimings[openingTimeIndex].TimeStart,place.placeDepartureTime);
                         if(getTimeFromDate(place.placeDepartureTime) - getTimeFromDate(place.placeArrivalTime) < place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
                         {
                             alert("You have Less Time to Cover This place. Set Timings Accordingly!");
@@ -637,7 +1045,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 if(openingTimeIndex != -1){
                     place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
                     if(checkIfClosedAtPlaceTiming(place.PlaceTimings[openingTimeIndex], place.placeDepartureTime)){
-                        place.placeDepartureTime = getDateFromString(place.PlaceTimings[openingTimeIndex].TimeEnd, place.placeArrivalTime);
+                        place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[openingTimeIndex].TimeEnd, place.placeArrivalTime);
                         if(getTimeFromDate(place.placeDepartureTime) - getTimeFromDate(place.placeArrivalTime) < place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
                         {
                             alert("You have Less Time to Cover This place. Set Timings Accordingly!");
@@ -684,12 +1092,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                     else if(openingTimeIndexForDeparture == -1){
                         //The place is open at arrival but closes before departure
-                        place.placeDepartureTime = getDateFromString(place.PlaceTimings[openingTimeIndexForArrival].TimeEnd, place.placeArrivalTime);
+                        place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[openingTimeIndexForArrival].TimeEnd, place.placeArrivalTime);
                         isPlaceTimingSet = true;
                     }
                     else if(openingTimeIndexForArrival == -1){
                         //The place is open at departure time but closed at arrival time
-                        place.placeArrivalTime = getDateFromString(place.PlaceTimings[openingTimeIndexForDeparture].TimeStart,place.placeDepartureTime);
+                        place.placeArrivalTime = $scope.getDateFromString(place.PlaceTimings[openingTimeIndexForDeparture].TimeStart,place.placeDepartureTime);
                         isPlaceTimingSet = true;
                     }
                     if(isPlaceTimingSet && getTimeFromDate(place.placeDepartureTime) - getTimeFromDate(place.placeArrivalTime) < place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
@@ -719,7 +1127,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     function checkIfClosedAtPlaceTiming(placeTime, time)
     {
-        if(isOnSameDay(time, placeTime.Days)){
+        if($scope.isOnSameDay(time, placeTime.Days)){
             if(getTimeOfDayInMinutesFromDate(time) >= getTimeOfDayInMinutesFromString(placeTime.TimeStart)) {
                 if(getTimeOfDayInMinutesFromDate(time) <= getTimeOfDayInMinutesFromString(placeTime.TimeEnd)) {
                     return false;
@@ -734,11 +1142,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var placeTimingsDateArray =[];
         for(var i=0;i<placeTimings.length;i++)
         {
-            if(isOnSameDay(currentDate,placeTimings[i].Days))
+            if($scope.isOnSameDay(currentDate,placeTimings[i].Days))
             {
                 placeTimingsDateArray.push({
-                    timeStart:getDateFromString(placeTimings[i].TimeStart,currentDate),
-                    timeEnd: getDateFromString(placeTimings[i].TimeEnd,currentDate)
+                    timeStart:$scope.getDateFromString(placeTimings[i].TimeStart,currentDate),
+                    timeEnd: $scope.getDateFromString(placeTimings[i].TimeEnd,currentDate)
                 });
             }
         }
@@ -1313,7 +1721,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     function placeIsClosedAtTime(time, placeTimings) {
         for(var timingIndex=0; timingIndex < placeTimings.length; timingIndex++){
             var timing = placeTimings[timingIndex];
-            if(isOnSameDay(time, timing.Days)){
+            if($scope.isOnSameDay(time, timing.Days)){
                 if(getTimeOfDayInMinutesFromDate(time) >= getTimeOfDayInMinutesFromString(timing.TimeStart)) {
                     if(getTimeOfDayInMinutesFromDate(time) <= getTimeOfDayInMinutesFromString(timing.TimeEnd)) {
                         return false;
@@ -1327,7 +1735,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     function getPlaceTimingsToSelect(time, placeTimings) {
         for(var timingIndex=0; timingIndex < placeTimings.length; timingIndex++){
             var timing = placeTimings[timingIndex];
-            if(isOnSameDay(time, timing.Days)){
+            if($scope.isOnSameDay(time, timing.Days)){
                 if(getTimeOfDayInMinutesFromDate(time) >= getTimeOfDayInMinutesFromString(timing.TimeStart)) {
                     if(getTimeOfDayInMinutesFromDate(time) <= getTimeOfDayInMinutesFromString(timing.TimeEnd)) {
                         return timingIndex;
@@ -1343,7 +1751,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var minimumIndex = -1;
         for(var timingIndex=0; timingIndex < placeTimings.length; timingIndex++){
             var timing = placeTimings[timingIndex];
-            if(isOnSameDay(time, timing.Days)){
+            if($scope.isOnSameDay(time, timing.Days)){
                 var timeAfterClosing = getTimeOfDayInMinutesFromDate(time) - getTimeOfDayInMinutesFromString(timing.TimeEnd);
                 var timeBeforeOpening =  getTimeOfDayInMinutesFromString(timing.TimeStart) - getTimeOfDayInMinutesFromDate(time);
                 if(timeAfterClosing > 0){
@@ -1370,8 +1778,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var freeEndTime = freeTimings.freeEndTime;
         var lowestTime = null;//Time at which place can be reached and place is also open
         var highestTime = null;//Time at which place can be departed and is not closed
-        var TimeStart = getDateFromString(placeTimings.TimeStart,freeStartTime);
-        var TimeEnd = getDateFromString(placeTimings.TimeEnd,freeStartTime);
+        var TimeStart = $scope.getDateFromString(placeTimings.TimeStart,freeStartTime);
+        var TimeEnd = $scope.getDateFromString(placeTimings.TimeEnd,freeStartTime);
         if(getTimeFromDate(TimeStart)>getTimeFromDate(freeStartTime))
         {
             lowestTime = TimeStart;
@@ -1411,13 +1819,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         return ( parseInt(timeStringArray[0]) * 60 ) + parseInt(timeStringArray[1]);
     }
 
-    function getDateFromString(timeString,date)
+    $scope.getDateFromString = function(timeString,date)
     {
         var timeStringArray = timeString.split(':');
         var dateClone = new Date(date);
         dateClone.setHours(parseInt(timeStringArray[0]),parseInt(timeStringArray[1]));
         return(dateClone);
-    }
+    };
 
     function getTimeFromDate(date){
         if(date instanceof Date){
@@ -1427,7 +1835,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         return date.getTime();
     }
 
-    function isOnSameDay(currentTime, days) {
+    $scope.isOnSameDay = function(currentTime, days) {
         if(!(currentTime instanceof Date))
         {
             currentTime = new Date(currentTime);
@@ -1437,11 +1845,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         var day = '' + (currentTime.getDay() + 1);
         if(days.indexOf(day) == -1) {
-            console.log('Not on same day');
             return false;
         }
         return true;
-    }
+    };
 
     function timeDifferenceGreaterThan(startTime, endTime, difference) {
         endTime = new Date(endTime);
@@ -1526,7 +1933,6 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
     };
     function getDistance(originLat, originLong, destinationLat, destinationLong) {
-        console.log('originLat:'+originLat+",originLong:"+originLong+',destinationLat:'+destinationLat+',destinationLong:'+destinationLong);
         var R = 6371;
         var dLat = (destinationLat - originLat) * Math.PI / 180;
         var dLon = (destinationLong - originLong) * Math.PI / 180;
@@ -1579,7 +1985,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         for (var lastPlaceTimingsIndex = 0; lastPlaceTimingsIndex < lastPlace.PlaceTimings.length; lastPlaceTimingsIndex++) {
             var placeTime = lastPlace.PlaceTimings[lastPlaceTimingsIndex];
             if (placeTime.isSelected != undefined && placeTime.isSelected == 1) {
-                var maxDepartTime = getDateFromString(placeTime.TimeEnd, departTime);
+                var maxDepartTime = $scope.getDateFromString(placeTime.TimeEnd, departTime);
                 if (getTimeFromDate(maxDepartTime) < getTimeFromDate(supposedLastPlaceDepartureTime)) {
                     lastPlace.placeDepartureTime = maxDepartTime;
                 }
@@ -1601,7 +2007,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         for (var nextPlaceTimingsIndex = 0; nextPlaceTimingsIndex < nextPlace.PlaceTimings.length; nextPlaceTimingsIndex++) {
             var placeTime = nextPlace.PlaceTimings[nextPlaceTimingsIndex];
             if (placeTime.isSelected != undefined && placeTime.isSelected == 1) {
-                var minArrivalTime = getDateFromString(placeTime.TimeStart, arrivalTime);
+                var minArrivalTime = $scope.getDateFromString(placeTime.TimeStart, arrivalTime);
                 if (getTimeFromDate(minArrivalTime) > getTimeFromDate(supposedNextPlaceArrivalTime)) {
                     nextPlace.placeArrivalTime = minArrivalTime;
                 }
@@ -1656,7 +2062,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var lastPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index-1]];
             var nextPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
             var lastPlaceTimings = getSelectedPlaceTimings(lastPlace);
-            var lastPlaceEndTime = getDateFromString(lastPlaceTimings.TimeEnd,lastPlace.placeDepartureTime);
+            var lastPlaceEndTime = $scope.getDateFromString(lastPlaceTimings.TimeEnd,lastPlace.placeDepartureTime);
             var maxPlaceDepartureTime = new Date(getTimeFromDate(lastPlace.placeArrivalTime) + lastPlace.Time2Cover*MINUTES_TO_MILLISECONDS*MAX_RATIO);
             var lastPlaceToNextPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,nextPlace.Latitude,nextPlace.Longitude);
             var timeFromLastPlaceToNextPlace = lastPlaceToNextPlace/SPEED;
@@ -1680,7 +2086,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     var timeFromLastPlaceToCurrentPlace = lastPlaceToCurrentPlaceDistance/SPEED;
                     var supposedCurrentPlaceArrivalTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime) + timeFromLastPlaceToCurrentPlace*HOURS_TO_MILLISECONDS);
                     var currentPlaceTimings = getSelectedPlaceTimings(currentPlace);
-                    var currentPlaceStartTime = getDateFromString(currentPlaceTimings.TimeStart, currentPlace.placeArrivalTime);
+                    var currentPlaceStartTime = $scope.getDateFromString(currentPlaceTimings.TimeStart, currentPlace.placeArrivalTime);
                     var maxPlaceArrivalTime = new Date(getTimeFromDate(currentPlace.placeDepartureTime) - currentPlace.Time2Cover*MINUTES_TO_MILLISECONDS*MAX_RATIO);
                     maxPlaceArrivalTime = getMaximum(currentPlaceStartTime, maxPlaceArrivalTime);
                     if(maxPlaceArrivalTime<=supposedCurrentPlaceArrivalTime){
