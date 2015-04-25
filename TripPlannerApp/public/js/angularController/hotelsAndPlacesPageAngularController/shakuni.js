@@ -1,4 +1,4 @@
-itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http, $timeout) {
+itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http, $timeout, $document) {
 
     $scope.origin = null;
     $scope.destinations = null;
@@ -21,6 +21,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.ismeridian = true;
     $scope.isFixItinerary = true;
 
+    $scope.currentDate = null;
+    $scope.currentDay = null;
+
     var SPEED = 15;//km/hr
     var RATIO = 0.75;
     var MORNING_CHECK_IN_DURATION = 2;//hrs
@@ -34,6 +37,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     var removedPlacesList = [];
 
+
+
     //TODO: while adding the place update isSelectedFlag in placeTimings
 
     $scope.getItinerary = function(){
@@ -46,6 +51,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             $scope.numberOfPeople = parseInt(data.numPeople);
             $scope.currentDestination = $scope.destinations[0];
             $scope.currentDestination.isCurrent = true;
+            $scope.currentDay = 0;
+            var firstDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+            $scope.currentDate = firstDay.setHours(0,0,0,0);
             calculateHotelExpenses();
             $scope.allPlaces = $scope.currentDestination.places;
             $scope.allHotels = $scope.currentDestination.hotels;
@@ -2228,6 +2236,26 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     function clone(a) {
         return JSON.parse(JSON.stringify(a));
     }
+
+    $scope.nextDay = function(){
+        $scope.currentDay += 1;
+        var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+        $scope.currentDate = currentDay.setHours(0,0,0,0);
+        var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
+        console.log('day-'+($scope.currentDay));
+        //console.log(section);
+        $document.duScrollToElementAnimated(section);
+    };
+
+    $scope.previousDay = function(){
+        $scope.currentDay -= 1;
+        var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+        $scope.currentDate = currentDay.setHours(0,0,0,0);
+        var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
+        console.log('day-'+($scope.currentDay));
+        //console.log(section);
+        $document.duScrollToElementAnimated(section);
+    };
 
     $scope.getItinerary();
 });
