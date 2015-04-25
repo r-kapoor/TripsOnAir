@@ -9,9 +9,9 @@
     <!--</div>-->
     <nav>
         <ul class="pager">
-            <li><a href="#">Previous</a></li>
-            <li>26 March 2015</li>
-            <li><a href="#">Next</a></li>
+            <li><a du-smooth-scroll ng-click="previousDay()">Previous</a></li>
+            <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
+            <li><a du-smooth-scroll ng-click="nextDay()">Next</a></li>
         </ul>
     </nav>
     <timeline>
@@ -28,6 +28,7 @@
             </timeline-panel>
         </timeline-node>
         <timeline ng-repeat="dateItinerary in currentDestination.dateWiseItinerary" ng-init="parentIndex=$index">
+            <small class="text-muted text-center" id="day-{{$index}}">Day {{$index+1}}</small>
             <timeline-node ng-if="currentDestination.hotelDetails != undefined && dateItinerary.dateWisePlaceData.typeOfDay == 0">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-home"></i>
                 </timeline-badge>
