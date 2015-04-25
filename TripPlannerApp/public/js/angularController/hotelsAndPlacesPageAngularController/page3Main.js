@@ -4,3 +4,4 @@ itineraryModule.controller('itineraryMainController',  function($scope, $rootSco
 
 
 	});
+itineraryModule.value('duScrollOffset', 100);

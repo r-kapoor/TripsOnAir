@@ -23,6 +23,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.currentDate = null;
     $scope.currentDay = null;
+    $scope.isDateBarCollapsed = false;
 
     var SPEED = 15;//km/hr
     var RATIO = 0.75;
@@ -2257,5 +2258,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         $document.duScrollToElementAnimated(section);
     };
 
+    function collapseDateBar(){
+        $timeout(function(){
+            $scope.isDateBarCollapsed = false;
+        }, 1500);
+    }
     $scope.getItinerary();
 });
