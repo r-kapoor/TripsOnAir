@@ -23,7 +23,7 @@
 .jslider table tr td { width: 100%; vertical-align: top; }
 
 .jslider.vertical table,
-.jslider.vertical table tr, 
+.jslider.vertical table tr,
 .jslider.vertical table tr td { height: 100%; vertical-align: top; }
 
 .jslider .jslider-bg { position: relative; }
@@ -61,7 +61,7 @@
 .jslider.vertical .jslider-pointer-to { left: 62%; }
 .jslider.vertical .jslider-pointer-to.jslider-pointer-hover { background-position: 0px -23px; }
 
-.jslider .jslider-label { font-size: 9px; line-height: 12px; color: black; opacity: 0.4; white-space: nowrap; padding: 0px 2px; position: absolute; top: -18px; left: 0px; }
+.jslider .jslider-label { font-size: 9px; line-height: 12px; color: black; opacity: 0.4; white-space: nowrap; padding: 0px 2px; position: absolute; top: 10px; left: 0px; }
 .jslider .jslider-label-to { left: auto; right: 0; }
 
 .jslider.vertical .jslider-label { margin-left: 10px; top:0;}
