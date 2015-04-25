@@ -39,7 +39,8 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         $rootScope.$emit('destinationAdded');
   };
 
-    $scope.originSelected = function() {
+    $scope.originSelected = function(isOpen) {
+        console.log("isOpen:"+isOpen);
         if($scope.originCity!== null && typeof $scope.originCity === 'object') {
             $scope.originValid = true;
             console.log($scope.originCity);
