@@ -2,6 +2,7 @@
 
 <html ng-app="tripdetails.itinerary.app">
 <head>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
     <script src="js/angularJS/angular.min.js"></script>
@@ -13,8 +14,9 @@
     <script src="js/angularJS/angular-dragdrop.js"></script>
     <script src="js/angularJS/ngDraggable.js"></script>
     <script type="text/javascript" src="js/angularDirective/scrollInview.js"></script>
-
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/page3Main.js"></script>
+    <script type="text/javascript" src="js/angularService/hotelsAndPlacesPageAngularService/mapDataService.js"></script>
+    <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/jatayu.js"></script>
 	<script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shakuni.js"></script>
     <script type="text/javascript" src="js/angularJS/verge.min.js"></script>
     <script type="text/javascript" src="js/angularJS/lodash.min.js"></script>
@@ -22,6 +24,8 @@
     <link rel="stylesheet" href="css/bootstrapCSS/angular-timeline.css" />
     <link rel="stylesheet" href="css/bootstrapCSS/angular-timeline-bootstrap.css" />
     <link rel="stylesheet" href="css/hotelsAndPlacesPage/shakuni.css" />
+    <link rel="stylesheet" href="css/hotelsAndPlacesPage/map.css">
+    <link rel="stylesheet" href="css/hotelsAndPlacesPage/cityPanel.css">
 
 </head>
 
@@ -34,10 +38,7 @@
             </div>
             <div class="col-xs-6">
                 <div class="row">
-                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showHotels.html'"></div>
-                </div>
-                <div class="row">
-                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showPlaces.html'"></div>
+                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/leftPanel.html'"></div>
                 </div>
             </div>
             <div class="col-xs-6">

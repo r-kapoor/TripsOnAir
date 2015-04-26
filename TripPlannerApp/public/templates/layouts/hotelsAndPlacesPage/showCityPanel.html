@@ -5,13 +5,55 @@
           <!--<div class="col-xs-1" style="height: 00px; border: 1px solid #000;margin-top: 1%;"></div>-->
 
           <!--<div class="col-xs-1" style="height: 00px; border: 1px solid #000;margin-top: 1%;"></div>-->
-          <div class="col-xs-2 btn btn-default  btn-responsive">{{origin.name}}</div>
-          <div ng-repeat="stop in stops[0]" class="col-xs-2 btn btn-danger btn-responsive" ng-click="showStopDetails(stop)">{{stop.name}}</div>
-          <div ng-repeat="destination in destinations">
-              <div class="col-xs-2 btn {{getButtonClass(destination)}}  btn-responsive" ng-click="showDestinationItinerary(destination)">{{destination.name}}</div>
-              <div ng-repeat="stop in stops[$index+1]" class="col-xs-2 btn btn-danger btn-responsive" ng-click="showStopDetails(stop)">{{stop.name}}</div>
+          <!--<div class="col-xs-2 btn btn-default  btn-responsive"></div>-->
+          <!--<div ng-repeat="stop in stops[0]" class="col-xs-2 btn btn-danger btn-responsive" ng-click="showStopDetails(stop)">{{stop.name}}</div>-->
+          <!--<div ng-repeat="destination in destinations">-->
+              <!--<div class="col-xs-2 btn {{getButtonClass(destination)}}  btn-responsive" ng-click="showDestinationItinerary(destination)">{{destination.name}}</div>-->
+              <!--<div ng-repeat="stop in stops[$index+1]" class="col-xs-2 btn btn-danger btn-responsive" ng-click="showStopDetails(stop)">{{stop.name}}</div>-->
+          <!--</div>-->
+          <!--<div class="col-xs-2 btn btn-default  btn-responsive">{{origin.name}}</div>-->
+
+          <div class="stepwizard">
+              <div class="stepwizard-row">
+                  <div class="stepwizard-step">
+                      <button type="button" class="btn btn-default btn-circle"></button>
+                      <p>{{origin.name}}</p>
+                  </div>
+                  <div ng-repeat="stop in stops[0]">
+                      <div class="stepwizard-step">
+                          <button ng-click="showStopDetails(stop)" type="button" class="btn btn-danger btn-circle"></button>
+                          <p>{{stop.name}}</p>
+                      </div>
+                  </div>
+                  <div ng-repeat="destinationWithStop in destinationsWithStop" class="stepwizard-step">
+                      <div ng-if="destinationWithStop.isDestination">
+                          <button type="button" class="btn {{getButtonClass(destinationWithStop)}} btn-circle" disabled="disabled" ng-click="showDestinationItinerary(destinationWithStop)">{{$index+1}}</button>
+                          <p>{{destinationWithStop.name}}</p>
+                      </div>
+                      <div ng-if="!destinationWithStop.isDestination">
+                          <button type="button" class="btn btn-danger btn-circle" disabled="disabled" ng-click="showStopDetails(destinationWithStop)">{{$index+1}}</button>;
+                          <p>{{destinationWithStop.name}}</p>
+                      </div>
+
+                  </div>
+                  <!--<div ng-repeat="destination in destinations" class="stepwizard-step">-->
+                      <!--<div class="stepwizard-row">-->
+                      <!--<div class="stepwizard-step">-->
+                          <!--<button type="button" class="btn {{getButtonClass(destination)}} btn-circle" disabled="disabled" ng-click="showDestinationItinerary(destination)">{{$index+1}}</button>-->
+                          <!--<p>{{destination.name}}</p>-->
+                      <!--</div>-->
+                      <!--</div>-->
+                      <!--&lt;!&ndash;<div ng-repeat="stop in stops[$index+1]" class="stepwizard-step">&ndash;&gt;-->
+                              <!--&lt;!&ndash;<button type="button" class="btn btn-danger btn-circle" disabled="disabled" ng-click="showStopDetails(stop)"></button>&ndash;&gt;-->
+                              <!--&lt;!&ndash;<p>{{stop.name}}</p>&ndash;&gt;-->
+                      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                  <!--</div>-->
+                  <div class="stepwizard-step">
+                      <button type="button" class="btn btn-default btn-circle" disabled="disabled"></button>
+                      <p>{{origin.name}}</p>
+                  </div>
+              </div>
           </div>
-          <div class="col-xs-2 btn btn-default  btn-responsive">{{origin.name}}</div>
       </div>
   </div>
 </div>
