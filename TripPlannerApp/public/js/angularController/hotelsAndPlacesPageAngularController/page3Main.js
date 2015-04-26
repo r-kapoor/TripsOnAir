@@ -1,4 +1,4 @@
-var itineraryModule = angular.module('tripdetails.itinerary.app', ['ui.bootstrap','angular-timeline','ngDragDrop','ngDraggable','duScroll','ngFixToTop']);
+var itineraryModule = angular.module('tripdetails.itinerary.app', ['ui.bootstrap','angular-timeline','ngDragDrop','ngDraggable','duScroll','ngFixToTop','ngScrollInView']);
 
 itineraryModule.controller('itineraryMainController',  function($scope, $rootScope) {
 

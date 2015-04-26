@@ -2239,23 +2239,27 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     $scope.nextDay = function(){
-        $scope.currentDay += 1;
-        var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
-        $scope.currentDate = currentDay.setHours(0,0,0,0);
-        var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
-        console.log('day-'+($scope.currentDay));
-        //console.log(section);
-        $document.duScrollToElementAnimated(section);
+        if($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-2){
+            $scope.currentDay += 1;
+            var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+            $scope.currentDate = currentDay.setHours(0,0,0,0);
+            var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
+            console.log('day-'+($scope.currentDay));
+            //console.log(section);
+            $document.duScrollToElementAnimated(section);
+        }
     };
 
     $scope.previousDay = function(){
-        $scope.currentDay -= 1;
-        var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
-        $scope.currentDate = currentDay.setHours(0,0,0,0);
-        var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
-        console.log('day-'+($scope.currentDay));
-        //console.log(section);
-        $document.duScrollToElementAnimated(section);
+        if($scope.currentDate > 0){
+            $scope.currentDay -= 1;
+            var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+            $scope.currentDate = currentDay.setHours(0,0,0,0);
+            var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
+            console.log('day-'+($scope.currentDay));
+            //console.log(section);
+            $document.duScrollToElementAnimated(section);
+        }
     };
 
     function collapseDateBar(){
@@ -2263,5 +2267,15 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             $scope.isDateBarCollapsed = false;
         }, 1500);
     }
+
+    $scope.changeCurrentDate = function(item){
+        console.log("day visible:"+(parseInt(item)+1));
+        if(parseInt(item)<=$scope.currentDestination.dateWiseItinerary.length-2){
+            $scope.currentDay = parseInt(item);
+            var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+            $scope.currentDate = currentDay.setHours(0,0,0,0);
+        }
+    };
+
     $scope.getItinerary();
 });
