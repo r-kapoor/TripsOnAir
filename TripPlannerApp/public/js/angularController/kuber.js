@@ -6,6 +6,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	$scope.isOverviewCollapsed = false;
 	$scope.isSuggestDestinationsOn = false;
     $scope.helpLabel="Help me choose destinations";
+    $scope.numPerson = "4";
       $scope.value = "5000";
       $scope.options = {
         from: 5000,
@@ -37,7 +38,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     $scope.submitOrSuggest = function() {
         formData.setBudget($scope.value);
         formData.setTastes($scope.checkModel);
-        formData.setNumPersons($scope.numPersons);
+        formData.setNumPersons($scope.numPerson);
         if($scope.isSuggestDestinationsOn)
         {
           $rootScope.$emit('suggest');
@@ -340,6 +341,18 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
             console.log('Will suggest destinations');
         }
 	};
+
+    $scope.addPerson = function(){
+        if(parseInt($scope.numPerson)<15){
+        $scope.numPerson = ""+(parseInt($scope.numPerson)+1);
+        }
+    };
+
+    $scope.subPerson = function(){
+        if(parseInt($scope.numPerson)>1){
+            $scope.numPerson = ""+(parseInt($scope.numPerson)-1);
+        }
+    };
 
 	$scope.checkModel = {
 	RELIGIOUS   : false,

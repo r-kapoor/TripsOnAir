@@ -292,25 +292,13 @@
 
                                                     <input ng-model="value"  type="text" id="mySlider1" slider options="options" />
                                                 </div>
-                                                <div class="col-sm-3">
-                                                    <label for="numP">Persons</label>
-                                                    <select ng-model="numPersons" class="form-control" id="numP">
-                                                        <option value="1" selected>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                        <option>4</option>
-                                                        <option>5</option>
-                                                        <option>6</option>
-                                                        <option>7</option>
-                                                        <option>8</option>
-                                                        <option>9</option>
-                                                        <option>10</option>
-                                                        <option>11</option>
-                                                        <option>12</option>
-                                                        <option>13</option>
-                                                        <option>14</option>
-                                                        <option>15</option>
-                                                    </select>
+                                                <div  class="col-sm-4">
+                                                    <label>Persons</label>
+                                                        <div class="input-group"  style="width:100%">
+                                                            <span class="input-group-addon btn cursor-style" ng-click="subPerson()"><i class="glyphicon glyphicon-minus"></i></span>
+                                                            <input restrict="[^0-9]" ng-model="numPerson" type="text" class="form-control text-center" aria-label="Amount (to the nearest dollar)">
+                                                            <span class="input-group-addon btn cursor-style" ng-click="addPerson()"><i class="glyphicon glyphicon-plus"></i></span>
+                                                        </div>
                                                 </div>
                                             </div>
                                         </div>
