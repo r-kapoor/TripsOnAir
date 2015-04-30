@@ -18,6 +18,7 @@
     <script type="text/javascript" src="js/angularService/hotelsAndPlacesPageAngularService/mapDataService.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/jatayu.js"></script>
 	<script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shakuni.js"></script>
+    <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/hanuman.js"></script>
     <script type="text/javascript" src="js/angularJS/verge.min.js"></script>
     <script type="text/javascript" src="js/angularJS/lodash.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
@@ -44,6 +45,9 @@
             <div class="col-xs-6">
                 <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showItineraryPanel.html'"></div>
             </div>
+        </div>
+        <div ng-controller="hanumanController" class="alert-box">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
         </div>
 		<!--<div ng-include src="'templates/layouts/global/footer.html'"></div>-->
 	</div>

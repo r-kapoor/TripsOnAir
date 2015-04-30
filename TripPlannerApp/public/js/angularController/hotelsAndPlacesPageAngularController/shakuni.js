@@ -1,4 +1,4 @@
-itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http, $timeout, $document,mapData) {
+itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http, $timeout, $document,$filter,mapData) {
 
     $scope.origin = null;
     $scope.destinations = null;
@@ -147,9 +147,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         event.stopPropagation();
         console.log("ADD:"+JSON.stringify(place));
 
+
         //Checking if a place has been removed and place holder is still there
-        var isInsertedInPlaceHolder = false, insertedByCreatingPosition = false;
+        var isInsertedInPlaceHolder = false, insertedByCreatingPosition = false, hasRemovedPlace = false;
         for(var i = removedPlacesList.length-1; i >=0; i--){
+            hasRemovedPlace = true;
             var dateItinerary = $scope.currentDestination.dateWiseItinerary[removedPlacesList[i].dateItineraryIndex];
             var dateItineraryClone = clone(dateItinerary);
             var placeHolder = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[removedPlacesList[i].index]];
@@ -261,7 +263,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
 
         if(!insertedByCreatingPosition && !isInsertedInPlaceHolder){
-            alert('Cannot add place due to no place available');
+            if(hasRemovedPlace){
+                //ALERT1
+                createAlert('addWhenPlaceHolder',place.Name);
+            }
+            else {
+                createAlert('addFail',place.Name);
+                //alert('Cannot add place due to no place available');//ALERT2
+            }
         }
 
         if(insertedByCreatingPosition)
@@ -517,7 +526,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         if(getTimeFromDate(place.placeArrivalTimeClone)>getTimeFromDate(place.placeDepartureTimeClone))
         {
-            alert('Arrival Time cannot be ahead of Departure Time');
+            //TODO: Create timepicker
+            //alert('Arrival Time cannot be ahead of Departure Time');//ALERT12
+            createAlert('timingChangeInvalid');
         }
         if($scope.isFixItinerary)
         {
@@ -669,7 +680,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 //depart from hotel
                 if((getTimeFromDate(startSightSeeingTime) - getTimeFromDate(hotelCheckInTime)) < MORNING_CHECK_IN_DURATION*RATIO*HOURS_TO_MILLISECONDS)
                 {
-                    alert("You have less time in Hotel");
+                    //alert("You have less time in Hotel");//ALERT13
+                    createAlert('hotelAndLessTime');
                 }
             }
             else
@@ -694,7 +706,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
                 if((getTimeFromDate(hotelExitTime) - getTimeFromDate(endSightSeeingTime)) < REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
                 {
-                    alert("You have less time in Hotel");
+                    //alert("You have less time in Hotel");//ALERT13
+                    createAlert('hotelAndLessTime');
                 }
             }
         }
@@ -726,7 +739,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
                 if((getTimeFromDate(hotelExitTime) - getTimeFromDate(endSightSeeingTime)) < REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
                 {
-                    alert("You have less time in Hotel");
+                   // alert("You have less time in Hotel");//ALERT13
+                    createAlert('hotelAndLessTime');
                 }
             }
         }
@@ -740,7 +754,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             {
                 if(getTimeFromDate(hotelCheckOutTime) - getTimeFromDate(endSightSeeingTime)<REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
                 {
-                    alert("You have less time in Hotel");
+                    //alert("You have less time in Hotel");//ALERT13
+                    createAlert('hotelAndLessTime');
                 }
             }
         }
@@ -754,14 +769,16 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             {
                 if((getTimeFromDate(startSightSeeingTime) - getTimeFromDate(hotelCheckInTime))< REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
                 {
-                    alert("You have less time in Hotel");
+                   // alert("You have less time in Hotel");//ALERT13
+                    createAlert('hotelAndLessTime');
                 }
             }
             else
             {
                 if(getTimeFromDate(startSightSeeingTime) - getTimeFromDate(previousDateItinerary.dateWisePlaceData.endSightSeeingTime)<REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
                 {
-                    alert("You have less time in Hotel");
+                   // alert("You have less time in Hotel");//ALERT13
+                    createAlert('hotelAndLessTime');
                 }
             }
         }
@@ -769,7 +786,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         {
             if((getTimeFromDate(startSightSeeingTime) - getTimeFromDate(hotelCheckInTime))< REST_TIME*RATIO*HOURS_TO_MILLISECONDS)
             {
-                alert("You have less time in Hotel");
+               // alert("You have less time in Hotel");//ALERT13
+                createAlert('hotelAndLessTime');
             }
         }
     }
@@ -888,7 +906,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             else
             {
                 finalPlace2DepartureTime = place1DepartureTime;
-                alert("place is closed");
+               // alert("place is closed");//ALERT8
+                createAlert('reorderAndPlaceClosed');
             }
             console.log(finalPlace2DepartureTime);
             place2.placeDepartureTime = finalPlace2DepartureTime;
@@ -934,22 +953,26 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                         else
                         {
-                            alert("place is closed at arrival Time");
+                            //alert("place is closed at arrival Time");//ALERT4
+                            createAlert('replaceAndClosedOnArrival',place2.Name);
                         }
                     }
                     else
                     {
-                        alert("Place is closed at departure Time");
+                        createAlert('replaceAndClosedOnDeparture',place2.Name);
+                       // alert("Place is closed at departure Time");//ALERT6
                     }
                 }
                 else
                 {
-                    alert("Place is closed at arrival Time");
+                    //alert("Place is closed at arrival Time");//ALERT4
+                    createAlert('replaceAndClosedOnArrival',place1.Name);
                 }
             }
             else
             {
-                alert("place is closed at departure Time");
+               // alert("place is closed at departure Time");//ALERT6
+                createAlert('replaceAndClosedOnDeparture',place1.Name);
             }
             return true;
         }
@@ -985,22 +1008,26 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                         else
                         {
-                            alert("place is closed at arrival Time");
+                            //alert("place is closed at arrival Time");//ALERT4
+                            createAlert('replaceAndClosedOnArrival',place1.Name);
                         }
                     }
                     else
                     {
-                        alert("Place is closed at departure Time");
+                        //alert("Place is closed at departure Time");//ALERT6
+                        createAlert('replaceAndClosedOnDeparture',place1.Name);
                     }
                 }
                 else
                 {
-                    alert("Place is closed at arrival Time");
+                    //alert("Place is closed at arrival Time");//ALERT6
+                    createAlert('replaceAndClosedOnArrival',place2.Name);
                 }
             }
             else
             {
-                alert("place is closed at departure Time");
+               // alert("place is closed at departure Time");//ALERT6
+                createAlert('replaceAndClosedOnDeparture',place2.Name);
             }
             return true;
         }
@@ -1047,16 +1074,19 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     else {
                         console.log(JSON.stringify(place1.PlaceTimings[selectedPlace1TimeIndex]) +" for "+place1ArrivalTime);
                         console.log(JSON.stringify(place2.PlaceTimings[selectedPlace2TimeIndex]) +" for "+place2DepartureTime);
-                        alert('Place closed at departure/arrival times');
+                        //alert('Place closed at departure/arrival times');//ALERT10
+                        createAlert('reorderAndPlaceClosed');
                     }
 
                 }
                 else {
-                    alert('Not enough time to cover places in this order');
+                   // alert('Not enough time to cover places in this order');//ALERT11
+                    createAlert('reorderAndLessTime');
                 }
             }
             else{
-                alert('Places closed at this time');
+               // alert('Places closed at this time');//ALERT10
+                createAlert('reorderAndPlaceClosed');
             }
             return true;
         }
@@ -1123,7 +1153,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         place.placeArrivalTime = $scope.getDateFromString(place.PlaceTimings[openingTimeIndex].TimeStart,place.placeDepartureTime);
                         if(getTimeFromDate(place.placeDepartureTime) - getTimeFromDate(place.placeArrivalTime) < place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
                         {
-                            alert("You have Less Time to Cover This place. Set Timings Accordingly!");
+                            //alert("You have Less Time to Cover This place. Set Timings Accordingly!");//ALERT5
+                            createAlert('replaceAndLessTime',place.Name);
                         }
                     }
                     dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
@@ -1131,7 +1162,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 else {
                     //The place is closed at place departure time
                     //TODO:set arrival Time as initial value so that user can set himself
-                    alert('The place is closed at this time');
+                    //alert('The place is closed at this time'); //ALERT6
+                    createAlert('replaceAndClosedOnDeparture',place.Name);
                 }
             }
             else if(index == dateItinerary.permutation.length -1)
@@ -1149,7 +1181,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[openingTimeIndex].TimeEnd, place.placeArrivalTime);
                         if(getTimeFromDate(place.placeDepartureTime) - getTimeFromDate(place.placeArrivalTime) < place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
                         {
-                            alert("You have Less Time to Cover This place. Set Timings Accordingly!");
+                            //alert("You have Less Time to Cover This place. Set Timings Accordingly!");//ALERT5
+                            createAlert('replaceAndLessTime',place.Name);
                         }
                     }
                     dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
@@ -1157,7 +1190,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 else {
                     //The place is closed at place departure time
                     //TODO:set arrival Time as initial value so that user can set himself
-                    alert('The place is closed at this time');
+                   // alert('The place is closed at this time');//ALERT6
+                    createAlert('replaceAndClosedOnDeparture',place.Name);
                 }
             }
             else {
@@ -1184,12 +1218,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         isPlaceTimingSet = true;
                     }
                     else{
-                        alert('The place is closed in this duration');
+                       // alert('The place is closed in this duration');//ALERT7
+                        createAlert('replaceAndClosedInDuration',place.Name);
                     }
                 }
                 else {
                     if(openingTimeIndexForArrival == openingTimeIndexForDeparture) {
-                        alert('The place is closed at this time');
+                        //alert('The place is closed at this time');//ALERT7
+                        createAlert('replaceAndClosedInDuration',place.Name);
                     }
                     else if(openingTimeIndexForDeparture == -1){
                         //The place is open at arrival but closes before departure
@@ -1203,7 +1239,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                     if(isPlaceTimingSet && getTimeFromDate(place.placeDepartureTime) - getTimeFromDate(place.placeArrivalTime) < place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
                     {
-                        alert("You have Less Time to Cover This place. Set Timings Accordingly!");
+                        //alert("You have Less Time to Cover This place. Set Timings Accordingly!");//ALERT5
+                        createAlert('replaceAndLessTime',place.Name);
                     }
                 }
             }
@@ -1211,7 +1248,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             replacePlace = true;
         }
         else {
-            alert('Place closed on this day');
+            //alert('Place closed on this day');//ALERT3
+            createAlert('replaceAndClosedOnDay',place.Name);
         }
         return replacePlace;
     }
@@ -1219,7 +1257,6 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     function getPlaceDepartureTimeFromArrival(arrivalTime, time2Cover){
         return new Date(getTimeFromDate(arrivalTime) + time2Cover*MINUTES_TO_MILLISECONDS);
-
     }
 
     function getPlaceArrivalTimeFromDeparture(departureTime, time2Cover){
@@ -1756,7 +1793,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(firstPlaceOfCurrentDay.placeArrivalTime) - timeFromHotel*HOURS_TO_MILLISECONDS);
                     if((getTimeFromDate(dateItinerary.dateWisePlaceData.startSightSeeingTime) - getTimeFromDate(hotel.checkInTime))  < RATIO*MORNING_CHECK_IN_DURATION*HOURS_TO_MILLISECONDS){
                         //Violating Constraint
-                        alert("You have less time in hotel on "+dateItinerary.dateWisePlaceData.startSightSeeingTime);
+                       // alert("You have less time in hotel on "+dateItinerary.dateWisePlaceData.startSightSeeingTime);//ALERT14
+                        createAlert('replaceHotelLessTimeOnDate',$filter('date')(dateItinerary.dateWisePlaceData.startSightSeeingTime, 'mediumDate'));
                     }
                     dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(lastPlaceOfDay.placeDepartureTime)+timeToHotel*HOURS_TO_MILLISECONDS);
                 }
@@ -1778,7 +1816,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 }
                 if((getTimeFromDate(dateItinerary.dateWisePlaceData.startSightSeeingTime) - getTimeFromDate(hotelEntryTime))  < RATIO*REST_TIME*HOURS_TO_MILLISECONDS){
                     //Violating Constraint
-                    alert("You have less time in hotel on morning of "+dateItinerary.dateWisePlaceData.startSightSeeingTime);
+                   // alert("You have less time in hotel on morning of "+dateItinerary.dateWisePlaceData.startSightSeeingTime);//ALERT15
+                    createAlert('replaceHotelLessTimeInMorning',$filter('date')(dateItinerary.dateWisePlaceData.startSightSeeingTime, 'mediumDate'));
                 }
                 dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(lastPlaceOfDay.placeDepartureTime)+timeToHotel*HOURS_TO_MILLISECONDS);
             }
@@ -1801,7 +1840,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                         if((getTimeFromDate(hotel.checkOutTime) - getTimeFromDate(hotelEntryTime))  < RATIO*REST_TIME*HOURS_TO_MILLISECONDS){
                             //Violating Constraint
-                            alert("You have less time in hotel on morning of "+hotel.checkOutTime);
+                           // alert("You have less time in hotel on morning of "+hotel.checkOutTime);//ALERT15
+                            createAlert('replaceHotelLessTimeInMorning',$filter('date')(dateItinerary.dateWisePlaceData.startSightSeeingTime, 'mediumDate'));
                         }
                     }
                 }
@@ -1820,7 +1860,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                         if((getTimeFromDate(dateItinerary.dateWisePlaceData.startSightSeeingTime) - getTimeFromDate(hotelEntryTime))  < RATIO*REST_TIME*HOURS_TO_MILLISECONDS){
                             //Violating Constraint
-                            alert("You have less time in hotel on morning of "+dateItinerary.dateWisePlaceData.startSightSeeingTime);
+                            //alert("You have less time in hotel on morning of "+dateItinerary.dateWisePlaceData.startSightSeeingTime);//ALERT15
+                            createAlert('replaceHotelLessTimeInMorning',$filter('date')(dateItinerary.dateWisePlaceData.startSightSeeingTime, 'mediumDate'));
                         }
                     }
                 }
@@ -2341,6 +2382,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             $scope.$broadcast('loadItinerary',$scope.currentDestination.dateWiseItinerary[$scope.currentDay],$scope.currentDay,$scope.currentDestination.hotelDetails);
         }
     };
+
+    function createAlert(category,param){
+        $rootScope.$emit('showRecommendation',category,param);
+    }
 
     $scope.getItinerary();
 });
