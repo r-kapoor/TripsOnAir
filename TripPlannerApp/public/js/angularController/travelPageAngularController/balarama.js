@@ -21,12 +21,13 @@ routesModule.controller('balaramaController', function($scope, $rootScope, $http
 
     $rootScope.$on('showRecommendation',function onShowRecommendation(event,category,params){
         var alert=messages[category];
-        removeAlert(alert.kind);
+        var alertClone = JSON.parse(JSON.stringify(alert));
+        removeAlert(alertClone.kind);
         if(params!=undefined)
         {
-            alert.msg = alert.msg.replace('?',params);
+            alertClone.msg = alertClone.msg.replace('?',params);
         }
-        $scope.alerts.push(alert);
+        $scope.alerts.push(alertClone);
     });
 
     $rootScope.$on('hideRecommendation',function onHideRecommendation(event,kind){
