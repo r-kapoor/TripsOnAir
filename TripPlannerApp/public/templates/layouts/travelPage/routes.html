@@ -17,8 +17,8 @@
                     <!--<div ng-hide="loader">-->
                     <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
                     <!--</div>-->
-                    <div class="panel panel-default" style="height: 100vh"  ng-click="closeOtherPanels(1)">
-
+                    <div class="panel panel-default" style="height: 100vh">
+                        <div class="{{getTransparentClass(1)}}" ng-click="closeOtherPanels(1)"></div>
                         <div class="panel-body">
                             <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
                                 <p>
@@ -128,7 +128,8 @@
 
                 </pageslide>
                 <pageslide ps-open="isTravelModesPanelOpen" ps-side="left" ps-size="350px">
-                    <div class="panel panel-default" style="height: 100vh"  ng-click="closeOtherPanels(2)">
+                    <div class="panel panel-default" style="height: 100vh">
+                        <div class="{{getTransparentClass(2)}}" ng-click="closeOtherPanels(2)"></div>
                         <div class="panel-body">
                             <div class="page-header text-center">
                                 <h2><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h2>

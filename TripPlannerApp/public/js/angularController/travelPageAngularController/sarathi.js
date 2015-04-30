@@ -466,6 +466,31 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         console.log("in close other panels");
     };
 
+    $scope.getTransparentClass = function(panelNo){
+        if(panelNo==1)
+        {
+            if($scope.isModeDetailsPanelOpen||$scope.isTravelModesPanelOpen)
+            {
+                return "panel-transparent";
+            }
+            else
+            {
+                return "";
+            }
+        }
+        else if(panelNo ==2)
+        {
+            if($scope.isModeDetailsPanelOpen)
+            {
+                return "panel-transparent";
+            }
+            else
+            {
+                return "";
+            }
+        }
+    }
+
     $scope.showOtherTrip = function() {
         $scope.isTripPanelSetCollapsed = true;
         console.log('Panel Collapsed');
