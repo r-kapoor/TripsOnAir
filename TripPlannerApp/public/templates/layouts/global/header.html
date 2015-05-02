@@ -4,9 +4,6 @@
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<title>Plan Trips in customized and personalized way at tripsonair.com</title>
-		<link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap-slider.css">
-		<link rel="stylesheet" type="text/css" href="css/bootstrapCSS/style.css">
 	</head>
 <body class="home">
 	<!-- Fixed navbar -->
@@ -19,19 +16,15 @@
                     <img src="/images/LogoB.png" alt="tripsonair" class="img-responsive" style="width: 100%">
 				</a>
 			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav pull-right">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="about.html">About</a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="sidebar-left.html">Left Sidebar</a></li>
-							<li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
-						</ul>
-					</li>
-					<li><a href="contact.html">Contact</a></li>
-					<li><a class="btn" href="signin.html">SIGN IN / SIGN UP</a></li>
+			<div class="navbar-collapse collapse" >
+				<ul class="nav navbar-nav pull-right" ng-controller="indraController">
+                    <li ng-click="submitPage()" ng-if="isSaveShown"><a class="btn round" style="background-color: #ff7310;color: #ffffff; font-weight: bold">{{saveText}}</a></li>
+                    <li><a class="btn btn-primary" href="signin.html">Login</a></li>
+                    <li id="budgetHeadBtn" ng-if="isBudgetShown" ng-click="toggleBudgetPanel()">
+                        <a class="btn btn-primary" type="button">
+                            Budget Spent <span class="badge">{{budgetPercent}}%</span>
+                        </a>
+                    </li>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>

@@ -1,0 +1,49 @@
+<div class="budget col-xs-2" budget-panel-position>
+    <div ng-if="isBudgetPanelOpen" class="panel panel-default">
+        <ul class="list-group">
+            <li class="list-group-item" ng-if="totalBudget > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{totalBudgetText}}</div>
+                    <div class="col-xs-4">{{totalBudget | currency:"&#8377;":0}}</div>
+                    <div ng-click="closeBudgetPanel()" class="col-xs-2"><i class="glyphicon glyphicon-remove"></i></div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-if="travelBudget > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{travelBudgetText}}</div>
+                    <div class="col-xs-4">{{travelBudget | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-mouseover="isHover = false" ng-mouseleave="isHover = true" ng-hide="!(cityExpenses > 0)">
+                <div class="row">
+                    <div class="col-xs-6">{{cityBudgetText}}</div>
+                    <div class="col-xs-4">{{cityExpenses | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-hide="isHover" ng-if="hotelExpenses > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{hotelExpensesText}}</div>
+                    <div class="col-xs-4">{{hotelExpenses | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-hide="isHover" ng-if="localTravelAndFoodExpenses > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{localTravelAndFoodText}}</div>
+                    <div class="col-xs-4">{{localTravelAndFoodExpenses | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-hide="isHover" ng-if="placesExpenses > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{placesExpensesText}}</div>
+                    <div class="col-xs-4">{{placesExpenses | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-if="otherCitiesExpenses > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{otherCitiesBudgetText}}</div>
+                    <div class="col-xs-4">{{otherCitiesExpenses | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

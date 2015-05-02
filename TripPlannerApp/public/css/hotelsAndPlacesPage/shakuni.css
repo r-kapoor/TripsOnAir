@@ -38,3 +38,10 @@
     z-index: 2;
     width: 40%;
 }
+
+.budget {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 2;
+}

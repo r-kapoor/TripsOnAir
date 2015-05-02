@@ -20,6 +20,8 @@ module.exports = function(app) {
 		//console.log("-----------Got data from session-------------\n"+JSON.stringify(JSON.parse(travelData).withTaxiRome2rioData));
 		var numOfPeople = travelData.numPeople;
 		var totalBudget=travelData.userTotalbudget;
+        var travelBudget = travelData.travelBudget;
+        var minorTravelBudget = travelData.minorTravelBudget;
 		var tastes  = travelData.tastes;
 		if(travelData.withTaxiRome2rioData.isMajorDefault==1)
 		{
@@ -70,6 +72,8 @@ async.parallel(
                 destinationAndStops.userTotalbudget = totalBudget;
                 destinationAndStops.numPeople = numOfPeople;
                 destinationAndStops.tastes = tastes;
+                destinationAndStops.travelBudget = travelBudget;
+                destinationAndStops.minorTravelBudget = minorTravelBudget;
 
                 res.json(destinationAndStops);
                 var fs = require('fs');

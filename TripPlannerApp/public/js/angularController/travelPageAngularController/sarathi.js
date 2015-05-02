@@ -934,6 +934,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         console.log("submitTravel");
         defaultRouteData.isMajorDefault=1;
         alternateRouteData.isMajorDefault=0;
+        travelData.travelBudget = $scope.travelBudget;
+        travelData.minorTravelBudget = $scope.minorBudget;
         travelData = JSON.stringify(travelData);
         var formElement=angular.element('<form\>');
         formElement.attr("action","/"+'showPlacesAndHotels');

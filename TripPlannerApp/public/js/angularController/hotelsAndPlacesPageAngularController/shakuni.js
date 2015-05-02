@@ -1,4 +1,4 @@
-itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http, $timeout, $document,$filter,mapData) {
+itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData) {
 
     $scope.origin = null;
     $scope.destinations = null;
@@ -26,6 +26,27 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.isDateBarCollapsed = false;
     $scope.destinationsWithStop = [];//Only used in showCityPanel
 
+    $scope.isBudgetPanelOpen = true;
+    $scope.totalBudgetText = "Budget";
+    $scope.travelBudgetText = "Travel Expenses";
+    $scope.otherCitiesBudgetText = "Other Destination(s) Expenses";
+    $scope.cityBudgetText = "";
+    $scope.hotelExpensesText = "";
+    $scope.localTravelAndFoodText = "Food & Local Travel";
+    $scope.placesExpensesText = "Places Entry Fee";
+
+    $scope.totalBudget = 0;
+    $scope.travelBudget = 0;
+    $scope.hotelExpenses = 0;
+    $scope.localTravelAndFoodExpenses = 0;
+    $scope.placesExpenses = 0;
+    $scope.cityExpenses = 0;
+    $scope.otherCitiesExpenses = 0;
+
+    $scope.isHover = true;
+
+    var responsedata;
+
     var SPEED = 15;//km/hr
     var RATIO = 0.75;
     var MORNING_CHECK_IN_DURATION = 2;//hrs
@@ -36,10 +57,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     var HOURS_TO_MILLISECONDS = MINUTES_TO_MILLISECONDS*60;
     var DAYS_TO_MILLISECONDS = HOURS_TO_MILLISECONDS*24;
     var MAX_RATIO = 1.5;
+    var PER_DAY_FOOD_AND_LOCAL_TRAVEL = 1000;
 
     var removedPlacesList = [];
-
-
 
     //TODO: while adding the place update isSelectedFlag in placeTimings
 
@@ -47,6 +67,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         $http.get('/planItinerary').success(function(data,status){
 
+            responsedata = data;
             $scope.origin=data.origin;
             $scope.destinations = data.destinations;
             $scope.stops = data.destinationsWiseStops;
@@ -83,6 +104,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 }
             }
 
+            $scope.cityBudgetText = $scope.currentDestination.name+"'s Expenses";
+            $scope.totalBudget = parseInt(data.userTotalbudget);
+            $scope.travelBudget = parseInt(data.travelBudget) + parseInt(data.minorTravelBudget);
+            calculateOtherCitiesExpenses();
+            calculateLocalTravelExpenses();
+
             var firstDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = firstDay.setHours(0,0,0,0);
             calculateHotelExpenses();
@@ -94,6 +121,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 Latitude:parseFloat($scope.currentDestination.pos.split(',')[0]),
                 Longitude:parseFloat($scope.currentDestination.pos.split(',')[1])
             };
+            calculatePlacesExpenses();
+            calculateCityExpenses();
             //$rootScope.$emit('loadMap',$scope.currentDestination.position);
         })
         .error(
@@ -142,6 +171,41 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             alert('Place Clicked');
         }
     };
+    $scope.closeBudgetPanel = function(){
+        $scope.isBudgetPanelOpen = false;
+    };
+
+    $rootScope.$on("toggleBudgetPanel",function(){
+        $scope.isBudgetPanelOpen = !$scope.isBudgetPanelOpen;
+    });
+
+    $rootScope.$on("submitPage",function(){
+            //open Modal
+            var modalInstance = $modal.open({
+                templateUrl: 'saveModalContent.html',
+                controller: 'ModalInstanceCtrl'
+            });
+    });
+
+    $rootScope.$on("downloadPDF",function(){
+        var req = {
+            method: 'POST',
+            url: '/downloadItinerary',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: { data: responsedata }
+        };
+
+        //$http.post('/downloadItinerary', {data:responsedata}).success(function(data,status) {
+        $http(req).success(function(data,status) {
+
+        }).error(
+            function(data, status) {
+                console.log(data || "Cannot Download. Backend Request failed");
+            });
+
+    });
 
     $scope.addPlace = function(event, place) {
         event.stopPropagation();
@@ -272,6 +336,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 //alert('Cannot add place due to no place available');//ALERT2
             }
         }
+        else {
+            calculatePlacesExpenses();
+        }
 
         if(insertedByCreatingPosition)
         {
@@ -299,6 +366,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             {
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
+                calculatePlacesExpenses();
             }
         }
         else {
@@ -1291,8 +1359,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         return placeTimingsDateArray;
     }
 
-    function calculateHotelExpenses(){
-        var hotelDetails = $scope.currentDestination.hotelDetails;
+    function calculateHotelExpenses(destination){
+        $scope.hotelExpensesText = $scope.currentDestination.hotelDetails.Name;
+        var currentCity = false;
+        if(destination == undefined){
+            destination = $scope.currentDestination;
+            currentCity = true;
+        }
+        var hotelDetails = destination.hotelDetails;
         var numberOfDaysInHotel = 0;
         hotelDetails.checkInTime = new Date(hotelDetails.checkInTime);
         hotelDetails.checkOutTime = new Date(hotelDetails.checkOutTime);
@@ -1310,6 +1384,88 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var numberOfRooms = Math.ceil($scope.numberOfPeople/hotelDetails.MaxPersons);
         var pricePerPerson = (hotelDetails.Price * numberOfDaysInHotel * numberOfRooms)/$scope.numberOfPeople;
         hotelDetails.pricePerPerson = pricePerPerson;
+        if(currentCity){
+            $scope.hotelExpenses = hotelDetails.pricePerPerson;
+            calculateCityExpenses();
+        }
+        else {
+            return hotelDetails.pricePerPerson;
+        }
+    }
+
+    function calculateLocalTravelExpenses(destination){
+        var currentCity = false;
+        if(destination == undefined){
+            destination = $scope.currentDestination;
+            currentCity = true;
+        }
+        var localTravelAndFoodExpenses = destination.dateWiseItinerary.length * PER_DAY_FOOD_AND_LOCAL_TRAVEL;
+        destination.localTravelAndFoodExpenses = localTravelAndFoodExpenses;
+        if(currentCity){
+            $scope.localTravelAndFoodExpenses = localTravelAndFoodExpenses;
+            calculateCityExpenses();
+        }
+        else {
+            return localTravelAndFoodExpenses;
+        }
+    }
+
+    function calculatePlacesExpenses(destination){
+        var currentCity = false;
+        if(destination == undefined){
+            destination = $scope.currentDestination;
+            currentCity = true;
+        }
+        var dateItinerary = destination.dateWiseItinerary;
+        var expenses = 0;
+        for(var i = 0; i < dateItinerary.length; i++){
+            for(var j = 0; j < dateItinerary[i].permutation.length; j++){
+                var isPlaceRemoved = dateItinerary[i].dateWisePlaceData.placesData[dateItinerary[i].permutation[j]].isPlaceRemoved;
+                if(!(isPlaceRemoved != undefined && isPlaceRemoved == 1)){
+                    if(dateItinerary[i].dateWisePlaceData.placesData[dateItinerary[i].permutation[j]].AdultCharge != undefined){
+                        if(dateItinerary[i].dateWisePlaceData.placesData[dateItinerary[i].permutation[j]].AdultCharge > 0){
+                            expenses += parseInt(dateItinerary[i].dateWisePlaceData.placesData[dateItinerary[i].permutation[j]].AdultCharge);
+                        }
+                    }
+                }
+            }
+        }
+        destination.placesExpenses = expenses;
+        if(currentCity){
+            $scope.placesExpenses = expenses;
+            calculateCityExpenses();
+        }
+        else {
+            return expenses;
+        }
+    }
+
+    function calculateCityExpenses(){
+        console.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
+        $scope.cityExpenses = $scope.hotelExpenses + $scope.placesExpenses + $scope.localTravelAndFoodExpenses;
+        calculateBudgetPercent();
+    }
+
+    function calculateBudgetPercent(){
+        var totalExpenses = $scope.travelBudget + $scope.cityExpenses + $scope.otherCitiesExpenses;
+        var percent = parseInt((totalExpenses * 100)/ $scope.totalBudget);
+        $rootScope.$emit('budgetChanged', percent);
+        console.log('budgetChanged');
+    }
+
+    function calculateOtherCitiesExpenses() {
+        var otherCitiesExpenses = 0;
+        for(var destinationIndex = 0; destinationIndex < $scope.destinations.length; destinationIndex++){
+            var destination = $scope.destinations[destinationIndex];
+            if(!destination.isCurrent){
+                var hotelExpenses = calculateHotelExpenses(destination);
+                var placeExpenses = calculatePlacesExpenses(destination);
+                var localTravelExpenses = calculateLocalTravelExpenses(destination);
+                destination.totalExpenses = hotelExpenses + placeExpenses + localTravelExpenses;
+                otherCitiesExpenses += destination.totalExpenses;
+            }
+        }
+        $scope.otherCitiesExpenses = otherCitiesExpenses;
     }
 
     function insertPlaceIntoItinerary(place, candidate, selectedPlaceTimingIndex){
@@ -2178,6 +2334,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         });
         dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].isPlaceRemoved = 1;
         setMapData(dateItineraryIndex);
+        calculatePlacesExpenses();
         //dateItinerary.permutation.splice(index,1);
 
     };

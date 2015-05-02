@@ -9,3 +9,22 @@
 .cursor-style{
     cursor: pointer;
 }
+
+.btn.round {
+    border-radius: 24px;
+}
+
+.btn.gradient {
+    background: -moz-linear-gradient(top, #ff7310 50%, #0000ff 50%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(50%,#ff7310), color-stop(50%,#0000ff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ff7310 50%,#0000ff 50%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ff7310 50%,#0000ff 50%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ff7310 50%,#0000ff 50%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ff7310 50%,#0000ff 50%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff7310', endColorstr='#0000ff',GradientType=0 ); /* IE6-9 */
+}
+
+/*.navbar-nav > li {*/
+    /*padding-left: 1%;*/
+    /*padding-right: 1%;*/
+/*}*/
