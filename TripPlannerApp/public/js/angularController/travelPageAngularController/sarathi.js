@@ -660,7 +660,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         if(vehicle.isFinal != undefined && vehicle.isFinal == 1) {
             return "Added";
         }
-        return "Add To Trip";
+        return "Add";
     };
 
     $scope.getNthDay = function(train) {
