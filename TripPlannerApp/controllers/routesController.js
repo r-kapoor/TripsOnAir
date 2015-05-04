@@ -11,12 +11,13 @@ var conn = require('../lib/database');
 var getDateSets = require('../lib/getDateSets');
 var getTrainData=require('../lib/getTrainData');
 var getFlightData=require('../lib/getFlightData');
+var getBusData=require('../lib/getBusData');
 var planAllModesTrip = require('../lib/planAllModesTrip');
 var planTaxiTrip=require('../lib/planTaxiTrip');
 var tasteObjectToInteger=require('../lib/UtilityFunctions/tasteObjectToInteger');
 var chooseMajorDefault = require('../lib/chooseMajorDefault');
 var cloneJSON=require('../lib/UtilityFunctions/cloneJSON');
-var combineTrainAndFlightData = require('../lib/combineTrainAndFlightData');
+var combineTrainFlightBusData = require('../lib/combineTrainFlightBusData');
 require('date-utils');
 var async  = require('async');
 
@@ -137,11 +138,15 @@ module.exports=function (app){
                                     getTrainData.getTrainData(conn, results.slice(0, results.length - 1), dateSet, budget, dates, times, ratio, numPeople,
                                         callbackData);
                                 }
+                            },
+                            function (callbackData) {
+                                getBusData.getBusData(conn, results.slice(0, results.length - 1), dateSet, budget, dates, times,
+                                    callbackData);
                             }],
                         function (err, results) {
 
                             //Reference for both train and flight data is same. Now Combining the isRecommendedRoute part
-                            var rome2RioData = combineTrainAndFlightData.combineTrainAndFlightData(results[0]);
+                            var rome2RioData = combineTrainFlightBusData.combineTrainFlightBusData(results[0]);
 
                             async.parallel(
                                 [
@@ -177,7 +182,6 @@ module.exports=function (app){
                         }
                     );
                 }
-
     	    }
         );
 	});
