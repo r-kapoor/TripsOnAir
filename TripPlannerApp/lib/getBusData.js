@@ -68,16 +68,16 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         +' (select CityID, AlternateName as DestinationName from CityAlternateName where AlternateName IN ( '+connection.escape(destinationCityNameArray)+' )) d '
         +' ON '
         +' c.DestinationID = d.CityID;';
-   // console.log('QUERY for Bus:'+fullQueryString);
+    console.log('QUERY for Bus:'+fullQueryString);
     connection.query(fullQueryString, function(err, rows, fields) {
         if (err)
         {
             throw err;
         }
         else{
-            //for (var i in rows) {
-            //    console.log(rows[i]);
-            //}
+            for (var i in rows) {
+                console.log(rows[i]);
+            }
             var countOfVehicleBus=0;
             //Iterating the array of rome2rio objects
             for(var i = 0; i < numOfTravels; i++)
@@ -89,7 +89,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                     var allSegments = allRoutes[j].segments;
                     var isRecommendedRoute = 1;
                     console.log("****Routes Name:"+allRoutes[j].name);
-                    if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS')
+                    if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS'||allRoutes[j].name.toUpperCase() == 'BUS')
                     {
                         console.log("****1");
                         for(var k = 0; k < allSegments.length; k++)
