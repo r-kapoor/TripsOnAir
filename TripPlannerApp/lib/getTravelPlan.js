@@ -14,7 +14,6 @@ var selectFinalTravelVehicle = function (allSegments,k,isMajorCounter,dateSet,i,
     else if(kind=="bus"){
         var vehicleData = "busData";
     }
-console.log("***************vehicle data:"+vehicleData);
     var trainData=allSegments[k][vehicleData];
     var minTrainTimeDifference=-1;
     var minTrain;

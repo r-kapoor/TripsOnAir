@@ -88,16 +88,12 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                 {
                     var allSegments = allRoutes[j].segments;
                     var isRecommendedRoute = 1;
-                    console.log("****Routes Name:"+allRoutes[j].name);
                     if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS'||allRoutes[j].name.toUpperCase() == 'BUS')
                     {
-                        console.log("****1");
                         for(var k = 0; k < allSegments.length; k++)
                         {
-                            console.log("****2");
                             if(allSegments[k].isMajor == 1 && allSegments[k].kind != undefined && allSegments[k].kind == "bus")//A part of this route is a flight
                             {
-                                console.log("****3");
                                 var sourceCityName = allSegments[k].sName.toUpperCase();
                                 var destinationCityName = allSegments[k].tName.toUpperCase();
                                 var startDate=busDateSetObjectArray[countOfVehicleBus].dateSet.dateStart;
@@ -106,10 +102,8 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                                 var endTime=endDate.toFormat("HH24")+":"+endDate.toFormat("MI")+":00";
                                 var atLeastABus=0;
                                 var busData=[];
-                                console.log("****SourceCityName"+sourceCityName+"*****desTinationCityName:"+destinationCityName);
                                 //Iterate the flight rows from the database to check whether there are flights on the possible days:times
                                 for (var t in rows) {
-                                    console.log("*******rows[t].OriginName"+rows[t].OriginName+","+"*****"+rows[t].DestinationName);
                                     if((sourceCityName==rows[t].OriginName)&&(destinationCityName==rows[t].DestinationName))
                                     {
                                         console.log("*******in BUS FOR LOOP------------------");
