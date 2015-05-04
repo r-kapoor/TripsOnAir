@@ -84,7 +84,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 		}
 	    else{
 			for (var i in rows) {
-				console.log(rows[i]);
+				//console.log(rows[i]);
 				if((rows[i].OriginDay!=1)&&(rows[i].DaysOfTravel!="0")){
 					var daysofTravelArray=rows[i].DaysOfTravel.split("");
 					console.log("oldDaysofTravel:"+rows[i].DaysOfTravel);

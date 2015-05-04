@@ -75,7 +75,7 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
         }
         else{
             for (var i in rows) {
-                console.log(rows[i]);
+                //console.log(rows[i]);
             }
             var countOfVehicleFlight=0;
             //Iterating the array of rome2rio objects
