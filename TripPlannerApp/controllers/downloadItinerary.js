@@ -9,15 +9,36 @@ module.exports = function(app) {
     app.post('/downloadItinerary', function(req, res) {
         console.log('downloadItinerary called');
 
-        var travelData=JSON.parse(req.session.travelData);
+        process.on('uncaughtException', function(err) {
+            console.log(err.stack);
+        });
 
-        var itineraryData = req.param('data');
-        //console.log(travelData);
+        var travelData;
+        if(req.session == undefined){
+            console.log("req.session is undefined");
+        }
+        if(req.session.travelData != undefined){
+            if(typeof req.session.travelData === 'object'){
+                travelData = req.session.travelData;
+            }
+            else {
+                travelData=JSON.parse(req.session.travelData);
+            }
+            var itineraryData = req.param('data');
+            if(itineraryData != undefined){
+                var itineraryPDF = getItineraryPDF.getItineraryPDF(travelData, itineraryData);
+                req.session.travelData=travelData;
+                res.json({success:true});
+            }
+            else {
+                console.log("itineraryData is undefined");
+                res.json({success:false});
+            }
+        }
+        else{
+            console.log("travelData is undefined");
+            res.json({success:false});
+        }
 
-        getItineraryPDF.getItineraryPDF(travelData, itineraryData);
-
-
-        //console.log("-----------Got data from session-------------\n"+JSON.stringify(JSON.parse(travelData).withTaxiRome2rioData));
-        res.json({success:true});
     });//app.get
 };
