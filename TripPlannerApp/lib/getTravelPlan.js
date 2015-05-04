@@ -191,8 +191,6 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
         }
     }
 
-
-    //console.log("totalDurationOfTrip:"+totalDurationOfTrip+":"+"travelDuration"+travelDuration);
     var tripPossible = true;
     for(var k=0;k<ratingRatio.length;k++)
     {
@@ -258,7 +256,6 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
                             if((allSegments[k].kind)&&(allSegments[k].kind=="train"))
                             {
                                 selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "train");
-
                             }
 
                             //if flight
@@ -270,17 +267,6 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
                             //if bus
                             else if((allRoutes[j].name.toUpperCase() == 'BUS REDBUS'||allRoutes[j].name.toUpperCase() == 'BUS')&&(allSegments[k].kind)&&(allSegments[k].kind=="bus"))
                             {
-
-                                ////adding idealStartTime in rome2Rio data
-                                //allSegments[k].startTime=new Date(idealStartTime.getTime());
-                                //console.log("Takes Bus at Time:"+idealStartTime);
-                                //idealStartTime.addMinutes(allSegments[k].duration);
-                                //console.log("Reaches at Time:"+idealStartTime);
-                                ////adding endTime in rome2Rio data
-                                //allSegments[k].endTime=new Date(idealStartTime.getTime());
-                                ////Adding buffer Time
-                                //idealStartTime.addHours(2);
-                                ////TODO:getBusSchedule and apply logic accordingly
                                 selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "bus");
                             }
 
