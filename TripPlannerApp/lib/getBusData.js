@@ -35,7 +35,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         for(var j = 0; j < allRoutes.length; j++)
         {
             console.log("Route Name:",allRoutes[j].name);
-            if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS'){
+            if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS'||allRoutes[j].name.toUpperCase() == 'BUS'){
                 var allSegments = allRoutes[j].segments;
                 var durBeforeBus=0;
                 for(var k = 0; k < allSegments.length; k++)
@@ -60,7 +60,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         }
     }
 
-    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime, Duration, OriginName, DestinationName, Rating, Price from(select * from(((select * from Bus) a '
+    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginName, DestinationName, Rating, Price, DestDay, OriginDay from(select * from(((select * from Bus) a '
         +' Join '
         +' (select CityID, AlternateName as OriginName from CityAlternateName where AlternateName IN ( '+connection.escape(sourceCityNameArray)+' )) b '
         +' ON a.OriginCityID = b.CityID))) c '
@@ -113,7 +113,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                                     if((sourceCityName==rows[t].OriginName)&&(destinationCityName==rows[t].DestinationName))
                                     {
                                         console.log("*******in BUS FOR LOOP------------------");
-                                        var daysOfTravelArray="0";//assuming bus is running all days
+                                        var daysOfTravelArray= rows[t].DaysOfTravel;
                                         var OriginDepartureTime=rows[t].OriginDepartureTime;
                                         console.log(startDate+","+endDate+","+startTime+","+endTime+","+daysOfTravelArray+","+OriginDepartureTime);
                                         var busDateLimits = getValidDateLimits.getValidDateLimits(startDate,endDate,startTime,endTime,daysOfTravelArray,OriginDepartureTime);
