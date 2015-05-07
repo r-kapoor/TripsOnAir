@@ -35,7 +35,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         for(var j = 0; j < allRoutes.length; j++)
         {
             console.log("Route Name:",allRoutes[j].name);
-            if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS'||allRoutes[j].name.toUpperCase() == 'BUS'){
+            if(allRoutes[j].name == 'Bus RedBus'||allRoutes[j].name == 'Bus'){
                 var allSegments = allRoutes[j].segments;
                 var durBeforeBus=0;
                 for(var k = 0; k < allSegments.length; k++)
@@ -60,7 +60,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         }
     }
 
-    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginName, DestinationName, Rating, Price, DestDay, OriginDay from(select * from(((select * from Bus) a '
+    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginName, DestinationName, Rating, Price as fare, DestDay, OriginDay from(select * from(((select * from Bus) a '
         +' Join '
         +' (select CityID, AlternateName as OriginName from CityAlternateName where AlternateName IN ( '+connection.escape(sourceCityNameArray)+' )) b '
         +' ON a.OriginCityID = b.CityID))) c '

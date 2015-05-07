@@ -47,7 +47,7 @@
                                             <div class="panel panel-default">
                                                 <div ng-repeat="segment in leg.defaultRoute.segments">
                                                     <div ng-if="segment.isMajor != 0" ng-href='#' ng-click="openTravelModesPanel(leg, $event, $parent.$parent.$index)">
-                                                        <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, route, $event,'cabOperator')">
+                                                        <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, leg.defaultRoute, $event,'cabOperator')">
                                                             <div ng-repeat="cabDetail in segment.CabDetails">
                                                                 <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info segment-hover">
                                                                     <div class="panel-heading">
@@ -151,6 +151,8 @@
                                                             </div>
                                                             <div class="col-xs-2">
                                                                 <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+                                                                <div class="row text-center" ng-if = "(route.name=='Drive')" style="font-size: 80%">Drive</div>
+                                                                <div class="row text-center" ng-if = "(route.name=='Taxi')" style="font-size: 80%">Taxi</div>
                                                             </div>
                                                             <div class="col-xs-5">
                                                                 <div class="row">
@@ -323,6 +325,75 @@
                                         </li>
                                         </div>
                                     </ul>
+
+                                    <ul class="list-group">
+                                        <div ng-if="isBusClicked" ng-repeat="bus in buses">
+                                            <li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="col-sm-2">
+                                                            <div class="row"> {{bus.OriginDepartureTime|formatTime}}</div>
+                                                        </div>
+                                                        <div class="col-sm-1">
+                                                            <i class="glyphicon glyphicon-arrow-right" style="font-size:small"></i>
+                                                        </div>
+                                                        <div class="col-sm-3 col-sm-offset-1">
+                                                            <div class="row">{{bus.DestArrivalTime|formatTime}}</div>
+                                                            <div class="row">
+                                                                <small>{{getNthDay(bus)}}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4" style="font-weight: bold;font-size: medium">
+                                                            <div class="row" style="color:orange">{{bus.fare | currency:"&#8377;"}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="col-sm-6">
+                                                            <div class="row">{{bus.Operator|titleCase}}</div>
+                                                        </div>
+                                                        <div class="col-sm-5 col-sm-offset-1">
+                                                            <div class="row">{{bus.Type}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="padding-top: 2%">
+                                                    <div class="col-xs-6">
+                                                        <button datepicker-popup="dd-MMMM-yyyy" ng-model="vehicleDate[$index].dt"
+                                                                is-open="vehicleDate[$index].opened" min-date="vehicleDate[$index].minDate"
+                                                                max-date="vehicleDate[$index].maxDate"
+                                                                datepicker-options="dateOptions" ng-required="true"
+                                                                close-text="Close" ng-click="open($event,$index)" ng-disabled="vehicleDate[$index].disabled" date-disabled="disabled(date, mode, bus)">
+                                                            <div class="row">
+                                                                <div class="col-xs-1 h5">
+                                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                                </div>
+                                                                <div class="col-xs-1 h5">{{(vehicleDate[$index].dt | date:'dd') || 'Select'}}
+                                                                </div>
+                                                                <div class="col-xs-4">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-2 month">{{vehicleDate[$index].dt |
+                                                                            date:'MMM'}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-2 day">{{vehicleDate[$index].dt |
+                                                                            date:'EEE'}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-xs-4 col-xs-offset-1">
+                                                        <div class="btn {{getAddButtonClass(bus)}}" ng-click="addToTrip(bus,$index,$event)">{{getAddButtonText(bus)}}</div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                    </ul>
+
                             <div  ng-if="isCabClicked">
                                 <div class = "panel panel-default">
                                 <div class="panel-body">
