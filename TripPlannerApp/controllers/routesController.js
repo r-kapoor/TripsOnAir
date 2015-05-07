@@ -142,7 +142,8 @@ module.exports=function (app){
                             function (callbackData) {
                                 getBusData.getBusData(conn, results.slice(0, results.length - 1), dateSet, budget, dates, times,
                                     callbackData);
-                            }],
+                            }
+                            ],
                         function (err, results) {
 
                             //Reference for both train and flight data is same. Now Combining the isRecommendedRoute part
