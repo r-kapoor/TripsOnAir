@@ -56,9 +56,11 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.routes = [];
     $scope.trains = [];
     $scope.flights = [];
+    $scope.buses = [];
 
     $scope.isTrainClicked = false;
     $scope.isFlightClicked = false;
+    $scope.isBusClicked = false;
     $scope.isCabClicked = false;
     $scope.isCabOperatorClicked = false;
     $scope.cabDetails = [];
@@ -129,6 +131,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         $scope.currentRoute = route;
         $scope.isTrainClicked = false;
         $scope.isFlightClicked = false;
+        $scope.isBusClicked = false;
         $scope.isCabOperatorClicked = false;
         $scope.isCabClicked = false;
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
@@ -146,6 +149,14 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
              $timeout(function() {
                  $scope.isFlightClicked = true;
              }, 500);
+        }
+        else if((route.name=="Bus"||route.name=="Bus RedBus")&&(segment.kind!="car"))
+        {
+            initializeVehicleDates(segment.busData,segment.startTime);
+            $scope.buses = segment.busData;
+            $timeout(function() {
+                $scope.isBusClicked = true;
+            }, 500);
         }
         else if(segment.kind="car"){
             if(segment.subkind != undefined && segment.subkind == "cab") {
@@ -575,6 +586,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             else if($scope.isFlightClicked) {
                 vehicles = $scope.flights;
             }
+            else if($scope.isCabClicked){
+                vehicles = $scope.buses;
+            }
             if(!(vehicle.isFinal!=undefined && vehicle.isFinal==1))
             {
                 for(var vehicleIndex in vehicles)
@@ -585,7 +599,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                         vehicles[vehicleIndex].isFinal = 0;
                     }
                 }
-
 
                 for(var routeIndex in $scope.currentLeg.routes)
                 {
@@ -618,6 +631,19 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                                     if(train.isFinal!=undefined && train.isFinal==1)
                                     {
                                         train.isFinal = 0;
+                                    }
+                                }
+                            }
+                            if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&($scope.currentLeg.routes[routeIndex].name=="Bus"||$scope.currentLeg.routes[routeIndex].name=="Bus RedBus")&&(segments[segmentIndex].kind=="bus"))
+                            {
+                                segments[segmentIndex].startTime = null;
+                                segments[segmentIndex].endTime = null;
+                                for(var busIndex in segments[segmentIndex].busData)
+                                {
+                                    var bus = segments[segmentIndex].busData[busIndex];
+                                    if(bus.isFinal!=undefined && bus.isFinal==1)
+                                    {
+                                        bus.isFinal = 0;
                                     }
                                 }
                             }
@@ -663,8 +689,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         return "Add";
     };
 
-    $scope.getNthDay = function(train) {
-        var destinationDay = train.DestDay;
+    $scope.getNthDay = function(vehicle) {
+        var destinationDay = vehicle.DestDay;
         if(destinationDay == "1") {
             return "Same Day";
         }

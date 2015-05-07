@@ -6,9 +6,13 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 import GlobalClasses.ConnectMysql;
 
@@ -100,6 +104,8 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 		String price = redBusDto.getFare();
 		String origin = redBusDto.getOrigin().replaceAll("'", "''");
 		String destination = redBusDto.getDestination().replaceAll("'", "''");
+		byte originDay = 1;
+		byte destDay = 1;
 		//String departureDate = redBusDto.getDepartureDate();
 		System.out.println("dur:"+dur);
 		
@@ -132,16 +138,16 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 		 * hack for alternative name
 		 */
 		
-		if(origin.toLowerCase().equals("bangalore"))
-		{
-			origin = "BENGALURU";
-		}
-		if(destination.toLowerCase().equals("bangalore"))
-		{
-			destination="BENGALURU";
-		}
+//		if(origin.toLowerCase().equals("bangalore"))
+//		{
+//			origin = "BENGALURU";
+//		}
+//		if(destination.toLowerCase().equals("bangalore"))
+//		{
+//			destination="BENGALURU";
+//		}
 		//Checking if the Origin City Exists in DB
-		ResultSet getCityR = statement.executeQuery("SELECT * FROM City WHERE CityName='"+origin+"';");
+		ResultSet getCityR = statement.executeQuery("SELECT * FROM CityAlternateName WHERE AlternateName='"+origin+"';");
 		while(getCityR.next())
 		{
 			
@@ -169,7 +175,7 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 		}
 		
 		//Checking if the Destination City Exists in DB
-		getCityR = statement.executeQuery("SELECT * FROM City WHERE CityName='"+destination+"';");
+		getCityR = statement.executeQuery("SELECT * FROM CityAlternateName WHERE AlternateName='"+destination+"';");
 		while(getCityR.next())
 		{
 			//The same name city in same country exists
@@ -188,7 +194,7 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 		if(!destinationExists)
 		{
 			//Insert the data
-			statement.executeUpdate("INSERT INTO City(CityName,State,Country) VALUES('"+origin+"','TEMP','INDIA');",Statement.RETURN_GENERATED_KEYS);
+			statement.executeUpdate("INSERT INTO City(CityName,State,Country) VALUES('"+destination+"','TEMP','INDIA');",Statement.RETURN_GENERATED_KEYS);
 		    ResultSet rs = statement.getGeneratedKeys();
 		    rs.next();
 		    DestinationID = rs.getInt(1);
@@ -326,6 +332,15 @@ public static void transferData(RedBusDto redBusDto, Statement statement) throws
 				values = values + ", '"+busType+"'";
 			}
 			
+			//Inserting originDay and destDay
+			insert = insert + ", OriginDay";
+			values = values + ", "+originDay; 
+			
+			//getting the destDay
+			destDay = (byte) (destDay + getDays(departureTime,arrivalTime,duration));
+			insert = insert + ", DestDay";
+			values = values + ", "+destDay;
+			
 			System.out.println(insert + values+");");
 			statement.executeUpdate(insert + values+");");
 		    ResultSet rs = statement.getGeneratedKeys();
@@ -390,6 +405,56 @@ private static String transformTimings(String time) {
 		}
 		return timePart;
 	}
+}
+
+public static byte getDays(String startTime,String endTime,int duration) throws Exception
+{
+	//handle case when duration is not given
+	//int dur = 
+	if(startTime.equals("-"))
+	{
+		return 0;
+	}
+	String startDate = "2014/05/01 "+startTime;
+	String inputEndDate = "2014/05/01 "+endTime;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	Date startD = sdf.parse(startDate);
+	Date endDate= new Date(startD.getTime() + duration*60000) ;
+	if(duration==-1 && !endTime.equals("-") && (sdf.parse(inputEndDate).before(startD)))
+	{
+		//if duration is not there and end date is before startdate
+		return 1;
+	}
+	else if(duration==-1)
+	{
+		return 0;
+	}
+//	System.out.println(startD);
+//	System.out.println(endDate);
+	Calendar cal = Calendar.getInstance();
+	cal.setTime(startD);
+	 
+	// Set time fields to zero
+	cal.set(Calendar.HOUR_OF_DAY, 0);
+	cal.set(Calendar.MINUTE, 0);
+	cal.set(Calendar.SECOND, 0);
+	cal.set(Calendar.MILLISECOND, 0);
+	startD = cal.getTime();
+	
+	cal.setTime(endDate);
+	 
+	// Set time fields to zero
+	cal.set(Calendar.HOUR_OF_DAY, 0);
+	cal.set(Calendar.MINUTE, 0);
+	cal.set(Calendar.SECOND, 0);
+	cal.set(Calendar.MILLISECOND, 0);
+	endDate = cal.getTime();
+	
+//	System.out.println(startD);
+//	System.out.println(endDate);
+	byte days = (byte) TimeUnit.DAYS.convert(endDate.getTime() - startD.getTime(), TimeUnit.MILLISECONDS);
+	return days;
+	//System.out.println(days);
 }
 
 	public static void main(String args[])

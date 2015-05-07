@@ -23,11 +23,11 @@ public class HtmlUnitWebClient extends getHibernateSession{
 	// Read the whole page
 	HtmlPage page = webClient.getPage(request);
 	int i=webClient.waitForBackgroundJavaScriptStartingBefore(5000);
-	while (i > 3)
+	while (i > 2)
     {
         i = webClient.waitForBackgroundJavaScript(5000);
         System.out.println("i "+i);
-        if ((i == 3)||(i == 2))
+        if ((i == 2))
         {
             break;
         }
