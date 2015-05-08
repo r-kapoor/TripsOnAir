@@ -48,7 +48,10 @@ function chooseMajorDefault(rome2RioDataArray, dates, times, budget, callbackRes
 		withTaxiRome2rioData: withTaxiRome2rioData,
 		withoutTaxiRome2rioData: withoutTaxiRome2rioData
 	};
+    removeNotRecommendedRoutes(rome2RioDataCombined.withoutTaxiRome2rioData);
+    removeNotRecommendedRoutes(rome2RioDataCombined.withTaxiRome2rioData);
 	callbackResponse(rome2RioDataCombined);
+    console.log('Returning combined data');
 	var fs = require('fs');
 	fs.writeFile("AfterMajorDefault.txt", JSON.stringify(rome2RioDataCombined), function(err) {
 		if (err) {
@@ -57,6 +60,22 @@ function chooseMajorDefault(rome2RioDataArray, dates, times, budget, callbackRes
 			console.log("The file was saved!");
 		}
 	});
+}
+
+function removeNotRecommendedRoutes(rome2RioDataObject){
+    if(rome2RioDataObject != null){
+        var rome2RioData = rome2RioDataObject.rome2RioData;
+        for(var legIndex = 0; legIndex < rome2RioData.length; legIndex++){
+            var routes = rome2RioData[legIndex].routes;
+            for(var routeIndex = 0; routeIndex < routes.length; routeIndex++){
+                var route = routes[routeIndex];
+                if(route.isRecommendedRoute == 0){
+                    routes.splice(routeIndex,1);
+                    routeIndex--;
+                }
+            }
+        }
+    }
 }
 
 module.exports.chooseMajorDefault = chooseMajorDefault;

@@ -124,26 +124,8 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 					{
 						var sCode = allSegments[k].sCode;
 						var tCode = allSegments[k].tCode;
-						for(var x=0; x < rome2RioData[i].airports.length; x++)
-						{
-							//TODO : BLR has name Bengaluru instead of Bangalore
-							if(rome2RioData[i].airports[x].code == sCode)
-							{
-								source = rome2RioData[i].airports[x].name;
-							}
-							else if(rome2RioData[i].airports[x].code == tCode)
-							{
-								destination = rome2RioData[i].airports[x].name;
-							}
-						}
-						if(source=="Bengaluru")
-						{
-							source="Bangalore";
-						}
-						if(destination=="Bengaluru")
-						{
-							destination="Bangalore";
-						}
+                        source = allSegments[k].sAirport.name;
+                        destination = allSegments[k].tAirport.name;
 					}
 					else
 					{
@@ -168,8 +150,8 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 							}],
 							startPlace:rome2RioData[i].places[0].name,
 							endPlace:rome2RioData[i].places[1].name,
-							source:source,
-							destination:destination,
+							source:source.toUpperCase(),
+							destination:destination.toUpperCase(),
 							duration:allSegments[k].duration,
 							distance:allSegments[k].distance,
 							path:allSegments[k].path,

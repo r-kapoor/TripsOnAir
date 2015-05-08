@@ -139,7 +139,7 @@
                             <div scroll-pane scroll-config="paneConfig" id="travelModesPanel" style="width:330px;height:100vh">
                                 <div id="transcludeTravelModesPanel">
                                     <div class="panel-travelMode" ng-repeat="route in routes" post-repeat>
-                                        <div class="panel panel-default">
+                                        <div class="panel panel-default" ng-if="route.isRecommendedRoute != undefined && route.isRecommendedRoute == 1">
                                             <div ng-repeat="segment in route.segments">
                                                 <div ng-if="segment.isMajor != 0">
                                                     <div class="segment-hover" ng-href='#' ng-click="openModeDetailsPanel(segment,route, $event,'cabTimings')">
