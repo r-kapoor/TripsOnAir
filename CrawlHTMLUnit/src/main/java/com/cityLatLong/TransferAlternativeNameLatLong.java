@@ -16,7 +16,6 @@ import GlobalClasses.getHibernateSession;
 import com.dataTransferObject.CityLatLongDto;
 import com.hibernate.City;
 import com.hibernate.CityAlternateName;
-import com.hibernate.Places;
 
 /**
  * 
@@ -95,7 +94,7 @@ public class TransferAlternativeNameLatLong extends getHibernateSession{
 			altCr.add(idCr);
 			if(altCr.list().isEmpty()){		
 				CityAlternateName cityAlternateName = new CityAlternateName();
-				cityAlternateName.setCityId(cityID);
+				cityAlternateName.setCityID(cityID);
 				cityAlternateName.setAlternateName(cityLatLongDto.getAltName().toUpperCase());
 				session2.save(cityAlternateName);
 				tr = session2.beginTransaction();
