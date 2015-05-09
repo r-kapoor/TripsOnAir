@@ -328,7 +328,7 @@
 
                                     <ul class="list-group">
                                         <div ng-if="isBusClicked" ng-repeat="bus in buses">
-                                            <li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">
+                                            <li ng-if="bus.isRecommended != 0 && bus.isFinal == 1" class="list-group-item" style="font-size:90%">
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="col-sm-2">
