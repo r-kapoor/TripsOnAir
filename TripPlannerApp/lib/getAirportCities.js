@@ -2,6 +2,7 @@
  * Created by rkapoor on 09/05/15.
  */
 //The function gets the cities corresponding to the airports
+var toTitleCase = require('../lib/UtilityFunctions/toTitleCase');
 function getAirportCities(conn, airportList, callback){
     if(airportList.length > 0){
         var connection=conn.conn();
@@ -38,7 +39,7 @@ function getAirportCities(conn, airportList, callback){
                     console.log(rows[i]);
                     for(var airportIndex = 0; airportIndex < airportList.length; airportIndex++){
                         if(airportList[airportIndex].code == rows[i].AirportCode){
-                            airportList[airportIndex].name = rows[i].CityName;
+                            airportList[airportIndex].name = toTitleCase.toTitleCase(rows[i].CityName);
                         }
                     }
                 }

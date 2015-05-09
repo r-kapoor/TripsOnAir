@@ -9,7 +9,7 @@
 
 require('date-utils');
 var getValidDateLimits = require('../lib/UtilityFunctions/getValidDateLimits');
-
+var toTitleCase = require('../lib/UtilityFunctions/toTitleCase');
 function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) {
     var connection=conn.conn();
     connection.connect();
@@ -58,12 +58,12 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         }
     }
 
-    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginName, DestinationName, Rating, Price as fare, DestDay, OriginDay from(select * from(((select * from Bus) a '
+    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginCityName, DestinationCityName, OriginName, DestinationName, Rating, Price as fare, DestDay, OriginDay from(select * from(((select * from Bus) a '
         +' Join '
-        +' (select CityID, AlternateName as OriginName from CityAlternateName where AlternateName IN ( '+connection.escape(sourceCityNameArray)+' )) b '
+        +' (select CityID, AlternateName as OriginName , CityName as OriginCityName from City_Alternate_Name where CONCAT("%",AlternateName,"%") IN ( '+connection.escape(sourceCityNameArray)+' )) b '
         +' ON a.OriginCityID = b.CityID))) c '
         +' Join '
-        +' (select CityID, AlternateName as DestinationName from CityAlternateName where AlternateName IN ( '+connection.escape(destinationCityNameArray)+' )) d '
+        +' (select CityID, AlternateName as DestinationName, CityName as DestinationCityName from City_Alternate_Name where CONCAT("%",AlternateName,"%") IN ( '+connection.escape(destinationCityNameArray)+' )) d '
         +' ON '
         +' c.DestinationID = d.CityID;';
     console.log('QUERY for Bus:'+fullQueryString);
@@ -100,9 +100,17 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                             var busData=[];
                             //Iterate the flight rows from the database to check whether there are flights on the possible days:times
                             for (var t in rows) {
-                                if((sourceCityName==rows[t].OriginName)&&(destinationCityName==rows[t].DestinationName))
+                                console.log(sourceCityName + "=" + rows[t].OriginName);
+                                console.log(destinationCityName + "=" + rows[t].DestinationName);
+
+                                if((sourceCityName.indexOf(rows[t].OriginName) != -1)&&(destinationCityName.indexOf(rows[t].DestinationName) != -1))
+                                //if((sourceCityName.includes(rows[t].OriginName))&&(destinationCityName.includes(rows[t].DestinationName)))
                                 {
                                     console.log("*******in BUS FOR LOOP------------------");
+                                    allSegments[k].sName = toTitleCase.toTitleCase(rows[t].OriginCityName);//Setting original name of city to sName
+                                    allSegments[k].tName = toTitleCase.toTitleCase(rows[t].DestinationCityName);
+
+
                                     var daysOfTravelArray= rows[t].DaysOfTravel;
                                     var OriginDepartureTime=rows[t].OriginDepartureTime;
                                     console.log(startDate+","+endDate+","+startTime+","+endTime+","+daysOfTravelArray+","+OriginDepartureTime);
