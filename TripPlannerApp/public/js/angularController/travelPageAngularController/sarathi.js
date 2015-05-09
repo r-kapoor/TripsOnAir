@@ -69,7 +69,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
 
     $scope.cabDetailToggle = [];
     $scope.cabDate = null;
-
     $scope.isBudgetPanelOpen = false;
 
     $scope.travelBudgetText = "Travel Expenses";
@@ -85,6 +84,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     var outOfBudgetFactor = 0.7;
     var minimumTimeSpentInCityInHours = 4;
     var travelData=null;
+    var MINUTES_TO_MILLISECONDS = 60*1000;
+    var HOURS_TO_MILLISECONDS = MINUTES_TO_MILLISECONDS*60;
+    var DAYS_TO_MILLISECONDS = HOURS_TO_MILLISECONDS*24;
 
     $scope.pageSlide = function(){
         $scope.checked1=!$scope.checked1;
@@ -134,6 +136,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         $scope.isBusClicked = false;
         $scope.isCabOperatorClicked = false;
         $scope.isCabClicked = false;
+        $scope.isTaxiClicked = false;
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
         if(segment.kind == "train") {
             console.log("startTime:"+segment.startTime);
@@ -177,7 +180,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             if(segment.subkind=="taxi")
             {
                 $scope.isTaxiClicked = true;
-
+                if(custom == 'cabTimings'){
+                    initializeCabDates(segment.startTime);
+                }
             }
         }
 
@@ -589,6 +594,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             else if($scope.isCabClicked){
                 vehicles = $scope.buses;
             }
+
             if(!(vehicle.isFinal!=undefined && vehicle.isFinal==1))
             {
                 for(var vehicleIndex in vehicles)
@@ -676,7 +682,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     };
 
     $scope.getAddButtonClass = function(vehicle) {
-        if(vehicle.isFinal != undefined && vehicle.isFinal == 1) {
+        if(vehicle!=undefined && vehicle.isFinal != undefined && vehicle.isFinal == 1) {
             return "btn-success";
         }
         return "btn-primary";
@@ -854,7 +860,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     }
 
-
     function initializeCabDates(startTime){
         console.log('In initializeCabDates:'+$scope.currentLegIndex);
         var minDate = new Date(dateSet.dateStart[$scope.currentLegIndex]);
@@ -881,15 +886,14 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         };
     }
     $scope.openCabDate=function($event){
-        $event.preventDefault();
-        $event.stopPropagation();
+        if($event!=undefined){
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
         $scope.cabDate.opened = true;
-    }
-    $scope.vehicleDate=[];
-
-    $scope.clear = function () {
-        //$scope.dt = 'Select';
     };
+
+    $scope.vehicleDate=[];
 
     $scope.toggleMin = function() {
         $scope.minDate = $scope.minDate ? null : new Date();
@@ -950,6 +954,97 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             default: {"background-color": "white"},
             after: {"background-color": "green"},
             pointer: {"background-color": "red"}
+        }
+    };
+
+    $scope.getHours = function(){
+        if($scope.cabDate.dt == null)
+        {
+            return "00";
+        }
+        else
+        {
+            if($scope.cabDate.dt.getHours()<10)
+            {
+                return "0"+$scope.cabDate.dt.getHours();
+            }
+            else
+            {
+                return $scope.cabDate.dt.getHours();
+            }
+            //console.log($scope.cabDate.dt.getHours());
+        }
+    };
+
+    $scope.getMins = function(){
+        if($scope.cabDate.dt == null)
+        {
+            return "00";
+        }
+        else
+        {
+            if( $scope.cabDate.dt.getMinutes()<10)
+            {
+                return "0"+$scope.cabDate.dt.getMinutes();
+            }
+            else
+            {
+                return $scope.cabDate.dt.getMinutes();
+            }
+        }
+    };
+
+    $scope.incrementHours = function(){
+        if($scope.cabDate.dt==null)
+        {
+            $scope.openCabDate();
+        }
+        else
+        {
+            var increasedDate = new Date($scope.cabDate.dt.getTime() + 1*HOURS_TO_MILLISECONDS);
+            if(increasedDate<=new Date($scope.cabDate.maxDate.getTime() + 24*HOURS_TO_MILLISECONDS)) {
+                $scope.cabDate.dt = increasedDate;
+            }
+        }
+    };
+
+    $scope.incrementMinutes = function(){
+        if($scope.cabDate.dt==null)
+        {
+            $scope.openCabDate();
+        }
+        else
+        {
+            var increasedDate = new Date($scope.cabDate.dt.getTime() + 15*60*1000);
+            if(increasedDate<=new Date($scope.cabDate.maxDate.getTime() + 23*HOURS_TO_MILLISECONDS + 59*1000)) {
+                $scope.cabDate.dt = increasedDate;
+            }
+        }
+    };
+
+    $scope.decrementHours = function(){
+        if($scope.cabDate.dt==null)
+        {
+            $scope.openCabDate();
+        }
+        else {
+            var decreasedDate = new Date($scope.cabDate.dt.getTime() - 1 * HOURS_TO_MILLISECONDS);
+            if (decreasedDate >= $scope.cabDate.minDate) {
+                $scope.cabDate.dt = decreasedDate;
+            }
+        }
+    };
+
+    $scope.decrementMinutes = function(){
+        if($scope.cabDate.dt==null)
+        {
+            $scope.openCabDate();
+        }
+        else {
+            var decreasedDate = new Date($scope.cabDate.dt.getTime() - 15 * 60 * 1000);
+            if (decreasedDate >= $scope.cabDate.minDate) {
+                $scope.cabDate.dt = decreasedDate;
+            }
         }
     };
 

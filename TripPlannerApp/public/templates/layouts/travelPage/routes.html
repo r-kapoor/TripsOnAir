@@ -394,6 +394,100 @@
                                         </div>
                                     </ul>
 
+                            <div ng-if="isTaxiClicked">
+                                <div class = "panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-5" style="padding-top: 10%">
+                                            <button datepicker-popup="dd-MMMM-yyyy" ng-model="cabDate.dt"
+                                                    is-open="cabDate.opened" min-date="cabDate.minDate"
+                                                    max-date="cabDate.maxDate"
+                                                    datepicker-options="dateOptions" ng-required="true"
+                                                    close-text="Close" ng-click="openCabDate($event)" ng-disabled="cabDate.disabled">
+                                                <div class="row">
+                                                    <div class="col-xs-2 h5" style="padding-left: 13px">
+                                                        <i class="glyphicon glyphicon-calendar"></i>
+                                                    </div>
+                                                    <div class="col-xs-2 h5" style="padding-left: 13px">{{(cabDate.dt | date:'dd') || 'Select'}}
+                                                    </div>
+                                                    <div class="col-xs-4" style="padding-left: 13px">
+                                                        <div class="row">
+                                                            <div class="col-xs-2 month">{{cabDate.dt |
+                                                                date:'MMM'}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-2 day">{{cabDate.dt |
+                                                                date:'EEE'}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                            </div>
+                                        <!--</div>-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="col-sm-12">-->
+                                                <!--<div class="col-sm-5">-->
+                                                <!--<div class="row btn btn-sm text-center"><i class="glyphicon glyphicon-chevron-up"></i></div>-->
+                                                <!--<div class="row">-->
+                                                    <!--<input ng-model="timingsCab" type="text" class="form-control text-center" aria-label="Amount (to the nearest dollar)">-->
+                                                <!--</div>-->
+                                                <!--<div class="row btn btn-sm text-center"><i class="glyphicon glyphicon-chevron-down"></i></div>-->
+                                                <!--</div>-->
+                                                <!--<div class="col-sm-2">-->
+                                                    <!--:-->
+                                                <!--</div>-->
+                                                <!--<div class="col-sm-5">-->
+                                                    <!--<div class="row btn btn-sm"><i class="glyphicon glyphicon-chevron-up"></i></div>-->
+                                                    <!--<div class="row">-->
+                                                        <!--<input ng-model="timingsCab" type="text" class="form-control text-center" aria-label="Amount (to the nearest dollar)">-->
+                                                    <!--</div>-->
+                                                    <!--<div class="row btn btn-sm"><i class="glyphicon glyphicon-chevron-down"></i></div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="row">-->
+                                            <table ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian" class="ng-isolate-scope ng-dirty ng-valid-parse ng-valid ng-valid-time">
+                                                <tbody>
+                                                <tr class="text-center">
+                                                    <td><a ng-click="incrementHours()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-up"></span></a></td>
+                                                    <td>&nbsp;</td>
+                                                    <td><a ng-click="incrementMinutes()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-up"></span></a></td>
+                                                    <!--<td ng-show="showMeridian"></td>-->
+                                                </tr>
+                                                <tr>
+                                                    <td class="form-group" ng-class="{'has-error': invalidHours}">
+                                                        <button type="button" class="btn btn-default text-center ng-binding" ng-disabled="true" style="opacity: 1">{{getHours()}}</button>
+                                                        <!--<input style="width:50px;" type="text" ng-model="hours" ng-change="updateHours()" class="form-control text-center ng-valid ng-valid-maxlength ng-dirty ng-touched" ng-readonly="readonlyInput" maxlength="2">-->
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td class="form-group" ng-class="{'has-error': invalidMinutes}">
+                                                        <!--<input style="width:50px;" type="text" ng-model="minutes" ng-change="updateMinutes()" class="form-control text-center ng-pristine ng-valid ng-valid-maxlength ng-touched" ng-readonly="readonlyInput" maxlength="2">-->
+                                                        <button type="button" class="btn btn-default text-center ng-binding" ng-disabled="true" style="opacity: 1">{{getMins()}}</button>
+                                                    </td>
+                                                    <td style="padding-left: 2%"><button type="button" class="btn btn-primary text-center ng-binding" ng-click=""></button></td>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <td><a ng-click="decrementHours()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>
+                                                    <td>&nbsp;</td>
+                                                    <td><a ng-click="decrementMinutes()" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>
+                                                    <!--<td ng-show="showMeridian"></td>-->
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-xs-4 col-xs-offset-8">
+                                                <!--<div class="btn {{getAddButtonClass(taxi)}}" ng-click="addToTrip(taxi,$index,$event)">{{getAddButtonText(taxi)}}</div>-->
+                                            </div>
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             <div  ng-if="isCabClicked">
                                 <div class = "panel panel-default">
                                 <div class="panel-body">
