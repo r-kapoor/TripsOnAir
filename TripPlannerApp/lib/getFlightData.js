@@ -4,6 +4,7 @@
 
 require('date-utils');
 var getValidDateLimits = require('../lib/UtilityFunctions/getValidDateLimits');
+var getAirportCities = require('../lib/getAirportCities');
 var async  = require('async');
 
 function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,numPeople, callback) {
@@ -69,6 +70,7 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
     console.log('QUERY for flights:'+fullQueryString);
 
     connection.query(fullQueryString, function(err, rows, fields) {
+        var airportList = [];
         if (err)
         {
             throw err;
@@ -137,11 +139,13 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
                                 var airport = rome2RioData[i].airports[airportIndex];
                                 if(airport.code == allSegments[k].sCode) {
                                     allSegments[k].sAirport = airport;
+                                    airportList.push(airport);
                                     airport.Latitude = airport.pos.split(',')[0];
                                     airport.Longitude = airport.pos.split(',')[1];
                                 }
                                 else if(airport.code == allSegments[k].tCode) {
                                     allSegments[k].tAirport = airport;
+                                    airportList.push(airport);
                                     airport.Latitude = airport.pos.split(',')[0];
                                     airport.Longitude = airport.pos.split(',')[1];
                                 }
@@ -161,7 +165,9 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
 
         }
 
-        callback(null, rome2RioData);
+        getAirportCities.getAirportCities(conn, airportList, function onGetAirportCities(){
+            callback(null, rome2RioData);
+        });
 
 
     });

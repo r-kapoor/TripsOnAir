@@ -35,27 +35,25 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         for(var j = 0; j < allRoutes.length; j++)
         {
             console.log("Route Name:",allRoutes[j].name);
-            if(allRoutes[j].name == 'Bus RedBus'||allRoutes[j].name == 'Bus'){
-                var allSegments = allRoutes[j].segments;
-                var durBeforeBus=0;
-                for(var k = 0; k < allSegments.length; k++)
+            var allSegments = allRoutes[j].segments;
+            var durBeforeBus=0;
+            for(var k = 0; k < allSegments.length; k++)
+            {
+                //console.log("allSegments[k].vehicle:"+allSegments[k].vehicle);
+                if(allSegments[k].kind != undefined && allSegments[k].isMajor == 1 && allSegments[k].kind == "bus")//A part of this route is a bus
                 {
-                    //console.log("allSegments[k].vehicle:"+allSegments[k].vehicle);
-                    if(allSegments[k].kind != undefined && allSegments[k].isMajor == 1 && allSegments[k].kind == "bus")//A part of this route is a bus
-                    {
-                        var dateSetAccToBus={
-                            dateStart:new Date(dateSet.dateStart[i].getTime() + durBeforeBus*60000),
-                            dateEnd:new Date(dateSet.dateEnd[i].getTime() + durBeforeBus*60000)
-                        };
-                        var sourceCityName = allSegments[k].sName.toUpperCase();
-                        var destinationCityName = allSegments[k].tName.toUpperCase();
-                        console.log("Source Dest:"+sourceCityName+":"+destinationCityName);
-                        busDateSetObjectArray.push(getBusDateSetObject(sourceCityName,destinationCityName,dateSetAccToBus));
-                        sourceCityNameArray.push(sourceCityName);
-                        destinationCityNameArray.push(destinationCityName);
-                    }
-                    durBeforeBus+=allSegments[k].duration;
+                    var dateSetAccToBus={
+                        dateStart:new Date(dateSet.dateStart[i].getTime() + durBeforeBus*60000),
+                        dateEnd:new Date(dateSet.dateEnd[i].getTime() + durBeforeBus*60000)
+                    };
+                    var sourceCityName = allSegments[k].sName.toUpperCase();
+                    var destinationCityName = allSegments[k].tName.toUpperCase();
+                    console.log("Source Dest:"+sourceCityName+":"+destinationCityName);
+                    busDateSetObjectArray.push(getBusDateSetObject(sourceCityName,destinationCityName,dateSetAccToBus));
+                    sourceCityNameArray.push(sourceCityName);
+                    destinationCityNameArray.push(destinationCityName);
                 }
+                durBeforeBus+=allSegments[k].duration;
             }
         }
     }
@@ -88,56 +86,53 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                 {
                     var allSegments = allRoutes[j].segments;
                     var isRecommendedRoute = 1;
-                    if(allRoutes[j].name.toUpperCase() == 'BUS REDBUS'||allRoutes[j].name.toUpperCase() == 'BUS')
+                    for(var k = 0; k < allSegments.length; k++)
                     {
-                        for(var k = 0; k < allSegments.length; k++)
+                        if(allSegments[k].isMajor == 1 && allSegments[k].kind != undefined && allSegments[k].kind == "bus")//A part of this route is a flight
                         {
-                            if(allSegments[k].isMajor == 1 && allSegments[k].kind != undefined && allSegments[k].kind == "bus")//A part of this route is a flight
-                            {
-                                var sourceCityName = allSegments[k].sName.toUpperCase();
-                                var destinationCityName = allSegments[k].tName.toUpperCase();
-                                var startDate=busDateSetObjectArray[countOfVehicleBus].dateSet.dateStart;
-                                var endDate=busDateSetObjectArray[countOfVehicleBus].dateSet.dateEnd;
-                                var startTime=startDate.toFormat("HH24")+":"+startDate.toFormat("MI")+":00";
-                                var endTime=endDate.toFormat("HH24")+":"+endDate.toFormat("MI")+":00";
-                                var atLeastABus=0;
-                                var busData=[];
-                                //Iterate the flight rows from the database to check whether there are flights on the possible days:times
-                                for (var t in rows) {
-                                    if((sourceCityName==rows[t].OriginName)&&(destinationCityName==rows[t].DestinationName))
+                            var sourceCityName = allSegments[k].sName.toUpperCase();
+                            var destinationCityName = allSegments[k].tName.toUpperCase();
+                            var startDate=busDateSetObjectArray[countOfVehicleBus].dateSet.dateStart;
+                            var endDate=busDateSetObjectArray[countOfVehicleBus].dateSet.dateEnd;
+                            var startTime=startDate.toFormat("HH24")+":"+startDate.toFormat("MI")+":00";
+                            var endTime=endDate.toFormat("HH24")+":"+endDate.toFormat("MI")+":00";
+                            var atLeastABus=0;
+                            var busData=[];
+                            //Iterate the flight rows from the database to check whether there are flights on the possible days:times
+                            for (var t in rows) {
+                                if((sourceCityName==rows[t].OriginName)&&(destinationCityName==rows[t].DestinationName))
+                                {
+                                    console.log("*******in BUS FOR LOOP------------------");
+                                    var daysOfTravelArray= rows[t].DaysOfTravel;
+                                    var OriginDepartureTime=rows[t].OriginDepartureTime;
+                                    console.log(startDate+","+endDate+","+startTime+","+endTime+","+daysOfTravelArray+","+OriginDepartureTime);
+                                    var busDateLimits = getValidDateLimits.getValidDateLimits(startDate,endDate,startTime,endTime,daysOfTravelArray,OriginDepartureTime);
+                                    console.log("BusDateLimits: "+busDateLimits);
+                                    if(busDateLimits.length > 0)
                                     {
-                                        console.log("*******in BUS FOR LOOP------------------");
-                                        var daysOfTravelArray= rows[t].DaysOfTravel;
-                                        var OriginDepartureTime=rows[t].OriginDepartureTime;
-                                        console.log(startDate+","+endDate+","+startTime+","+endTime+","+daysOfTravelArray+","+OriginDepartureTime);
-                                        var busDateLimits = getValidDateLimits.getValidDateLimits(startDate,endDate,startTime,endTime,daysOfTravelArray,OriginDepartureTime);
-                                        console.log("BusDateLimits: "+busDateLimits);
-                                        if(busDateLimits.length > 0)
-                                        {
-                                            atLeastABus=1;
-                                            rows[t].isRecommended=1;
-                                        }
-                                        else
-                                        {
-                                            rows[t].isRecommended=0;
-                                        }
-                                        rows[t].dateLimits = busDateLimits;
-                                        busData.push(rows[t]);
+                                        atLeastABus=1;
+                                        rows[t].isRecommended=1;
                                     }
+                                    else
+                                    {
+                                        rows[t].isRecommended=0;
+                                    }
+                                    rows[t].dateLimits = busDateLimits;
+                                    busData.push(rows[t]);
                                 }
-                                if(atLeastABus==1)
-                                {
-                                    allSegments[k].isRecommendedSegment=1;
-                                    isRecommendedRoute = 1;
-                                }
-                                else
-                                {
-                                    allSegments[k].isRecommendedSegment=0;
-                                    isRecommendedRoute = 0;
-                                }
-                                allSegments[k].busData=busData;
-                                countOfVehicleBus++;
                             }
+                            if(atLeastABus==1)
+                            {
+                                allSegments[k].isRecommendedSegment=1;
+                                isRecommendedRoute = 1;
+                            }
+                            else
+                            {
+                                allSegments[k].isRecommendedSegment=0;
+                                isRecommendedRoute = 0;
+                            }
+                            allSegments[k].busData=busData;
+                            countOfVehicleBus++;
                         }
                     }
                     if(isRecommendedRoute==1)

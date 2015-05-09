@@ -6,12 +6,19 @@ function combineTrainFlightBusData(rome2RioData) {
         var routes = rome2RioData[legIndex].routes;
         for(var routeIndex = 0; routeIndex < routes.length; routeIndex++) {
             var route = routes[routeIndex];
-            if(route.isRecommendedRouteTrain != undefined && route.isRecommendedRouteFlight != undefined && route.isRecommendedRouteBus!=undefined) {
-                route.isRecommendedRoute = route.isRecommendedRouteTrain * route.isRecommendedRouteFlight * route.isRecommendedRouteBus;
+            var isRecommendedRouteTrain = 1, isRecommendedRouteFlight = 1, isRecommendedRouteBus = 1;
+            if(route.isRecommendedRouteTrain != undefined) {
+                isRecommendedRouteTrain = route.isRecommendedRouteTrain;
             }
-            else {
-                route.isRecommendedRoute = 1;
+            if(route.isRecommendedRouteFlight != undefined) {
+                isRecommendedRouteFlight = route.isRecommendedRouteFlight;
             }
+            if(route.isRecommendedRouteBus != undefined){
+                isRecommendedRouteBus = route.isRecommendedRouteBus;
+            }
+
+            route.isRecommendedRoute = route.isRecommendedRouteTrain * route.isRecommendedRouteFlight * route.isRecommendedRouteBus;
+
             delete route.isRecommendedRouteTrain;
             delete route.isRecommendedRouteFlight;
             delete route.isRecommendedRouteBus;

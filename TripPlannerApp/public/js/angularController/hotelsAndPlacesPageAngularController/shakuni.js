@@ -199,6 +199,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         //$http.post('/downloadItinerary', {data:responsedata}).success(function(data,status) {
         $http(req).success(function(data,status) {
+            window.open('file1.pdf', '_blank', '');
 
         }).error(
             function(data, status) {
