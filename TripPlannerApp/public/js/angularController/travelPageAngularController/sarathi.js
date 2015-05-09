@@ -605,57 +605,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                         vehicles[vehicleIndex].isFinal = 0;
                     }
                 }
-
-                for(var routeIndex in $scope.currentLeg.routes)
-                {
-                    if($scope.currentLeg.routes[routeIndex].isDefault!= undefined && ($scope.currentLeg.routes[routeIndex].isDefault==1))
-                    {
-                        $scope.currentLeg.routes[routeIndex].isDefault = 0;
-                        var segments = $scope.currentLeg.routes[routeIndex].segments;
-                        for(var segmentIndex in segments)
-                        {
-                            if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="flight"))
-                            {
-                                segments[segmentIndex].startTime = null;
-                                segments[segmentIndex].endTime = null;
-                                for(var flightIndex in segments[segmentIndex].flightData)
-                                {
-                                    var flight = segments[segmentIndex].flightData[flightIndex];
-                                    if(flight.isFinal!=undefined && flight.isFinal==1)
-                                    {
-                                        flight.isFinal = 0;
-                                    }
-                                }
-                            }
-                            if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="train"))
-                            {
-                                segments[segmentIndex].startTime = null;
-                                segments[segmentIndex].endTime = null;
-                                for(var trainIndex in segments[segmentIndex].trainData)
-                                {
-                                    var train = segments[segmentIndex].trainData[trainIndex];
-                                    if(train.isFinal!=undefined && train.isFinal==1)
-                                    {
-                                        train.isFinal = 0;
-                                    }
-                                }
-                            }
-                            if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="bus"))
-                            {
-                                segments[segmentIndex].startTime = null;
-                                segments[segmentIndex].endTime = null;
-                                for(var busIndex in segments[segmentIndex].busData)
-                                {
-                                    var bus = segments[segmentIndex].busData[busIndex];
-                                    if(bus.isFinal!=undefined && bus.isFinal==1)
-                                    {
-                                        bus.isFinal = 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                //set isDefault and isFinal to 0 for existed default route
+                clearIsDefaultAndIsFinal();
                 vehicle.isFinal =1;
                 if(vehicle.fare != undefined) {
                     $scope.currentRoute.indicativePrice.price = vehicle.fare;
@@ -681,6 +632,22 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         alertAndSetTravelBudget();
     };
 
+    $scope.addCabToTrip = function(){
+
+        var cabStartTime = $scope.cabDate.dt;
+        clearIsDefaultAndIsFinal();
+        $scope.currentLeg.defaultRoute = $scope.currentRoute;
+        $scope.currentRoute.isDefault =1;
+        $scope.currentSegment.startTime = cabStartTime;
+        $scope.currentSegment.endTime = addMinutes(cabStartTime,$scope.currentSegment.duration);
+        console.log($scope.currentSegment.endTime);
+        $scope.isTravelModesPanelOpen = false;
+        $scope.isModeDetailsPanelOpen = false;
+        showCurrentRouteOnMap();
+        alertAndSetTravelBudget();
+    };
+
+
     $scope.getAddButtonClass = function(vehicle) {
         if(vehicle!=undefined && vehicle.isFinal != undefined && vehicle.isFinal == 1) {
             return "btn-success";
@@ -690,6 +657,22 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
 
     $scope.getAddButtonText = function(vehicle) {
         if(vehicle.isFinal != undefined && vehicle.isFinal == 1) {
+            return "Added";
+        }
+        return "Add";
+    };
+
+    $scope.getAddButtonClassForTaxiOrDrive = function() {
+        if(  $scope.currentRoute.isDefault ==1)
+        {
+            return "btn-success";
+        }
+        return "btn-primary";
+    };
+
+    $scope.getAddButtonTextForTaxiOrDrive = function(){
+        if(  $scope.currentRoute.isDefault ==1)
+        {
             return "Added";
         }
         return "Add";
@@ -708,6 +691,60 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
+
+    function clearIsDefaultAndIsFinal(){
+
+        for(var routeIndex in $scope.currentLeg.routes)
+        {
+            if($scope.currentLeg.routes[routeIndex].isDefault!= undefined && ($scope.currentLeg.routes[routeIndex].isDefault==1))
+            {
+                $scope.currentLeg.routes[routeIndex].isDefault = 0;
+                var segments = $scope.currentLeg.routes[routeIndex].segments;
+                for(var segmentIndex in segments)
+                {
+                    if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="flight"))
+                    {
+                        segments[segmentIndex].startTime = null;
+                        segments[segmentIndex].endTime = null;
+                        for(var flightIndex in segments[segmentIndex].flightData)
+                        {
+                            var flight = segments[segmentIndex].flightData[flightIndex];
+                            if(flight.isFinal!=undefined && flight.isFinal==1)
+                            {
+                                flight.isFinal = 0;
+                            }
+                        }
+                    }
+                    if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="train"))
+                    {
+                        segments[segmentIndex].startTime = null;
+                        segments[segmentIndex].endTime = null;
+                        for(var trainIndex in segments[segmentIndex].trainData)
+                        {
+                            var train = segments[segmentIndex].trainData[trainIndex];
+                            if(train.isFinal!=undefined && train.isFinal==1)
+                            {
+                                train.isFinal = 0;
+                            }
+                        }
+                    }
+                    if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="bus"))
+                    {
+                        segments[segmentIndex].startTime = null;
+                        segments[segmentIndex].endTime = null;
+                        for(var busIndex in segments[segmentIndex].busData)
+                        {
+                            var bus = segments[segmentIndex].busData[busIndex];
+                            if(bus.isFinal!=undefined && bus.isFinal==1)
+                            {
+                                bus.isFinal = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     function getDurationFromStartEndTime(startTime,endTime,originDay,destDay){
         var startHours=parseInt(startTime.split(":")[0]);
@@ -886,10 +923,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         };
     }
     $scope.openCabDate=function($event){
-        if($event!=undefined){
-            $event.preventDefault();
-            $event.stopPropagation();
-        }
+        $event.preventDefault();
+        $event.stopPropagation();
         $scope.cabDate.opened = true;
     };
 
@@ -994,38 +1029,38 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
-    $scope.incrementHours = function(){
+    $scope.incrementHours = function($event){
         if($scope.cabDate.dt==null)
         {
-            $scope.openCabDate();
+            $scope.openCabDate($event);
         }
         else
         {
             var increasedDate = new Date($scope.cabDate.dt.getTime() + 1*HOURS_TO_MILLISECONDS);
-            if(increasedDate<=new Date($scope.cabDate.maxDate.getTime() + 24*HOURS_TO_MILLISECONDS)) {
+            if(increasedDate<=new Date($scope.cabDate.maxDate.getTime() + 23*HOURS_TO_MILLISECONDS)) {
                 $scope.cabDate.dt = increasedDate;
             }
         }
     };
 
-    $scope.incrementMinutes = function(){
+    $scope.incrementMinutes = function($event){
         if($scope.cabDate.dt==null)
         {
-            $scope.openCabDate();
+            $scope.openCabDate($event);
         }
         else
         {
             var increasedDate = new Date($scope.cabDate.dt.getTime() + 15*60*1000);
-            if(increasedDate<=new Date($scope.cabDate.maxDate.getTime() + 23*HOURS_TO_MILLISECONDS + 59*1000)) {
+            if(increasedDate<=new Date($scope.cabDate.maxDate.getTime() + 23*HOURS_TO_MILLISECONDS + 45*60*1000)) {
                 $scope.cabDate.dt = increasedDate;
             }
         }
     };
 
-    $scope.decrementHours = function(){
+    $scope.decrementHours = function($event){
         if($scope.cabDate.dt==null)
         {
-            $scope.openCabDate();
+            $scope.openCabDate($event);
         }
         else {
             var decreasedDate = new Date($scope.cabDate.dt.getTime() - 1 * HOURS_TO_MILLISECONDS);
@@ -1035,10 +1070,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
-    $scope.decrementMinutes = function(){
+    $scope.decrementMinutes = function($event){
         if($scope.cabDate.dt==null)
         {
-            $scope.openCabDate();
+            $scope.openCabDate($event);
         }
         else {
             var decreasedDate = new Date($scope.cabDate.dt.getTime() - 15 * 60 * 1000);
