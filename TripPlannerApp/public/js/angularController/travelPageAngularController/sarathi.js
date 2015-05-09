@@ -153,7 +153,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                  $scope.isFlightClicked = true;
              }, 500);
         }
-        else if((route.name=="Bus"||route.name=="Bus RedBus")&&(segment.kind!="car"))
+        else if(segment.kind == "bus")
         {
             initializeVehicleDates(segment.busData,segment.startTime);
             $scope.buses = segment.busData;
@@ -640,7 +640,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                                     }
                                 }
                             }
-                            if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&($scope.currentLeg.routes[routeIndex].name=="Bus"||$scope.currentLeg.routes[routeIndex].name=="Bus RedBus")&&(segments[segmentIndex].kind=="bus"))
+                            if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="bus"))
                             {
                                 segments[segmentIndex].startTime = null;
                                 segments[segmentIndex].endTime = null;
