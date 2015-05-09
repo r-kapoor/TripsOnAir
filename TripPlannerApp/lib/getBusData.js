@@ -58,12 +58,15 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
         }
     }
 
-    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginCityName, DestinationCityName, OriginName, DestinationName, Rating, Price as fare, DestDay, OriginDay from(select * from(((select * from Bus) a '
+    var sourceLikeQueryString = getLikeQueryString(sourceCityNameArray, connection);
+    var destinationLikeQueryString  = getLikeQueryString(destinationCityNameArray, connection);
+
+    var fullQueryString = 'select BusID, Operator, Type, OriginCityID, DestinationID, DepartureTime as OriginDepartureTime, ArrivalTime as DestArrivalTime, Duration, DaysOfTravel,OriginCityName, DestinationCityName, OriginName, DestinationName, Rating, Price as fare, DestDay, OriginDay from (select * from (((select * from Bus) a '
         +' Join '
-        +' (select CityID, AlternateName as OriginName , CityName as OriginCityName from City_Alternate_Name where CONCAT("%",AlternateName,"%") IN ( '+connection.escape(sourceCityNameArray)+' )) b '
+        +' (select CityID, AlternateName as OriginName , CityName as OriginCityName from City_Alternate_Name where '+sourceLikeQueryString+') b '
         +' ON a.OriginCityID = b.CityID))) c '
         +' Join '
-        +' (select CityID, AlternateName as DestinationName, CityName as DestinationCityName from City_Alternate_Name where CONCAT("%",AlternateName,"%") IN ( '+connection.escape(destinationCityNameArray)+' )) d '
+        +' (select CityID, AlternateName as DestinationName, CityName as DestinationCityName from City_Alternate_Name where '+destinationLikeQueryString+') d '
         +' ON '
         +' c.DestinationID = d.CityID;';
     console.log('QUERY for Bus:'+fullQueryString);
@@ -160,6 +163,23 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
 }
 module.exports.getBusData = getBusData;
 
+function getLikeQueryString(cityNameArray, connection){
+    var likeQueryString = "";
+    outer:
+    for(var cityIndex = 0; cityIndex < cityNameArray.length; cityIndex++){
+        for(var innerCityIndex = 0; innerCityIndex < cityIndex; innerCityIndex++){
+            if(cityNameArray[innerCityIndex] == cityNameArray[cityIndex]){
+                //This city already exists
+                continue outer;
+            }
+        }
+        if(cityIndex != 0){
+            likeQueryString += " OR ";
+        }
+        likeQueryString += "("+connection.escape(cityNameArray[cityIndex])+" LIKE CONCAT('%',AlternateName,'%')) ";
+    }
+    return likeQueryString;
+}
 
 function getBusDateSetObject(originCityName,destinationCityName,dateSet)
 {
