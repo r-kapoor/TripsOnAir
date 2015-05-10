@@ -10,8 +10,7 @@ var async  = require('async');
 
 function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRatio,numPeople, callback) {
 	console.log('TRAIN times:'+times);
-	var connection=conn.conn();
-	connection.connect();
+    var connection = null;
 	var queryString = '';
 	var parsingQuery = 'origin.TrainNo as TrainNo, origin.StationCode as OriginStationCode, dest.StationCode as DestStationCode, origin.DepartureTime as OriginDepartureTime, dest.ArrivalTime as DestArrivalTime, (dest.DistanceCovered - origin.DistanceCovered) as Distance, origin.Day as OriginDay, dest.Day as DestDay';
 	var numOfTravels = rome2RioData.length;
@@ -48,7 +47,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 						var dateSetAccToTrain={
 								dateStart:new Date(dateSet.dateStart[i].getTime() + durBeforeTrain*60000),
 								dateEnd:new Date(dateSet.dateEnd[i].getTime() + durBeforeTrain*60000)
-						}
+						};
 						var sourceStation = allSegments[k].sName;
 						var destinationStation = allSegments[k].tName;
 						console.log("Source Dest:"+sourceStation+":"+destinationStation);
@@ -59,6 +58,10 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 						{
 							queryString += ' UNION ALL';
 						}
+                        if(connection == null){
+                            connection=conn.conn();
+                            connection.connect();
+                        }
 						queryString += ' SELECT '+parsingQuery+' FROM'
 										+' (SELECT * FROM Railway_Timetable WHERE StationCode='+connection.escape(sourceStationCode)+') origin'
 										+' JOIN'
@@ -70,119 +73,130 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
 			}
 		}
 	}
-	var fullQueryString = 'SELECT train.TrainNo, TrainName, DaysOfTravel, Pantry, Type, OriginStationCode, DestStationCode, OriginDepartureTime, DestArrivalTime, Distance, OriginDay, DestDay FROM'
-		+' (SELECT * FROM Trains) train'
-		+' JOIN'
-		+' ('+queryString+') trip'
-		+' ON (train.TrainNo = trip.TrainNo);';
-	console.log('QUERY for trains:'+fullQueryString);
+    if(queryString != ''){
+        var fullQueryString = 'SELECT train.TrainNo, TrainName, DaysOfTravel, Pantry, Type, OriginStationCode, DestStationCode, OriginDepartureTime, DestArrivalTime, Distance, OriginDay, DestDay FROM'
+            +' (SELECT * FROM Trains) train'
+            +' JOIN'
+            +' ('+queryString+') trip'
+            +' ON (train.TrainNo = trip.TrainNo);';
+        console.log('QUERY for trains:'+fullQueryString);
 
-	connection.query(fullQueryString, function(err, rows, fields) {
-		if (err)
-		{
-			throw err;
-		}
-	    else{
-			for (var i in rows) {
-				//console.log(rows[i]);
-				if((rows[i].OriginDay!=1)&&(rows[i].DaysOfTravel!="0")){
-					var daysofTravelArray=rows[i].DaysOfTravel.split("");
-					console.log("oldDaysofTravel:"+rows[i].DaysOfTravel);
-					var updatedDaysOfTravel="";
-					for(var j=0;j<daysofTravelArray.length;j++)
-					{
-						updatedDaysOfTravel+=parseInt(daysofTravelArray[j])+(rows[i].OriginDay-1);
-					}
-					console.log("updatedDaysOfTravel:"+updatedDaysOfTravel);
-					rows[i].DaysOfTravel=updatedDaysOfTravel;
-				}
-	    	}
-			var countOfVehicleTrain=0;
-			//Iterating the array of rome2rio objects
-			for(var i = 0; i < numOfTravels; i++)
-			{
-				//console.log("i:"+i);
-				var allRoutes = rome2RioData[i].routes;
-				for(var j = 0; j < allRoutes.length; j++)
-				{
-					var allSegments = allRoutes[j].segments;
-					var isRecommendedRoute = 1;
-					for(var k = 0; k < allSegments.length; k++)
-					{
-						if(allSegments[k].isMajor == 1 && allSegments[k].vehicle)
-						{
-							if(allSegments[k].vehicle == "train")//A part of this route is a train
-							{
-								var sourceStation = allSegments[k].sName;
-								var destinationStation = allSegments[k].tName;
-								var sourceStationCode = extractStationCode.extractStationCode(sourceStation);
-								var destinationStationCode = extractStationCode.extractStationCode(destinationStation);
-								var startDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateStart;
-								var endDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateEnd;
-                                var startTime=startDate.toFormat("HH24")+":"+startDate.toFormat("MI")+":00";
-                                var endTime=endDate.toFormat("HH24")+":"+endDate.toFormat("MI")+":00";
-								var atLeastATrain=0;
-								var trainData=[];
-								//Iterate the train rows from the database to check whether there are trains on the possible days:times
-								for (var t in rows) {
-									if((sourceStationCode==rows[t].OriginStationCode)&&(destinationStationCode==rows[t].DestStationCode))
-									{
-										var daysofTravelArray=rows[t].DaysOfTravel.split("");
-										var OriginDepartureTime=rows[t].OriginDepartureTime;
-                                        var trainDateLimits = getValidDateLimits.getValidDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime);
-										if(trainDateLimits.length > 0)
-										{
-											atLeastATrain=1;
-											console.log("Train found:"+rows[t].TrainName+":"+rows[t].TrainNo);
-											rows[t].isRecommended=1;
-										}
-										else
-										{
-											rows[t].isRecommended=0;
-										}
-                                        rows[t].fare=getTrainFare(rows[t].Distance,rows[t].Type,rows[t].OriginDepartureTime, rows[t].DestArrivalTime, rows[t].OriginDay, rows[t].DestDay );
-                                        rows[t].dateLimits = trainDateLimits;
-										trainData.push(rows[t]);
-							    	}
-								}
-								if(atLeastATrain==1)
-								{
-									allSegments[k].isRecommendedSegment=1;
-									isRecommendedRoute = 1;
+        connection.query(fullQueryString, function(err, rows, fields) {
+            if (err)
+            {
+                throw err;
+            }
+            else{
+                for (var i in rows) {
+                    //console.log(rows[i]);
+                    if((rows[i].OriginDay!=1)&&(rows[i].DaysOfTravel!="0")){
+                        var daysofTravelArray=rows[i].DaysOfTravel.split("");
+                        console.log("oldDaysofTravel:"+rows[i].DaysOfTravel);
+                        var updatedDaysOfTravel="";
+                        for(var j=0;j<daysofTravelArray.length;j++)
+                        {
+                            updatedDaysOfTravel+=parseInt(daysofTravelArray[j])+(rows[i].OriginDay-1);
+                        }
+                        console.log("updatedDaysOfTravel:"+updatedDaysOfTravel);
+                        rows[i].DaysOfTravel=updatedDaysOfTravel;
+                    }
+                }
+                var countOfVehicleTrain=0;
+                //Iterating the array of rome2rio objects
+                for(var i = 0; i < numOfTravels; i++)
+                {
+                    //console.log("i:"+i);
+                    var allRoutes = rome2RioData[i].routes;
+                    for(var j = 0; j < allRoutes.length; j++)
+                    {
+                        var allSegments = allRoutes[j].segments;
+                        var isRecommendedRoute = 1;
+                        for(var k = 0; k < allSegments.length; k++)
+                        {
+                            if(allSegments[k].isMajor == 1 && allSegments[k].vehicle)
+                            {
+                                if(allSegments[k].vehicle == "train")//A part of this route is a train
+                                {
+                                    var sourceStation = allSegments[k].sName;
+                                    var destinationStation = allSegments[k].tName;
+                                    var sourceStationCode = extractStationCode.extractStationCode(sourceStation);
+                                    var destinationStationCode = extractStationCode.extractStationCode(destinationStation);
+                                    var startDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateStart;
+                                    var endDate=trainDateSetObjectArray[countOfVehicleTrain].dateSet.dateEnd;
+                                    var startTime=startDate.toFormat("HH24")+":"+startDate.toFormat("MI")+":00";
+                                    var endTime=endDate.toFormat("HH24")+":"+endDate.toFormat("MI")+":00";
+                                    var atLeastATrain=0;
+                                    var trainData=[];
+                                    //Iterate the train rows from the database to check whether there are trains on the possible days:times
+                                    for (var t in rows) {
+                                        if((sourceStationCode==rows[t].OriginStationCode)&&(destinationStationCode==rows[t].DestStationCode))
+                                        {
+                                            var daysofTravelArray=rows[t].DaysOfTravel.split("");
+                                            var OriginDepartureTime=rows[t].OriginDepartureTime;
+                                            var trainDateLimits = getValidDateLimits.getValidDateLimits(startDate,endDate,startTime,endTime,daysofTravelArray,OriginDepartureTime);
+                                            if(trainDateLimits.length > 0)
+                                            {
+                                                atLeastATrain=1;
+                                                console.log("Train found:"+rows[t].TrainName+":"+rows[t].TrainNo);
+                                                rows[t].isRecommended=1;
+                                            }
+                                            else
+                                            {
+                                                rows[t].isRecommended=0;
+                                            }
+                                            rows[t].fare=getTrainFare(rows[t].Distance,rows[t].Type,rows[t].OriginDepartureTime, rows[t].DestArrivalTime, rows[t].OriginDay, rows[t].DestDay );
+                                            rows[t].dateLimits = trainDateLimits;
+                                            trainData.push(rows[t]);
+                                        }
+                                    }
+                                    if(atLeastATrain==1)
+                                    {
+                                        allSegments[k].isRecommendedSegment=1;
+                                        isRecommendedRoute = 1;
 
-								}
-								else
-								{
-									allSegments[k].isRecommendedSegment=0;
-									isRecommendedRoute = 0;
-								}
-								allSegments[k].trainData=trainData;
-								countOfVehicleTrain++;
+                                    }
+                                    else
+                                    {
+                                        allSegments[k].isRecommendedSegment=0;
+                                        isRecommendedRoute = 0;
+                                    }
+                                    allSegments[k].trainData=trainData;
+                                    countOfVehicleTrain++;
 
-							}
-						}
-					}
-					if(isRecommendedRoute==1)
-					{
-						 allRoutes[j].isRecommendedRouteTrain=1;
-					}
-					else
-					{
-						allRoutes[j].isRecommendedRouteTrain=0;
-					}
-				}
-			}
+                                }
+                            }
+                        }
+                        if(isRecommendedRoute==1)
+                        {
+                            allRoutes[j].isRecommendedRouteTrain=1;
+                        }
+                        else
+                        {
+                            allRoutes[j].isRecommendedRouteTrain=0;
+                        }
+                    }
+                }
 
-	    }
+            }
+            var result = {
+                rome2RioData:rome2RioData,
+                lengthOfRoutesArray:lengthOfRoutesArray,
+                indexOfDrive:indexOfDrive
+            };
+            callback(null, result);
+
+        });
+        connection.end();
+    }
+    else {
+        //No trains in the data
         var result = {
             rome2RioData:rome2RioData,
             lengthOfRoutesArray:lengthOfRoutesArray,
             indexOfDrive:indexOfDrive
         };
         callback(null, result);
-
-	});
-	connection.end();
+    }
 
 }
 module.exports.getTrainData = getTrainData;
