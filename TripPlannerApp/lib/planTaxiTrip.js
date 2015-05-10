@@ -17,8 +17,6 @@ module.exports.planTaxiTrip=planTaxiTrip;
 
 function getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times,ratingRatio, callback)
 {
-	var connection=conn.conn();
-	connection.connect();
 	var cityCode=[];
 	var numOfTravels = rome2RioData.length;
 	for(var i = 0; i < numOfTravels; i++)
@@ -58,26 +56,34 @@ function getCityNameCode(conn,rome2RioData,numPeople,userBudget,dateSet,dates, t
 
 	//db Query
 
-	var fullQueryString = 'SELECT a.CityName, b.StationCode FROM'
-		+' (SELECT CityName, CityID from City) a'
-		+' JOIN'
-		+' (SELECT CityID, StationCode from RailwayStations_In_City where StationCode IN('+connection.escape(cityCode)+')) b'
-		+' ON (a.CityID = b.CityID);';
-	//console.log('QUERY for trains:'+fullQueryString);
+    if(cityCode.length > 0){
+        var connection=conn.conn();
+        connection.connect();
+        var fullQueryString = 'SELECT a.CityName, b.StationCode FROM'
+            +' (SELECT CityName, CityID from City) a'
+            +' JOIN'
+            +' (SELECT CityID, StationCode from RailwayStations_In_City where StationCode IN('+connection.escape(cityCode)+')) b'
+            +' ON (a.CityID = b.CityID);';
+        //console.log('QUERY for trains:'+fullQueryString);
 
-	connection.query(fullQueryString, function(err, rows, fields) {
-		if (err)
-		{
-			throw err;
-		}
-	    else{
-			for (var i in rows) {
-				console.log(rows[i].CityName+","+rows[i].StationCode);
-			}
-			getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, rows, callback);
-	    }
-	});
-	connection.end();
+        connection.query(fullQueryString, function(err, rows, fields) {
+            if (err)
+            {
+                throw err;
+            }
+            else{
+                for (var i in rows) {
+                    console.log(rows[i].CityName+","+rows[i].StationCode);
+                }
+                getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, rows, callback);
+            }
+        });
+        connection.end();
+    }
+    else{
+        //No train in data. No need for this query
+        getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, null, callback);
+    }
 }
 function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, times, ratingRatio, rows, callback)
 {

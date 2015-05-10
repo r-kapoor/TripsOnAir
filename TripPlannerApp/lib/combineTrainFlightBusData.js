@@ -17,7 +17,7 @@ function combineTrainFlightBusData(rome2RioData) {
                 isRecommendedRouteBus = route.isRecommendedRouteBus;
             }
 
-            route.isRecommendedRoute = route.isRecommendedRouteTrain * route.isRecommendedRouteFlight * route.isRecommendedRouteBus;
+            route.isRecommendedRoute = isRecommendedRouteTrain * isRecommendedRouteFlight * isRecommendedRouteBus;
 
             delete route.isRecommendedRouteTrain;
             delete route.isRecommendedRouteFlight;
