@@ -62,6 +62,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.isFlightClicked = false;
     $scope.isBusClicked = false;
     $scope.isCabClicked = false;
+    $scope.isDriveClicked = false;
     $scope.isCabOperatorClicked = false;
     $scope.cabDetails = [];
     $scope.currentSegment = null;
@@ -136,6 +137,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         $scope.isBusClicked = false;
         $scope.isCabOperatorClicked = false;
         $scope.isCabClicked = false;
+        $scope.isDriveClicked = false;
         $scope.isTaxiClicked = false;
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
         if(segment.kind == "train") {
@@ -180,6 +182,13 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             if(segment.subkind=="taxi")
             {
                 $scope.isTaxiClicked = true;
+                if(custom == 'cabTimings'){
+                    initializeCabDates(segment.startTime);
+                }
+            }
+            if(segment.subkind == "car")
+            {
+                $scope.isDriveClicked = true;
                 if(custom == 'cabTimings'){
                     initializeCabDates(segment.startTime);
                 }
@@ -690,7 +699,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             return "3rd Day";
         }
     };
-
 
     function clearIsDefaultAndIsFinal(){
 

@@ -151,8 +151,8 @@
                                                         </div>
                                                         <div class="col-xs-2">
                                                             <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
-                                                            <div class="row text-center" ng-if = "(route.name=='Drive')" style="font-size: 80%">Drive</div>
-                                                            <div class="row text-center" ng-if = "(route.name=='Taxi')" style="font-size: 80%">Taxi</div>
+                                                            <div class="row text-center" ng-if = "(segment.subkind=='car')" style="font-size: 80%">Drive</div>
+                                                            <div class="row text-center" ng-if = "(segment.subkind=='taxi')" style="font-size: 80%">Taxi</div>
                                                         </div>
                                                         <div class="col-xs-5">
                                                             <div class="row">
@@ -400,7 +400,7 @@
                             </div>
                         </ul>
 
-                        <div ng-if="isTaxiClicked">
+                        <div ng-if="isTaxiClicked||isDriveClicked">
                             <div class = "panel panel-default">
                                 <div class="panel-body">
                                     <div class="row">
