@@ -135,11 +135,11 @@ var selectFinalTravelVehicle = function (allSegments,k,isMajorCounter,dateSet,i,
     allSegments[k][vehicleData][minTrainIndex].date = minTrainDateOfTravel;
     console.log("Takes Train:\n%j",allSegments[k][vehicleData][minTrainIndex]);
     //Commenting as don't know why setting ideal start time to train time only when 1st major segment
-    //if(isMajorCounter==1)
-    //{
+    if(isMajorCounter==1)
+    {
         console.log("minTrainDateOfTravel:"+minTrainDateOfTravel);
         idealStartTime=new Date(minTrainDateOfTravel.getTime());
-    //}
+    }
     console.log("At time:"+idealStartTime);
     //adding idealStartTime in rome2Rio data
     allSegments[k].startTime=new Date(idealStartTime.getTime());

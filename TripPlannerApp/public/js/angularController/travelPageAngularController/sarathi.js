@@ -26,7 +26,7 @@ routesModule.directive('postRepeat', function($timeout) {
                     $scope.$emit('initialize-pane',"trainPanel");
                 }
             },1000);
-             $timeout(function (){
+            $timeout(function (){
                 if(element.class=="panel-flightMode"){
                     console.log("in panel-flightMode");
                     console.log("scrollHeightFlightMode:"+$("#transcludeFlightPanel").get(0).scrollHeight);
@@ -67,6 +67,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.cabDetails = [];
     $scope.currentSegment = null;
     $scope.currentRoute = null;
+    $scope.currentRouteIndex = -1;
 
     $scope.cabDetailToggle = [];
     $scope.cabDate = null;
@@ -78,6 +79,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.totalBudget = 0;
     $scope.travelBudget = 0;
     $scope.minorBudget = 0;
+    $scope.isTravelPanelDisable = false;
 
     var defaultRouteData = null;
     var alternateRouteData = null;
@@ -96,7 +98,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
 
     $scope.showModes = function(){
         console.log("in show modes");
-         $scope.checked1=true;
+        $scope.checked1=true;
     };
     $scope.test = function(){
         console.log("in test function");
@@ -129,9 +131,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         //travelPageSlide.attr('ng-click','closeOtherPanels(1)');
     };
 
-    $scope.openModeDetailsPanel = function(segment,route, clickEvent, custom) {
+    $scope.openModeDetailsPanel = function(segment,route,routeIndex, clickEvent, custom) {
         $scope.currentSegment = segment;
         $scope.currentRoute = route;
+        $scope.currentRouteIndex = routeIndex;
         $scope.isTrainClicked = false;
         $scope.isFlightClicked = false;
         $scope.isBusClicked = false;
@@ -151,9 +154,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             initializeVehicleDates(segment.flightData,segment.startTime);
             $scope.flights = segment.flightData;
             // $scope.isFlightClicked = true;
-             $timeout(function() {
-                 $scope.isFlightClicked = true;
-             }, 500);
+            $timeout(function() {
+                $scope.isFlightClicked = true;
+            }, 500);
         }
         else if(segment.kind == "bus")
         {
@@ -284,7 +287,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                     alternateRouteData = data.withTaxiRome2rioData;
                     //defaultRouteData = data.withTaxiRome2rioData;
                     //alternateRouteData = data.withoutTaxiRome2rioData;
-                    }
+                }
                 getAttributesFromRouteData(defaultRouteData);
                 showCurrentRouteOnMap();
                 showBudget(data.userTotalbudget);
@@ -312,6 +315,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                 route.majorCount = majorIndex - 1;
                 if(route.isDefault != undefined && route.isDefault == 1) {
                     leg.defaultRoute = route;
+                    leg.defaultRouteIndex = routeIndex;
                 }
             }
         }
@@ -514,7 +518,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                 return "";
             }
         }
-    }
+    };
 
     $scope.showOtherTrip = function() {
         $scope.isTripPanelSetCollapsed = true;
@@ -579,6 +583,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
 
     $scope.addToTrip = function(vehicle,$index,$event) {
         console.log('In addtotrip');
+        var allSegmentSelected = false;
         if($scope.vehicleDate[$index].dt == null) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -614,6 +619,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                         vehicles[vehicleIndex].isFinal = 0;
                     }
                 }
+
                 //set isDefault and isFinal to 0 for existed default route
                 clearIsDefaultAndIsFinal();
                 vehicle.isFinal =1;
@@ -623,39 +629,64 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                 $scope.currentLeg.defaultRoute = $scope.currentRoute;
                 $scope.currentRoute.isDefault =1;
             }
+
             $scope.currentSegment.startTime = startTime;
             $scope.currentSegment.endTime = addMinutes(startTime,duration);
             $scope.currentSegment.duration = duration;
 
-            console.log("currentSegment:"+JSON.stringify($scope.currentSegment));
-
-
             if(vehicle.fare != undefined) {
                 $scope.currentSegment.indicativePrice.price = vehicle.fare;
             }
+
             vehicle.date = startTime;
-            $scope.isTravelModesPanelOpen = false;
-            $scope.isModeDetailsPanelOpen = false;
+            allSegmentSelected = isAllSegmentsSelected();
+            if( !allSegmentSelected)
+            {
+                $scope.isModeDetailsPanelOpen = false;
+                $scope.isTravelPanelDisable = true;
+            }
+            else {
+                $scope.isTravelModesPanelOpen = false;
+                $scope.isModeDetailsPanelOpen = false;
+                $scope.isTravelPanelDisable = false;
+            }
         }
-        showCurrentRouteOnMap();
-        alertAndSetTravelBudget();
+        if(allSegmentSelected)
+        {
+            showCurrentRouteOnMap();
+            alertAndSetTravelBudget();
+        }
     };
 
-    $scope.addCabToTrip = function(){
+    $scope.addCabToTrip = function($event){
 
         var cabStartTime = $scope.cabDate.dt;
-        clearIsDefaultAndIsFinal();
-        $scope.currentLeg.defaultRoute = $scope.currentRoute;
-        $scope.currentRoute.isDefault =1;
-        $scope.currentSegment.startTime = cabStartTime;
-        $scope.currentSegment.endTime = addMinutes(cabStartTime,$scope.currentSegment.duration);
-        console.log($scope.currentSegment.endTime);
-        $scope.isTravelModesPanelOpen = false;
-        $scope.isModeDetailsPanelOpen = false;
-        showCurrentRouteOnMap();
-        alertAndSetTravelBudget();
+        if(cabStartTime == null||cabStartTime==undefined) {
+            $scope.openCabDate($event);
+        }
+        else {
+            //set isDefault and isFinal to 0 for existed default route
+            clearIsDefaultAndIsFinal();
+            $scope.currentLeg.defaultRoute = $scope.currentRoute;
+            $scope.currentRoute.isDefault =1;
+            $scope.currentSegment.startTime = cabStartTime;
+            $scope.currentSegment.endTime = addMinutes(cabStartTime,$scope.currentSegment.duration);
+            console.log($scope.currentSegment.endTime);
+            var allSegmentSelected = isAllSegmentsSelected();
+            if( !allSegmentSelected)
+            {
+                $scope.isModeDetailsPanelOpen = false;
+                $scope.isTravelPanelDisable = true;
+            }
+            else {
+                $scope.isTravelModesPanelOpen = false;
+                $scope.isModeDetailsPanelOpen = false;
+                $scope.isTravelPanelDisable = false;
+                showCurrentRouteOnMap();
+                alertAndSetTravelBudget();
+            }
+        }
     };
-
 
     $scope.getAddButtonClass = function(vehicle) {
         if(vehicle!=undefined && vehicle.isFinal != undefined && vehicle.isFinal == 1) {
@@ -700,53 +731,79 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
+    function isAllSegmentsSelected()
+    {
+        var currentDefaultRoute = $scope.currentRoute;
+        if(currentDefaultRoute.majorCount>0)
+        {
+            //more than one major segments
+            var segments = currentDefaultRoute.segments;
+            for(var segmentIndex = 0;segmentIndex<segments.length;segmentIndex++)
+            {
+                if(segments[segmentIndex].isMajor==1 && (segments[segmentIndex].startTime==undefined||segments[segmentIndex].startTime==null))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     function clearIsDefaultAndIsFinal(){
 
         for(var routeIndex in $scope.currentLeg.routes)
         {
-            if($scope.currentLeg.routes[routeIndex].isDefault!= undefined && ($scope.currentLeg.routes[routeIndex].isDefault==1))
+            if($scope.currentRouteIndex!=routeIndex)//not for current route
             {
-                $scope.currentLeg.routes[routeIndex].isDefault = 0;
-                var segments = $scope.currentLeg.routes[routeIndex].segments;
-                for(var segmentIndex in segments)
+                if($scope.currentLeg.routes[routeIndex].isDefault!= undefined && ($scope.currentLeg.routes[routeIndex].isDefault==1))
                 {
-                    if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="flight"))
+                    $scope.currentLeg.routes[routeIndex].isDefault = 0;
+                    var segments = $scope.currentLeg.routes[routeIndex].segments;
+                    for(var segmentIndex in segments)
                     {
-                        segments[segmentIndex].startTime = null;
-                        segments[segmentIndex].endTime = null;
-                        for(var flightIndex in segments[segmentIndex].flightData)
+                        if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="flight"))
                         {
-                            var flight = segments[segmentIndex].flightData[flightIndex];
-                            if(flight.isFinal!=undefined && flight.isFinal==1)
+                            segments[segmentIndex].startTime = null;
+                            segments[segmentIndex].endTime = null;
+                            for(var flightIndex in segments[segmentIndex].flightData)
                             {
-                                flight.isFinal = 0;
+                                var flight = segments[segmentIndex].flightData[flightIndex];
+                                if(flight.isFinal!=undefined && flight.isFinal==1)
+                                {
+                                    flight.isFinal = 0;
+                                }
                             }
                         }
-                    }
-                    if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="train"))
-                    {
-                        segments[segmentIndex].startTime = null;
-                        segments[segmentIndex].endTime = null;
-                        for(var trainIndex in segments[segmentIndex].trainData)
+                        if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="train"))
                         {
-                            var train = segments[segmentIndex].trainData[trainIndex];
-                            if(train.isFinal!=undefined && train.isFinal==1)
+                            segments[segmentIndex].startTime = null;
+                            segments[segmentIndex].endTime = null;
+                            for(var trainIndex in segments[segmentIndex].trainData)
                             {
-                                train.isFinal = 0;
+                                var train = segments[segmentIndex].trainData[trainIndex];
+                                if(train.isFinal!=undefined && train.isFinal==1)
+                                {
+                                    train.isFinal = 0;
+                                }
                             }
                         }
-                    }
-                    if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="bus"))
-                    {
-                        segments[segmentIndex].startTime = null;
-                        segments[segmentIndex].endTime = null;
-                        for(var busIndex in segments[segmentIndex].busData)
+                        if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].kind=="bus"))
                         {
-                            var bus = segments[segmentIndex].busData[busIndex];
-                            if(bus.isFinal!=undefined && bus.isFinal==1)
+                            segments[segmentIndex].startTime = null;
+                            segments[segmentIndex].endTime = null;
+                            for(var busIndex in segments[segmentIndex].busData)
                             {
-                                bus.isFinal = 0;
+                                var bus = segments[segmentIndex].busData[busIndex];
+                                if(bus.isFinal!=undefined && bus.isFinal==1)
+                                {
+                                    bus.isFinal = 0;
+                                }
                             }
+                        }
+                        if(segments[segmentIndex].kind!=undefined && (segments[segmentIndex].isMajor ==1)&&(segments[segmentIndex].subkind=="taxi"||segments[segmentIndex].subkind=="car"))
+                        {
+                            segments[segmentIndex].startTime = null;
+                            segments[segmentIndex].endTime = null;
                         }
                     }
                 }
@@ -829,7 +886,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                 $scope.cabDetails[cabDetailIndex].isFinal=0;
                 for(var cabOperatorIndex in $scope.cabDetails[cabDetailIndex].OperatorPrices)
                 {
-                   var operatorPrice=$scope.cabDetails[cabDetailIndex].OperatorPrices[cabOperatorIndex];
+                    var operatorPrice=$scope.cabDetails[cabDetailIndex].OperatorPrices[cabOperatorIndex];
                     if(operatorPrice.isFinal!=undefined && operatorPrice.isFinal==1)
                     {
                         operatorPrice.isFinal=0;
@@ -847,7 +904,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         alertAndSetTravelBudget();
     };
     /*
-    * This is the part dealing with datepicker
+     * This is the part dealing with datepicker
      */
 
     function initializeVehicleDates(vehicleData, startTime){

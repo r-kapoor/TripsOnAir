@@ -18,7 +18,7 @@
                 <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
                 <!--</div>-->
                 <div class="panel panel-default" style="height: 100vh">
-                    <div class="{{getTransparentClass(1)}}" ng-click="closeOtherPanels(1)"></div>
+                    <div class="{{getTransparentClass(1)}} btn" ng-click="isTravelPanelDisable || closeOtherPanels(1)"></div>
                     <div class="panel-body">
                         <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
                             <p>
@@ -44,12 +44,12 @@
                                                 {{getSourceCityName($index)}}
                                             </div>
                                         </div>
-                                        <div class="panel panel-default">
+                                        <div class="panel panel-default segment-hover">
                                             <div ng-repeat="segment in leg.defaultRoute.segments">
                                                 <div ng-if="segment.isMajor != 0" ng-href='#' ng-click="openTravelModesPanel(leg, $event, $parent.$parent.$index)">
-                                                    <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, leg.defaultRoute, $event,'cabOperator')">
+                                                    <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, leg.defaultRoute, defaultRouteIndex, $event,'cabOperator')">
                                                         <div ng-repeat="cabDetail in segment.CabDetails">
-                                                            <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info segment-hover">
+                                                            <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info">
                                                                 <div class="panel-heading">
                                                                     <div class="row">
                                                                         <div class="col-xs-4">
@@ -74,7 +74,8 @@
                                                         <div class="panel-body travel-panel-body">
                                                             <div class="col-xs-2">
                                                                 <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
-                                                                <!--<i class="glyphicon {{getModeIcon(segment)}} glyphicon-large" style="font-size: 2em; margin-top: 30%"></i>-->
+                                                                <div class="row text-center" ng-if = "(segment.subkind=='car')" style="font-size: 80%">Drive</div>
+                                                                <div class="row text-center" ng-if = "(segment.subkind=='taxi')" style="font-size: 80%">Taxi</div>
                                                             </div>
                                                             <div class="col-xs-4">
                                                                 <div class="row">
@@ -138,11 +139,11 @@
 
                         <div scroll-pane scroll-config="paneConfig" id="travelModesPanel" style="width:330px;height:100vh">
                             <div id="transcludeTravelModesPanel">
-                                <div class="panel-travelMode" ng-repeat="route in routes" post-repeat>
+                                <div class="panel-travelMode" ng-repeat="route in routes" ng-init="routeIndex = $index" post-repeat>
                                     <div class="panel panel-default" ng-if="route.isRecommendedRoute != undefined && route.isRecommendedRoute == 1">
                                         <div ng-repeat="segment in route.segments">
                                             <div ng-if="segment.isMajor != 0">
-                                                <div class="segment-hover" ng-href='#' ng-click="openModeDetailsPanel(segment,route, $event,'cabTimings')">
+                                                <div class="segment-hover" ng-href='#' ng-click="openModeDetailsPanel(segment, route, routeIndex, $event,'cabTimings')">
                                                     <div class="panel-body">
                                                         <div class="col-xs-1">
                                                             <div ng-if="segment.majorIndex==0">
@@ -446,7 +447,7 @@
                                                 <td class="form-group">
                                                     <button type="button" class="btn btn-default text-center ng-binding" ng-disabled="true" style="opacity: 1">{{getMins()}}</button>
                                                 </td>
-                                                <td style="padding-left: 2%"><button type="button" class="btn {{getAddButtonClassForTaxiOrDrive()}} text-center" ng-click="addCabToTrip()">{{getAddButtonTextForTaxiOrDrive()}}</button></td>
+                                                <td style="padding-left: 2%"><button type="button" class="btn {{getAddButtonClassForTaxiOrDrive()}} text-center" ng-click="addCabToTrip($event)">{{getAddButtonTextForTaxiOrDrive()}}</button></td>
                                             </tr>
                                             <tr class="text-center">
                                                 <td><a ng-click="decrementHours($event)" class="btn btn-link"><span class="glyphicon glyphicon-chevron-down"></span></a></td>
