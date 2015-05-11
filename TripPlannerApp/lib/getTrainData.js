@@ -159,6 +159,7 @@ function getTrainData(conn, rome2RioData, dateSet,budget, dates, times, ratingRa
                                     {
                                         allSegments[k].isRecommendedSegment=0;
                                         isRecommendedRoute = 0;
+                                        break;
                                     }
                                     allSegments[k].trainData=trainData;
                                     countOfVehicleTrain++;

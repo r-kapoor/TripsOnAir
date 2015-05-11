@@ -104,8 +104,8 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                                 var busData=[];
                                 //Iterate the flight rows from the database to check whether there are flights on the possible days:times
                                 for (var t in rows) {
-                                    console.log(sourceCityName + "=" + rows[t].OriginName);
-                                    console.log(destinationCityName + "=" + rows[t].DestinationName);
+                                    //console.log(sourceCityName + "=" + rows[t].OriginName);
+                                    //console.log(destinationCityName + "=" + rows[t].DestinationName);
 
                                     if((sourceCityName.indexOf(rows[t].OriginName) != -1)&&(destinationCityName.indexOf(rows[t].DestinationName) != -1))
                                     //if((sourceCityName.includes(rows[t].OriginName))&&(destinationCityName.includes(rows[t].DestinationName)))
@@ -142,6 +142,7 @@ function getBusData(conn, rome2RioData, dateSet,budget, dates, times, callback) 
                                 {
                                     allSegments[k].isRecommendedSegment=0;
                                     isRecommendedRoute = 0;
+                                    break;
                                 }
                                 allSegments[k].busData=busData;
                                 countOfVehicleBus++;
