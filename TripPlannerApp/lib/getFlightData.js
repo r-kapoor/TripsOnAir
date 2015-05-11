@@ -133,6 +133,7 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
                                 {
                                     allSegments[k].isRecommendedSegment=0;
                                     isRecommendedRoute = 0;
+                                    break;
                                 }
                                 allSegments[k].flightData=flightData;
                                 countOfVehicleFlight++;
