@@ -26,6 +26,20 @@
 .segment-hover:hover {
     background-color: rgba(255,255,255,0.75);
     background-color: #F0F0F0 ;
+    color:#000000;
+    /*background-color: rgba(255,255,255,0.75);*/
+    /*background-color: #F0F0F0 ;*/
+    /*background-color: rgba(255,115,16,0.75);*/
+    /*background-color: rgba(0,0,255,0.75);*/
+   /*color: white;*/
+}
+
+.icon-default{
+    -webkit-filter: invert(100%);
+}
+
+.icon-hover:hover img{
+    -webkit-filter: invert(100%);
 }
 
 .panel-transparent{
@@ -40,4 +54,18 @@
     cursor: pointer;
     display: block;
     z-index:2;
+}
+
+.default-route{
+    background-color: rgba(255,115,16,0.75);
+    color: white;
+    /*background-color: rgba(255,255,255,0.75);*/
+    /*background-color: #F0F0F0 ;*/
+
+}
+
+.segment-warning{
+    color: rgb(169,68,66) ;
+    background-color: #f2dede;
+
 }
