@@ -24,6 +24,7 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, rating
         var minPriority1 = -1, minPriority2 = -1, minPriority3 = -1, minPriority4 = -1;
         var minPriorityCombinations1 = [], minPriorityCombinations2 = [], minPriorityCombinations3 = [], minPriorityCombinations4 = [];
         var finalPriorityCombination=[];
+        var hasAllSegmentRecommendedCombination = false;
         outer:
             for(var i=0;i<allPossibleCombinations.length;i++)
             {
@@ -41,6 +42,7 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, rating
                     totalDurationOfTrip += routeObject.duration;
                     totalBudgetOfTrip += routeObject.indicativePrice.price;
                 }
+                hasAllSegmentRecommendedCombination = true;
                 if(totalDurationOfTrip < durationInTravel && totalBudgetOfTrip < budgetInTravel)
                 {
                     //This is a good option!!
@@ -82,42 +84,48 @@ function getDefaultModeOfTravel(rome2RioData,dateSet,budget,dates, times, rating
                     }
                 }
             }
-        if(minPriorityCombinations1.length > 0)
-        {
-            finalPriorityCombination=minPriorityCombinations1;
-            console.log('Combination 1:'+minPriorityCombinations1);
-        }
-        else if(minPriorityCombinations2.length > 0)
-        {
-            finalPriorityCombination=minPriorityCombinations2;
-            console.log('Combination 2:'+minPriorityCombinations2);
-        }
-        else if(minPriorityCombinations3.length > 0)
-        {
-            finalPriorityCombination=minPriorityCombinations3;
-            console.log('Combination 3:'+minPriorityCombinations3);
-        }
-        else if(minPriorityCombinations4.length > 0)
-        {
-            finalPriorityCombination=minPriorityCombinations4;
-            console.log('Combination 4:'+minPriorityCombinations4);
-        }
 
-
-        for(var t=0;t<rome2RioData.length;t++)
-        {
-            rome2RioData[t].routes[finalPriorityCombination[t]].isDefault=1;
+        if(!hasAllSegmentRecommendedCombination){
+            getTravelPlan.getTravelPlan(null,dateSet,dates,times,ratingRatio,null,numPeople,callback);
         }
-
-        var fs = require('fs');
-        fs.writeFile("text.txt",JSON.stringify(rome2RioData), function(err) {
-            if(err) {
-                console.log(err);
-            } else {
-                console.log("The file was saved!");
+        else {
+            if(minPriorityCombinations1.length > 0)
+            {
+                finalPriorityCombination=minPriorityCombinations1;
+                console.log('Combination 1:'+minPriorityCombinations1);
             }
-        });
-        getTravelPlan.getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,duration,numPeople,callback);
+            else if(minPriorityCombinations2.length > 0)
+            {
+                finalPriorityCombination=minPriorityCombinations2;
+                console.log('Combination 2:'+minPriorityCombinations2);
+            }
+            else if(minPriorityCombinations3.length > 0)
+            {
+                finalPriorityCombination=minPriorityCombinations3;
+                console.log('Combination 3:'+minPriorityCombinations3);
+            }
+            else if(minPriorityCombinations4.length > 0)
+            {
+                finalPriorityCombination=minPriorityCombinations4;
+                console.log('Combination 4:'+minPriorityCombinations4);
+            }
+
+
+            for(var t=0;t<rome2RioData.length;t++)
+            {
+                rome2RioData[t].routes[finalPriorityCombination[t]].isDefault=1;
+            }
+
+            var fs = require('fs');
+            fs.writeFile("text.txt",JSON.stringify(rome2RioData), function(err) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("The file was saved!");
+                }
+            });
+            getTravelPlan.getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,duration,numPeople,callback);
+        }
     }
 
 	//callbackDefaultMode(rome2RioData);
