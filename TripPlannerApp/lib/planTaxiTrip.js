@@ -360,6 +360,20 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
                     }
                 }
             }
+            else {
+                //The car route does not contain segments of this leg
+                //Need to check whether there is atleast one route of this leg which is recommended
+                var hasAtLeastOneRecommendedRoute = false;
+                for(routeIndex = 0; routeIndex < rome2RioData[legIndex].routes.length; routeIndex++) {
+                    if(rome2RioData[legIndex].routes[routeIndex].isRecommended == 1){
+                        hasAtLeastOneRecommendedRoute = true;
+                    }
+                }
+                if(!hasAtLeastOneRecommendedRoute){
+                    routeValid = false;
+                    break;
+                }
+            }
         }
         if(!routeValid){
             console.log('Removing route:'+carRouteArrayIndex);
