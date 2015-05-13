@@ -430,6 +430,27 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
+    $scope.getModeClass = function(route,segment){
+        if(route.isDefault!=undefined && route.isDefault ==1)
+        {
+            if(route.majorCount>0 && segment.isMajor==1 && (segment.startTime==undefined||segment.startTime==null))
+            {
+                return "segment-warning";
+            }
+            return "default-route";
+        }
+        return "";
+    };
+
+    $scope.getIconClass = function(route)
+    {
+        if(route.isDefault!=undefined && route.isDefault ==1)
+        {
+            return "icon-default icon-hover";
+        }
+        return "";
+    };
+
     $scope.getModeIcon = function(segment) {
         if(segment.kind == "flight") {
             return "glyphicons-39-airplane";
