@@ -3,7 +3,7 @@
  */
 require('date-utils');
 var calculateBudgetOfTrip=require('../lib/calculateBudgetOfTrip');
-var selectFinalTravelVehicle = function (allSegments,k,isMajorCounter,dateSet,i,idealStartTime, kind){
+var selectFinalTravelVehicle = function (allSegments,k,isMajorCounter,dateSet,i,idealStartTime, kind, durationDelayAfterStops){
 //console.log("Kind is train");
     console.log('Kind:'+kind);
     if(kind=="train"){
@@ -19,135 +19,226 @@ var selectFinalTravelVehicle = function (allSegments,k,isMajorCounter,dateSet,i,
     var minTrainTimeDifference=-1;
     var minTrain;
     var minTrainDateOfTravel;
-    var minTrainIndex;
+    var minTrainIndex = -1;
     var currentStartDate;
-    console.log("idealStartTime:"+idealStartTime);
-    for(var l=0;l<trainData.length;l++)
-    {
-        if(trainData[l].isRecommended==1)
-        {
-            /*for(var m=0;m<dateSet.length;m++)
-             {
-             dateSet.dateStart
-             dateSet.dateEnd
 
-             }*/
-            if(isMajorCounter==1)
+    var dateSetStart = dateSet.dateStart[i].clone().addMinutes(durationDelayAfterStops);
+    var dateSetEnd = dateSet.dateEnd[i].clone().addMinutes(durationDelayAfterStops);
+    console.log("idealStartTime:"+idealStartTime);
+    console.log("dateSetStart:"+dateSetStart);
+    console.log("dateSetEnd:"+dateSetEnd);
+
+    if(trainData.length > 0){
+        for(var l=0;l<trainData.length;l++)
+        {
+            if(trainData[l].isRecommended==1)
             {
-                currentStartDate=new Date(dateSet.dateStart[i].getTime());
-            }
-            else
-            {
-                currentStartDate=new Date(idealStartTime.getTime());
-            }
-            var minDateSetTrainTimeDifference=-1;
-            var minTrainTime;
-            while(currentStartDate.isBefore(dateSet.dateEnd[i]))
-            {
-                console.log('In while currentStartDate:'+currentStartDate+", trainData[l].DaysOfTravel:"+trainData[l].DaysOfTravel);
-                if(runsOnSameDay(currentStartDate,trainData[l].DaysOfTravel))
+                /*for(var m=0;m<dateSet.length;m++)
+                 {
+                 dateSet.dateStart
+                 dateSet.dateEnd
+
+                 }*/
+                if(isMajorCounter==1)
                 {
-                    console.log('runs on same day');
-                    if(currentStartDate.equals(dateSet.dateStart[i]))
+                    currentStartDate=new Date(dateSetStart.getTime());
+                }
+                else
+                {
+                    currentStartDate=new Date(idealStartTime.getTime());
+                }
+                var minDateSetTrainTimeDifference=-1;
+                var minTrainTime;
+                var dateStartDay = dateSetStart.clone().clearTime();
+                var dateEndDay = dateSetEnd.clone().clearTime();
+                var idealStartDay = idealStartTime.clone().clearTime();
+                if(isMajorCounter == 1){
+                    console.log('1st Major Travel, Finding the vehicle nearest to ideal start time..');
+                    while(currentStartDate.isBefore(dateSetEnd))
                     {
-                        console.log('equals dateStart:'+(currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))+",:"+trainData[l].OriginDepartureTime);
-                        if((currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))<trainData[l].OriginDepartureTime)
+                        var currentStartDay = currentStartDate.clone().clearTime();
+                        console.log('In while currentStartDate:'+currentStartDate+", trainData[l].DaysOfTravel:"+trainData[l].DaysOfTravel);
+                        if(runsOnSameDay(currentStartDate,trainData[l].DaysOfTravel))
                         {
-                            var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
-                            if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
+                            console.log('runs on same day');
+                            if(currentStartDay.equals(dateStartDay))
                             {
-                                console.log('currentTrainTime='+currentTrainTime);
-                                minTrainTime = currentTrainTime;
-                                minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
+                                console.log('equals dateStart:'+(currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))+",:"+trainData[l].OriginDepartureTime);
+                                if((currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))<trainData[l].OriginDepartureTime)
+                                {
+                                    var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
+                                    if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
+                                    {
+                                        console.log('currentTrainTime='+currentTrainTime);
+                                        minTrainTime = currentTrainTime;
+                                        minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
+                                    }
+                                }
+                            }
+                            else if(currentStartDay.equals(dateEndDay))
+                            {
+                                console.log('equals dateEnd');
+                                //This is the end date
+                                if((currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))>trainData[l].OriginDepartureTime)
+                                {
+                                    var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
+                                    if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
+                                    {
+                                        console.log('1currentTrainTime='+currentTrainTime);
+                                        minTrainTime = currentTrainTime;
+                                        minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                console.log('is somewhere in between');
+                                var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(),currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
+                                if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
+                                {
+                                    console.log('2currentTrainTime='+currentTrainTime);
+                                    minTrainTime = currentTrainTime;
+                                    minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
+                                }
                             }
                         }
-                    }
-                    else if(currentStartDate.equals(dateSet.dateEnd[i]))
-                    {
-                        console.log('equals dateEnd');
-                        //This is the end date
-                        if((currentStartDate.getHours()+":"+currentStartDate.getMinutes())>trainData[l].OriginDepartureTime)
-                        {
-                            var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
-                            if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
-                            {
-                                console.log('1currentTrainTime='+currentTrainTime);
-                                minTrainTime = currentTrainTime;
-                                minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        console.log('is somewhere in between');
-                        var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(),currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
-                        if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
-                        {
-                            console.log('2currentTrainTime='+currentTrainTime);
-                            minTrainTime = currentTrainTime;
-                            minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
-                        }
+                        currentStartDate.addDays(1);
                     }
                 }
-                currentStartDate.addDays(1);
-            }
-            //We have got the iteration of the train which is nearest to the ideal time
-            //Finding the minimum of all trains
-            console.log('minTrainTimeDifference:'+minTrainTimeDifference);
-            console.log('minDateSetTrainTimeDifference:'+minDateSetTrainTimeDifference);
-            if(minTrainTimeDifference == -1 || minTrainTimeDifference > minDateSetTrainTimeDifference)
-            {
+                else {
+                    console.log('Major segment after another major segment. Finding the nearest vehicle to ideal start time');
+                    while(true)
+                    {
+                        var currentStartDay = currentStartDate.clone().clearTime();
+                        console.log('In while currentStartDate:'+currentStartDate+", trainData[l].DaysOfTravel:"+trainData[l].DaysOfTravel);
+                        if(runsOnSameDay(currentStartDate,trainData[l].DaysOfTravel))
+                        {
+                            console.log('runs on same day');
+                            if(currentStartDay.equals(idealStartDay))
+                            {
+                                console.log('equals idealStartDay:'+(currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))+",:"+trainData[l].OriginDepartureTime);
+                                if((currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))<trainData[l].OriginDepartureTime)
+                                {
+                                    var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
+                                    if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
+                                    {
+                                        console.log('currentTrainTime='+currentTrainTime);
+                                        minTrainTime = currentTrainTime;
+                                        minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                console.log('is somewhere after ideal start day');
+                                var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(),currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
+                                if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
+                                {
+                                    console.log('2currentTrainTime='+currentTrainTime);
+                                    minTrainTime = currentTrainTime;
+                                    minDateSetTrainTimeDifference = Math.abs(idealStartTime.getMinutesBetween(currentTrainTime));
+                                    break;
+                                }
+                            }
+                        }
+                        currentStartDate.addDays(1);
+                    }
+                }
+                //We have got the iteration of the train which is nearest to the ideal time
+                //Finding the minimum of all trains
+                console.log('minTrainTimeDifference:'+minTrainTimeDifference);
+                console.log('minDateSetTrainTimeDifference:'+minDateSetTrainTimeDifference);
+                if(minDateSetTrainTimeDifference == -1){
+                    console.log('No iteration of the vehicle was found to be running within the days');
+                }
+                else {
+                    if(minTrainTimeDifference == -1 || minTrainTimeDifference > minDateSetTrainTimeDifference)
+                    {
+                        console.log('Set This Vehicle as new min');
+                        minTrainTimeDifference = minDateSetTrainTimeDifference;
+                        minTrain = trainData[l];
 
-                minTrainTimeDifference = minDateSetTrainTimeDifference;
-                minTrain = trainData[l];
-
-                console.log("minTrainTime="+minTrainTime);
-                console.log("minTrainTimeDifference="+minTrainTimeDifference);
-                minTrainDateOfTravel = minTrainTime;
-                minTrainIndex = l;
+                        console.log("minTrainTime="+minTrainTime);
+                        console.log("minTrainTimeDifference="+minTrainTimeDifference);
+                        minTrainDateOfTravel = minTrainTime;
+                        minTrainIndex = l;
+                    }
+                    else {
+                        console.log('The earlier selected vehicle was nearer to ideal time than this');
+                    }
+                }
+                //idealStartTime.getMinutesBetween(date);
             }
-            //idealStartTime.getMinutesBetween(date);
+
+        }
+
+        //Now we have got the train which needs to be taken for travel along with the date and time of it
+        //Setting it in the rome2Rio data
+        console.log('kind:'+kind);
+        console.log('allSegments[k][vehicleData].length:'+allSegments[k][vehicleData].length);
+        console.log('minTrainIndex:'+minTrainIndex);
+
+        if(minTrainIndex != -1 && minTrainDateOfTravel != undefined){
+            console.log('minTrainIndex:'+minTrainIndex);
+            console.log('allSegments[k][vehicleData][minTrainIndex]:'+JSON.stringify(allSegments[k][vehicleData][minTrainIndex]));
+            allSegments[k][vehicleData][minTrainIndex].isFinal = 1;
+            allSegments[k][vehicleData][minTrainIndex].date = minTrainDateOfTravel;
+            console.log("Takes Train:\n%j",allSegments[k][vehicleData][minTrainIndex]);
+            //Commenting as don't know why setting ideal start time to train time only when 1st major segment
+            //if(isMajorCounter==1)
+            //{
+                console.log("minTrainDateOfTravel:"+minTrainDateOfTravel);
+                idealStartTime=new Date(minTrainDateOfTravel.getTime());
+            //}
+            console.log("At time:"+idealStartTime);
+            //adding idealStartTime in rome2Rio data
+            allSegments[k].startTime=new Date(idealStartTime.getTime());
+
+
+            idealStartTime.addDays(allSegments[k][vehicleData][minTrainIndex].DestDay-allSegments[k][vehicleData][minTrainIndex].OriginDay);
+            idealStartTime.clearTime();
+            idealStartTime.addHours(allSegments[k][vehicleData][minTrainIndex].DestArrivalTime.split(":")[0]);
+            idealStartTime.addMinutes(allSegments[k][vehicleData][minTrainIndex].DestArrivalTime.split(":")[1]);
+
+            //adding endTime in rome2Rio data
+            allSegments[k].endTime=new Date(idealStartTime.getTime());
+            allSegments[k].duration = allSegments[k].startTime.getMinutesBetween(allSegments[k].endTime);
+            if(allSegments[k][vehicleData][minTrainIndex].fare != undefined){
+                allSegments[k].indicativePrice.price = allSegments[k][vehicleData][minTrainIndex].fare;
+            }
+
+            console.log("idealStartTime after taking train before buffer:"+idealStartTime);
+            //Adding buffer Time
+            idealStartTime.addHours(2);
+            console.log("idealStartTime after taking train after buffer:"+idealStartTime);
+            return idealStartTime;
+        }
+        else {
+            console.log('ISSUE: Could not select any possible vehicle within date set');
+            console.log('Details:');
+            if(allSegments[k].sName != undefined){
+                console.log('sName:'+allSegments[k].sName);
+            }
+            if(allSegments[k].tName != undefined){
+                console.log('tName:'+allSegments[k].tName);
+            }
+            if(allSegments[k].sAirport != undefined){
+                console.log('sAirport:'+allSegments[k].sAirport.name);
+            }
+            if(allSegments[k].tAirport != undefined){
+                console.log('tAirport:'+allSegments[k].tAirport.name);
+            }
+            return null;
         }
 
     }
-
-    //Now we have got the train which needs to be taken for travel along with the date and time of it
-    //Setting it in the rome2Rio data
-    console.log('kind:'+kind);
-    console.log('allSegments[k][vehicleData].length:'+allSegments[k][vehicleData].length);
-    console.log('minTrainIndex:'+minTrainIndex);
-    console.log('allSegments[k][vehicleData][minTrainIndex]:'+JSON.stringify(allSegments[k][vehicleData][minTrainIndex]));
-    allSegments[k][vehicleData][minTrainIndex].isFinal = 1;
-    allSegments[k][vehicleData][minTrainIndex].date = minTrainDateOfTravel;
-    console.log("Takes Train:\n%j",allSegments[k][vehicleData][minTrainIndex]);
-    //Commenting as don't know why setting ideal start time to train time only when 1st major segment
-    if(isMajorCounter==1)
-    {
-        console.log("minTrainDateOfTravel:"+minTrainDateOfTravel);
-        idealStartTime=new Date(minTrainDateOfTravel.getTime());
+    else {
+        console.log('----------------');
+        console.log('UNEXPECTED ISSUE: Vehicle Data is empty even after being the default segment');
+        console.log('----------------');
+        return null;
     }
-    console.log("At time:"+idealStartTime);
-    //adding idealStartTime in rome2Rio data
-    allSegments[k].startTime=new Date(idealStartTime.getTime());
-
-
-    idealStartTime.addDays(allSegments[k][vehicleData][minTrainIndex].DestDay-allSegments[k][vehicleData][minTrainIndex].OriginDay);
-    idealStartTime.clearTime();
-    idealStartTime.addHours(allSegments[k][vehicleData][minTrainIndex].DestArrivalTime.split(":")[0]);
-    idealStartTime.addMinutes(allSegments[k][vehicleData][minTrainIndex].DestArrivalTime.split(":")[1]);
-
-    //adding endTime in rome2Rio data
-    allSegments[k].endTime=new Date(idealStartTime.getTime());
-    allSegments[k].duration = allSegments[k].startTime.getMinutesBetween(allSegments[k].endTime);
-    if(allSegments[k][vehicleData][minTrainIndex].fare != undefined){
-        allSegments[k].indicativePrice.price = allSegments[k][vehicleData][minTrainIndex].fare;
-    }
-
-    console.log("idealStartTime after taking train before buffer:"+idealStartTime);
-    //Adding buffer Time
-    idealStartTime.addHours(2);
-    console.log("idealStartTime after taking train after buffer:"+idealStartTime);
-    return idealStartTime;
 };
 
 function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDurationOfTrip,numPeople,callback)
@@ -204,6 +295,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
 
             console.log("Trip Starts AT:"+idealStartTime);
 
+            outer:
             for(var i=0;i<rome2RioData.length;i++)
             {
                 var allRoutes=rome2RioData[i].routes;
@@ -212,6 +304,7 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
                     if(allRoutes[j].isDefault==1)
                     {
                         //console.log("isDefault for route"+j);
+                        var durationDelayAfterStops = 0;
                         var allSegments=allRoutes[j].segments;
                         var isMajorCounter=0;
                         for(var k=0;k<allSegments.length;k++)
@@ -234,25 +327,26 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
                                 isMajorCounter++;
                                 if((allSegments[k].kind)&&(allSegments[k].kind=="train"))
                                 {
-                                    console.log("idealStartTime before selecting vehicle:"+idealStartTime);
-                                    idealStartTime = selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "train");
-                                    console.log("idealStartTime after selecting vehicle:"+idealStartTime);
+                                    console.log("idealStartTime before selecting train:"+idealStartTime);
+                                    idealStartTime = selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "train", durationDelayAfterStops);
+                                    console.log("idealStartTime after selecting train:"+idealStartTime);
+
                                 }
 
                                 //if flight
                                 else if((allSegments[k].kind)&&(allSegments[k].kind=="flight"))
                                 {
-                                    console.log("idealStartTime before selecting vehicle:"+idealStartTime);
-                                    idealStartTime = selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "flight");
-                                    console.log("idealStartTime after selecting vehicle:"+idealStartTime);
+                                    console.log("idealStartTime before selecting flight:"+idealStartTime);
+                                    idealStartTime = selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "flight", durationDelayAfterStops);
+                                    console.log("idealStartTime after selecting flight:"+idealStartTime);
                                 }
 
                                 //if bus
                                 else if((allSegments[k].kind)&&(allSegments[k].kind=="bus"))
                                 {
-                                    console.log("idealStartTime before selecting vehicle:"+idealStartTime);
-                                    idealStartTime = selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "bus");
-                                    console.log("idealStartTime after selecting vehicle:"+idealStartTime);
+                                    console.log("idealStartTime before selecting bus:"+idealStartTime);
+                                    idealStartTime = selectFinalTravelVehicle(allSegments, k, isMajorCounter, dateSet, i, idealStartTime, "bus", durationDelayAfterStops);
+                                    console.log("idealStartTime after selecting bus:"+idealStartTime);
                                 }
 
                                 //if taxi
@@ -315,8 +409,14 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
                                     console.log("Reaches at Time:"+idealStartTime);
                                 }
 
-                            }
+                                if(idealStartTime == null){
+                                    console.log('Breaking out of trip planning');
+                                    tripPossible = false;
+                                    break outer;
+                                }
 
+                            }
+                            durationDelayAfterStops += allSegments[k].duration;
                         }
 
                     }
@@ -330,7 +430,13 @@ function getTravelPlan(rome2RioData,dateSet,dates,times,ratingRatio,totalDuratio
                     console.log("Leaving from city:"+idealStartTime);
                 }
             }
-            calculateBudgetOfTrip.calculateBudgetOfTrip(rome2RioData,numPeople,callback);
+            if(!tripPossible){
+                console.log('Trip Planning Not Possible');
+                calculateBudgetOfTrip.calculateBudgetOfTrip(null,numPeople,callback);
+            }
+            else {
+                calculateBudgetOfTrip.calculateBudgetOfTrip(rome2RioData,numPeople,callback);
+            }
         }
         else {
             calculateBudgetOfTrip.calculateBudgetOfTrip(null,numPeople,callback);
