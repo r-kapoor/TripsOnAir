@@ -25,6 +25,7 @@ function getDistanceMatrix(dests, callback)
 			}
 		}*/
 		//console.log('callback called');
+        console.log(JSON.stringify(data));
 		callback(null, data);
 	});
 }

@@ -10,7 +10,7 @@ function populateCityDataService() {
     var queryString = "SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude FROM City;"
     connection.query(queryString, function(err, rows, fields) {
         if (err)
-        {
+        {p
             throw err;
         }
         else{
