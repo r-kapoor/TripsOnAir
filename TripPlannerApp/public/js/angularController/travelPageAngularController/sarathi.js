@@ -275,18 +275,31 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             }
             else {
                 dateSet = data.dateSet;
-                if(data.withoutTaxiRome2rioData.isMajorDefault == 1) {
-                    defaultRouteData = data.withoutTaxiRome2rioData;
-                    alternateRouteData = data.withTaxiRome2rioData;
+
+                if(data.withoutTaxiRome2rioData==null)
+                {
+                    defaultRouteData = data.withTaxiRome2rioData;
+                    alternateRouteData = null;
                 }
-                else {
-                    /*
-                     hack
-                     */
+                else if(data.withTaxiRome2rioData==null)
+                {
                     defaultRouteData = data.withoutTaxiRome2rioData;
-                    alternateRouteData = data.withTaxiRome2rioData;
-                    //defaultRouteData = data.withTaxiRome2rioData;
-                    //alternateRouteData = data.withoutTaxiRome2rioData;
+                    alternateRouteData = null;
+                }
+                else{
+                    if(data.withoutTaxiRome2rioData.isMajorDefault == 1) {
+                        defaultRouteData = data.withoutTaxiRome2rioData;
+                        alternateRouteData = data.withTaxiRome2rioData;
+                    }
+                    else {
+                        /*
+                         hack
+                         */
+                        defaultRouteData = data.withoutTaxiRome2rioData;
+                        alternateRouteData = data.withTaxiRome2rioData;
+                        //defaultRouteData = data.withTaxiRome2rioData;
+                        //alternateRouteData = data.withoutTaxiRome2rioData;
+                    }
                 }
                 getAttributesFromRouteData(defaultRouteData);
                 showCurrentRouteOnMap();
@@ -579,7 +592,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                     return true;
                 }
                 else {
-                    return false;
+                    //hack
+                    return true;
+                    //return false;
                 }
             }
         }
@@ -598,6 +613,37 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             }
         }
         return true;
+    };
+
+    $scope.isPriceShown = function(segment){
+        if(segment.kind == 'car') {
+            if(segment.subkind != undefined && segment.subkind == "cab") {
+               return false;
+            }
+        }
+        return true;
+    };
+
+    $scope.isPanelFooterShown = function(segment){
+        if(segment.kind == 'car') {
+            if(segment.subkind != undefined && segment.subkind == "cab") {
+                if(segment.endCabTrip != undefined && segment.endCabTrip == 1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    };
+
+    $scope.getStartCityForTaxi = function(segment){
+      return segment.carLegDetails[0];
+    };
+
+    $scope.getEndCityForTaxi = function(segment){
+        return segment.endCity;
     };
 
     function simpleKeys (original) {
