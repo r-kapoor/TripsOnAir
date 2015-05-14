@@ -94,11 +94,11 @@
                                                             <div class="col-xs-3">
                                                                 {{getDateFormatted(segment) | date:'shortTime'}}
                                                             </div>
-                                                            <div ng-if="isPriceShown()" class="col-xs-3">
+                                                            <div ng-if="isPriceShown(segment)" class="col-xs-3">
                                                                 {{getPrice(segment) | currency:"&#8377;":0}}
                                                             </div>
                                                         </div>
-                                                        <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center">Leave Taxi at {{getEndCityForTaxi}}</div>
+                                                        <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center">Leave Taxi at {{getEndCityForTaxi(segment)}}</div>
                                                     </div>
                                                     <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount && isViaShown(segment)">
                                                         <!--<div class="panel panel-default">-->
