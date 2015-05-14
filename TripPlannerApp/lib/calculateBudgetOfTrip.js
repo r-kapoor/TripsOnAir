@@ -18,7 +18,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
     else {
         //console.log("calling calculateBudgetOfTrip:%j",rome2RioData);
         var firstCabTime, cabEndTime ,totalBudgetofCabs = 0,isLastTripWithCab = 0, totalBudgetOfTrip = 0, totalBudgetOfMinor = 0,distanceByCab=0, startSegment, endSegment;
-        var startTimeOfTrip, endTimeOfTrip;
+        var startTimeOfTrip, endTimeOfTrip, endCity;
         for(var i=0;i<rome2RioData.length;i++)
         {
             //console.log("i:"+i);
@@ -50,6 +50,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
                                     isLastTripWithCab=1;
                                     startSegment = allSegments[k];
                                     startSegment.startCabTrip = 1;
+                                    endCity = startSegment.carLegDetails[startSegment.carLegDetails.length - 1];
                                 }
                                 console.log('cab is coming');
                                 cabEndTime=new Date(allSegments[k].endTime.getTime());
@@ -76,6 +77,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
         }
         if(isLastTripWithCab == 1) {
             endSegment.endCabTrip = 1;
+            endSegment.endCity = endCity;
             calculateCabBudgetOfLastTrip();
         }
         totalBudgetOfTrip += totalBudgetofCabs;
