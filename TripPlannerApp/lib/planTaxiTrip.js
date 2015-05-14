@@ -302,6 +302,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 	}
 	var preferenceOfTaxi = [];
 	var distanceSumArray = [];
+    var carLegDetails = [];
 
     //Iterating through the selected routes to find what all segments from which routes and legs have been covered
     for(var carRouteArrayIndex = 0; carRouteArrayIndex < carRouteDetailsArray.length; carRouteArrayIndex++){
@@ -390,6 +391,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
         for(var i=0; i < carRouteDetailsArray.length; i++)
         {
             preferenceOfTaxi[i] = 0;
+            carLegDetails[i] = [];
             var distanceSum = 0;
             console.log('---------------------------Route:'+i);
             for(var j = 0; j < carRouteDetailsArray[i].length; j++)
@@ -428,6 +430,10 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
                 console.log('endPlace:'+carRouteDetailsArray[i][j].endPlace);
                 console.log('duration:'+carRouteDetailsArray[i][j].duration);
                 console.log('distance:'+carRouteDetailsArray[i][j].distance);
+                if(j==0){
+                    carLegDetails[i].push(carRouteDetailsArray[i][j].source);
+                }
+                carLegDetails[i].push(carRouteDetailsArray[i][j].destination);
             }
             console.log('Total Distance:'+distanceSum);
             distanceSumArray[i]= distanceSum;
@@ -461,7 +467,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
         }
         console.log('#################And the winner is:'+preferredTaxi);
 
-        rome2RioData = taxiModifiedRome2RioData(rome2RioData,carRouteDetailsArray[preferredTaxi]);
+        rome2RioData = taxiModifiedRome2RioData(rome2RioData,carRouteDetailsArray[preferredTaxi], carLegDetails[preferredTaxi]);
         var lengthOfRoutesArray = [];
         var duration = getDuration.getDuration(dates, times);
         var durationInDays = duration/(24*60);
@@ -546,10 +552,10 @@ function insertCabBudget(rome2RioData, numberOfDaysInCab, distanceInCab,countOfC
 	return rome2RioData;
 }
 
-function taxiModifiedRome2RioData(rome2RioData,carRouteDetails)
+function taxiModifiedRome2RioData(rome2RioData,carRouteDetails, carLegDetails)
 {
-
 	var numOfTravels = rome2RioData.length;
+    var gotFirstCabSegment = false;
 	for(var i = 0; i < numOfTravels; i++)
 	{
 		var allRoutes = rome2RioData[i].routes;
@@ -580,6 +586,10 @@ function taxiModifiedRome2RioData(rome2RioData,carRouteDetails)
 										tPos:rome2RioData[i].routes[j].segments[k].tPos,
 										path:carRouteDetails[l].path
 								};
+                                if(!gotFirstCabSegment){
+                                    cabSegment.carLegDetails = carLegDetails;
+                                    gotFirstCabSegment = true;
+                                }
                                 if(carRouteDetails[l].ddpDetailsUpdated==0)
                                 {
                                     var speed=40;//km per hour
