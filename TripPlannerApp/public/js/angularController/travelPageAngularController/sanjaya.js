@@ -242,6 +242,18 @@ routesModule.controller('sanjayaController',  function($scope,$rootScope, $windo
 
     });
 
+    //used by sarthi when only one destination
+    $rootScope.$on('plotMarkers', function plotMarkers(event,data){
+        console.log("plotMarkers called");
+        removeAllMarkers();
+        var originCity = data.origin;
+        var destinationCity = data.destination;
+        $scope.addMarker(originCity,'A');
+        $scope.addMarker(destinationCity, String.fromCharCode('A'.charCodeAt() + 1));
+        //$scope.addMarker(destinationCity, String.fromCharCode('A'.charCodeAt() + i+1));
+
+    });
+
     $rootScope.$on('showSegment', function onShowSegment(event, segment) {
         console.log('In show segment:'+JSON.stringify(segment));
         var showArrow = false;

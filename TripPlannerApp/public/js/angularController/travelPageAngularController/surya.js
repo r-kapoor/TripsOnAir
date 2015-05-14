@@ -3,7 +3,7 @@
  */
 routesModule.controller('suryaController', function($scope, $rootScope, $http, $q, $location, orderedCities, $window) {
 
-    $scope.reorderPanel=true;
+    $scope.reorderPanel=false;
     $scope.loader=false;
     $scope.reorderList=true;
     $scope.draggableObjects = [];
@@ -73,6 +73,7 @@ console.log("weightArray:"+weightArray);
 
         console.log("pathArray:"+JSON.stringify(pathArray[1]));
         if((pathArray.length>1) && (destinations.length>1)){
+            $scope.reorderPanel = true;
             $http.get('/getOptimizeOrder?'+pathArray[1]).success(function(data,status){
                     console.log("getOptimizeOrder response:"+JSON.stringify(data));
                     orderedCities.setOrderedDestinationCities(data.trip);

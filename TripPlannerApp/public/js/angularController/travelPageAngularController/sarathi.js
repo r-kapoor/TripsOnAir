@@ -269,7 +269,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         $http.get(queryString).success(function(data,status){
             $scope.loader = true;
             $scope.isTravelPanelDataHidden = false;
-            console.log("showRoutes response:"+JSON.stringify(data));
+            //console.log("showRoutes response:"+JSON.stringify(data));
             if(data.tripNotPossible != undefined && data.tripNotPossible == 1) {
                 console.log('Page NOT FOUND');
             }
@@ -323,6 +323,18 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     }
 
     function showCurrentRouteOnMap() {
+        var destinations = getParameterByName('dsts').split(";");
+        var originCity  =  getParameterByName('o');
+        if(destinations.length==1) {
+            //need to plot markers if only one destination
+            originCity = JSON.parse(originCity);
+            destinations = JSON.parse(destinations);
+            var data = {
+                origin:originCity,
+                destination:destinations
+            };
+            $rootScope.$emit('plotMarkers',data);
+        }
         $rootScope.$emit('removeSegments');
         for(var legIndex in $scope.legs) {
             for(var segmentIndex in $scope.legs[legIndex].defaultRoute.segments) {
