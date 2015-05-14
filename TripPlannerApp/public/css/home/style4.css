@@ -210,12 +210,12 @@ select {
 }
 .header h1.logo a {
   color: #fff;
-  padding: 15px 30px;
+  padding: 15px 5px;
   display: inline-block;
   text-align: center;
   line-height: 1.4;
   max-width: 155px;
-  background: #f89d29;
+  /*background: #f89d29;*/
   -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-right-radius: 4px;
   -webkit-border-bottom-left-radius: 4px;
