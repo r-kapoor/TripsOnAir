@@ -51,6 +51,9 @@
                                                         <div ng-repeat="cabDetail in segment.CabDetails">
                                                             <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info">
                                                                 <div class="panel-heading">
+                                                                    <div class="row text-center">
+                                                                            Take Taxi From {{getStartCityForTaxi(segment)}}
+                                                                    </div>
                                                                     <div class="row">
                                                                         <div class="col-xs-4">
                                                                             {{cabDetail.SegmentType}}
@@ -61,7 +64,7 @@
                                                                                     {{cabOperator.Operator}}
                                                                                 </div>
                                                                                 <div class="col-xs-4">
-                                                                                    {{cabOperator.ActualCabPrice}}
+                                                                                    {{cabOperator.ActualCabPrice | currency:"&#8377;":0}}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -70,7 +73,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div ng-if="isSegmentShown(segment,leg)" class="travel-panel {{getRouteClass(segment)}}">
+                                                    <div ng-if="isSegmentShown(segment,leg)" class="travel-panel">
                                                         <div class="panel-body travel-panel-body">
                                                             <div class="col-xs-2">
                                                                 <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive icon-hover">
@@ -91,10 +94,11 @@
                                                             <div class="col-xs-3">
                                                                 {{getDateFormatted(segment) | date:'shortTime'}}
                                                             </div>
-                                                            <div class="col-xs-3">
-                                                                {{getPrice(segment) | currency:"&#8377;"}}
+                                                            <div ng-if="isPriceShown()" class="col-xs-3">
+                                                                {{getPrice(segment) | currency:"&#8377;":0}}
                                                             </div>
                                                         </div>
+                                                        <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center">Leave Taxi at {{getEndCityForTaxi}}</div>
                                                     </div>
                                                     <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount && isViaShown(segment)">
                                                         <!--<div class="panel panel-default">-->
@@ -168,7 +172,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-2">
-                                                            {{getPrice(segment) | currency:"&#8377;"}}
+                                                            {{getPrice(segment) | currency:"&#8377;":0}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -224,7 +228,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-2">
-                                                    {{train.fare | currency:"&#8377;"}}
+                                                    {{train.fare | currency:"&#8377;":0}}
                                                 </div>
                                             </div>
                                             <div class="row" style="padding-top: 2%">
@@ -351,7 +355,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4" style="font-weight: bold;font-size: medium">
-                                                <div class="row" style="color:orange">{{bus.fare | currency:"&#8377;"}}</div>
+                                                <div class="row" style="color:orange">{{bus.fare | currency:"&#8377;":0}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -518,7 +522,7 @@
                                                     </div>
                                                     <div class="col-xs-6">
                                                         <div class="row">
-                                                            {{operator.ActualCabPrice | currency:"&#8377;"}}
+                                                            {{operator.ActualCabPrice | currency:"&#8377;":0}}
                                                         </div>
                                                         <div class="row">
                                                             <div style="margin-top: 10%">
@@ -544,19 +548,19 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-7">{{totalBudgetText}}</div>
-                                <div class="col-xs-5">{{totalBudget | currency:"&#8377;"}}</div>
+                                <div class="col-xs-5">{{totalBudget | currency:"&#8377;":0}}</div>
                             </div>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-7">{{travelBudgetText}}</div>
-                                <div class="col-xs-5">{{travelBudget | currency:"&#8377;"}}</div>
+                                <div class="col-xs-5">{{travelBudget | currency:"&#8377;":0}}</div>
                             </div>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-7">{{minorBudgetText}}</div>
-                                <div class="col-xs-5">{{minorBudget | currency:"&#8377;"}}</div>
+                                <div class="col-xs-5">{{minorBudget | currency:"&#8377;":0}}</div>
                             </div>
                         </li>
                     </ul>
