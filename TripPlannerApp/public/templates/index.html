@@ -39,19 +39,21 @@
     <script src="js/angularController/krishna.js"></script>
     <script src="js/angularController/bhishma.js"></script>
 	<!-- <script src="js/jscrollPaneJS/ItineraryPanelJscrollPane.js"></script>-->
-    <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+   <!-- <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">-->
+    <!--<link rel="stylesheet" href="css/font-awesome.min.css">-->
     <link rel="stylesheet" type="text/css" href="css/krishna.css">
+    <link rel="stylesheet" href="css/home/fonts-awesome.css">
+    <link rel="stylesheet" href="css/home/flexslider.css">
+    <link id="theme-style" rel="stylesheet" href="css/home/style4.css">
 </head>
 
-<body>
-	<div ng-include src="'templates/layouts/global/header.html'"></div>
-	<div ng-include src="'templates/layouts/home/form1.html'"></div>
-	<!--<div ng-include src="'templates/layouts/home/promo1.html'"></div>
-	<div ng-include src="'templates/layouts/home/promo2.html'"></div>-->
-	<!--<div ng-include src="'templates/normalApp.html'"></div>-->
-	<div ng-include style="height:100%" src="'templates/layouts/global/footer.html'"></div>
-
+<body class="home-page">
+	<!--<div ng-include src="'templates/layouts/global/header.html'"></div>-->
+    <div ng-include src="'templates/layouts/global/header1.html'"></div>
+    <div ng-include src="'templates/layouts/home/imageSlider.html'"></div>
+    <div ng-include src="'templates/layouts/home/form1.html'"></div>
+    <div ng-include src="'templates/layouts/home/howItWorks.html'"></div>
+	<div ng-include src="'templates/layouts/global/footer.html'"></div>
 </body>
 
 </html>
