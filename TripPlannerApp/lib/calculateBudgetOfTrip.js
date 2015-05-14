@@ -65,6 +65,7 @@ function calculateBudgetOfTrip(rome2RioData,numPeople,callback)
                                 if(isLastTripWithCab==1)
                                 {
                                     endSegment.endCabTrip = 1;
+                                    endSegment.endCity = endCity;
                                     calculateCabBudgetOfLastTrip();
                                 }
                                 totalBudgetOfTrip += allSegments[k].indicativePrice.price;
