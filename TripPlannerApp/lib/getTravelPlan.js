@@ -79,7 +79,7 @@ var selectFinalTravelVehicle = function (allSegments,k,isMajorCounter,dateSet,i,
                             {
                                 console.log('equals dateEnd');
                                 //This is the end date
-                                if((currentStartDate.toFormat("HH24")+":"+currentStartDate.toFormat("MI")+":"+currentStartDate.toFormat("SS"))>trainData[l].OriginDepartureTime)
+                                if((dateSetEnd.toFormat("HH24")+":"+dateSetEnd.toFormat("MI")+":"+dateSetEnd.toFormat("SS"))>trainData[l].OriginDepartureTime)
                                 {
                                     var currentTrainTime=new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate(), parseInt(trainData[l].OriginDepartureTime.split(":")[0]),parseInt(trainData[l].OriginDepartureTime.split(":")[1]));
                                     if((minDateSetTrainTimeDifference==-1)||(minDateSetTrainTimeDifference>Math.abs(idealStartTime.getMinutesBetween(currentTrainTime))))
