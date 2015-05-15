@@ -45,7 +45,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.isTripPanelSetCollapsed = false;
     $scope.isModeDetailsPanelOpen = false;
 
-    $scope.loader = false;
     $scope.isTravelPanelDataHidden = true;
     $scope.cities = [];
 
@@ -144,16 +143,13 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         $scope.isTaxiClicked = false;
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
         if(segment.kind == "train") {
-            console.log("startTime:"+segment.startTime);
             initializeVehicleDates(segment.trainData,segment.startTime);
             $scope.trains = segment.trainData;
             $scope.isTrainClicked = true;
         }
         else if(segment.kind == "flight") {
-            console.log("startTime:"+segment.startTime);
             initializeVehicleDates(segment.flightData,segment.startTime);
             $scope.flights = segment.flightData;
-            // $scope.isFlightClicked = true;
             $timeout(function() {
                 $scope.isFlightClicked = true;
             }, 500);
@@ -170,7 +166,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             if(segment.subkind != undefined && segment.subkind == "cab") {
                 if(custom != undefined) {
                     if(custom == 'cabOperator') {
-                        console.log("CAB OPERATOR CLICKED");
                         $scope.isTravelModesPanelOpen = false;
                         $scope.isCabOperatorClicked = true;
                         $scope.cabDetails = segment.CabDetails;
@@ -216,7 +211,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     };
 
     angular.element(window).ready(function () {
-        console.log('Calling Routes in Sarathi');
         var currentURL = $location.absUrl();
         var pathArray = currentURL.split('?');
         var destinations = getParameterByName('dsts').split(";");
@@ -226,7 +220,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         if((pathArray.length>1) && (destinations.length==1))
         {
             //only one destination
-            console.log("only one destination from input");
             $scope.isTravelPanelOpen = true;
             originCity = JSON.parse(originCity);
             destinations = JSON.parse(destinations);
@@ -244,8 +237,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     }
 
     $rootScope.$on('showTravelPanel', function onShowTravelPanel(event, data) {
-        console.log('function called');
         openPanel();
+        $rootScope.$emit('gettingData');
         //Call showRoutes
         var orderedDestinationCities = orderedCities.getOrderedDestinationCities();
         var originCity = orderedCities.getOriginCity();
@@ -267,7 +260,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     {
         var queryString = "/showRoutes?"+citiesString+"&"+cityIDsString+"&"+pathArray[1];
         $http.get(queryString).success(function(data,status){
-            $scope.loader = true;
+            $rootScope.$emit('dataLoaded');
             $scope.isTravelPanelDataHidden = false;
             //console.log("showRoutes response:"+JSON.stringify(data));
             if(data.tripNotPossible != undefined && data.tripNotPossible == 1) {
@@ -418,7 +411,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             {
                 $rootScope.$emit('showRecommendation','budgetExceeds');
             }
-
         }
         else
         {
@@ -523,7 +515,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.closeOtherPanels =function(panelNo){
         if(panelNo==1){
             //travel panel clicked
-            console.log('travel panel clicked');
             if($scope.isTravelModesPanelOpen){
                 $scope.isTravelModesPanelOpen=false;
             }
@@ -533,12 +524,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
         else if(panelNo==2){
             //travel modes panel clicked
-            console.log('travel modes panel clicked');
             if($scope.isModeDetailsPanelOpen) {
                 $scope.isModeDetailsPanelOpen = false;
             }
         }
-        console.log("in close other panels");
     };
 
     $scope.getTransparentClass = function(panelNo){
@@ -568,13 +557,11 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
 
     $scope.showOtherTrip = function() {
         $scope.isTripPanelSetCollapsed = true;
-        console.log('Panel Collapsed');
         $timeout(function openCollapsedPanelSet(){
             var swapRouteData = alternateRouteData;
             alternateRouteData = defaultRouteData;
             defaultRouteData = swapRouteData;
             getAttributesFromRouteData(defaultRouteData);
-            console.log('Panel Opened');
             $scope.isTripPanelSetCollapsed = false;
             showCurrentRouteOnMap();
             alertAndSetTravelBudget();
@@ -586,18 +573,18 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         {
             return true;
         }
-        if(segment.kind == 'car') {
-            if(segment.subkind != undefined && segment.subkind == "cab") {
-                if(segment.startCabTrip != undefined && segment.startCabTrip == 1) {
-                    return true;
-                }
-                else {
-                    //hack
-                    return true;
-                    //return false;
-                }
-            }
-        }
+        //if(segment.kind == 'car') {
+        //    if(segment.subkind != undefined && segment.subkind == "cab") {
+        //        if(segment.startCabTrip != undefined && segment.startCabTrip == 1) {
+        //            return true;
+        //        }
+        //        else {
+        //            //hack
+        //            return true;
+        //            //return false;
+        //        }
+        //    }
+        //}
         return true;
     };
 
@@ -661,12 +648,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     };
 
     $scope.addToTrip = function(vehicle,$index,$event) {
-        console.log('In addtotrip');
         var allSegmentSelected = false;
         if($scope.vehicleDate[$index].dt == null) {
             $event.preventDefault();
             $event.stopPropagation();
-            console.log('In If:'+$scope.vehicleDate[$index].opened);
             $scope.vehicleDate[$index].opened = true;
         }
         else {
@@ -909,7 +894,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         {
             duration = (destDay-originDay-1)*24*60 + endTimeInMins+(24*60-startTimeInMins);
         }
-        console.log("duration:"+duration);
         return duration;
     };
 
@@ -975,8 +959,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
         cabDetail.isFinal =1;
         operator.isFinal=1;
-        console.log('cabDetail:'+JSON.stringify(cabDetail));
-
         $scope.currentSegment.indicativePrice.price = operator.ActualCabPrice;
         $scope.isTravelModesPanelOpen = false;
         $scope.isModeDetailsPanelOpen = false;
@@ -987,11 +969,9 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
      */
 
     function initializeVehicleDates(vehicleData, startTime){
-        console.log("in initialize:"+startTime);
         $scope.vehicleDate=[];
         for(var i = 0; i < vehicleData.length; i++){
             var vehicleDate;
-            //console.log('trainData[i].dateLimits:'+trainData[i].dateLimits[0]);
             if(vehicleData[i].dateLimits.length > 1) {
                 vehicleData[i].dateLimits.sort(function(a,b) {
                     a = new Date(a);
@@ -1036,22 +1016,18 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                     maxDate:null
                 }
             }
-            console.log('vehicleDate pushed:'+JSON.stringify(vehicleDate));
             $scope.vehicleDate.push(vehicleDate);
         }
     }
 
     function initializeCabDates(startTime){
-        console.log('In initializeCabDates:'+$scope.currentLegIndex);
         var minDate = new Date(dateSet.dateStart[$scope.currentLegIndex]);
         var maxDate = new Date(dateSet.dateEnd[$scope.currentLegIndex]);
         var dt = null;
         var disabled = false;
         minDate.setHours(0,0,0,0);
         maxDate.setHours(0,0,0,0);
-        console.log(minDate+","+maxDate);
         if (maxDate.getTime() - minDate.getTime() == 0) {
-            console.log('disabled');
             disabled = true;
         }
 
@@ -1084,7 +1060,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         $event.preventDefault();
         $event.stopPropagation();
         for(var i = 0; i < $scope.vehicleDate.length; i++) {
-            console.log("i:"+i+",in:"+index);
             if(i == index) {
                 $scope.vehicleDate[i].opened = true;
             }
@@ -1112,30 +1087,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         return ( mode === 'day' && ( !isRunningOnThatDay ) );
     };
 
-
-    /**
-     * End of Datepicker
-     */
-
-
-    /**
-     * Cab Timings slider
-     */
-    $scope.value = "8";
-    $scope.options = {
-        from: 0,
-        to: 23,
-        step: 1,
-        dimension: "hrs",
-        css: {
-            background: {"background-color": "silver"},
-            before: {"background-color": "purple"},
-            default: {"background-color": "white"},
-            after: {"background-color": "green"},
-            pointer: {"background-color": "red"}
-        }
-    };
-
     $scope.getHours = function(){
         if($scope.cabDate.dt == null)
         {
@@ -1151,7 +1102,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             {
                 return $scope.cabDate.dt.getHours();
             }
-            //console.log($scope.cabDate.dt.getHours());
         }
     };
 
