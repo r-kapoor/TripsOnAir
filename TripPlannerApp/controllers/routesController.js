@@ -118,7 +118,7 @@ module.exports=function (app){
 
 				//Getting the lower and upper limits of the date-times when each leg of the trip can be taken
 				var dateSet = getDateSets.getDateSets(results.slice(0,results.length-1), dates, times);
-                console.log('dateSet:'+dateSet);
+                console.log('dateSet:'+JSON.stringify(dateSet));
                 if(dateSet==null)
                 {
                     tripNotPossibleResponse(res);
