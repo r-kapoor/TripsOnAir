@@ -11,10 +11,15 @@ function getDayWisePlaces(destinationAndStops) {
     {
         var arrivalTime=destinationAndStops.destinations[i].arrivalTime;
         var departureTime = destinationAndStops.destinations[i].departureTime;
-        var checkInTime = destinationAndStops.destinations[i].hotelDetails.checkInTime;
-        var checkOutTime = destinationAndStops.destinations[i].hotelDetails.checkOutTime;
-        //var numOfDays= arrivalTime.getDaysBetween(departureTime);
+        var checkInTime = null;
+        var checkOutTime = null;
         var isHotelRequired = destinationAndStops.destinations[i].isHotelRequired;
+
+        if(isHotelRequired && destinationAndStops.destinations[i].hotelDetails != undefined){
+            checkInTime = destinationAndStops.destinations[i].hotelDetails.checkInTime;
+            checkOutTime = destinationAndStops.destinations[i].hotelDetails.checkOutTime;
+        }
+        //var numOfDays= arrivalTime.getDaysBetween(departureTime);
         var daysAndDatesInDestination=getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,checkOutTime,isHotelRequired);
 
         destinationAndStops.destinations[i].thingsToDoSelected.sort(comparePlaces);
@@ -109,10 +114,10 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,chec
     var departureTimeClone = departureTime.clone();
     var checkInTimeClone = null;
     var checkOutTimeClone = null;
-    if(checkInTime != undefined){
+    if(checkInTime != undefined && checkInTime != null){
         checkInTimeClone = checkInTime.clone();
     }
-    if(checkOutTime != undefined){
+    if(checkOutTime != undefined && checkOutTime != null){
         checkOutTimeClone = checkOutTime.clone();
     }
     var daysInDestination = "";
@@ -158,16 +163,21 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,chec
         }
     }
     else {
-        endSightSeeingTime = checkOutTimeClone.addHours(-2);
+        endSightSeeingTime = departureTimeClone.addHours(-2);
     }
 
-    var numOfDays= 0;
+    var numOfDays;
+    var startForCalculatingDays = datesInDestination[0].startSightSeeingTime;
+    var endForCalculatingDays = endSightSeeingTime;
     if(datesInDestination[0].startSightSeeingTime == null) {
-        numOfDays = getCalendarDaysBetween.getCalendarDaysBetween(arrivalTime, endSightSeeingTime);
+        startForCalculatingDays = arrivalTime;
     }
-    else {
-        numOfDays = getCalendarDaysBetween.getCalendarDaysBetween(datesInDestination[0].startSightSeeingTime, endSightSeeingTime);
+
+    if(endSightSeeingTime == null){
+        endForCalculatingDays = departureTime;
     }
+
+    numOfDays = getCalendarDaysBetween.getCalendarDaysBetween(startForCalculatingDays, endForCalculatingDays);
 
     for(var i = 1; i<numOfDays; i++) {
         var currentDate = arrivalTime.clone();
@@ -180,13 +190,17 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,chec
         datesInDestination.push(dateObject);
     }
 
-    if(datesInDestination[0].startSightSeeingTime == null ||
-        getCalendarDaysBetween.getCalendarDaysBetween(datesInDestination[0].startSightSeeingTime, endSightSeeingTime) > 0) {
-        var dateObject = {
-            typeOfDay: 2,
-            endSightSeeingTime:endSightSeeingTime
-        };
-        datesInDestination.push(dateObject);
+    if(datesInDestination[0].startSightSeeingTime == null || numOfDays> 0) {
+        //Either Number of Days > 0, so there might be a need of last/departure day, or if 0 days on arrival day, no time to visit places
+        if(endSightSeeingTime != null){
+            //There is time to visit places
+            //Adding the departure day
+            var dateObject = {
+                typeOfDay: 2,
+                endSightSeeingTime:endSightSeeingTime
+            };
+            datesInDestination.push(dateObject);
+        }
     }
     else {
         datesInDestination[0].typeOfDay = 3;
@@ -589,6 +603,9 @@ function addPlaceToDate(place, dateObject) {
 }
 
 function checkIfPlaceIsOpenOnDay(place, dateObject) {
+    if(place.Days == undefined) {
+        place.Days = combineDays(place.PlaceTimings);
+    }
     if(place.Days != '0') {
         var currentDay = '' + getCurrentDay(dateObject);
         if(place.Days.indexOf(currentDay) == -1) {

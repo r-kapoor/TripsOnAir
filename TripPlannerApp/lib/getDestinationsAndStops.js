@@ -102,19 +102,19 @@ function getDestinationsAndStops(travelData)
                 }
             }
             else if(firstMajorSegment.kind == 'train' && firstMajorSegment.subkind == 'train' && firstMajorSegment.vehicle == 'train') {
-                destinations[i].LocationOfDeparture = {
-                    Latitude:parseFloat(lastMajorSegment.sPos.split(',')[0]),
-                    Longitude:parseFloat(lastMajorSegment.sPos.split(',')[1])
+                destinations[i-1].LocationOfDeparture = {
+                    Latitude:parseFloat(firstMajorSegment.sPos.split(',')[0]),
+                    Longitude:parseFloat(firstMajorSegment.sPos.split(',')[1])
                 };
             }
             else if(firstMajorSegment.kind == 'bus' && firstMajorSegment.subkind == 'bus' && firstMajorSegment.vehicle == 'bus') {
-                destinations[i].LocationOfDeparture = {
-                    Latitude:parseFloat(lastMajorSegment.sPos.split(',')[0]),
-                    Longitude:parseFloat(lastMajorSegment.sPos.split(',')[1])
+                destinations[i-1].LocationOfDeparture = {
+                    Latitude:parseFloat(firstMajorSegment.sPos.split(',')[0]),
+                    Longitude:parseFloat(firstMajorSegment.sPos.split(',')[1])
                 };
             }
             else {
-                destinations[i].LocationOfDeparture = {
+                destinations[i-1].LocationOfDeparture = {
                     Latitude:parseFloat(destinations[i].pos.split(',')[0]),
                     Longitude:parseFloat(destinations[i].pos.split(',')[1])
                 };

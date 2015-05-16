@@ -6,7 +6,7 @@ module.exports = function(app) {
 
 		console.log("TravelData called");
 		var travelData=req.param('travelData');
-        console.log(travelData);
+        //console.log(travelData);
  		req.session.travelData=travelData;
  		res.sendfile('./public/templates/layouts/hotelsAndPlacesPage/hotelsAndPlacesIndex.html');
 	});

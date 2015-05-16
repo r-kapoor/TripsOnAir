@@ -36,7 +36,7 @@ module.exports = function(app) {
         console.log('plan itinerary called2');
 		var destinationsForPlaces=clone.clone(destinationsAndStops);
 		isHotelRequired.isHotelRequired(destinationsAndStops);
-        console.log(JSON.stringify(destinationsAndStops));
+        //console.log(JSON.stringify(destinationsAndStops));
 			/*for(var i=0;i<destinationsAndStops.destinations.length;i++)
 			{
 				console.log("destinations:"+JSON.stringify(destinationsAndStops.destinations[i]));
