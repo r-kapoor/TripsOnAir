@@ -5,73 +5,80 @@
     }
 </style>
 <div ng-controller="suryaController">
-    <div>
-        <pageslide ps-open="reorderPanel" ps-size="400px" ps-side="left">
-            <div class="text-center">
-                <h3>Optimized Order Of Destination</h3>
-                <!--<div ng-hide="loader">-->
-                    <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
-                <!--</div>-->
-                <div ng-hide="reorderList">
-                <p>Drag and Drop To Reorder</p>
-                <div class="btn btn-default btn-xs btn-responsive" ng-click="showRoutes()">Submit</div>
-                <div class="row">
-                    <div class="col-xs-2"></div>
-                    <div class="col-xs-8">
+    <div class="left-slider">
+        <pageslide ps-open="reorderPanel" ps-size="300px" ps-side="left">
+            <div class="panel panel-default" style="height: 100vh">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <!--<h3>Optimized Order Of Destination</h3>-->
+                        <!--<div ng-hide="loader">-->
+                        <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
+                        <!--</div>-->
+                        <div ng-hide="reorderList">
+                            <!--<div class="panel panel-primary">-->
+                                <!--<div class="panel-heading" style="font-size: small">Drag and Drop To Reorder</div>-->
+                            <!--</div>-->
+                            <!--<h5></h5>-->
+                            <div class="btn btn-default btn-xs btn-responsive" ng-click="showRoutes()">Submit</div>
+                            <div class="row">
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-8">
 
-                        <ul class="draglist">
-                            <li ng-drop="false">
-                                <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
-                                    <div class="wrapper">
-                                        <a href="#" class="thumbnail " style="margin-bottom: -20%;">
-                                            <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                        </a>
-                                        <div class="name">
-                                            <p class="name_content">
-                                                {{originCity.CityName}}
-                                            </p>
-                                        </div>
-                                        <!--end of description class-->
-                                    </div>
+                                    <ul class="draglist">
+                                        <li ng-drop="false">
+                                            <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
+                                                <div class="wrapper">
+                                                    <a href="#" class="thumbnail " style="margin-bottom: -20%;">
+                                                        <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
+                                                    </a>
+                                                    <div class="name">
+                                                        <p class="name_content">
+                                                            {{originCity.CityName}}
+                                                        </p>
+                                                    </div>
+                                                    <!--end of description class-->
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li ng-repeat="obj in draggableObjects" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)">
+                                            <div ng-drag="true" ng-drag-data="obj" ng-class="obj.CityName">
+                                                <div class="wrapper draggable">
+                                                    <a href="#" class="thumbnail " style="margin-bottom: -20%;">
+                                                        <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
+                                                    </a>
+                                                    <div class="name">
+                                                        <p class="name_content">
+                                                            {{obj.CityName}}
+                                                        </p>
+                                                    </div>
+                                                    <!--end of description class-->
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li ng-drop="false">
+                                            <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
+                                                <div class="wrapper">
+                                                    <a href="#" class="thumbnail " style="margin-bottom: -20%;">
+                                                        <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
+                                                    </a>
+                                                    <div class="name">
+                                                        <p class="name_content">
+                                                            {{originCity.CityName}}
+                                                        </p>
+                                                    </div>
+                                                    <!--end of description class-->
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </li>
-                            <li ng-repeat="obj in draggableObjects" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)">
-                                <div ng-drag="true" ng-drag-data="obj" ng-class="obj.CityName">
-                                    <div class="wrapper draggable">
-                                        <a href="#" class="thumbnail " style="margin-bottom: -20%;">
-                                            <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                        </a>
-                                        <div class="name">
-                                            <p class="name_content">
-                                                {{obj.CityName}}
-                                            </p>
-                                        </div>
-                                        <!--end of description class-->
-                                    </div>
-                                </div>
-                            </li>
-                            <li ng-drop="false">
-                                <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
-                                    <div class="wrapper">
-                                        <a href="#" class="thumbnail " style="margin-bottom: -20%;">
-                                            <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                        </a>
-                                        <div class="name">
-                                            <p class="name_content">
-                                                {{originCity.CityName}}
-                                            </p>
-                                        </div>
-                                        <!--end of description class-->
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+
+                            </div>
+                        </div>
                     </div>
-
-                </div>
                 </div>
             </div>
-            <div class="col-xs-2"></div>
+            <!--<div class="col-xs-2"></div>-->
         </pageslide>
     </div>
 </div>
