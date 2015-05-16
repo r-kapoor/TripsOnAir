@@ -72,7 +72,7 @@ pageslideDirective.directive('pageslide', [
                         break;
                     case 'left':
                         slider.style.height = attrs.psCustomHeight || '100%';
-                        slider.style.top = attrs.psCustomTop || '0px';
+                        slider.style.top = attrs.psCustomTop || '71px';
                         slider.style.bottom = attrs.psCustomBottom || '0px';
                         slider.style.left = attrs.psCustomLeft || '0px';
                         break;

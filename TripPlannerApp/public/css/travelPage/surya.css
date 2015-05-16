@@ -118,3 +118,9 @@ ul {
 .reorderPanel{
     background: #dbdbdb;
 }
+
+@media (min-width: 992px) {
+    .left-slider {
+        top: 60px;
+    }
+}

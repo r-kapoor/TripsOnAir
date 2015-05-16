@@ -9,10 +9,8 @@
     }
 </style>
 <div ng-controller="routesController">
-    <div style="overflow: visible" ng-controller="sarthiController" >
-
-        <div>
-
+    <div ng-controller="sarthiController" >
+        <div class="col-sm-4">
             <pageslide ps-open="isTravelPanelOpen" ps-size="400px" ps-side="left" ps-class="ng-travel">
                 <!--<div ng-hide="loader">-->
                 <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
@@ -541,7 +539,7 @@
                 </div>
             </pageslide>
         </div>
-        <div class="col-xs-12">
+        <div class="col-sm-12">
             <div class="budget col-xs-2">
                 <div ng-if="isBudgetPanelOpen" class="panel panel-default">
                     <ul class="list-group">
@@ -557,7 +555,7 @@
                                 <div class="col-xs-5">{{travelBudget | currency:"&#8377;":0}}</div>
                             </div>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item" ng-if="minorBudget>0">
                             <div class="row">
                                 <div class="col-xs-7">{{minorBudgetText}}</div>
                                 <div class="col-xs-5">{{minorBudget | currency:"&#8377;":0}}</div>
@@ -569,7 +567,7 @@
                     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
                 </div>
             </div>
-            <div id="map-canvas" ng-controller="sanjayaController"></div>
+            <div id="map-canvas" style="" ng-controller="sanjayaController"></div>
         </div>
     </div>
 </div>

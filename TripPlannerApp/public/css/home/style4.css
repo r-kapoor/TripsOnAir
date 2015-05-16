@@ -3267,7 +3267,7 @@ select {
     display: block;
   }
   .header {
-    height: 80px;
+    height: 60px;
   }
   .header.navbar-fixed-top {
     position: fixed;
