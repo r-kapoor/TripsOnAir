@@ -50,14 +50,14 @@ routesModule.controller('suryaController', function($scope, $rootScope, $http, $
         $rootScope.$emit('plotCities');
     };
 
-    $scope.showRoutes=function(){
+    $rootScope.$on('showRoutes',function onShowRoutes(event,data){
         $scope.reorderPanel = false;
         $rootScope.$emit('showTravelPanel');
-    };
+    });
 
-        angular.element(window).ready(function () {
+    angular.element(window).ready(function () {
         var currentURL = $location.absUrl();
-        console.log('url:'+currentURL);
+        //console.log('url:'+currentURL);
         pathArray = currentURL.split('?');
         var destinations = getParameterByName('dsts').split(";");
         if((pathArray.length>1) && (destinations.length>1)){

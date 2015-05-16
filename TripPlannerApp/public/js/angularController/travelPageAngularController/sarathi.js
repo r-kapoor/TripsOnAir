@@ -1180,7 +1180,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     /**
      * Submit Button
      */
-    $scope.submitTravel = function(){
+    $rootScope.$on('submitTravel',function onSubmitTravel(event, data)
+    {
         console.log("submitTravel");
         defaultRouteData.isMajorDefault=1;
         alternateRouteData.isMajorDefault=0;
@@ -1197,5 +1198,24 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         var body=angular.element(document.querySelectorAll("body"));
         body.append(formElement);
         formElement.submit();
-    };
+    });
+
+    //$scope.submitTravel = function(){
+    //    console.log("submitTravel");
+    //    defaultRouteData.isMajorDefault=1;
+    //    alternateRouteData.isMajorDefault=0;
+    //    travelData.travelBudget = $scope.travelBudget;
+    //    travelData.minorTravelBudget = $scope.minorBudget;
+    //    travelData = JSON.stringify(travelData);
+    //    var formElement=angular.element('<form\>');
+    //    formElement.attr("action","/"+'showPlacesAndHotels');
+    //    formElement.attr("method","POST");
+    //    var d=angular.element("<input type='hidden'/>");
+    //    d.attr("name","travelData");
+    //    d.attr("value",travelData);
+    //    formElement.append(d);
+    //    var body=angular.element(document.querySelectorAll("body"));
+    //    body.append(formElement);
+    //    formElement.submit();
+    //};
 });
