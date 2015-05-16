@@ -112,100 +112,106 @@ function getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,chec
     var startDay=arrivalTime.getDay()+1;
     var arrivalTimeClone = arrivalTime.clone();
     var departureTimeClone = departureTime.clone();
-    var checkInTimeClone = null;
-    var checkOutTimeClone = null;
-    if(checkInTime != undefined && checkInTime != null){
-        checkInTimeClone = checkInTime.clone();
-    }
-    if(checkOutTime != undefined && checkOutTime != null){
-        checkOutTimeClone = checkOutTime.clone();
-    }
+
     var daysInDestination = "";
+
+    var endSightSeeingTime = null;
+
+    var numOfDays, dateObject;
     //typeOfDay - 0 = ArrivalDay, 1 = InBetweenDay, 2 = departureDay, 3 = both 0 and 2
-    if(isHotelRequired)
-    {
+
+    if(isHotelRequired){
+        //HotelRequired for this trip. The hotel must have already been set.
+        var checkInTimeClone = null;
+        var checkOutTimeClone = null;
+        if(checkInTime != undefined && checkInTime != null){
+            checkInTimeClone = checkInTime.clone();
+        }
+        if(checkOutTime != undefined && checkOutTime != null){
+            checkOutTimeClone = checkOutTime.clone();
+        }
 
         if(hourOfArrival>=19) {
-            var dateObject = {
+            dateObject = {
                 typeOfDay: 0,
                 startSightSeeingTime: null,
                 arrivalTime: arrivalTime
             };
-            datesInDestination.push(dateObject);
         }
         else if(hourOfArrival >= 12) {
-            var dateObject = {
+            dateObject = {
                 typeOfDay: 0,
                 startSightSeeingTime: checkInTimeClone.addHours(2)
             };
-            datesInDestination.push(dateObject);
         }
         else {
-            var dateObject = {
+            dateObject = {
                 typeOfDay: 0,
                 startSightSeeingTime: checkInTimeClone.addHours(3)
             };
-            datesInDestination.push(dateObject);
         }
-    }
-    else {
-        var dateObject = {
-            typeOfDay: 0,
-            startSightSeeingTime: arrivalTimeClone
-        };
-        datesInDestination.push(dateObject);
-    }
-
-    var endSightSeeingTime = null;
-    if(isHotelRequired) {
+        datesInDestination.push(dateObject);//Pushing the first day of trip
         if(hourOfDeparture > 9) {
+            //Some places can be visited on the departure day as well
             endSightSeeingTime = checkOutTimeClone.addHours(-4);
         }
-    }
-    else {
-        endSightSeeingTime = departureTimeClone.addHours(-2);
-    }
+        //Otherwise it is null, signifying that no place can be visited on that day.
 
-    var numOfDays;
-    var startForCalculatingDays = datesInDestination[0].startSightSeeingTime;
-    var endForCalculatingDays = endSightSeeingTime;
-    if(datesInDestination[0].startSightSeeingTime == null) {
-        startForCalculatingDays = arrivalTime;
-    }
+        var startForCalculatingDays = datesInDestination[0].startSightSeeingTime;
+        var endForCalculatingDays = endSightSeeingTime;
+        if(startForCalculatingDays == null) {
+            startForCalculatingDays = arrivalTime;
+        }
+        if(endForCalculatingDays == null){
+            endForCalculatingDays = departureTime;
+        }
 
-    if(endSightSeeingTime == null){
-        endForCalculatingDays = departureTime;
-    }
+        numOfDays = getCalendarDaysBetween.getCalendarDaysBetween(startForCalculatingDays, endForCalculatingDays);
 
-    numOfDays = getCalendarDaysBetween.getCalendarDaysBetween(startForCalculatingDays, endForCalculatingDays);
-
-    for(var i = 1; i<numOfDays; i++) {
-        var currentDate = arrivalTime.clone();
-        currentDate.addDays(i);
-        currentDate.clearTime();
-        var dateObject = {
-            typeOfDay: 1,
-            currentDate: currentDate
-        };
-        datesInDestination.push(dateObject);
-    }
-
-    if(datesInDestination[0].startSightSeeingTime == null || numOfDays> 0) {
-        //Either Number of Days > 0, so there might be a need of last/departure day, or if 0 days on arrival day, no time to visit places
-        if(endSightSeeingTime != null){
-            //There is time to visit places
-            //Adding the departure day
-            var dateObject = {
-                typeOfDay: 2,
-                endSightSeeingTime:endSightSeeingTime
+        for(var i = 1; i<numOfDays; i++) {
+            var currentDate = arrivalTime.clone();
+            currentDate.addDays(i);
+            currentDate.clearTime();
+            dateObject = {
+                typeOfDay: 1,
+                currentDate: currentDate
             };
             datesInDestination.push(dateObject);
         }
+
+        if(numOfDays> 0) {
+            //If Number of Days > 0, so there might be a need of last/departure day
+            if(endSightSeeingTime != null){
+                //There is time to visit places
+                //Adding the departure day
+                dateObject = {
+                    typeOfDay: 2,
+                    endSightSeeingTime:endSightSeeingTime
+                };
+                datesInDestination.push(dateObject);
+            }
+            //Otherwise not adding the departure day as no places to be visited on that day, just departure from city
+        }
+        else {
+            //If 0 days, so arrival day is departure day
+            datesInDestination[0].typeOfDay = 3;
+            datesInDestination[0].endSightSeeingTime = endSightSeeingTime;
+        }
+
     }
     else {
-        datesInDestination[0].typeOfDay = 3;
-        datesInDestination[0].endSightSeeingTime = endSightSeeingTime;
+        //No Hotel is needed for this trip. The trip is short but may extend to 2 calendar days.
+        //Will be taking this up as a one day trip (to make allotment of places continuous from arrival to departure)
+
+        dateObject = {
+            typeOfDay: 0,
+            startSightSeeingTime: arrivalTimeClone.addHours(1),
+            endSightSeeingTime: departureTimeClone.addHours(-2)
+        };
+        datesInDestination.push(dateObject);
+        numOfDays = 1;
     }
+
 
     if(numOfDays>=6)
     {
