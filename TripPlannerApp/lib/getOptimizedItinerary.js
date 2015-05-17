@@ -103,7 +103,7 @@ function getDayWiseItinerary(dateWisePlaceData, destination, previousDaysItinera
 }
 
 function getValidPermutation(placesPermutation, dateWisePlaceData, destination, previousDaysDateWisePlaceData) {
-    console.log('In getValidPermutation');
+    //console.log('In getValidPermutation');
     //Making Copies for this permutation
     var dateWisePlaceData = clone.clone(dateWisePlaceData);
     var placesData = dateWisePlaceData.placesData;
@@ -119,13 +119,13 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
         }
 
         for (var j = 0; j < placesPermutation.length; j++) {
-            console.log('For Place No.'+j+' of the day');
-            console.log('Trying to see whether the place is open on current timings and adding the place if it is');
+            //console.log('For Place No.'+j+' of the day');
+            //console.log('Trying to see whether the place is open on current timings and adding the place if it is');
             var placeAdded = false;
             var distance = 0;
             var placeIndex = placesPermutation[j];
-            console.log('PlaceIndex:'+placeIndex);
-            console.log('Place:'+placesData[placeIndex].Name);
+            //console.log('PlaceIndex:'+placeIndex);
+            //console.log('Place:'+placesData[placeIndex].Name);
             if (j == 0) {
                 //Getting distance between Hotel/Arrival Place to the 1st selected place
                 distance = getDistance.getDistance(destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude,
@@ -138,29 +138,29 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
             }
             var timeInMinutes = ( distance * 60 ) / SPEED;
             if (j == 0) {
-                console.log('This is the first place of the day');
+                //console.log('This is the first place of the day');
                 var startTime = startSightSeeingTime.clone();
                 startTime.addMinutes(timeInMinutes);
                 var lagTimeAndSelectedPlaceTimingIndex = getLagTimeAndSelectedPlaceTimingIndex(startTime, placesData[placeIndex]);
                 var lagTime = lagTimeAndSelectedPlaceTimingIndex.lagTime;
                 var selectedPlaceTimingIndex = lagTimeAndSelectedPlaceTimingIndex.selectedPlaceTimingIndex;
-                console.log('Lag Time:'+lagTime);
+                //console.log('Lag Time:'+lagTime);
                 if (lagTime == 0) {
-                    console.log('Place open at this time');
+                    //console.log('Place open at this time');
                     placesData[placeIndex].placeArrivalTime = startTime.clone();
                     placesData[placeIndex].placeDepartureTime = startTime.clone().addMinutes(placesData[placeIndex].Time2Cover);
                     placeAdded = true;
 
                 }
                 else if (lagTime > 0) {
-                    console.log('Place opening after time:'+lagTime);
+                    //console.log('Place opening after time:'+lagTime);
                     startSightSeeingTime.addMinutes(lagTime);
                     placesData[placeIndex].placeArrivalTime = startTime.clone().addMinutes(lagTime);
                     placesData[placeIndex].placeDepartureTime = startTime.clone().addMinutes(lagTime + placesData[placeIndex].Time2Cover);
                     placeAdded = true;
                 }
                 else if (lagTime == -1) {
-                    console.log('Place closed before reaching');
+                    //console.log('Place closed before reaching');
                     //The place is closed before it can be reached. Hence not a valid permutation
                     validity = false;
                     placesPermutation.splice(j, 1);
@@ -173,17 +173,17 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                     }
                 }
                 else {
-                    console.log('Place open but not enough time:'+(-1*lagTime));
+                    //console.log('Place open but not enough time:'+(-1*lagTime));
                     //The place is open but not enough time. Hence checking if time = 75% of time2Cover
                     if ((-1 * lagTime) > (TIME2COVER_RATIO * placesData[placeIndex].Time2Cover)) {
-                        console.log('Covering in less time');
+                        //console.log('Covering in less time');
                         //Place can still be covered in less time
                         placesData[placeIndex].placeArrivalTime = startTime.clone();
                         placesData[placeIndex].placeDepartureTime = startTime.clone().addMinutes(-1 * lagTime);
                         placeAdded = true;
                     }
                     else {
-                        console.log('Not covering place');
+                        //console.log('Not covering place');
                         validity = false;
                         placesPermutation.splice(j, 1);
                         j--;
@@ -197,29 +197,29 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                 }
             }
             else {
-                console.log('This is some place after 1st place');
+                //console.log('This is some place after 1st place');
                 //console.log('Last Place:'+JSON.stringify(placesData[placesPermutation[j - 1]]));
                 var startTime = placesData[placesPermutation[j - 1]].placeDepartureTime.clone();
                 startTime.addMinutes(timeInMinutes); //Time taken to go from last place to this place
                 var lagTimeAndSelectedPlaceTimingIndex = getLagTimeAndSelectedPlaceTimingIndex(startTime, placesData[placeIndex]);
                 var lagTime = lagTimeAndSelectedPlaceTimingIndex.lagTime;
                 var selectedPlaceTimingIndex = lagTimeAndSelectedPlaceTimingIndex.selectedPlaceTimingIndex;
-                console.log('Lag Time:'+lagTime);
+                //console.log('Lag Time:'+lagTime);
                 if (lagTime == 0) {
-                    console.log('Place open at this time');
+                    //console.log('Place open at this time');
                     placesData[placeIndex].placeArrivalTime = startTime.clone();
                     placesData[placeIndex].placeDepartureTime = startTime.clone().addMinutes(placesData[placeIndex].Time2Cover);
                     placeAdded = true;
                 }
                 else if (lagTime > 0) {
-                    console.log('Place opening after time:'+lagTime);
+                    //console.log('Place opening after time:'+lagTime);
                     increaseDepartureTimeOfPlaceTillClosing(placesData[placesPermutation[j - 1]], lagTime);
                     placesData[placeIndex].placeArrivalTime = startTime.clone().clearTime().addMinutes(getTimeOfDayInMinutesFromString(placesData[placeIndex].PlaceTimings[selectedPlaceTimingIndex].TimeStart));
                     placesData[placeIndex].placeDepartureTime = placesData[placeIndex].placeArrivalTime.clone().addMinutes(placesData[placeIndex].Time2Cover);
                     placeAdded = true;
                 }
                 else if (lagTime == -1) {
-                    console.log('Place closed before reaching');
+                    //console.log('Place closed before reaching');
                     //The place is closed before it can be reached. Hence not a valid permutation
                     validity = false;
                     placesPermutation.splice(j, 1);
@@ -232,17 +232,17 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                     }
                 }
                 else {
-                    console.log('Place open but not enough time:'+(-1*lagTime));
+                    //console.log('Place open but not enough time:'+(-1*lagTime));
                     //The place is open but not enough time. Hence checking if time = 75% of time2Cover
                     if ((-1 * lagTime) > (TIME2COVER_RATIO * placesData[placeIndex].Time2Cover)) {
-                        console.log('Covering in less time');
+                        //console.log('Covering in less time');
                         //Place can still be covered in less time
                         placesData[placeIndex].placeArrivalTime = startTime.clone();
                         placesData[placeIndex].placeDepartureTime = startTime.clone().addMinutes(-1 * lagTime);
                         placeAdded = true;
                     }
                     else {
-                        console.log('Not covering place');
+                        //console.log('Not covering place');
                         validity = false;
                         placesPermutation.splice(j, 1);
                         j--;
@@ -257,10 +257,10 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
             }
 
             if(placeAdded) {
-                console.log('The place was added');
-                console.log('Place Timings Selected');
-                console.log('placeArrivalTime:'+placesData[placeIndex].placeArrivalTime);
-                console.log('placeDepartureTime:'+placesData[placeIndex].placeDepartureTime);
+                //console.log('The place was added');
+                //console.log('Place Timings Selected');
+                //console.log('placeArrivalTime:'+placesData[placeIndex].placeArrivalTime);
+                //console.log('placeDepartureTime:'+placesData[placeIndex].placeDepartureTime);
 
                 var isPlaceRemoved = false;
                 if(isDepartureDate){
@@ -315,7 +315,7 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                 }
 
                 if (!isDepartureDate && (j == placesPermutation.length - 1)) {
-                    console.log('This is the last place of the day');
+                    //console.log('This is the last place of the day');
                     //This is the last place of the day
                     distance = getDistance.getDistance(placesData[placesPermutation[j]].Latitude, placesData[placesPermutation[j]].Longitude,
                         destination.startLocationPosition.Latitude, destination.startLocationPosition.Longitude);
@@ -324,11 +324,11 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                 }
             }
             else {
-                console.log('The place could not be added');
+                //console.log('The place could not be added');
                 if(j == placesPermutation.length - 1){
-                    console.log('No more places left to add');
+                    //console.log('No more places left to add');
                     if(j==-1){
-                        console.log('No place has been added till now');
+                        //console.log('No place has been added till now');
                         dateWisePlaceData.noPlacesVisited = 1;
                         if(isDepartureDate){
                             dateWisePlaceData.startSightSeeingTime = null;
@@ -346,23 +346,23 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
                     }
                 }
                 else {
-                    console.log('Moving on to next place in permutation');
+                    //console.log('Moving on to next place in permutation');
                 }
             }
         }
     };
     if(dateWisePlaceData.typeOfDay == 0) {
-        console.log('Is arrival day');
+        //console.log('Is arrival day');
         startSightSeeingTime = dateWisePlaceData.startSightSeeingTime;
         //Is arrival day
         if(startSightSeeingTime != null) {
-            console.log('Places to be visited');
+            //console.log('Places to be visited');
             //Places are to be visited on this day
             //Setting Meal Flags
             makeItinerary(false);
         }
         else {
-            console.log('No places to be visited');
+            //console.log('No places to be visited');
             //No places to be visited this day
             var distance = getDistance.getDistance(destination.LocationOfArrival.Latitude,
                 destination.LocationOfArrival.Longitude,
@@ -373,23 +373,23 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
 
     }
     else if(dateWisePlaceData.typeOfDay == 1) {
-        console.log('Is normal day');
+        //console.log('Is normal day');
         //It is a normal day
         if(previousDaysDateWisePlaceData != undefined && previousDaysDateWisePlaceData != null){
             if(previousDaysDateWisePlaceData.endSightSeeingTime == undefined){
-                console.log('ISSUE');
+                //console.log('ISSUE');
             }
             dateWisePlaceData.startSightSeeingTime=previousDaysDateWisePlaceData.endSightSeeingTime.clone().addMinutes(REST_TIME);
             startSightSeeingTime = dateWisePlaceData.startSightSeeingTime;
             makeItinerary(false);
         }
         else {
-            console.log('Problem with previousDaysDateWisePlaceData.');
+            //console.log('Problem with previousDaysDateWisePlaceData.');
         }
     }
     else if(dateWisePlaceData.typeOfDay==2)
     {
-        console.log('Is departure day');
+        //console.log('Is departure day');
         //It is the departure day
         if(dateWisePlaceData.endSightSeeingTime!=null) {
             dateWisePlaceData.startSightSeeingTime = previousDaysDateWisePlaceData.endSightSeeingTime.clone().addMinutes(REST_TIME);
@@ -399,12 +399,12 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
     }
     else
     {
-        console.log('Is arrival as well as departure day');
+        //console.log('Is arrival as well as departure day');
         //It is arrival as well as departure day
         startSightSeeingTime = dateWisePlaceData.startSightSeeingTime;
         makeItinerary(true);
     }
-    console.log('Returning validity:'+validity+", data:"+dateWisePlaceData);
+    //console.log('Returning validity:'+validity+", data:"+dateWisePlaceData);
     return {
         validity : validity,
         dateWisePlaceData: dateWisePlaceData
@@ -477,17 +477,17 @@ function increaseDepartureTimeOfPlaceTillClosing(place, time) {
 }
 
 function getLagTimeAndSelectedPlaceTimingIndex(time, placeData) {
-    console.log('In getLagTimeAndSelectedPlaceTimingIndex');
+    //console.log('In getLagTimeAndSelectedPlaceTimingIndex');
     var placeTimings = placeData.PlaceTimings;
     var placeTime2Cover = placeData.Time2Cover;
-    console.log('placeTimings:'+JSON.stringify(placeTimings));
+    //console.log('placeTimings:'+JSON.stringify(placeTimings));
     var openStatus = 0;
     var currentSelectedTimings = -1;
     for(var i = 0; i < placeTimings.length; i++) {
         if(isOnSameDay(time, placeTimings[i].Days)) {
-            console.log('placeTimings is on the same day as:'+time);
+            //console.log('placeTimings is on the same day as:'+time);
             var nearestOpeningTime = getNearestOpeningTime(time, placeTimings[i], placeTime2Cover);
-            console.log('nearestOpeningTime:'+nearestOpeningTime);
+            //console.log('nearestOpeningTime:'+nearestOpeningTime);
             if(nearestOpeningTime == 0) {
                 placeTimings[i].isSelected = 1;
                 return {
@@ -513,7 +513,7 @@ function getLagTimeAndSelectedPlaceTimingIndex(time, placeData) {
             }
         }
     }
-    console.log('currentSelectedTimings:'+currentSelectedTimings);
+    //console.log('currentSelectedTimings:'+currentSelectedTimings);
     if(currentSelectedTimings != -1) {
         placeTimings[currentSelectedTimings].isSelected = 1;
     }

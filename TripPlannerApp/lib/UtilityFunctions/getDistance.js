@@ -2,7 +2,7 @@
  * Created by rkapoor on 18/01/15.
  */
 function getDistance(originLat, originLong, destinationLat, destinationLong) {
-    console.log('originLat:'+originLat+",originLong:"+originLong+',destinationLat:'+destinationLat+',destinationLong:'+destinationLong);
+    //console.log('originLat:'+originLat+",originLong:"+originLong+',destinationLat:'+destinationLat+',destinationLong:'+destinationLong);
     var R = 6371;
     var dLat = (destinationLat - originLat) * Math.PI / 180;
     var dLon = (destinationLong - originLong) * Math.PI / 180;
