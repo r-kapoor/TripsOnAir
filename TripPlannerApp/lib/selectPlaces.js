@@ -162,11 +162,11 @@ function selectSetOfPlaces(destinationAndStops) {
         }
         destinationAndStops.destinations[i].placesSelected = placesSelected;
         destinationAndStops.destinations[i].thingsToDoSelected = thingsToDoSelected;
-        for(var i = 0; i < placesSelected.length; i++) {
-            console.log(i+":"+JSON.stringify(placesSelected[i]));
+        for(var selectedPlaceIndex = 0; selectedPlaceIndex < placesSelected.length; selectedPlaceIndex++) {
+            console.log(selectedPlaceIndex+":"+JSON.stringify(placesSelected[selectedPlaceIndex]));
         }
-        for(var i = 0; i < thingsToDoSelected.length; i++) {
-            console.log(i+":"+JSON.stringify(thingsToDoSelected[i]));
+        for(selectedPlaceIndex = 0; selectedPlaceIndex < thingsToDoSelected.length; selectedPlaceIndex++) {
+            console.log(selectedPlaceIndex+":"+JSON.stringify(thingsToDoSelected[selectedPlaceIndex]));
         }
     }
     console.log('returns places');

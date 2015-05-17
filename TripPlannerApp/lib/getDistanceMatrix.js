@@ -26,7 +26,14 @@ function getDistanceMatrix(dests, callback)
 		}*/
 		//console.log('callback called');
         console.log(JSON.stringify(data));
-		callback(null, data);
+
+        if(data.distance != undefined && data.time != undefined){
+            callback(null, data);
+        }
+        else {
+            console.log('Problem with MapQuest Data');
+            callback(null, null);
+        }
 	});
 }
 function getURL(dests)
