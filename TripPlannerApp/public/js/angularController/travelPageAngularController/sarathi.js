@@ -79,9 +79,11 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.travelBudget = 0;
     $scope.minorBudget = 0;
     $scope.isTravelPanelDisable = false;
+    $scope.altTrip = true;
 
     var defaultRouteData = null;
     var alternateRouteData = null;
+    var isOtherTripClicked = false;
     var dateSet = null;
     var outOfBudgetFactor = 0.7;
     var minimumTimeSpentInCityInHours = 4;
@@ -285,13 +287,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                         alternateRouteData = data.withTaxiRome2rioData;
                     }
                     else {
-                        /*
-                         hack
-                         */
-                        defaultRouteData = data.withoutTaxiRome2rioData;
-                        alternateRouteData = data.withTaxiRome2rioData;
-                        //defaultRouteData = data.withTaxiRome2rioData;
-                        //alternateRouteData = data.withoutTaxiRome2rioData;
+                        defaultRouteData = data.withTaxiRome2rioData;
+                        alternateRouteData = data.withoutTaxiRome2rioData;
                     }
                 }
                 getAttributesFromRouteData(defaultRouteData);
@@ -555,8 +552,17 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
     };
 
+    $scope.isShowOtherTrip = function(){
+        if(alternateRouteData!=null)
+        {
+            return true;
+        }
+        return false;
+    };
+
     $scope.showOtherTrip = function() {
         $scope.isTripPanelSetCollapsed = true;
+        isOtherTripClicked = !isOtherTripClicked;
         $timeout(function openCollapsedPanelSet(){
             var swapRouteData = alternateRouteData;
             alternateRouteData = defaultRouteData;
@@ -566,6 +572,37 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             showCurrentRouteOnMap();
             alertAndSetTravelBudget();
         },1000);
+    };
+
+    $scope.getOtherTripText = function(){
+        console.log("getOtherTripText Called");
+        console.log("isOtherTripClicked"+isOtherTripClicked);
+        if(defaultRouteData.isCabTrip!=undefined && defaultRouteData.isCabTrip==1)
+        {
+            if(isOtherTripClicked)
+            {
+                $scope.altTrip = false;
+                return "Back To Multi-Mode Travel";
+            }
+            else
+            {
+                $scope.altTrip = true;
+                return "Check Out Multi-Mode Travel For This Trip";
+            }
+        }
+        else
+        {
+            if(isOtherTripClicked)
+            {
+                $scope.altTrip = false;
+                return "Back To MultiCityTaxi Travel";
+            }
+            else
+            {
+                $scope.altTrip = true;
+                return "Check Out MultiCityTaxi Travel For This Trip";
+            }
+        }
     };
 
     $scope.isSegmentShown = function(segment,leg) {
@@ -1183,8 +1220,18 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $rootScope.$on('submitTravel',function onSubmitTravel(event, data)
     {
         console.log("submitTravel");
-        defaultRouteData.isMajorDefault=1;
-        alternateRouteData.isMajorDefault=0;
+        if(defaultRouteData!=null)
+        {
+            defaultRouteData.isMajorDefault=1;
+        }
+        if(travelData.withTaxiRome2rioData!=null && travelData.withTaxiRome2rioData.isMajorDefault==1)
+        {
+            delete travelData.withoutTaxiRome2rioData;
+        }
+        else
+        {
+            delete travelData.withTaxiRome2rioData;
+        }
         travelData.travelBudget = $scope.travelBudget;
         travelData.minorTravelBudget = $scope.minorBudget;
         travelData = JSON.stringify(travelData);

@@ -76,3 +76,16 @@
     background-color:rgb(179,205,255);
     width: 100%;
 }
+
+.panel-default>.panel-heading {
+    cursor: pointer;
+    color: #f89d29;
+    background-color: #1e1e1e;
+}
+
+.footPanel{
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    font-size: 90%;
+}

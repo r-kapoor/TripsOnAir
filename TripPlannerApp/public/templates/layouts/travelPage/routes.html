@@ -49,7 +49,7 @@
                                                         <div ng-repeat="cabDetail in segment.CabDetails">
                                                             <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info">
                                                                 <div class="panel-heading">
-                                                                    <div class="row text-center">
+                                                                    <div class="row text-center" style="font-size: 85%">
                                                                             Take Taxi From {{getStartCityForTaxi(segment)}}
                                                                     </div>
                                                                     <div class="row">
@@ -96,7 +96,7 @@
                                                                 {{getPrice(segment) | currency:"&#8377;":0}}
                                                             </div>
                                                         </div>
-                                                        <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center">Leave Taxi at {{getEndCityForTaxi(segment)}}</div>
+                                                        <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center footPanel">Leave Taxi at {{getEndCityForTaxi(segment)}}</div>
                                                     </div>
                                                     <div ng-if="segment.majorIndex != leg.defaultRoute.majorCount && isViaShown(segment)">
                                                         <!--<div class="panel panel-default">-->
@@ -116,9 +116,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-default" ng-click="showOtherTrip()">
-                                        <div class="panel-heading">
-                                            We suggest you check out multi-city taxi for this trip!
+                                    <div class="panel panel-default" ng-if="isShowOtherTrip()" ng-click="showOtherTrip()">
+                                        <div class="otherTaxiTrip panel-heading text-center">
+                                            <i ng-if="!altTrip" class="glyphicon glyphicon-arrow-left"></i>
+                                            {{getOtherTripText()}}
+                                            <i ng-if="altTrip" class="glyphicon glyphicon-share-alt"></i>
                                         </div>
                                     </div>
 
