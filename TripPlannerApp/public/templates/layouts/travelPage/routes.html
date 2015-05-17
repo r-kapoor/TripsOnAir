@@ -403,7 +403,7 @@
                             </div>
                         </ul>
 
-                        <div ng-if="isTaxiClicked||isDriveClicked">
+                        <div ng-if="isTaxiClicked||isDriveClicked||isCabClicked">
                             <div class = "panel panel-default">
                                 <div class="panel-body">
                                     <div class="row">
@@ -458,47 +458,6 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div  ng-if="isCabClicked">
-                            <div class = "panel panel-default">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <button datepicker-popup="dd-MMMM-yyyy" ng-model="cabDate.dt"
-                                                is-open="cabDate.opened" min-date="cabDate.minDate"
-                                                max-date="cabDate.maxDate"
-                                                datepicker-options="dateOptions" ng-required="true"
-                                                close-text="Close" ng-click="openCabDate($event)" ng-disabled="cabDate.disabled">
-                                            <div class="row">
-                                                <div class="col-xs-2 h5">
-                                                    <i class="glyphicon glyphicon-calendar"></i>
-                                                </div>
-                                                <div class="col-xs-2 h5">{{(cabDate.dt | date:'dd') || 'Select'}}
-                                                </div>
-                                                <div class="col-xs-4">
-                                                    <div class="row">
-                                                        <div class="col-xs-2 month">{{cabDate.dt |
-                                                            date:'MMM'}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-xs-2 day">{{cabDate.dt |
-                                                            date:'EEE'}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div class="row">
-                                        <input ng-model="value"  type="text" id="cabTimeSlider" slider options="options" />
-                                        {{value}}
-                                    </div>
-                                    <div class="row">
-                                        <div class="btn {{getAddButtonClass(flight)}} btn-block" ng-click="addToTrip(flight,$index,$event)">{{getAddButtonText(flight)}}</div>
                                     </div>
                                 </div>
                             </div>
