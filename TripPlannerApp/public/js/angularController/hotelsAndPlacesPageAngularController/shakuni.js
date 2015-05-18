@@ -123,6 +123,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             };
             calculatePlacesExpenses();
             calculateCityExpenses();
+            $rootScope.$emit('dataLoaded');
             //$rootScope.$emit('loadMap',$scope.currentDestination.position);
         })
         .error(

@@ -15,6 +15,7 @@
     <script src="js/angularJS/ngDraggable.js"></script>
     <script type="text/javascript" src="js/angularDirective/scrollInview.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/page3Main.js"></script>
+    <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shabari.js"></script>
     <script type="text/javascript" src="js/angularService/hotelsAndPlacesPageAngularService/mapDataService.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/jatayu.js"></script>
 	<script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shakuni.js"></script>
@@ -31,10 +32,11 @@
     <link rel="stylesheet" href="css/hotelsAndPlacesPage/map.css">
     <link rel="stylesheet" href="css/hotelsAndPlacesPage/cityPanel.css">
     <link rel="stylesheet" href="css/home/inputs.css">
-
+    <link rel="stylesheet" href="css/global/pageLoader.css">
 </head>
 
 <body>
+    <div ng-include src="'templates/layouts/global/pageLoader.html'"></div>
 	<div ng-controller="itineraryMainController">
 		<div ng-include src="'templates/layouts/global/header.html'"></div>
         <div ng-controller="shakuniController">
