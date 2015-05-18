@@ -4,8 +4,13 @@
 
 inputModule.controller('indraController', function($scope, $rootScope, $http, $q, $location, $timeout) {
 
+    $scope.isHomeShown = false;
+    $scope.isHowItWorksShown = true;
+    $scope.isLogInShown = false;
     $scope.isSaveShown = false;
-    $scope.isBudgetShown = false;
+    $scope.isBudgetPercentShown = false;
+    $scope.isSignUpShown = false;
     $scope.saveText = "CONTINUE";
+    $scope.budgetPercent = 0;
 });
 

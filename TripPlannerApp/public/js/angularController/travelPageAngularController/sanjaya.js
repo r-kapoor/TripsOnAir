@@ -133,14 +133,6 @@ routesModule.controller('sanjayaController',  function($scope,$rootScope, $windo
                             map : $scope.map,
                             directions : response
                         });
-                    //directionsDisplay.suppressMarkers = true;
-                    //directionsDisplay.map = $scope.map;
-                    //directionsDisplay.directions = response;
-                    //{
-                    //    map: $scope.map,
-                    //    directions: response
-                    //});
-
                 }
             }
         );
