@@ -562,52 +562,74 @@ function taxiModifiedRome2RioData(rome2RioData,carRouteDetails, carLegDetails)
 		for(var j = 0; j < allRoutes.length; j++)
 		{
 			allRoutes[j].isRecommendedRoute = 1;
+            var lastSegmentWasCab = false;
+            var lastCabSegment= null;
 			var allSegments = allRoutes[j].segments;
 			for(var k = 0; k < allSegments.length; k++)
 			{
-				for(var l = 0; l < carRouteDetails.length; l++)
-				{
-					if(carRouteDetails[l].indexOfLeg == i)
-					{
-						rome2RioData[i].hasCab = 1;
-						for(var m = 0; m < carRouteDetails[l].routeAndSegments.length; m++)
-						{
-							if(carRouteDetails[l].routeAndSegments[m].route == j && carRouteDetails[l].routeAndSegments[m].segment == k)
-							{
-								var cabSegment = {
-										kind:"car",
-										subkind:"cab",
-										isMajor:1,
-										distance:carRouteDetails[l].distance,
-										duration:carRouteDetails[l].duration,
-										sName:carRouteDetails[l].source,
-										tName:carRouteDetails[l].destination,
-										sPos:rome2RioData[i].routes[j].segments[k].sPos,
-										tPos:rome2RioData[i].routes[j].segments[k].tPos,
-										path:carRouteDetails[l].path
-								};
-                                if(!gotFirstCabSegment){
-                                    cabSegment.carLegDetails = carLegDetails;
-                                    gotFirstCabSegment = true;
-                                }
-                                if(carRouteDetails[l].ddpDetailsUpdated==0)
+                if(allSegments[k].isMajor==1){
+                    var isCabSegment = false;
+
+                    for(var l = 0; l < carRouteDetails.length; l++)
+                    {
+                        if(carRouteDetails[l].indexOfLeg == i)
+                        {
+                            rome2RioData[i].hasCab = 1;
+                            for(var m = 0; m < carRouteDetails[l].routeAndSegments.length; m++)
+                            {
+                                if(carRouteDetails[l].routeAndSegments[m].route == j && carRouteDetails[l].routeAndSegments[m].segment == k)
                                 {
-                                    var speed=40;//km per hour
-                                    if(carRouteDetails[l].oldKind=="flight")
+                                    if(carRouteDetails[l].ddpDetailsUpdated==0)
                                     {
-                                        speed= 25;
+                                        var speed=40;//km per hour
+                                        if(carRouteDetails[l].oldKind=="flight")
+                                        {
+                                            speed= 25;
+                                        }
+                                        else if(carRouteDetails[l].oldKind=="train")
+                                        {
+                                            speed=35;
+                                        }
+                                        carRouteDetails[l].duration = (carRouteDetails[l].distance/speed)*60;//in minutes
                                     }
-                                    else if(carRouteDetails[l].oldKind=="train")
-                                    {
-                                        speed=35;
+                                    if(lastSegmentWasCab){
+                                        //Need to combine this segment with previous one
+                                        lastCabSegment.distance += carRouteDetails[l].distance;
+                                        lastCabSegment.duration += carRouteDetails[l].duration;
+                                        lastCabSegment.tName = carRouteDetails[l].destination;
+                                        lastCabSegment.tPos = rome2RioData[i].routes[j].segments[k].tPos;
+                                        //lastCabSegment.path += carRouteDetails[l].path;
+                                        rome2RioData[i].routes[j].segments.splice(k,1);
+                                        k--;
                                     }
-                                    cabSegment.duration = (cabSegment.distance/speed)*60;//in minutes
+                                    else {
+                                        var cabSegment = {
+                                            kind:"car",
+                                            subkind:"cab",
+                                            isMajor:1,
+                                            distance:carRouteDetails[l].distance,
+                                            duration:carRouteDetails[l].duration,
+                                            sName:carRouteDetails[l].source,
+                                            tName:carRouteDetails[l].destination,
+                                            sPos:rome2RioData[i].routes[j].segments[k].sPos,
+                                            tPos:rome2RioData[i].routes[j].segments[k].tPos,
+                                            path:carRouteDetails[l].path
+                                        };
+                                        if(!gotFirstCabSegment){
+                                            cabSegment.carLegDetails = carLegDetails;
+                                            gotFirstCabSegment = true;
+                                        }
+                                        //Replacing the other segment with taxi segment
+                                        rome2RioData[i].routes[j].segments.splice(k,1,cabSegment);
+                                    }
+                                    isCabSegment = true;
+                                    lastCabSegment = cabSegment;
                                 }
-								rome2RioData[i].routes[j].segments.splice(k,1,cabSegment);
-							}
-						}
-					}
-				}
+                            }
+                        }
+                    }
+                    lastSegmentWasCab = isCabSegment;
+                }
 			}
 		}
 	}
