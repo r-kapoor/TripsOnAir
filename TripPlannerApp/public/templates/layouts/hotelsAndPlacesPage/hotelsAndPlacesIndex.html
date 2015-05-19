@@ -15,6 +15,7 @@
     <script src="js/angularJS/ngDraggable.js"></script>
     <script type="text/javascript" src="js/angularDirective/scrollInview.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/page3Main.js"></script>
+    <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shabari.js"></script>
     <script type="text/javascript" src="js/angularService/hotelsAndPlacesPageAngularService/mapDataService.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/jatayu.js"></script>
 	<script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shakuni.js"></script>
@@ -27,16 +28,20 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrapCSS/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrapCSS/angular-timeline.css" />
     <link rel="stylesheet" href="css/bootstrapCSS/angular-timeline-bootstrap.css" />
+    <link rel="stylesheet" href="css/home/fonts-awesome.css">
     <link rel="stylesheet" href="css/hotelsAndPlacesPage/shakuni.css" />
     <link rel="stylesheet" href="css/hotelsAndPlacesPage/map.css">
     <link rel="stylesheet" href="css/hotelsAndPlacesPage/cityPanel.css">
     <link rel="stylesheet" href="css/home/inputs.css">
-
+    <link rel="stylesheet" href="css/global/pageLoader.css">
+    <link rel="stylesheet" href="css/home/flexslider.css">
+    <link id="theme-style" rel="stylesheet" href="css/home/style4.css">
 </head>
 
 <body>
+    <div ng-include src="'templates/layouts/global/pageLoader.html'"></div>
 	<div ng-controller="itineraryMainController">
-		<div ng-include src="'templates/layouts/global/header.html'"></div>
+		<div class="header-top" ng-include src="'templates/layouts/global/header1.html'"></div>
         <div ng-controller="shakuniController">
             <div class="row">
                 <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showCityPanel.html'"></div>

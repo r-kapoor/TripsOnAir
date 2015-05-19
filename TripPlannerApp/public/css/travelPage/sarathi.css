@@ -89,3 +89,8 @@
     border-color: #bce8f1;
     font-size: 90%;
 }
+.taxi-details:hover{
+    color: #f89d29;
+    background-color: #1e1e1e;
+    cursor: pointer;
+}

@@ -42,13 +42,13 @@
                                                 {{getSourceCityName($index)}}
                                             </div>
                                         </div>
-                                        <div class="panel panel-default segment-hover">
+                                        <div class="panel panel-default {{segmentHoverClass}}">
                                             <div ng-repeat="segment in leg.defaultRoute.segments">
                                                 <div ng-if="segment.isMajor != 0" ng-href='#' ng-click="openTravelModesPanel(leg, $event, $parent.$parent.$index)">
                                                     <div ng-if="segment.startCabTrip != undefined && segment.startCabTrip == 1" ng-click="openModeDetailsPanel(segment, leg.defaultRoute, defaultRouteIndex, $event,'cabOperator')">
                                                         <div ng-repeat="cabDetail in segment.CabDetails">
                                                             <div ng-if="cabDetail.isFinal != undefined && cabDetail.isFinal == 1" class="panel panel-info">
-                                                                <div class="panel-heading">
+                                                                <div class="panel-heading taxi-details" ng-mouseover="onTaxiDetailsHover()" ng-mouseleave="onTaxiDetailsLeave()">
                                                                     <div class="row text-center" style="font-size: 85%">
                                                                             Take Taxi From {{getStartCityForTaxi(segment)}}
                                                                     </div>
@@ -171,7 +171,7 @@
                                                                 {{getDuration(segment)}}
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-2">
+                                                        <div ng-if="isPriceShown(segment)"class="col-xs-2">
                                                             {{getPrice(segment) | currency:"&#8377;":0}}
                                                         </div>
                                                     </div>
@@ -472,7 +472,7 @@
                                             {{cabDetail.SegmentType}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': cabDetailToggle[$index].open, 'glyphicon-chevron-right': !cabDetailToggle[$index].open}"></i>
                                         </div>
                                     </accordion-heading>
-                                    <div ng-repeat="operator in cabDetail.OperatorPrices" class="row {{getCabOperatorClass(operator)}}">
+                                    <div ng-repeat="operator in cabDetail.OperatorPrices" class="row">
                                         <div class="panel panel-default">
                                             <div class="panel-body">
                                                 <div class="row">

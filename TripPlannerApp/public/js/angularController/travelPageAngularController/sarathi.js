@@ -80,7 +80,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.minorBudget = 0;
     $scope.isTravelPanelDisable = false;
     $scope.altTrip = true;
-
+    $scope.segmentHoverClass = "segment-hover";
     var defaultRouteData = null;
     var alternateRouteData = null;
     var isOtherTripClicked = false;
@@ -454,6 +454,14 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             return "default-route";
         }
         return "";
+    };
+
+    $scope.onTaxiDetailsLeave = function(){
+        $scope.segmentHoverClass = "segment-hover";
+    };
+
+    $scope.onTaxiDetailsHover = function(){
+        $scope.segmentHoverClass = "";
     };
 
     $scope.getIconClass = function(route)
@@ -960,15 +968,6 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $scope.getAccordionHeadingClass = function(cabDetail)
     {
         if(cabDetail.isFinal!=undefined && cabDetail.isFinal==1)
-        {
-            return "final-cab-segment";
-        }
-        return "";
-    };
-
-    $scope.getCabOperatorClass = function(operator)
-    {
-        if(operator.isFinal!=undefined && operator.isFinal==1)
         {
             return "final-cab-segment";
         }

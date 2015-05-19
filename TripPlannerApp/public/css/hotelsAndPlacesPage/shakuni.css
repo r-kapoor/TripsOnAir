@@ -45,3 +45,22 @@
     top: 0px;
     z-index: 2;
 }
+.header-top{
+    z-index:100;
+    background-color:rgb(179,205,255);
+    width: 100%;
+}
+
+.badge{
+    background-color:#f89d29;
+}
+
+.badgeOnHover{
+    background-color: white;
+    color:#f89d29;
+}
+.sub-expense{
+    color: #fff;
+    background-color: #428bca;
+    border-color: #357ebd;
+}
