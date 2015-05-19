@@ -26,7 +26,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.isDateBarCollapsed = false;
     $scope.destinationsWithStop = [];//Only used in showCityPanel
 
-    $scope.isBudgetPanelOpen = true;
+    $scope.isBudgetPanelOpen = false;
     $scope.totalBudgetText = "Budget";
     $scope.travelBudgetText = "Travel Expenses";
     $scope.otherCitiesBudgetText = "Other Destination(s) Expenses";

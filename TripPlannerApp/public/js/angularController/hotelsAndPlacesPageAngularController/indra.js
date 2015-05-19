@@ -4,9 +4,9 @@
 
 itineraryModule.controller('indraController', function($scope, $rootScope, $http, $q, $location, $timeout) {
     $scope.isSaveShown = true;
-    $scope.isBudgetShown = true;
+    $scope.isBudgetPercentShown = true;
     $scope.saveText = "SAVE";
-
+    $scope.budgetBadgeClass ="";
     $scope.budgetPercent = 0;
 
     $rootScope.$on('budgetChanged',  function onBudgetChanged(event, percent) {
@@ -20,5 +20,13 @@ itineraryModule.controller('indraController', function($scope, $rootScope, $http
 
     $scope.submitPage = function(){
         $rootScope.$emit("submitPage");
-    }
+    };
+
+    $scope.setChildClassOnHover = function(){
+        $scope.budgetBadgeClass = "badgeOnHover";
+    };
+
+    $scope.setChildClassOnOut = function(){
+        $scope.budgetBadgeClass = "";
+    };
 });

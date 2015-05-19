@@ -19,7 +19,7 @@
                     <li ng-if="isLogInShown" class="nav-item"><a href="">Log in</a></li>
                     <li ng-if="isSaveShown"  ng-click="submitPage()" class="nav-item"><a href="">{{saveText}}</a></li>
                     <li ng-if="isSignUpShown" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Sign Up Free</a></li>
-                    <li ng-if="isBudgetPercentShown" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Budget Spent<span class="badge">{{budgetPercent}}%</span></a></li>
+                    <li id="budgetHeadBtn" ng-if="isBudgetPercentShown" ng-mouseover="setChildClassOnHover()" ng-mouseleave="setChildClassOnOut()" ng-click="toggleBudgetPanel()" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Budget Spent<span class="badge {{budgetBadgeClass}}">{{budgetPercent}}%</span></a></li>
                 </ul><!--//nav-->
             </div><!--//navabr-collapse-->
         </nav><!--//main-nav-->
