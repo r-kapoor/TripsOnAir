@@ -87,7 +87,10 @@ module.exports = function(app) {
                     connection.end();
                     var destinationAndStops = selectPlaces.selectPlaces(results[0], results[1]);
                     getDayWisePlaces.getDayWisePlaces(destinationAndStops);
-                    getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
+                    var error = getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
+                    if(error != undefined){
+                        throw error;
+                    }
                     destinationAndStops.userTotalbudget = totalBudget;
                     destinationAndStops.numPeople = numOfPeople;
                     destinationAndStops.tastes = tastes;
