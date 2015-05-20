@@ -55,6 +55,48 @@ adminModule.controller('placesController',  function($scope, $rootScope, $routeP
 
 });
 
+adminModule.controller('newPlaceController', function($scope, $http){
+    console.log('Loads newPlace');
+    $scope.alerts = [];
+    $scope.place = {};
+    $scope.place.PlaceTimings = [{}];
+
+    $scope.submit = function() {
+        console.log(JSON.stringify($scope.place));
+        $http.post('/admin/newPlace',{
+            placeDetails: $scope.place
+        }).success(function(data,status){
+            console.log("Place response:"+JSON.stringify(data));
+            if(data.Status == "SUCCESS"){
+                $scope.alerts.push({ type: 'success', msg: 'Success' });
+                $scope.place = null;
+            }
+            else {
+                $scope.alerts.push({ type: 'danger', msg: 'Failed' });
+            }
+        })
+            .error(
+            function(data, status) {
+                $scope.alerts.push({ type: 'danger', msg: 'Failed' });
+                console.log(data || "Backend Request failed");
+            });
+    };
+
+    $scope.addTimings = function () {
+        $scope.place.PlaceTimings.push({});
+    };
+
+    $scope.removeTimings = function(){
+        if($scope.place.PlaceTimings.length > 1){
+            $scope.place.PlaceTimings.splice($scope.place.PlaceTimings.length-1,1);
+        }
+    };
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
+});
+
 adminModule.controller('placesOfCityController',  function($scope, $rootScope, $http, $location) {
 
     console.log('Loads PlacesOfCity');

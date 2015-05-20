@@ -18,6 +18,10 @@ adminModule.config(['$routeProvider',
                 templateUrl: 'templates/layouts/admin/places.html',
                 controller: 'placesController'
             }).
+            when('/newPlace', {
+                templateUrl: 'templates/layouts/admin/newPlace.html',
+                controller: 'newPlaceController'
+            }).
             otherwise({
                 redirectTo: '/'
             });

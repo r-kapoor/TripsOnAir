@@ -9,6 +9,7 @@
 
 var getPlaceDetails = require('../lib/admin/getPlaceDetails');
 var postPlaceDetails = require('../lib/admin/postPlaceDetails');
+var insertPlaceDetails = require('../lib/admin/insertPlaceDetails');
 var tasteIntegerToObject = require('../lib/UtilityFunctions/tasteObjectToInteger');
 require('date-utils');
 var async  = require('async');
@@ -51,6 +52,29 @@ module.exports=function (app){
         //    placeObject.Taste = tasteIntegerToObject.tasteIntegerToObject(placeObject.Taste);
         //    res.json(placeObject);
         //});
+    });
+
+    app.post('/admin/newPlace', function(req, res)
+    {
+        console.log('In admin/newPlaces POST');
+        var placeDetails = req.param('placeDetails');
+        console.log('Place Details:'+JSON.stringify(placeDetails));
+
+        console.log('Taste:'+JSON.stringify(placeDetails.Taste));
+        var taste = tasteIntegerToObject.tasteObjectToInteger(placeDetails.Taste);
+
+        placeDetails.Taste = parseInt(taste.tasteInteger | taste.familyFriendsInteger);
+
+        if(placeDetails.Taste == 1023){
+            placeDetails.Taste = 0;
+        }
+
+        console.log('Taste:'+placeDetails.Taste);
+
+        insertPlaceDetails.insertPlaceDetails(placeDetails, function responseJSON(model){
+            res.json(model);
+        })
+
     });
 
     app.get('/admin',function(req,res)
