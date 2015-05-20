@@ -1219,9 +1219,13 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     $rootScope.$on('submitTravel',function onSubmitTravel(event, data)
     {
         console.log("submitTravel");
+        console.log(defaultRouteData);
         if(defaultRouteData!=null)
         {
             defaultRouteData.isMajorDefault=1;
+        }
+        if(alternateRouteData!=null){
+            alternateRouteData.isMajorDefault = 0;
         }
         if(travelData.withTaxiRome2rioData!=null && travelData.withTaxiRome2rioData.isMajorDefault==1)
         {

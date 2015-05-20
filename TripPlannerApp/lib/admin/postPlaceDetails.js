@@ -14,11 +14,11 @@ function postPlaceDetails(placeDetails, callback)
         'Address='+connection.escape(placeDetails.Address)+',PinCode='+connection.escape(placeDetails.PinCode)+',' +
         'PhoneNo='+connection.escape(placeDetails.PhoneNo)+',CityID='+connection.escape(placeDetails.CityID)+',' +
         'Description='+connection.escape(placeDetails.Description)+',Score='+connection.escape(placeDetails.Score)+',' +
-        'ScoreSources='+connection.escape(placeDetails.ScoreSources)+',Broad_Category='+connection.escape(placeDetails.Broad_Category)+',' +
+        'ScoreSources='+connection.escape(placeDetails.ScoreSources)+',' +
         'Website='+connection.escape(placeDetails.Website)+',Latitude='+connection.escape(placeDetails.Latitude)+',' +
         'Longitude='+connection.escape(placeDetails.Longitude)+',Time2Cover='+connection.escape(placeDetails.Time2Cover)+',' +
-        'UnescoHeritage='+connection.escape(placeDetails.UnescoHeritage)+',Ixigo='+connection.escape(placeDetails.Ixigo)+',' +
-        'TripAdvisor='+connection.escape(placeDetails.TripAdvisor)+' WHERE PlaceID='+connection.escape(placeDetails.PlaceID)+';';
+        'UnescoHeritage='+connection.escape(placeDetails.UnescoHeritage)+
+        ' WHERE PlaceID='+connection.escape(placeDetails.PlaceID)+';';
 
     console.log("SetPlaceDetails query:"+placesQueryString);
 

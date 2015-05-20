@@ -27,7 +27,7 @@
                   </div>
                   <div ng-repeat="destinationWithStop in destinationsWithStop" class="stepwizard-step">
                       <div ng-if="destinationWithStop.isDestination">
-                          <button type="button" class="btn {{getButtonClass(destinationWithStop)}} btn-circle" disabled="disabled" ng-click="showDestinationItinerary(destinationWithStop)">{{$index+1}}</button>
+                          <button type="button" class="btn {{getButtonClass(destinationWithStop)}} btn-circle" ng-click="showDestinationItinerary(destinationWithStop)">{{$index+1}}</button>
                           <p>{{destinationWithStop.name}}</p>
                       </div>
                       <div ng-if="!destinationWithStop.isDestination">

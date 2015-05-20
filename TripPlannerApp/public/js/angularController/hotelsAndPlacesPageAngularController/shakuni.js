@@ -104,17 +104,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 }
             }
 
-            $scope.cityBudgetText = $scope.currentDestination.name+"'s Expenses";
-            $scope.totalBudget = parseInt(data.userTotalbudget);
             $scope.travelBudget = parseInt(data.travelBudget) + parseInt(data.minorTravelBudget);
-            calculateOtherCitiesExpenses();
-            calculateLocalTravelExpenses();
 
-            var firstDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
-            $scope.currentDate = firstDay.setHours(0,0,0,0);
-            calculateHotelExpenses();
-            $scope.allPlaces = $scope.currentDestination.places;
-            $scope.allHotels = $scope.currentDestination.hotels;
+            setBudgetModels();
+            $scope.totalBudget = parseInt(data.userTotalbudget);
+
+            setDestinationSpecificModels();
+
             $scope.isItineraryPlanned=true;
             initializeMapDataArray();
              $scope.currentDestination.position = {
@@ -161,6 +157,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         $scope.currentDestination.isCurrent = false;
         destination.isCurrent = true;
         $scope.currentDestination = destination;
+
+        setBudgetModels();
+
+        setDestinationSpecificModels();
+
+        initializeMapDataArray();
+        $scope.currentDestination.position = {
+            Latitude:parseFloat($scope.currentDestination.pos.split(',')[0]),
+            Longitude:parseFloat($scope.currentDestination.pos.split(',')[1])
+        };
+        calculatePlacesExpenses();
+        calculateCityExpenses();
     };
 
     $scope.showPlaceDetails = function() {
@@ -580,6 +588,20 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         return true;
     };
+
+    function setBudgetModels(){
+        $scope.cityBudgetText = $scope.currentDestination.name+"'s Expenses";
+        calculateOtherCitiesExpenses();
+        calculateLocalTravelExpenses();
+    }
+
+    function setDestinationSpecificModels(){
+        var firstDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+        $scope.currentDate = firstDay.setHours(0,0,0,0);
+        calculateHotelExpenses();
+        $scope.allPlaces = $scope.currentDestination.places;
+        $scope.allHotels = $scope.currentDestination.hotels;
+    }
 
     function setMapData(dateItineraryIndex){
         mapData.setRouteNthData(dateItineraryIndex,false);

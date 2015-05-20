@@ -10,7 +10,7 @@ function getPlaceDetails(placeID, callback)
     connection.connect();
 
     var queryString = 'SELECT Type,Taste,Name,a.PlaceID,Address,PinCode,PhoneNo,CityID,Description,Score,ScoreSources,' +
-        'Broad_Category,Website,Latitude,Longitude,Time2Cover,UnescoHeritage,Ixigo,TripAdvisor,Timing_ID, TimeStart, TimeEnd, ' +
+        'Website,Latitude,Longitude,Time2Cover,UnescoHeritage,Timing_ID, TimeStart, TimeEnd, ' +
         'Days, ChildCharge, AdultCharge, ForeignerCharge FROM ' +
         '(SELECT * FROM Places WHERE PlaceID = '+connection.escape(placeID)+') a ' +
         'LEFT JOIN ' +
