@@ -115,8 +115,8 @@ function getDestinationsAndStops(travelData)
             }
             else {
                 destinations[i-1].LocationOfDeparture = {
-                    Latitude:parseFloat(destinations[i].pos.split(',')[0]),
-                    Longitude:parseFloat(destinations[i].pos.split(',')[1])
+                    Latitude:parseFloat(destinations[i-1].pos.split(',')[0]),
+                    Longitude:parseFloat(destinations[i-1].pos.split(',')[1])
                 };
             }
             console.log('destinations['+i+'-1].departureTime:'+destinations[i-1].departureTime);

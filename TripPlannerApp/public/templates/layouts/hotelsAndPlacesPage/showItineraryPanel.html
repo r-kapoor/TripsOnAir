@@ -11,7 +11,7 @@
         <ul class="pager">
             <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="currentDay == 0">Previous</a></li>
             <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
-            <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="currentDay == currentDestination.dateWiseItinerary.length - 2">Next</a></li>
+            <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="currentDay == currentDestination.dateWiseItinerary.length - 1">Next</a></li>
         </ul>
     </nav>
     <timeline>
@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <p>
-                                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData, true) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index, true) | date:'shortTime'}} </small>
+                                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData, true) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index,true) | date:'shortTime'}} </small>
                                 </p>
                             </div>
                             <div class="col-xs-6 text-right">

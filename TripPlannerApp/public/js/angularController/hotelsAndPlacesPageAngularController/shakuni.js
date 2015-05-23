@@ -2189,8 +2189,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         return dateWisePlaceData.endSightSeeingTime;
     };
 
-    $scope.getHotelExitTime = function(dateWisePlaceData, currentIndex, morningCheckIn){
-        if(dateWisePlaceData.typeOfDay == 2){
+    $scope.getHotelExitTime = function(dateWisePlaceData, currentIndex,morningCheckIn){
+        console.log("currentIndex:"+currentIndex+","+$scope.currentDestination.dateWiseItinerary.length);
+
+        if((dateWisePlaceData.typeOfDay == 1 && currentIndex ==$scope.currentDestination.dateWiseItinerary.length-1)||dateWisePlaceData.typeOfDay == 2){
             return $scope.currentDestination.hotelDetails.checkOutTime;
         }
         else if(morningCheckIn != undefined && morningCheckIn) {
@@ -2517,7 +2519,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     $scope.nextDay = function(){
-        if($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-2){
+        if(($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited == 1)){
             $scope.currentDay += 1;
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = currentDay.setHours(0,0,0,0);
@@ -2550,7 +2552,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.changeCurrentDate = function(item){
         console.log("day visible:"+(parseInt(item)+1));
-        if(parseInt(item)<=$scope.currentDestination.dateWiseItinerary.length-2){
+        if((parseInt(item)<=$scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited == 1)){
             $scope.currentDay = parseInt(item);
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = currentDay.setHours(0,0,0,0);
