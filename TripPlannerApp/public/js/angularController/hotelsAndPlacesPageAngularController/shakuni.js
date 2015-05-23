@@ -1644,6 +1644,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         {
             for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
                 var candidate = candidates[candidateIndex];
+                console.log('For candidate:'+candidateIndex);
                 checkIfPlaceIsOpenOnFreeTimings(candidate,place);
                 if(candidate.freeTimingsArray.length==0){
                     candidates.splice(candidateIndex,1);
@@ -1888,16 +1889,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         {
             var freeStartTime = candidate.freeTimingsArray[candidateTimingsIndex].freeStartTime;
             var freeEndTime = candidate.freeTimingsArray[candidateTimingsIndex].freeEndTime;
+            var candidateTimingValid = false;
             for(var placeTimingsIndex = 0; placeTimingsIndex<place.PlaceTimings.length;placeTimingsIndex++) {
                 if (checkIfPlaceIsOpenOnDay(place.PlaceTimings[placeTimingsIndex].Days, freeStartTime)) {
-                    console.log('Place is Open on day');
+                    console.log('Place is Open on day :'+candidateTimingsIndex);
                     if (compareTimings(place.PlaceTimings[placeTimingsIndex], place.Time2Cover, candidate.freeTimingsArray[candidateTimingsIndex])) {
                         candidate.placeTimingsIndex = placeTimingsIndex;
+                        candidateTimingValid = true;
                         break;
                     }
                 }
             }
-            if(candidate.placeTimingsIndex==undefined)
+            if(!candidateTimingValid)
             {
                 candidate.freeTimingsArray.splice(candidateTimingsIndex,1);
                 candidateTimingsIndex--;
