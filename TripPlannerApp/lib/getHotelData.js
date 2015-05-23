@@ -99,6 +99,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                     //var id = hashidscity.encode(rows[i].CityID);
                     var id = hashidEncoder.encodeHotelID(rows[i].HotelID);
                     rows[i].HotelID = id;
+                    rows[i].hotelAdded = false;
                     //console.log("decodedCityIDsWhereHotelIsRequired:"+decodedCityIDsWhereHotelIsRequired+",rows[i].CityID:"+rows[i].CityID);
                     var cityIDIndex=decodedCityIDsWhereHotelIsRequired.indexOf(rows[i].CityID);
                     //console.log(rows[i]);
@@ -149,7 +150,9 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                     if(cityIDIndex!=-1){
                         //console.log("in hotelDetails:"+JSON.stringify(hotelData[cityIDIndex]));
                         destinationsAndStops.destinations[i].hotelDetails=hotelData[cityIDIndex];
+                        destinationsAndStops.destinations[i].hotelDetails.hotelAdded = true;
                         destinationsAndStops.destinations[i].hotels = hotels[cityIDIndex];
+                        setHotelIndices(destinationsAndStops.destinations[i].hotels);
                     }
                 }
                 if(HotelsInStops.length>0){
@@ -163,6 +166,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                             if(cityIDIndex!=-1){
                                 stopsArray[d].hotelDetails=hotelData[cityIDIndex];
                                 stopsArray[d].hotels = hotels[cityIDIndex];
+                                setHotelIndices(stopsArray[d].hotels);
                             }
                         }
                     }
@@ -207,6 +211,12 @@ function isHotelInBudget(price,maxPersons,perDayHotelBudget,numOfPeople)
         }
     }
 
+}
+
+function setHotelIndices(hotels){
+    for(var hotelIndex = 0; hotelIndex < hotels.length; hotelIndex++){
+        hotels[hotelIndex].hotelIndex = hotelIndex;
+    }
 }
 
 module.exports.getHotelData=getHotelData;

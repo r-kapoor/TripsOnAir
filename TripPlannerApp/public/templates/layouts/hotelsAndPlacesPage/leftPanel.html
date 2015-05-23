@@ -41,7 +41,7 @@
                 <a href="#" class="thumbnail" style="margin-bottom: 0;">
                     <img ng-src="{{hotel.PhotoLink}}" class="img-responsive" style="width: 100%"/>
                 </a>
-                <div class="btn btn-default add-button" ng-click="addHotel(hotel)">
+                <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
                     <i class="glyphicon glyphicon-plus"></i>
                 </div>
                 <div class="name">

@@ -147,6 +147,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.addHotel = function(hotel){
+        $scope.allHotels[$scope.currentDestination.hotelDetails.hotelIndex].hotelAdded = false;
+        hotel.hotelAdded = true;
         $scope.currentDestination.hotelDetails = hotel;
         calculateHotelEntryExitTime(hotel);
         calculateHotelExpenses();
