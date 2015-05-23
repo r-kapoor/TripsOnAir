@@ -20,12 +20,13 @@ function getOptimizedItinerary(destinationAndStops) {
         console.log('Current Destination:'+destination.name);
         var dateWisePlaces = destination.dateWisePlaces;
         var hotel = destination.hotelDetails;
+        var allPlaces = destination.places;
         var dateWiseItinerary = [];
         for(var dateIndex = 0; dateIndex < dateWisePlaces.length; dateIndex++) {
             console.log('Current date['+dateIndex+'] with places:'+JSON.stringify(dateWisePlaces[dateIndex]));
             if(dayIsOpenForSchedulingPlaces(dateWisePlaces[dateIndex])){
                 if(dateIndex == 0) {
-                    var dateItinerary = getDayWiseItinerary(dateWisePlaces[dateIndex], destination, null, hotel);
+                    var dateItinerary = getDayWiseItinerary(dateWisePlaces[dateIndex], destination, null, hotel, allPlaces);
                     if(dateItinerary instanceof Error){
                         return dateItinerary;
                     }
@@ -33,7 +34,7 @@ function getOptimizedItinerary(destinationAndStops) {
                 }
                 else {
                     console.log('Going for next. Passing prev itinerary:'+JSON.stringify(dateWiseItinerary[dateIndex - 1]));
-                    var dateItinerary = getDayWiseItinerary(dateWisePlaces[dateIndex], destination, dateWiseItinerary[dateIndex - 1], hotel);
+                    var dateItinerary = getDayWiseItinerary(dateWisePlaces[dateIndex], destination, dateWiseItinerary[dateIndex - 1], hotel, allPlaces);
                     if(dateItinerary instanceof Error){
                         return dateItinerary;
                     }
@@ -54,7 +55,7 @@ function getOptimizedItinerary(destinationAndStops) {
     }
 }
 
-function getDayWiseItinerary(dateWisePlaceData, destination, previousDaysItinerary, hotel) {
+function getDayWiseItinerary(dateWisePlaceData, destination, previousDaysItinerary, hotel, places) {
     console.log('In getDayWiseItinerary');
     var placesData = dateWisePlaceData.placesData;
     if(placesData!=undefined && placesData.length > 0){
@@ -117,13 +118,17 @@ function getDayWiseItinerary(dateWisePlaceData, destination, previousDaysItinera
             return permArr;
         }
         if(minPermutation != null) {
+            markSelectedPlaces(minPermutation, minPermutationDateWisePlaceData, places);
             return {
                 validity: true,
                 permutation: minPermutation,
                 dateWisePlaceData: minPermutationDateWisePlaceData
             };
         }
-        return lastInvalidItinerary;
+        else {
+            markSelectedPlaces(lastInvalidItinerary.permutation, lastInvalidItinerary.dateWisePlaceData, places);
+            return lastInvalidItinerary;
+        }
     }
     else {
         dateWisePlaceData.noPlacesVisited = 1;
@@ -131,6 +136,18 @@ function getDayWiseItinerary(dateWisePlaceData, destination, previousDaysItinera
             validity: true,
             permutation: [],
             dateWisePlaceData: dateWisePlaceData
+        }
+    }
+}
+
+function markSelectedPlaces(permutation, dateWisePlaceData, places){
+    for(var permutationIndex = 0; permutationIndex < permutation.length; permutationIndex++){
+        var permValue = permutation[permutationIndex];
+        var place = dateWisePlaceData.placesData[permValue];
+        place.placeAdded = true;
+        if(place.isMeal == undefined || place.isMeal != 1){
+            //Only if it not a meal
+            places[place.placeIndex].placeAdded = true;
         }
     }
 }

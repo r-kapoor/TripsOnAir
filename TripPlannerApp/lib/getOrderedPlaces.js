@@ -31,6 +31,7 @@ connection.query(queryString, function(err, rows, fields) {
 				}
 			    else{
 			    	for (var i in rows) {
+                        rows[i].placeAdded = false;
                         rows[i].PlaceTimings = [];
                         rows[i].PlaceTimings.push({
                             TimeStart : rows[i].TimeStart,
@@ -47,6 +48,7 @@ connection.query(queryString, function(err, rows, fields) {
                         }
                         else {
                             cityWisePlaces[indexOfCity].push(rows[i]);
+                            cityWisePlaces[indexOfCity][cityWisePlaces[indexOfCity].length - 1].placeIndex = cityWisePlaces[indexOfCity].length - 1;
                         }
 			    	}
 			    }
