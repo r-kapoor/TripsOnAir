@@ -15,6 +15,7 @@ itineraryModule.controller('hanumanController', function($scope, $rootScope, $ht
         replaceAndLessTime:{kind:'place',type:'danger',msg:'You have less time to cover ?'},
         replaceAndClosedOnDeparture:{kind:'place',type:'danger',msg:'? is closed at your departure time. Set it accordingly'},
         replaceAndClosedInDuration:{kind:'place',type:'danger',msg:'? is closed in between your arrival and departure time'},
+        replaceAndClosedOnArrivalAndDeparture:{kind:'place',type:'danger',msg:'? is closed in on your arrival and departure time'},
         reorderAndPlaceClosed:{kind:'place',type:'danger',msg:'? is closed at reordered timings'},
         reorderAndClosed:{kind:'place',type:'danger',msg:'Places are closed at reordered timings'},
         reorderAndLessTime:{kind:'place',type:'danger',msg:'You have less time to cover these places'},
