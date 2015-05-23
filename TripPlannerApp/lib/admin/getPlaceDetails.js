@@ -36,7 +36,9 @@ function getPlaceDetails(placeID, callback)
                     Days:rows[i].Days
                 });
             }
-            rows[0].PlaceTimings = placeTimings;
+            if(rows[0] != undefined){
+                rows[0].PlaceTimings = placeTimings;
+            }
             callback(rows[0]);
         }
     });
