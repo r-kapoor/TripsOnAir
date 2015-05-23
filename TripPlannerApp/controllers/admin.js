@@ -10,7 +10,7 @@
 var getPlaceDetails = require('../lib/admin/getPlaceDetails');
 var postPlaceDetails = require('../lib/admin/postPlaceDetails');
 var insertPlaceDetails = require('../lib/admin/insertPlaceDetails');
-var tasteIntegerToObject = require('../lib/UtilityFunctions/tasteObjectToInteger');
+var tasteIntegerToObject = require('../lib/UtilityFunctions/tasteObjectToIntegerAdmin');
 require('date-utils');
 var async  = require('async');
 
@@ -22,7 +22,9 @@ module.exports=function (app){
         console.log('In admin/places');
         var placeID = req.param('id');
         getPlaceDetails.getPlaceDetails(placeID, function respondWithPlace(placeObject){
-            placeObject.Taste = tasteIntegerToObject.tasteIntegerToObject(placeObject.Taste);
+            if(placeObject != undefined){
+                placeObject.Taste = tasteIntegerToObject.tasteIntegerToObject(placeObject.Taste);
+            }
             res.json(placeObject);
         });
     });
@@ -39,7 +41,7 @@ module.exports=function (app){
 
         placeDetails.Taste = parseInt(taste.tasteInteger | taste.familyFriendsInteger);
 
-        if(placeDetails.Taste == 1023){
+        if(placeDetails.Taste == 16383){
             placeDetails.Taste = 0;
         }
 
@@ -65,7 +67,7 @@ module.exports=function (app){
 
         placeDetails.Taste = parseInt(taste.tasteInteger | taste.familyFriendsInteger);
 
-        if(placeDetails.Taste == 1023){
+        if(placeDetails.Taste == 16383){
             placeDetails.Taste = 0;
         }
 
