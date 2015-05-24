@@ -11,7 +11,7 @@
         <ul class="pager">
             <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="currentDay == 0">Previous</a></li>
             <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
-            <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="currentDay == currentDestination.dateWiseItinerary.length - 1">Next</a></li>
+            <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
         </ul>
     </nav>
     <timeline>
@@ -28,7 +28,7 @@
             </timeline-panel>
         </timeline-node>
         <timeline ng-repeat="dateItinerary in currentDestination.dateWiseItinerary" ng-init="parentIndex=$index">
-            <small scroll-view scroll="changeCurrentDate(item)" scroll-item="$index" class="text-muted text-center" id="day-{{$index}}">Day {{$index+1}}</small>
+            <small scroll-view scroll="changeCurrentDate(item)" scroll-item="parentIndex" class="text-muted text-center" id="day-{{$index}}">Day {{$index+1}}</small>
             <timeline-node ng-if="currentDestination.hotelDetails != undefined && dateItinerary.dateWisePlaceData.typeOfDay == 0">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-home"></i>
                 </timeline-badge>

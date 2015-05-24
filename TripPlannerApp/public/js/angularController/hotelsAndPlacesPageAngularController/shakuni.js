@@ -246,6 +246,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             console.log('Inserted In Place Holder');
             //set data for map
             setMapData(removedPlacesList[i].dateItineraryIndex);
+            removedPlacesList.splice(i,1);
         }
         else {
             console.log('Not Inserted In Place Holder, Trying to insert elsewhere');
@@ -379,6 +380,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
                 calculatePlacesExpenses();
+                for(var i = 0; i < removedPlacesList.length; i++){
+                    if(removedPlacesList[i].dateItineraryIndex == dateItineraryIndex && removedPlacesList[i].index == index){
+                        removedPlacesList.splice(i,1);
+                        break;
+                    }
+                }
             }
         }
         else {
@@ -598,6 +605,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     function setDestinationSpecificModels(){
+        $scope.currentDay = 0;
         var firstDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
         $scope.currentDate = firstDay.setHours(0,0,0,0);
         calculateHotelExpenses();
@@ -2522,12 +2530,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     $scope.nextDay = function(){
-        if(($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited == 1)){
+        if(($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay+1].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay+1].dateWisePlaceData.noPlacesVisited == 1)){
             $scope.currentDay += 1;
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+            console.log($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = currentDay.setHours(0,0,0,0);
             var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
-            console.log('day-'+($scope.currentDay));
+            //console.log('day-'+($scope.currentDay));
             //console.log(section);
             $document.duScrollToElementAnimated(section);
             $scope.$broadcast('loadItinerary',$scope.currentDestination.dateWiseItinerary[$scope.currentDay],$scope.currentDay,$scope.currentDestination.hotelDetails);
@@ -2555,12 +2564,20 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.changeCurrentDate = function(item){
         console.log("day visible:"+(parseInt(item)+1));
-        if((parseInt(item)<=$scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.noPlacesVisited == 1)){
+        if((parseInt(item)<=$scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[parseInt(item)].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[parseInt(item)].dateWisePlaceData.noPlacesVisited == 1)){
             $scope.currentDay = parseInt(item);
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = currentDay.setHours(0,0,0,0);
             $scope.$broadcast('loadItinerary',$scope.currentDestination.dateWiseItinerary[$scope.currentDay],$scope.currentDay,$scope.currentDestination.hotelDetails);
         }
+    };
+
+    $scope.isNextDisable = function(){
+
+        if(($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay+1].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay+1].dateWisePlaceData.noPlacesVisited == 1)){
+            return false;
+        }
+        return true;
     };
 
     function createAlert(category,param){
