@@ -1612,7 +1612,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                     if(candidate.isOpenOnDay == undefined){
                         //Closed on both days
-                        candidate.splice(candidateIndex, 1);
+                        candidates.splice(candidateIndex, 1);
                         console.log('Place is not open on both days:'+candidateIndex);
                         candidateIndex--;
                     }
