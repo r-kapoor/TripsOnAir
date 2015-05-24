@@ -237,6 +237,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             if(replacePlace(currentPlaceClone,removedPlacesList[i].index,dateItineraryClone)) {
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[removedPlacesList[i].dateItineraryIndex] = dateItineraryClone;
+                currentPlaceClone.isPlaceRemoved = 0;
                 isInsertedInPlaceHolder = true;
                 break;
             }
@@ -351,6 +352,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else {
             calculatePlacesExpenses();
+            markPlaceAsAdded(place);
         }
 
         if(insertedByCreatingPosition)
@@ -380,6 +382,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
                 calculatePlacesExpenses();
+                markPlaceAsAdded(place);
                 for(var i = 0; i < removedPlacesList.length; i++){
                     if(removedPlacesList[i].dateItineraryIndex == dateItineraryIndex && removedPlacesList[i].index == index){
                         removedPlacesList.splice(i,1);
@@ -2366,6 +2369,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].isPlaceRemoved = 1;
         setMapData(dateItineraryIndex);
         calculatePlacesExpenses();
+        markPlaceAsNotAdded(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]]);
         //dateItinerary.permutation.splice(index,1);
 
     };
@@ -2582,6 +2586,23 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     function createAlert(category,param){
         $rootScope.$emit('showRecommendation',category,param);
+    }
+
+
+    function markPlaceAsAdded(place){
+        place.placeAdded = true;
+        place.isPlaceRemoved = 0;
+        if(place.isMeal == undefined || place.isMeal != 1){
+            $scope.allPlaces[place.placeIndex].placeAdded = true;
+            $scope.allPlaces[place.placeIndex].isPlaceRemoved = 0;
+        }
+    }
+
+    function markPlaceAsNotAdded(place){
+        place.placeAdded = false;
+        if(place.isMeal == undefined || place.isMeal != 1){
+            $scope.allPlaces[place.placeIndex].placeAdded = false;
+        }
     }
 
     $scope.getItinerary();
