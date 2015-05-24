@@ -246,6 +246,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             console.log('Inserted In Place Holder');
             //set data for map
             setMapData(removedPlacesList[i].dateItineraryIndex);
+            removedPlacesList.splice(i,1);
         }
         else {
             console.log('Not Inserted In Place Holder, Trying to insert elsewhere');
@@ -379,6 +380,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
                 calculatePlacesExpenses();
+                for(var i = 0; i < removedPlacesList.length; i++){
+                    if(removedPlacesList[i].dateItineraryIndex == dateItineraryIndex && removedPlacesList[i].index == index){
+                        removedPlacesList.splice(i,1);
+                        break;
+                    }
+                }
             }
         }
         else {
