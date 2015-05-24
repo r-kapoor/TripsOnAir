@@ -2193,7 +2193,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.getHotelExitTime = function(dateWisePlaceData, currentIndex,morningCheckIn){
-        console.log("currentIndex:"+currentIndex+","+$scope.currentDestination.dateWiseItinerary.length);
+        //console.log("currentIndex:"+currentIndex+","+$scope.currentDestination.dateWiseItinerary.length);
 
         if((dateWisePlaceData.typeOfDay == 1 && currentIndex ==$scope.currentDestination.dateWiseItinerary.length-1)||dateWisePlaceData.typeOfDay == 2){
             return $scope.currentDestination.hotelDetails.checkOutTime;
