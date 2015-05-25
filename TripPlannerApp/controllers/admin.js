@@ -79,6 +79,14 @@ module.exports=function (app){
 
     });
 
+    app.get('/admin/newPlace', function(req, res)
+    {
+        console.log('In GET admin/newPlaces');
+        var placeObject = {};
+        placeObject.Taste = tasteIntegerToObject.tasteIntegerToObject(0);
+        res.json(placeObject);
+    });
+
     app.get('/admin',function(req,res)
     {
         //Getting the paramters passed

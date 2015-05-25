@@ -61,6 +61,18 @@ adminModule.controller('newPlaceController', function($scope, $http){
     $scope.place = {};
     $scope.place.PlaceTimings = [{}];
 
+    $scope.loadEmptyPlace = function(){
+        $http.get('/admin/newPlace')
+            .success(function(data, status){
+                $scope.place = data;
+            })
+            .error(function(data, status){
+                console.log('Backend Request Failed');
+            })
+    };
+
+    $scope.loadEmptyPlace();
+
     $scope.submit = function() {
         console.log(JSON.stringify($scope.place));
         $http.post('/admin/newPlace',{
