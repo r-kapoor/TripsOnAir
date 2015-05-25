@@ -382,7 +382,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
                 calculatePlacesExpenses();
-                markPlaceAsAdded(place);
+                markPlaceAsAdded(currentPlace);
+                markPlaceAsNotAdded(place);
                 for(var i = 0; i < removedPlacesList.length; i++){
                     if(removedPlacesList[i].dateItineraryIndex == dateItineraryIndex && removedPlacesList[i].index == index){
                         removedPlacesList.splice(i,1);

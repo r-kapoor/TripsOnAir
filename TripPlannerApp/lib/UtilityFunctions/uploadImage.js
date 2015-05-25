@@ -34,25 +34,26 @@ function uploadImages()
     var filePath;
     for(var i in files)
     {
+        console.log(files[i]);
         if(files[i].indexOf("png")!=-1||files[i].indexOf("jpg")!=-1) {
             filePath = path+"/"+files[i];
             //console.log(files[i]);
-            cloudinary.uploader.upload(
-                filePath,
-                function(result) { console.log(result); },
-                {
-                    public_id: '123',
-                    crop: 'limit',
-                    width: 600,
-                    height: 250,
-                    eager: [
-                        { width: 200, height: 200, crop: 'thumb', gravity: 'face',
-                            radius: 20, effect: 'sepia' },
-                        { width: 100, height: 150, crop: 'fit', format: 'png' }
-                    ],
-                    tags: ['myPic', 'NamePerson']
-                }
-            )
+            //cloudinary.uploader.upload(
+            //    filePath,
+            //    function(result) { console.log(result); },
+            //    {
+            //        public_id: '123',
+            //        crop: 'limit',
+            //        width: 600,
+            //        height: 250,
+            //        eager: [
+            //            { width: 200, height: 200, crop: 'thumb', gravity: 'face',
+            //                radius: 20, effect: 'sepia' },
+            //            { width: 100, height: 150, crop: 'fit', format: 'png' }
+            //        ],
+            //        tags: ['myPic', 'NamePerson']
+            //    }
+            //)
         }
         else
         {
