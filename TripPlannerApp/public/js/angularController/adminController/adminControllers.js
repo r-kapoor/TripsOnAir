@@ -65,6 +65,7 @@ adminModule.controller('newPlaceController', function($scope, $http){
         $http.get('/admin/newPlace')
             .success(function(data, status){
                 $scope.place = data;
+                $scope.place.PlaceTimings = [{}];
             })
             .error(function(data, status){
                 console.log('Backend Request Failed');
@@ -81,7 +82,7 @@ adminModule.controller('newPlaceController', function($scope, $http){
             console.log("Place response:"+JSON.stringify(data));
             if(data.Status == "SUCCESS"){
                 $scope.alerts.push({ type: 'success', msg: 'Success' });
-                $scope.place = null;
+                $scope.loadEmptyPlace();
             }
             else {
                 $scope.alerts.push({ type: 'danger', msg: 'Failed' });

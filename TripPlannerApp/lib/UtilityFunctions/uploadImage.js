@@ -4,6 +4,9 @@
 
 var cloudinary = require('cloudinary');
 var fs = require('fs');
+var encodePlaceID = require('../../lib/hashEncoderDecoder');
+var lineReader = require('line-reader');
+var conn = require('../../lib/database');
 
 cloudinary.config({
     cloud_name: 'picsonair',
@@ -11,56 +14,99 @@ cloudinary.config({
     api_secret: 'R9WfEeCpaAgt4YUbd3Ag_F5YtGA'
 });
 
-//cloudinary.uploader.upload("../../public/images/nature.png", function(result) {
-//    console.log(result);
-//});
-
-//cloudinary.uploader.upload();
-
-//var files = fs.readdirSync('../../public/images/');
-//for (var i in files) {
-//    console.log(files[i]);
-//}
-
-//process.argv.forEach(function (val, index, array) {
-//    console.log(index + ': ' + val);
-//});
-
 function uploadImages()
 {
-    var folder = process.argv[2];
+    var folder = process.argv[3];
     var path = "../../public/images/"+folder;
     var files = fs.readdirSync(path);
     var filePath;
+    var encodedPlaceID;
     for(var i in files)
     {
-        console.log(files[i]);
+        filePath = path+"/"+files[i];
+        console.log(filePath);
+        //console.log(files[i]);
         if(files[i].indexOf("png")!=-1||files[i].indexOf("jpg")!=-1) {
-            filePath = path+"/"+files[i];
+            var idWithImageNumber = files[i].split("-");
+            var placeID = idWithImageNumber[0];
+            var imageNumber = idWithImageNumber[1].replace ( /[^\d]/g, '' );
+            console.log(placeID+","+imageNumber);
+            encodedPlaceID = encodePlaceID.encodePlaceID(parseInt(placeID))+"-"+imageNumber;
+
+            console.log("encodePlaceID:"+encodedPlaceID);
             //console.log(files[i]);
-            //cloudinary.uploader.upload(
-            //    filePath,
-            //    function(result) { console.log(result); },
-            //    {
-            //        public_id: '123',
-            //        crop: 'limit',
-            //        width: 600,
-            //        height: 250,
-            //        eager: [
-            //            { width: 200, height: 200, crop: 'thumb', gravity: 'face',
-            //                radius: 20, effect: 'sepia' },
-            //            { width: 100, height: 150, crop: 'fit', format: 'png' }
-            //        ],
-            //        tags: ['myPic', 'NamePerson']
-            //    }
-            //)
-        }
-        else
-        {
-            console.log("----------Error---------");
-            console.log("Convert "+files[i]+" to jpg or png");
+            cloudinary.uploader.upload(
+                filePath,
+                function(result) { console.log(result); },
+                {
+                    public_id: encodedPlaceID,
+                    eager: [
+                        { width: 300, height: 150, crop: 'limit', format: 'png' }
+                        //{ width: 400, height: 50, crop: 'limit', format: 'png' }
+                    ]
+                }
+            )
         }
     }
 }
 
-uploadImages();
+function updateData()
+{
+    var filePath;
+    var folder = process.argv[3];
+    var path = "\\..\\..\\public\\images\\"+folder;
+    var files = fs.readdirSync(__dirname+path);
+    var connection=conn.conn();
+    connection.connect();
+    console.log("__dirname:"+__dirname);
+    for(var i in files) {
+        filePath = __dirname + path + files[i];
+        console.log(filePath);
+        if (files[i].indexOf("txt") != -1) {
+            var queryString = 'LOAD DATA LOCAL INFILE '+connection.escape(filePath)+' '
+                + ' INTO TABLE Place_Image '
+                + ' FIELDS TERMINATED BY \',\' '
+                + ' OPTIONALLY ENCLOSED BY \'"\';';
+
+            connection.query(queryString, function (err, rows, fields) {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    //for (var i in rows) {
+                    //    console.log("Returned Cities from db:"+rows[i].CityID+','+rows[i].CityName);
+                    //    cityIDs[cityNames.indexOf(rows[i].CityName)] = rows[i].CityID;
+                    //}
+                    console.log("Query Success!!");
+                }
+                //callback();
+            });
+            connection.end();
+        }
+    }
+}
+//uploadImages();
+//updateData();
+
+//lineReader.eachLine(filePath, function(line, last) {
+//    console.log(line);
+//    console.log("Read one line");
+    //if (0) {
+    //    return false; // stop reading
+    //}
+//});
+
+function onCommandLine()
+{
+    var functionName = process.argv[2];
+    if(functionName.toLowerCase()=='uploadimages')
+    {
+        uploadImages();
+    }
+    else if(functionName.toLowerCase() =='updatedata')
+    {
+        updateData();
+    }
+}
+
+onCommandLine();

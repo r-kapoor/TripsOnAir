@@ -31,6 +31,7 @@ connection.query(queryString, function(err, rows, fields) {
 				}
 			    else{
 			    	for (var i in rows) {
+                        rows[i].PlaceID= hashidEncoder.encodePlaceID(parseInt(rows[i].PlaceID));
                         rows[i].placeAdded = false;
                         rows[i].PlaceTimings = [];
                         rows[i].PlaceTimings.push({
