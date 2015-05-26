@@ -45,6 +45,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.isHover = true;
 
+    $scope.isNewPlace = false;
+
     var responsedata;
 
     var SPEED = 15;//km/hr
@@ -171,6 +173,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         };
         calculatePlacesExpenses();
         calculateCityExpenses();
+        $rootScope.$emit('newPlace', destination.name);
     };
 
     $scope.showPlaceDetails = function() {
