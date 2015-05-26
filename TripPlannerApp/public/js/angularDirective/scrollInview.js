@@ -5,10 +5,12 @@
 (function() {
     angular.module("ngScrollInView", []);
 
-    angular.module("ngScrollInView").directive('scrollView', function ($parse, $document, $window) {
+    angular.module("ngScrollInView").directive('scrollView', function ($parse, $document, $window, $rootScope) {
         var _ = $window._;
         var verge = $window.verge;
         var visibleElements = [];
+        var refresh = false;
+        var lastName = null;
         return {
             restrict: 'A',
             scope: {
@@ -17,9 +19,6 @@
             },
             link: function (scope, element, attrs) {
                 var debounced = _.debounce(function() {
-                    // You might need a different test,
-                    // perhaps including the height of the element,
-                    // or using verge "rectangle" function
                     var visible = verge.inViewport(element);
                     var index = visibleElements.indexOf(scope.scrollItem);
                     var previouslyVisible = (index != -1);
@@ -29,10 +28,23 @@
                             scope.scroll({item:scope.scrollItem});
                         });
                     }
+                    console.log('visibleElements:'+JSON.stringify(visibleElements));
                     if (!visible && previouslyVisible) {
                         visibleElements.splice(index, 1);
+                        console.log('visibleElements:'+JSON.stringify(visibleElements));
                     }
                 }, 10);
+                $rootScope.$on('newPlace', function onNew(event, name){
+                    if(lastName == null || lastName != name){
+                        refresh = true;
+                        lastName = name;
+                    }
+                });
+                if(refresh){
+                    angular.element($document).unbind('scroll');
+                    refresh = false;
+                    angular.element($document).on('scroll', debounced);
+                }
                 angular.element($document).on('scroll', debounced);
                 if (verge.inViewport(element)) {
                     visibleElements.push(element);
