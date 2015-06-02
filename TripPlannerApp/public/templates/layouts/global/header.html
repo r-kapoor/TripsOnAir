@@ -1,34 +1,27 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8"/>
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<title>Plan Trips in customized and personalized way at tripsonair.com</title>
-	</head>
-<body class="home">
-	<!-- Fixed navbar -->
-	<div class="navbar navbar-static-top" style="margin-bottom:0px" >
-		<div class="container" style="height:12vh">
-			<div class="navbar-header">
-				<!-- Button for smallest screens -->
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand">
-                    <img src="/images/LogoB.png" alt="tripsonair" class="img-responsive" style="width: 100%">
-				</a>
-			</div>
-			<div class="navbar-collapse collapse" >
-				<ul class="nav navbar-nav pull-right" ng-controller="indraController">
-                    <li ng-click="submitPage()" ng-if="isSaveShown"><a class="btn round" style="background-color: #ff7310;color: #ffffff; font-weight: bold">{{saveText}}</a></li>
-                    <li><a class="btn btn-primary" href="signin.html">Login</a></li>
-                    <li id="budgetHeadBtn" ng-if="isBudgetShown" ng-click="toggleBudgetPanel()">
-                        <a class="btn btn-primary" type="button">
-                            Budget Spent <span class="badge">{{budgetPercent}}%</span>
-                        </a>
-                    </li>
-				</ul>
-			</div><!--/.nav-collapse -->
-		</div>
-	</div>
-	<script src="js/bootstrapJS/bootstrap.min.js"></script>
-</body>
-</html>
+<header id="header" class="header">
+    <div class="container">
+        <h1 class="logo">
+            <a href=""><img src="/images/Logo.png" alt="tripsonair" class="img-responsive" style="width: 100%"></a>
+        </h1><!--//logo-->
+        <nav class="main-nav navbar-right" role="navigation">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="sr-only"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button><!--//nav-toggle-->
+            </div><!--//navbar-header-->
+            <div id="navbar-collapse" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" ng-controller="indraController">
+                    <li ng-if="isHomeShown" class="active nav-item"><a href="">Home</a></li>
+                    <li ng-if="isHowItWorksShown" class="nav-item nav-item-cta last"><a  class="btn btn-cta btn-cta-secondary" href="">How it Works</a></li>
+                    <li ng-if="isLogInShown" class="nav-item"><a href="">Log in</a></li>
+                    <li ng-if="isSaveShown"  ng-click="submitPage()" class="nav-item"><a href="">{{saveText}}</a></li>
+                    <li ng-if="isSignUpShown" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Sign Up Free</a></li>
+                    <li id="budgetHeadBtn" ng-if="isBudgetPercentShown" ng-mouseover="setChildClassOnHover()" ng-mouseleave="setChildClassOnOut()" ng-click="toggleBudgetPanel()" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Budget Spent<span class="badge {{budgetBadgeClass}}">{{budgetPercent}}%</span></a></li>
+                </ul><!--//nav-->
+            </div><!--//navabr-collapse-->
+        </nav><!--//main-nav-->
+    </div><!--//container-->
+</header><!--//header-

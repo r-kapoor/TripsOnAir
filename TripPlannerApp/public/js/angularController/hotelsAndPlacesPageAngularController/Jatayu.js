@@ -47,14 +47,6 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
             };
             console.log('Map Initialized');
             $scope.map = new google.maps.Map(mapCanvas, mapOptions);
-            //$scope.addMarker(markerPosition);
-            //$scope.addMarker(markerPosition1);
-            console.log('Map Initialized');
-            //$scope.showRoute(markerPosition, markerPosition1);
-            //$scope.showPath(encodedPath);
-            console.log('Map Initialized');
-            // $scope.showFlightPath(markerPosition, markerPosition1);
-            console.log('Map Initialized');
         }
         angular.element(window).ready(function () {
             initialize();
@@ -76,21 +68,28 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
         }
     });
 
-    $scope.$on('loadItinerary', function onLoadItinerary(event, dateItinerary,dateItineraryIndex,hotel) {
+    $scope.$on('loadItinerary', function onLoadItinerary(event, dateItinerary,dateItineraryIndex,startLocationPosition, endLocationPosition) {
         console.log('Load Itinerary');
+        var startEndSame = false;
+        if(startLocationPosition.Latitude == endLocationPosition.Latitude && startLocationPosition.Longitude == endLocationPosition.Longitude){
+            startEndSame = true;
+        }
         if($scope.isMapInitialized)
         {
             if(mapData.getRouteNthData(dateItineraryIndex))
             {
                 removeAllMarkers();
                 var markerIndex = 0;
-                $scope.addMarker(hotel, 'A');
+                $scope.addMarker(startLocationPosition, 'A');
                 for (var i = 0; i < dateItinerary.permutation.length; i++) {
                     var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[i]];
                     if (!(place.isMeal != undefined && place.isMeal == 1) && !(place.isPlaceRemoved!=undefined && place.isPlaceRemoved==1)) {
                         $scope.addMarker(place, String.fromCharCode('A'.charCodeAt() + markerIndex + 1));
                         markerIndex++;
                     }
+                }
+                if(!startEndSame){
+                    $scope.addMarker(endLocationPosition, String.fromCharCode('A'.charCodeAt() + markerIndex + 1));
                 }
                 removeRoute();
                 directionsDisplay = new google.maps.DirectionsRenderer(
@@ -104,7 +103,7 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
                 var waypoints = [];
                 var markerIndex = 0;
                 removeAllMarkers();
-                $scope.addMarker(hotel, 'A');
+                $scope.addMarker(startLocationPosition, 'A');
                 for (var i = 0; i < dateItinerary.permutation.length; i++) {
                     var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[i]];
                     if (!(place.isMeal != undefined && place.isMeal == 1) && !(place.isPlaceRemoved!=undefined && place.isPlaceRemoved==1)) {
@@ -116,7 +115,10 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
                         });
                     }
                 }
-                $scope.showRoute(hotel, hotel, dateItineraryIndex, waypoints);
+                if(!startEndSame){
+                    $scope.addMarker(endLocationPosition, 'A'.charCodeAt() + markerIndex + 1);
+                }
+                $scope.showRoute(startLocationPosition, endLocationPosition, dateItineraryIndex, waypoints);
                 mapData.setRouteNthData(dateItineraryIndex,true);
             }
         }

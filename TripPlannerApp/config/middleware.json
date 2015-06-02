@@ -1,7 +1,7 @@
 {
     "middleware": {
         "errorPages": {
-            "404": "errors/404",
+            "404": "errors/test",
             "500": "errors/500",
             "503": "errors/503"
         },

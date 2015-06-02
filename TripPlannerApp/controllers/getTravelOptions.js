@@ -12,7 +12,7 @@ module.exports = function (app) {
     	//var model = new getTravelOptionsModel();
     	//res.render('getTravelOptions', model);
     	// res.sendfile('./public/templates/layouts/travelPage/getTravelOptions.html');
-        res.sendfile('./public/templates/layouts/travelPage/getTravelOptions_temp.html');
+        res.sendfile('./public/templates/layouts/travelPage/getTravelOptions.html');
     	/*var origin=req.param("o");
     	var startDate=req.param("stD");
     	var endDate=req.param("enD");

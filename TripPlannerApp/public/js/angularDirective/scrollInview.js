@@ -28,10 +28,8 @@
                             scope.scroll({item:scope.scrollItem});
                         });
                     }
-                    console.log('visibleElements:'+JSON.stringify(visibleElements));
                     if (!visible && previouslyVisible) {
                         visibleElements.splice(index, 1);
-                        console.log('visibleElements:'+JSON.stringify(visibleElements));
                     }
                 }, 10);
                 $rootScope.$on('newPlace', function onNew(event, name){

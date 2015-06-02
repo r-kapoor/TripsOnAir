@@ -1,9 +1,0 @@
-	<div>
-            <ul>
-                {#GroupList}
-                    <li>
-                            <h3><div class="groupDestination" id="{.GroupName}" style="cursor:pointer" >{.GroupName}</div></h3>
-                    </li>
-                {/GroupList}
-            </ul>
-     </div>

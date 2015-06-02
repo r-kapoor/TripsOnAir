@@ -9,7 +9,7 @@
             <i class="col-xs-2 glyphicon glyphicon-map-marker"></i>
             <div class="col-xs-2">Maps</div>
         </label>
-        <label class="btn btn-primary" ng-model="leftPanel" btn-radio="'hotels'">
+        <label ng-hide="!(currentDestination.isHotelRequired != undefined && currentDestination.isHotelRequired == 1)" class="btn btn-primary" ng-model="leftPanel" btn-radio="'hotels'">
             <i class="col-xs-2 glyphicon glyphicon-home"></i>
             <div class="col-xs-2">Hotels</div>
         </label>
