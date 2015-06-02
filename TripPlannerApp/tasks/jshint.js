@@ -10,7 +10,11 @@ module.exports = function jshint(grunt) {
 		//files: ['controllers/**/*.js', 'lib/**/*.js', 'models/**/*.js'],
 		files: ['public/js/angularController/travelPageAngularController/*.js'],
 		options: {
-		    jshintrc: '.jshintrc'
+		    //jshintrc: '.jshintrc',
+            //'-W116' : true,
+            //'-W117' : true,
+            //'-W097' : true,
+            '-W041' : true
 		}
 	};
 };

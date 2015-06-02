@@ -1,7 +1,7 @@
 /**
  * Created by rkapoor on 26/02/15.
  */
-routesModule.controller('suryaController', function($scope, $rootScope, $http, $q, $location, orderedCities, $window) {
+routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', function($scope, $rootScope, $http, $q, $location, orderedCities) {
 
     $scope.reorderPanel=false;
     $scope.reorderList=true;
@@ -88,4 +88,4 @@ routesModule.controller('suryaController', function($scope, $rootScope, $http, $
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
-});
+}]);

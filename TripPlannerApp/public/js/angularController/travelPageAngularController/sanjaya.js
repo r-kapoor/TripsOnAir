@@ -3,7 +3,8 @@
  */
 //var routesMapModule = angular.module('tripdetails.routes.map.app', []);
 //routesMapModule.controller('mapController',  function($scope, $window) {
-routesModule.controller('sanjayaController',  function($scope,$rootScope, $window,orderedCities) {
+routesModule.controller('sanjayaController',  ['$scope','$rootScope', '$window','orderedCities', function($scope,$rootScope, $window,orderedCities) {
+    "use strict";
     $scope.zoomConstants = {
         COUNTRY: 5,
         CITY: 12
@@ -32,7 +33,7 @@ routesModule.controller('sanjayaController',  function($scope,$rootScope, $windo
     var infowindows = [];
     var routePaths = [];
     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-    $scope.map;
+    $scope.map = null;
 
     $scope.zoom = $scope.zoomConstants.COUNTRY;
     $scope.initializeMap = function() {
@@ -80,7 +81,7 @@ routesModule.controller('sanjayaController',  function($scope,$rootScope, $windo
             infowindows[i].setMap(null);
         }
         infowindows = [];
-        for(var i = 0; i < markers.length; i++) {
+        for(i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
         }
         markers = [];
@@ -268,4 +269,4 @@ routesModule.controller('sanjayaController',  function($scope,$rootScope, $windo
         removeRoutePaths();
     });
 
-});
+}]);

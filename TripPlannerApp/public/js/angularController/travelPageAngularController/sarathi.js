@@ -1,4 +1,4 @@
-routesModule.directive('postRepeat', function($timeout) {
+routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     return function($scope,$rootScope, element, $attrs) {
         console.log("testing....");
         console.log("element:"+element.class);
@@ -35,9 +35,9 @@ routesModule.directive('postRepeat', function($timeout) {
             },1000);
         }
     };
-});
+}]);
 
-routesModule.controller('sarthiController', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout) {
+routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout) {
 
     $scope.isTravelPanelOpen=false;
     $scope.isTravelModesPanelOpen=false;
@@ -164,7 +164,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                 $scope.isBusClicked = true;
             }, 500);
         }
-        else if(segment.kind="car"){
+        else if(segment.kind=="car"){
             if(segment.subkind != undefined && segment.subkind == "cab") {
                 if(custom != undefined) {
                     if(custom == 'cabOperator') {
@@ -365,7 +365,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             var segment = $scope.legs[legIndex].defaultRoute.segments;
             for(var segmentIndex = 0; segmentIndex < segment.length; segmentIndex ++) {
                 if(segment[segmentIndex].isMajor == 1) {
-                    majorBudget += parseInt(segment[segmentIndex].indicativePrice.price);
+                    majorBudget += parseInt(segment[segmentIndex].indicativePrice.price, 10);
                     if(segment[segmentIndex].kind == "train" || segment[segmentIndex].kind == "bus") {
                         minorBudget += 300;
                     }
@@ -390,7 +390,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                     }
                 }
                 else {
-                    minorBudget += parseInt(segment[segmentIndex].indicativePrice.price);
+                    minorBudget += parseInt(segment[segmentIndex].indicativePrice.price, 10);
                 }
                 console.log('major budget:'+majorBudget);
                 console.log('minor budget:'+minorBudget);
@@ -500,8 +500,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     };
 
     $scope.getDuration = function(segment) {
-        var duration = parseInt(segment.duration);
-        var hours = parseInt(duration/60);
+        var duration = parseInt(segment.duration, 10);
+        var hours = parseInt(duration/60, 10);
         var minutes = duration%60;
         var returnString = "";
         if(hours > 0) {
@@ -701,8 +701,8 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         }
         else {
             var startTime=new Date($scope.vehicleDate[$index].dt);
-            var hours=parseInt(vehicle.OriginDepartureTime.split(":")[0]);
-            var minutes = parseInt(vehicle.OriginDepartureTime.split(":")[1]);
+            var hours=parseInt(vehicle.OriginDepartureTime.split(":")[0], 10);
+            var minutes = parseInt(vehicle.OriginDepartureTime.split(":")[1], 10);
             startTime.setHours(hours);
             startTime.setMinutes(minutes);
             var duration= getDurationFromStartEndTime(vehicle.OriginDepartureTime,vehicle.DestArrivalTime,vehicle.OriginDay,vehicle.DestDay);
@@ -921,10 +921,10 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     }
 
     function getDurationFromStartEndTime(startTime,endTime,originDay,destDay){
-        var startHours=parseInt(startTime.split(":")[0]);
-        var startMins=parseInt(startTime.split(":")[1]);
-        var endHours=parseInt(endTime.split(":")[0]);
-        var endMins=parseInt(endTime.split(":")[1]);
+        var startHours=parseInt(startTime.split(":")[0], 10);
+        var startMins=parseInt(startTime.split(":")[1], 10);
+        var endHours=parseInt(endTime.split(":")[0], 10);
+        var endMins=parseInt(endTime.split(":")[1], 10);
         var startTimeInMins = startMins+ startHours*60;
         var endTimeInMins = endMins + endHours*60;
 
@@ -940,7 +940,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
             duration = (destDay-originDay-1)*24*60 + endTimeInMins+(24*60-startTimeInMins);
         }
         return duration;
-    };
+    }
 
     function addMinutes(date, minutes) {
         return new Date(date.getTime() + minutes*60000);
@@ -1009,11 +1009,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         for(var i = 0; i < vehicleData.length; i++){
             var vehicleDate;
             if(vehicleData[i].dateLimits.length > 1) {
-                vehicleData[i].dateLimits.sort(function(a,b) {
-                    a = new Date(a);
-                    b = new Date(b);
-                    return a.getTime() - b.getTime();
-                });
+                vehicleData[i].dateLimits.sort(getTimeDifference);
                 if(vehicleData[i].isFinal != undefined && vehicleData[i].isFinal == 1){
                     vehicleDate = {
                         dt:startTime,
@@ -1050,9 +1046,14 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
                     disabled:false,
                     minDate:null,
                     maxDate:null
-                }
+                };
             }
             $scope.vehicleDate.push(vehicleDate);
+        }
+        function getTimeDifference(a,b) {
+            a = new Date(a);
+            b = new Date(b);
+            return a.getTime() - b.getTime();
         }
     }
 
@@ -1238,7 +1239,7 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
         travelData.travelBudget = $scope.travelBudget;
         travelData.minorTravelBudget = $scope.minorBudget;
         travelData = JSON.stringify(travelData);
-        var formElement=angular.element('<form\>');
+        var formElement=angular.element('<form>');
         formElement.attr("action","/"+'showPlacesAndHotels');
         formElement.attr("method","POST");
         var d=angular.element("<input type='hidden'/>");
@@ -1268,4 +1269,4 @@ routesModule.controller('sarthiController', function($scope, $rootScope, $http, 
     //    body.append(formElement);
     //    formElement.submit();
     //};
-});
+}]);

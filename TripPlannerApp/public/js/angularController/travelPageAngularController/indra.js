@@ -1,9 +1,9 @@
 /**
  * Created by rkapoor on 01/05/15.
  */
-
-routesModule.controller('indraController', function($scope, $rootScope,$location) {
-
+var routesModule;
+routesModule.controller("indraController", ['$scope', '$rootScope','$location', function($scope, $rootScope,$location) {
+    "use strict";
     $scope.isHomeShown = false;
     $scope.isHowItWorksShown = false;
     $scope.isLogInShown = false;
@@ -17,8 +17,8 @@ routesModule.controller('indraController', function($scope, $rootScope,$location
 
     $scope.submitPage = function(){
         var currentURL = $location.absUrl();
-        var pathArray = currentURL.split('?');
-        var destinations = getParameterByName('dsts').split(";");
+        var pathArray = currentURL.split("?");
+        var destinations = getParameterByName("dsts").split(";");
         if(pathArray.length>1)
         {
             if(destinations.length==1)
@@ -58,5 +58,5 @@ routesModule.controller('indraController', function($scope, $rootScope,$location
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
-});
+}]);
 

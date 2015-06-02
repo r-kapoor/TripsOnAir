@@ -11,8 +11,6 @@ module.exports = function concat(grunt) {
     return {
         dist : {
             src : [
-                'public/js/angularJS/angular.min.js',
-                'public/js/bootstrapJS/ui-bootstrap.min.js',
                 'public/js/angularController/travelPageAngularController/routesApp.js',
                 'public/js/angularController/travelPageAngularController/shabari.js',
                 'public/js/angularController/travelPageAngularController/sanjaya.js',

@@ -2,8 +2,9 @@
  * Created by rkapoor on 21/03/15.
  */
 
-routesModule.controller('balaramaController', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout) {
-
+var routesModule;
+routesModule.controller('balaramaController', ['$scope', '$rootScope', function($scope, $rootScope) {
+    "use strict";
     $scope.alerts = [];
     var isBudgetAlertPresent=false;
     var messages =
@@ -23,7 +24,7 @@ routesModule.controller('balaramaController', function($scope, $rootScope, $http
         var alert=messages[category];
         var alertClone = JSON.parse(JSON.stringify(alert));
         removeAlert(alertClone.kind);
-        if(params!=undefined)
+        if(params!==undefined)
         {
             alertClone.msg = alertClone.msg.replace('?',params);
         }
@@ -36,9 +37,9 @@ routesModule.controller('balaramaController', function($scope, $rootScope, $http
 
     var removeAlert = function (kind) {
         for (var alertIndex in $scope.alerts) {
-            if ($scope.alerts[alertIndex].kind == kind) {
+            if ($scope.alerts[alertIndex].kind === kind) {
                 $scope.alerts.splice(alertIndex, 1);
             }
         }
     };
-});
+}]);
