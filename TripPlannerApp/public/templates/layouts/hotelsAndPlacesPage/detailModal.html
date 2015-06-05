@@ -1,0 +1,51 @@
+<script type="text/ng-template" id="detailModalContent.html">
+    <div class="modal-header">
+        <h4 class="modal-title text-center">{{itemDetails.Name}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+        <div class="col-sm-8">
+            <div style="height: 305px">
+                <carousel interval="myInterval">
+                    <slide ng-repeat="slide in slides" active="slide.active">
+                        <img ng-src="{{slide.image}}" style="margin:auto;">
+                    </slide>
+                </carousel>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div ng-repeat="timing in itemDetails.PlaceTimings">
+                <div ng-if="timing.Days=='0'">
+                <div class="col-sm-4">
+                    All Days
+                </div>
+                    <div class="col-sm-8">
+                        {{getDateFromString(timing.TimeStart) | date:'shortTime'}} - {{getDateFromString(timing.TimeEnd) | date:'shortTime'}}
+                    </div>
+                </div>
+                <div ng-if="timing.Days!='0'">
+                    <div class="row">
+                        <div class="btn-group" role="group" aria-label="">
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,1)}}">Sn</button>
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,2)}}">M</button>
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,3)}}">T</button>
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,4)}}">W</button>
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,5)}}">Th</button>
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,6)}}">F</button>
+                            <button type="button" class="btn btn-sm {{getDayClass(timing.Days,7)}}">S</button>
+                        </div>
+                    </div>
+                    <div class="row text-center" style="padding-top: 2px;padding-bottom: 4px;font-size: small">
+                        {{getDateFromString(timing.TimeStart) | date:'shortTime'}} - {{getDateFromString(timing.TimeEnd) | date:'shortTime'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+        <div class="well col-sm-12">
+        {{itemDetails.Description}}
+        </div>
+        </div>
+    </div>
+</script>

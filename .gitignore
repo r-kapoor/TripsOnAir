@@ -11,3 +11,5 @@ TripPlannerApp/.settings
 TripPlannerApp/.idea/
 #Production Files
 TripPlannerApp/public/js/production/**
+#database file
+TripPlannerApp/lib/database.js
