@@ -9,3 +9,5 @@ CrawlHTMLUnit/.metadata/
 TripPlannerApp/.settings
 #WebStorm metadata
 TripPlannerApp/.idea/
+#Production Files
+TripPlannerApp/public/js/production/**
