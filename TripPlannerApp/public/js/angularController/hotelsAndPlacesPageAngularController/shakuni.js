@@ -47,7 +47,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.isHover = true;
 
     $scope.isNewPlace = false;
-
+    $scope.animationsEnabled = true;
     var responseData;
 
     var SPEED = 15;//km/hr
@@ -178,13 +178,25 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         $rootScope.$emit('newPlace', destination.name);
     };
 
-    $scope.showPlaceDetails = function() {
+    $scope.showLeftPanelDetails = function(item) {
         if($scope.stopClickClass == 'stop-click') {
             $scope.stopClickClass = 'cursor-click';
         }
         else {
-            console.log('Clicked');
-            alert('Place Clicked');
+            //console.log('Clicked');
+            //alert('Place Clicked');
+            $scope.itemDetails = item;
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'detailModalContent.html',
+                controller: 'detailModalInstanceCtrl',
+                size: 'lg',
+                resolve: {
+                    itemDetails: function () {
+                        return $scope.itemDetails;
+                    }
+                }
+            });
         }
     };
     $scope.closeBudgetPanel = function(){

@@ -22,6 +22,7 @@
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/hanuman.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/indra.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/saveModalInstance.js"></script>
+    <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/detailsModalInstance.js"></script>
     <script type="text/javascript" src="js/angularDirective/budgetPanelPosition.js"></script>
     <script type="text/javascript" src="js/angularJS/verge.min.js"></script>
     <script type="text/javascript" src="js/angularJS/lodash.min.js"></script>
@@ -57,6 +58,7 @@
             </div>
             <div ng-include src="'templates/layouts/hotelsAndPlacesPage/budgetPanel.html'"></div>
             <div ng-include src="'templates/layouts/hotelsAndPlacesPage/saveModal.html'"></div>
+            <div ng-include src="'templates/layouts/hotelsAndPlacesPage/detailModal.html'"></div>
         </div>
         <div ng-controller="hanumanController" class="alert-box">
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
