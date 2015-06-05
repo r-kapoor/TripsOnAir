@@ -33,7 +33,7 @@ module.exports = function(app) {
         endTime = JSON.parse(endTime);
         tastes = JSON.parse(tastes);
         var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
-        
+
         console.log(startDate.getDay()+","+endDate+","+"stTime:"+startTime.morning+","+tastes);
 		// Get the range of travel according to user budget and number of days
 		getRange.getRange(budget, startDate, startTime, endDate, endTime, function(range) {
@@ -68,7 +68,7 @@ module.exports = function(app) {
         endTime = JSON.parse(endTime);
         tastes = JSON.parse(tastes);
         var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
-        
+
 		getRange.getRange(budget, startDate, startTime, endDate, endTime, function(range) {
 			getGroup.getGroupList(conn, orgLat, orgLong, tastes, range, start, batchsize, function(groupRows) {
 				var model = {
@@ -106,9 +106,15 @@ module.exports = function(app) {
             destinations = [];
             destinations.push(destination);
         }
-        tastes = JSON.parse(tastes);
-        var  tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
-        
+
+        if(tastes != undefined){
+            tastes = JSON.parse(tastes);
+            tastes=tasteObjectToInteger.tasteObjectToInteger(tastes);
+        }
+        else {
+            tastes=tasteObjectToInteger.tasteObjectToInteger({});
+        }
+
 		getNearbyCity.getNearbyCityList(conn, destinations, orgLat, orgLong, tastes,
 				distRemaining, start, batchsize, function(nearbyCityRows) {
 					var model = {
