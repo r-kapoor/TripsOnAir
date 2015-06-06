@@ -9,7 +9,7 @@
     <!--</div>-->
     <nav class="navbar navbar-default" fix-top collapse="isDateBarCollapsed">
         <ul class="pager">
-            <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="currentDay == 0">Previous</a></li>
+            <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>
             <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
             <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
         </ul>

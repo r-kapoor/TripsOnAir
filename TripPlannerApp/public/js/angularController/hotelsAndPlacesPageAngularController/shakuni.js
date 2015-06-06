@@ -328,6 +328,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                 }
                 if(dateWisePlaceData.typeOfDay == 2){
+                console.log("LAST DAY ADDITION");
                     //This is the last day
                     if(dateWisePlaceData.endSightSeeingTime != undefined && !(dateWisePlaceData.noPlacesVisited != undefined && dateWiseItinerary.noPlacesVisited == 1)){
                         //There are some places to visit on that day
@@ -1031,7 +1032,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             {
                 finalPlace2DepartureTime = place1DepartureTime;
                // alert("place is closed");//ALERT8
-                createAlert('reorderAndPlaceClosed');
+                createAlert('reorderAndClosed');
             }
             console.log(finalPlace2DepartureTime);
             place2.placeDepartureTime = finalPlace2DepartureTime;
@@ -1192,16 +1193,28 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             if(selectedPlace1TimeIndex!= -1 && selectedPlace2TimeIndex != -1){
                 if(getTimeFromDate(place1DepartureTime) - getTimeFromDate(place2ArrivalTime) > minimumTimeNeeded){
                     //There is sufficient time to cover
-                    if(!checkIfClosedAtPlaceTiming(place1.PlaceTimings[selectedPlace1TimeIndex], place1ArrivalTime) && !checkIfClosedAtPlaceTiming(place2.PlaceTimings[selectedPlace2TimeIndex], place2DepartureTime)){
+                    var isPlace1Closed = checkIfClosedAtPlaceTiming(place1.PlaceTimings[selectedPlace1TimeIndex], place1ArrivalTime);
+                    var isPlace2Closed = checkIfClosedAtPlaceTiming(place2.PlaceTimings[selectedPlace2TimeIndex], place2DepartureTime);
+                    if(!isPlace1Closed && !isPlace2Closed){
                         return true;
                     }
                     else {
                         console.log(JSON.stringify(place1.PlaceTimings[selectedPlace1TimeIndex]) +" for "+place1ArrivalTime);
                         console.log(JSON.stringify(place2.PlaceTimings[selectedPlace2TimeIndex]) +" for "+place2DepartureTime);
                         //alert('Place closed at departure/arrival times');//ALERT10
-                        createAlert('reorderAndPlaceClosed');
+                        if(isPlace1Closed && isPlace2Closed)
+                        {
+                            createAlert('reorderAndClosed');
+                        }
+                        else if(isPlace1Closed)
+                        {
+                            createAlert('reorderAndPlaceClosed',place1.Name);
+                        }
+                        else
+                        {
+                            createAlert('reorderAndPlaceClosed',place2.Name);
+                        }
                     }
-
                 }
                 else {
                    // alert('Not enough time to cover places in this order');//ALERT11
@@ -1210,7 +1223,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
             else{
                // alert('Places closed at this time');//ALERT10
-                createAlert('reorderAndPlaceClosed');
+                if(selectedPlace1TimeIndex==-1 && selectedPlace2TimeIndex==-1)
+                {
+                    createAlert('reorderAndClosed');
+                }
+                else if(selectedPlace1TimeIndex==-1)
+                {
+                    createAlert('reorderAndPlaceClosed',place1.Name);
+                }
+                else
+                {
+                    createAlert('reorderAndPlaceClosed',place2.Name);
+                }
             }
             return true;
         }
@@ -1546,6 +1570,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 if(candidate.type == "checkIn") {
                     dateWiseItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - place.timeToHotel * HOURS_TO_MILLISECONDS);
                 }
+                if( dateWiseItinerary.dateWisePlaceData.noPlacesVisited!=undefined && dateWiseItinerary.dateWisePlaceData.noPlacesVisited==1)
+                {
+                    dateWiseItinerary.dateWisePlaceData.noPlacesVisited = 0;
+                }
             }
             else if(freeTiming.insertionDay == 1){
                 //The insertion is on the next day
@@ -1564,6 +1592,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 }
                 setPlaceArrivalTime(place, freeTiming);
                 nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - place.timeToHotel * HOURS_TO_MILLISECONDS);
+                if( nextDateWiseItinerary.dateWisePlaceData.noPlacesVisited!=undefined && nextDateWiseItinerary.dateWisePlaceData.noPlacesVisited==1)
+                {
+                    nextDateWiseItinerary.dateWisePlaceData.noPlacesVisited = 0;
+                }
+                console.log("nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime:"+nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime+","+place.timeToHotel);
                 if(candidate.type == "checkOut") {
                     nextDateWiseItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + place.timeToHotel * HOURS_TO_MILLISECONDS);
                 }
@@ -2238,6 +2271,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             return $scope.currentDestination.hotelDetails.checkOutTime;
         }
         else if(morningCheckIn != undefined && morningCheckIn) {
+            if(dateWisePlaceData.noPlacesVisited != undefined && dateWisePlaceData.noPlacesVisited == 1)
+            {
+                return $scope.currentDestination.dateWiseItinerary[currentIndex+1].dateWisePlaceData.startSightSeeingTime;
+            }
             return dateWisePlaceData.startSightSeeingTime;
         }
         if($scope.currentDestination.dateWiseItinerary[currentIndex+1].dateWisePlaceData.noPlacesVisited != undefined && $scope.currentDestination.dateWiseItinerary[currentIndex+1].dateWisePlaceData.noPlacesVisited == 1) {
@@ -2611,10 +2648,21 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         return true;
     };
 
+    $scope.isPreviousDisable = function(){
+        if($scope.currentDay == 0)
+        {
+            return true;
+        }
+        else if($scope.currentDay>0 && $scope.currentDestination.dateWiseItinerary[$scope.currentDay-1].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay-1].dateWisePlaceData.noPlacesVisited==1)
+        {
+            return true;
+        }
+        return false;
+    };
+
     function createAlert(category,param){
         $rootScope.$emit('showRecommendation',category,param);
     }
-
 
     function markPlaceAsAdded(place){
         place.placeAdded = true;
