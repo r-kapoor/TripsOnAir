@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 11, 2014 11:23:25 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.hibernate.PlaceCharges" table="Place_Charges" catalog="Holiday">
+    <class name="com.hibernate.PlaceCharges" table="Place_Charges_Crawl" catalog="Holiday">
         <id name="placeID" type="int">
             <column name="PlaceID" />
             <generator class="assigned" />
