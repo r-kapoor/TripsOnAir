@@ -3,6 +3,7 @@ TripPlannerApp/.build
 TripPlannerApp/npm-debug.log
 #node_modules
 TripPlannerApp/node_modules/**
+TripPlannerApp/node_modules/
 #Eclipse metadata
 .metadata/**
 CrawlHTMLUnit/.metadata/
