@@ -277,6 +277,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 itineraryIndex = parseInt(itineraryIndex);
                 var dateWiseItinerary = $scope.currentDestination.dateWiseItinerary[itineraryIndex];
                 var dateWisePlaceData = dateWiseItinerary.dateWisePlaceData;
+
                 if(dateWisePlaceData.typeOfDay == 0) {
                     //Is 1st Day
                     if (dateWiseItinerary.hasMorningCheckIn != undefined && dateWiseItinerary.hasMorningCheckIn) {
@@ -290,10 +291,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                 }
                 if(itineraryIndex < $scope.currentDestination.dateWiseItinerary.length - 1) {
+                    console.log("not morning check in");
                     //This is not the last date in dateWiseItinerary
                     //console.log($scope.currentDestination.dateWiseItinerary);
                     //console.log($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1]);
-                    if ((dateWisePlaceData.endSightSeeingTime != undefined) && ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime != undefined)) {
+                    if ((dateWisePlaceData.endSightSeeingTime != undefined) && ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime != undefined) && ($scope.currentDestination.dateWiseItinerary[itineraryIndex].dateWisePlaceData.noPlacesVisited == undefined)) {
+                        console.log("nightMorning");
                         if (timeDifferenceGreaterThan(dateWisePlaceData.endSightSeeingTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover)) {
                             placeAdditionCandidates.push({
                                 type: 'nightMorning',
@@ -302,24 +305,24 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             });
                         }
                     }
-                    else if (dateWisePlaceData.endSightSeeingTime != undefined) {
-                        if ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.typeOfDay == 2) {
-                            //This is one before last day
-                            if ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.noPlacesVisited == 1) {
-                                console.log("CHECKOUT CASE:"+dateWisePlaceData.endSightSeeingTime +","+ $scope.currentDestination.hotelDetails.checkOutTime+","+ REST_TIME * 60 + Time2Cover)
-                                if (timeDifferenceGreaterThan(dateWisePlaceData.endSightSeeingTime, $scope.currentDestination.hotelDetails.checkOutTime, REST_TIME * 60 + Time2Cover)) {
-                                    placeAdditionCandidates.push({
-                                        type: 'checkOut',
-                                        dateWiseItinerary: dateWiseItinerary,
-                                        dateWiseItineraryIndex:itineraryIndex
-                                    });
-                                }
+                   else if (dateWisePlaceData.endSightSeeingTime != undefined && $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.typeOfDay == 2) {
+                        //This is one before last day
+                        if ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.noPlacesVisited == 1) {
+                            console.log("CHECKOUT CASE:"+dateWisePlaceData.endSightSeeingTime +","+ $scope.currentDestination.hotelDetails.checkOutTime+","+ REST_TIME * 60 + Time2Cover)
+                            if (timeDifferenceGreaterThan(dateWisePlaceData.endSightSeeingTime, $scope.currentDestination.hotelDetails.checkOutTime, REST_TIME * 60 + Time2Cover)) {
+                                placeAdditionCandidates.push({
+                                    type: 'checkOut',
+                                    dateWiseItinerary: dateWiseItinerary,
+                                    dateWiseItineraryIndex:itineraryIndex
+                                });
                             }
                         }
                     }
                     else {
                         if(dateWisePlaceData.typeOfDay == 0){
-                            if($scope.currentDestination.hotelDetails.checkInTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover){
+                            console.log("TYPE OF DAY:0");
+                            if(timeDifferenceGreaterThan($scope.currentDestination.hotelDetails.checkInTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover)){
+                                console.log("timeDifference Greater");
                                 placeAdditionCandidates.push({
                                     type: 'checkIn',
                                     dateWiseItinerary: dateWiseItinerary,
@@ -1272,7 +1275,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         else {
                             //the place is closed at departure time
                             var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
-                            place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex], oldPlace.placeArrivalTime);
+                            place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeEnd, oldPlace.placeArrivalTime);
                             place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
                         }
                     }
@@ -1847,7 +1850,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 var candidate = candidates[candidateIndex];
                 for(var candidateTimingsIndex=0;candidateTimingsIndex<candidate.freeTimingsArray.length;candidateTimingsIndex++)
                 {
-                    var freeDuration = getTimeFromDate(candidate.freeTimingsArray[candidateTimingsIndex].freeEndTime)-getTimeFromDate(candidate.freeTimingsArray[candidateTimingsIndex].freeStartTime);
+                    var freeDuration = getTimeFromDate(candidate.freeTimingsArray[candidateTimingsIndex].highestTime)-getTimeFromDate(candidate.freeTimingsArray[candidateTimingsIndex].lowestTime);
                     if((freeDuration)>duration)
                     {
                         duration = freeDuration;
