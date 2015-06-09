@@ -251,7 +251,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var placeHolderClone = clone(placeHolder);
             var currentPlace = place;
             var currentPlaceClone = clone(currentPlace);
-            if(replacePlace(currentPlaceClone,removedPlacesList[i].index,dateItineraryClone)) {
+            var locationOfArrival = $scope.currentDestination.LocationOfArrival;
+            var locationOfDeparture = $scope.currentDestination.LocationOfDeparture;
+            if(replacePlace(currentPlaceClone,removedPlacesList[i].index,dateItineraryClone, locationOfArrival, locationOfDeparture)) {
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[removedPlacesList[i].dateItineraryIndex] = dateItineraryClone;
                 currentPlaceClone.isPlaceRemoved = 0;
@@ -390,12 +392,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var dateItineraryClone = clone(dateItinerary);
         var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
         var placeClone = clone(place);
+        var locationOfArrival = $scope.currentDestination.LocationOfArrival;
+        var locationOfDeparture = $scope.currentDestination.LocationOfDeparture;
         if(!data.isSwap) {
             //A new place has been dropped from places
             var currentPlace = $scope.allPlaces[data.placeIndex];
             var currentPlaceClone = clone(currentPlace);
             //console.log("replacePlace:"+replacePlace(currentPlaceClone,index,dateItineraryClone));
-            if(replacePlace(currentPlaceClone,index,dateItineraryClone))
+            if(replacePlace(currentPlaceClone,index,dateItineraryClone, locationOfArrival, locationOfDeparture))
             {
                 console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
@@ -1240,7 +1244,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         return false;
     }
-    function replacePlace(place,index,dateItinerary)
+    function replacePlace(place,index,dateItinerary, locationOfArrival, locationOfDeparture)
     {
         var permValue = dateItinerary.permutation[index];
         var oldPlace = dateItinerary.dateWisePlaceData.placesData[permValue];
@@ -1258,35 +1262,102 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
             if(dateItinerary.permutation.length == 1){
                 //This is the only place of the day
-                if(!placeIsClosedAtTime(oldPlace.placeArrivalTime, place.PlaceTimings)){
-                    var supposedDepartureTime = getPlaceDepartureTimeFromArrival(oldPlace.placeArrivalTime, place.Time2Cover);
-                    if(!placeIsClosedAtTime(supposedDepartureTime, place.PlaceTimings)){
-                        place.placeArrivalTime = oldPlace.placeArrivalTime;
-                        place.placeDepartureTime = supposedDepartureTime;
+                if(hasHotel){
+                    if(!placeIsClosedAtTime(oldPlace.placeArrivalTime, place.PlaceTimings)){
+                        var supposedDepartureTime = getPlaceDepartureTimeFromArrival(oldPlace.placeArrivalTime, place.Time2Cover);
+                        if(!placeIsClosedAtTime(supposedDepartureTime, place.PlaceTimings)){
+                            place.placeArrivalTime = oldPlace.placeArrivalTime;
+                            place.placeDepartureTime = supposedDepartureTime;
+                        }
+                        else {
+                            //the place is closed at departure time
+                            var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
+                            place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex], oldPlace.placeArrivalTime);
+                            place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
+                        }
                     }
                     else {
-                        //the place is closed at departure time
-                        var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
-                        place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex], oldPlace.placeArrivalTime);
-                        place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
+                        var nearestTimingIndex = getNearestTimingIndex(oldPlace.placeArrivalTime, place.PlaceTimings);
+                        var nearestTiming = place.PlaceTimings[nearestTimingIndex];
+                        if(getTimeOfDayInMinutesFromDate(oldPlace.placeArrivalTime) > getTimeOfDayInMinutesFromString(nearestTiming.TimeEnd)){
+                            //The current time is after place closes
+                            place.placeDepartureTime = $scope.getDateFromString(nearestTiming.TimeEnd, oldPlace.placeArrivalTime);
+                            place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
+                        }
+                        else {
+                            //The current time is before the place opens
+                            place.placeArrivalTime = $scope.getDateFromString(nearestTiming.TimeStart, oldPlace.placeArrivalTime);
+                            place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
+                        }
                     }
+                    dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
+                    dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
                 }
                 else {
-                    var nearestTimingIndex = getNearestTimingIndex(oldPlace.placeArrivalTime, place.PlaceTimings);
-                    var nearestTiming = place.PlaceTimings[nearestTimingIndex];
-                    if(getTimeOfDayInMinutesFromDate(oldPlace.placeArrivalTime) > getTimeOfDayInMinutesFromString(nearestTiming.TimeEnd)){
-                        //The current time is after place closes
-                        place.placeDepartureTime = $scope.getDateFromString(nearestTiming.TimeEnd, oldPlace.placeArrivalTime);
-                        place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
+                    var distanceFromArrivalToPlace = getDistance(locationOfArrival.Latitude, locationOfArrival.Longitude, place.Latitude, place.Longitude);
+                    var distanceFromPlaceToDeparture = getDistance(place.Latitude, place.Longitude, locationOfDeparture.Latitude, locationOfDeparture.Longitude);
+                    var timeFromArrivalToPlace = distanceFromArrivalToPlace/SPEED;
+                    var timeFromPlaceToDeparture = distanceFromPlaceToDeparture/SPEED;
+
+                    var supposedPlaceArrivalTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.startSightSeeingTime) + timeFromArrivalToPlace*HOURS_TO_MILLISECONDS);
+                    var maxPlaceDepartureTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.endSightSeeingTime) - timeFromPlaceToDeparture*HOURS_TO_MILLISECONDS);
+                    timingIndex = getPlaceTimingsToSelect(supposedPlaceArrivalTime, place.PlaceTimings);
+                    if(timingIndex != -1){
+                        //The place is open when reached directly from the place of arrival
+                        //Trying to fix the whole available time to this place
+                        var timingIndexDeparture = getPlaceTimingsToSelect(maxPlaceDepartureTime, place.PlaceTimings);
+                        if(timingIndex == timingIndexDeparture){
+                            //The place is open at departure time and is the same timing
+                            place.placeArrivalTime = supposedPlaceArrivalTime;
+                            place.placeDepartureTime = maxPlaceDepartureTime;
+                        }
+                        else if(timingIndexDeparture == -1){
+                            //The place closes before departure time
+                            //Fixing the departure time when the place closes
+                            place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeEnd, oldPlace.placeArrivalTime);
+                            place.placeArrivalTime = supposedPlaceArrivalTime;
+                        }
+                        else {
+                            //The place is open at both times but in different place timings
+                            //Need to select the time where more time is spent
+                            var departureTimeAccordingToArrival = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeEnd, oldPlace.placeArrivalTime);
+                            var arrivalTimeAccordingToDeparture = $scope.getDateFromString(place.PlaceTimings[timingIndexDeparture].TimeStart, oldPlace.placeArrivalTime);
+                            var durationAccordingToArrival = getTimeFromDate(departureTimeAccordingToArrival) - getTimeFromDate(supposedPlaceArrivalTime);
+                            var durationAccordingToDeparture = getTimeFromDate(maxPlaceDepartureTime) - getTimeFromDate(arrivalTimeAccordingToDeparture);
+                            if(durationAccordingToArrival > durationAccordingToDeparture){
+                                place.placeArrivalTime = supposedPlaceArrivalTime;
+                                place.placeDepartureTime = departureTimeAccordingToArrival;
+                            }
+                            else {
+                                place.placeArrivalTime = arrivalTimeAccordingToDeparture;
+                                place.placeDepartureTime = maxPlaceDepartureTime;
+                            }
+                        }
                     }
                     else {
-                        //The current time is before the place opens
-                        place.placeArrivalTime = $scope.getDateFromString(nearestTiming.TimeStart, oldPlace.placeArrivalTime);
-                        place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
+                        //The place is closed when reached directly
+                        timingIndex = getNearestTimingIndexAfterTime(supposedPlaceArrivalTime, place.PlaceTimings);
+                        if(timingIndex != -1){
+                            //Fixing this timing
+                            place.placeArrivalTime = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeStart, oldPlace.placeArrivalTime);
+                            var supposedPlaceDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeEnd, oldPlace.placeArrivalTime);
+                            if(getTimeFromDate(supposedPlaceDepartureTime) > getTimeFromDate(maxPlaceDepartureTime)){
+                                //Departure after endSightSeeingTime
+                                place.placeDepartureTime = maxPlaceDepartureTime;
+                            }
+                            else {
+                                place.placeDepartureTime = supposedPlaceDepartureTime;
+                            }
+                        }
+                        else {
+                            //Place is closed before reaching the destination
+                            place.placeArrivalTime = supposedPlaceArrivalTime;
+                            place.placeDepartureTime = maxPlaceDepartureTime;
+                            createAlert('replaceAndClosedOnArrival',place.Name);
+                        }
                     }
+
                 }
-                dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
-                dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
             }
             else if(index == 0){
                 //This is the first place of the day
@@ -1294,14 +1365,37 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 var nextPlace = dateItinerary.dateWisePlaceData.placesData[permValueNextPlace];
                 var distanceToNextPlace = getDistance(place.Latitude,place.Longitude,nextPlace.Latitude,nextPlace.Longitude);
                 var TimeToNextPlace =   distanceToNextPlace/SPEED;
+
                 place.placeDepartureTime = new Date(getTimeFromDate(nextPlace.placeArrivalTime) - TimeToNextPlace*HOURS_TO_MILLISECONDS);
                 place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime,place.Time2Cover);
 
-                var openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
-                var openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime,place.PlaceTimings);
+                var openingTimeIndexForDeparture = -1, openingTimeIndexForArrival = -1;
+                if(!hasHotel){
+                    //If no hotel then will try to adjust the place arrival time
+                    distanceFromArrivalToPlace = getDistance(locationOfArrival.Latitude, locationOfArrival.Longitude, place.Latitude, place.Longitude);
+                    timeFromArrivalToPlace = distanceFromArrivalToPlace/SPEED;
+                    var minPlaceArrivalTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.startSightSeeingTime) + timeFromArrivalToPlace*HOURS_TO_MILLISECONDS);
+                    if(getTimeFromDate(place.placeArrivalTime) < getTimeFromDate(minPlaceArrivalTime)){
+                        //Arrival time before min arrival. Not possible
+                        if(getTimeFromDate(place.placeDepartureTime) < getTimeFromDate(minPlaceArrivalTime)){
+                            //Departing from place before coming to city
+                            createAlert('replaceAndNoTimeAfterArrival');
+                        }
+                        else{
+                            //Need to adjust arrival time
+                            place.placeArrivalTime = minPlaceArrivalTime;
+                        }
+                    }
+                }
+
+                openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
+                openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime,place.PlaceTimings);
 
                 checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
-                dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
+                if(hasHotel){
+                    //If has hotel then adjust the hotel timings
+                    dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
+                }
             }
             else if(index == dateItinerary.permutation.length -1)
             {
@@ -1312,10 +1406,30 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 var TimeFromLastPlace = distanceFromLastPlace/SPEED;
                 place.placeArrivalTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime) + TimeFromLastPlace*HOURS_TO_MILLISECONDS);
                 place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
+
+                if(!hasHotel){
+                    //No hotel. Try adjusting the place departure time
+                    distanceFromPlaceToDeparture = getDistance(place.Latitude, place.Longitude, locationOfDeparture.Latitude, locationOfDeparture.Longitude);
+                    timeFromPlaceToDeparture = distanceFromPlaceToDeparture/SPEED;
+                    maxPlaceDepartureTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.endSightSeeingTime) - timeFromPlaceToDeparture*HOURS_TO_MILLISECONDS);
+                    if(getTimeFromDate(place.placeDepartureTime) > getTimeFromDate(maxPlaceDepartureTime)){
+                        //Departure after max possible departure time
+                        if(getTimeFromDate(place.placeArrivalTime) > getTimeFromDate(maxPlaceDepartureTime)){
+                            //Arrival also after max possible departure time
+                            createAlert('replaceAndNoTimeBeforeDeparture');
+                        }
+                        else{
+                            //Need to adjust departure time
+                            place.placeDepartureTime = maxPlaceDepartureTime;
+                        }
+                    }
+                }
                 var openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
                 var openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime, place.PlaceTimings);
                 checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
-                dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
+                if(hasHotel){
+                    dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
+                }
             }
             else {
                 //This place is in between some other places
@@ -2147,6 +2261,25 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                 }
                 else if(timeBeforeOpening > 0){
+                    //the time is before the place opens
+                    if(minimumMinutes == -1 || minimumMinutes > timeBeforeOpening){
+                        minimumIndex = timingIndex;
+                        minimumMinutes = timeBeforeOpening;
+                    }
+                }
+            }
+        }
+        return minimumIndex;
+    }
+
+    function getNearestTimingIndexAfterTime(time, placeTimings){
+        var minimumMinutes = -1;
+        var minimumIndex = -1;
+        for(var timingIndex=0; timingIndex < placeTimings.length; timingIndex++){
+            var timing = placeTimings[timingIndex];
+            if($scope.isOnSameDay(time, timing.Days)){
+                var timeBeforeOpening =  getTimeOfDayInMinutesFromString(timing.TimeStart) - getTimeOfDayInMinutesFromDate(time);
+                if(timeBeforeOpening > 0){
                     //the time is before the place opens
                     if(minimumMinutes == -1 || minimumMinutes > timeBeforeOpening){
                         minimumIndex = timingIndex;
