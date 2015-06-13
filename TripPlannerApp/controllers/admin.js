@@ -16,7 +16,7 @@ var async  = require('async');
 
 module.exports=function (app){
 
-    app.get('/admin/places',function(req,res)
+    app.get('/addorchangeplace/places',function(req,res)
     {
         //Getting the paramters passed
         console.log('In admin/places');
@@ -29,7 +29,7 @@ module.exports=function (app){
         });
     });
 
-    app.post('/admin/places',function(req,res)
+    app.post('/addorchangeplace/places',function(req,res)
     {
         //Getting the paramters passed
         console.log('In admin/places POST');
@@ -56,7 +56,7 @@ module.exports=function (app){
         //});
     });
 
-    app.post('/admin/newPlace', function(req, res)
+    app.post('/addorchangeplace/newPlace', function(req, res)
     {
         console.log('In admin/newPlaces POST');
         var placeDetails = req.param('placeDetails');
@@ -79,7 +79,7 @@ module.exports=function (app){
 
     });
 
-    app.get('/admin/newPlace', function(req, res)
+    app.get('/addorchangeplace/newPlace', function(req, res)
     {
         console.log('In GET admin/newPlaces');
         var placeObject = {};
@@ -87,7 +87,7 @@ module.exports=function (app){
         res.json(placeObject);
     });
 
-    app.get('/admin',function(req,res)
+    app.get('/addorchangeplace',function(req,res)
     {
         //Getting the paramters passed
         res.sendfile('./public/templates/layouts/admin/index.html');

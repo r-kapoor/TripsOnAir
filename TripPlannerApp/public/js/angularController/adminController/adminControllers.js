@@ -11,7 +11,7 @@ adminModule.controller('placesController',  function($scope, $rootScope, $routeP
 
        var placeID = $routeParams.placeId;
 
-        $http.get('/admin/places?id='+placeID).success(function(data,status){
+        $http.get('/addorchangeplace/places?id='+placeID).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
             $scope.place = data;
 
@@ -25,7 +25,7 @@ adminModule.controller('placesController',  function($scope, $rootScope, $routeP
 
     $scope.submit = function() {
         console.log(JSON.stringify($scope.place));
-        $http.post('/admin/places',{
+        $http.post('/addorchangeplace/places',{
             placeDetails: $scope.place
         }).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
@@ -62,7 +62,7 @@ adminModule.controller('newPlaceController', function($scope, $http){
     $scope.place.PlaceTimings = [{}];
 
     $scope.loadEmptyPlace = function(){
-        $http.get('/admin/newPlace')
+        $http.get('/addorchangeplace/newPlace')
             .success(function(data, status){
                 $scope.place = data;
                 $scope.place.PlaceTimings = [{}];
@@ -76,7 +76,7 @@ adminModule.controller('newPlaceController', function($scope, $http){
 
     $scope.submit = function() {
         console.log(JSON.stringify($scope.place));
-        $http.post('/admin/newPlace',{
+        $http.post('/addorchangeplace/newPlace',{
             placeDetails: $scope.place
         }).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
