@@ -19,6 +19,20 @@ inputModule.filter('filterByOrigin',function()
     };
 });
 
+inputModule.filter('filterDestinations', function() {
+   return function (items){
+       var filtered = [];
+       for(var i = 0; i < items.length; i++){
+           var item = items[i];
+           if(item.IsDestination == 1){
+               filtered.push(item);
+           }
+       }
+       return filtered;
+   }
+
+});
+
 inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, cityData, formData) {
   $scope.originCity = null;
   $scope.destinationCity = null;

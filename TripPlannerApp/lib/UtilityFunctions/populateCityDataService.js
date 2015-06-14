@@ -7,10 +7,10 @@ var encodeCityID = require('../../lib/hashEncoderDecoder');
 function populateCityDataService() {
     var connection=conn.conn();
     connection.connect();
-    var queryString = "SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude FROM City;"
+    var queryString = "SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude, IsDestination FROM City;"
     connection.query(queryString, function(err, rows, fields) {
         if (err)
-        {p
+        {
             throw err;
         }
         else{

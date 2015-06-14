@@ -104,7 +104,7 @@
                                                         <input ng-model="destinationCity"
                                                                ng-blur="destinationSelected()" class="form-control"
                                                                placeholder="{{label}}"
-                                                               typeahead="city as city.CityName for city in cities | filterByOrigin:originCity | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)">
+                                                               typeahead="city as city.CityName for city in cities | filterDestinations | filterByOrigin:originCity | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)">
 
                                                         <div class="input-group-addon " ng-click="destinationSelected()"><i
                                                             class="glyphicon glyphicon-plus cursor-style"></i></div>
