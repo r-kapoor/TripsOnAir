@@ -4,6 +4,7 @@
 'use strict';
 
 var getItineraryPDF = require('../lib/getItineraryPDF');
+var fs = require("fs");
 module.exports = function(app) {
 
     app.post('/downloadItinerary', function(req, res) {
@@ -26,9 +27,20 @@ module.exports = function(app) {
             }
             var itineraryData = req.param('data');
             if(itineraryData != undefined){
-                var itineraryPDF = getItineraryPDF.getItineraryPDF(travelData, itineraryData);
-                req.session.travelData=travelData;
-                res.json({success:true});
+                getItineraryPDF.getItineraryPDF(travelData, itineraryData, function returnPDF(itineraryPDF, fileName){
+                    console.log('itineraryPDF:'+itineraryPDF);
+                    req.session.travelData=travelData;
+                    res.setHeader('Content-disposition', 'attachment; filename='+fileName);
+                    //var file = fs.createWriteStream(itineraryPDF);
+                    //res.pipe(file);
+                    res.json({success:true, file:itineraryPDF});
+                    //res.download(itineraryPDF, fileName, function(err){
+                    //    if (err) {
+                    //        console.log(err);
+                    //    } else {
+                    //        console.log('Complete download');
+                    //    }});
+                });
             }
             else {
                 console.log("itineraryData is undefined");

@@ -14,3 +14,6 @@ TripPlannerApp/.idea/
 TripPlannerApp/public/js/production/**
 #database file
 TripPlannerApp/lib/database.js
+#Downloaded Itineraries
+TripPlannerApp/public/saved_itinerary/html/*.html
+TripPlannerApp/public/saved_itinerary/pdf/*.pdf

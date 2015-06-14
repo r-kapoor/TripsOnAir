@@ -3,15 +3,17 @@
  */
 'use strict';
 require('date-utils');
+var path = require("path");
 var pdf = require('phantom-html2pdf');
 var fs = require('fs');
+var randomstring = require("randomstring");
 var doc;
 
-var htmlContent = '<!DOCTYPE html>';
-function getItineraryPDF(travelData, itineraryData){
+function getItineraryPDF(travelData, itineraryData, returnPDF){
 
     var defaultTrip = getDefaultTrip(travelData);
 
+    var htmlContent = '<!DOCTYPE html>';
     var head = getHead();
     htmlContent += head;
     var logo = getLogo();
@@ -19,73 +21,49 @@ function getItineraryPDF(travelData, itineraryData){
     var travelDetailsPanel = getTravelDetailsPanel(defaultTrip);
     var hotelDetailsPanel = getHotelDetailsPanel(itineraryData);
     var itineraryDetailsPanel = getItineraryDetailsPanel(itineraryData);
-    addToTag('body', logo + salutation + travelDetailsPanel + hotelDetailsPanel + itineraryDetailsPanel);
+    htmlContent += addToTag('body', logo + salutation + travelDetailsPanel + hotelDetailsPanel + itineraryDetailsPanel);
     htmlContent += '</html>';
 
-    fs.writeFile("public/templates/layouts/htmlToPDF/file.html", htmlContent, function(err) {
-        if(err) {
-            return console.log(err);
-        }
-
-        console.log("The html file was saved!");
-    });
-
-    //for(var legIndex = 0; legIndex < defaultTrip.rome2RioData.length; legIndex++){
-    //    var fromPlace = defaultTrip.rome2RioData[legIndex].places[0].name;
-    //    var toPlace = defaultTrip.rome2RioData[legIndex].places[1].name;
-    //    addTravelPlaces(fromPlace,toPlace,legIndex);
-    //    console.log("-1");
-    //    var routes = defaultTrip.rome2RioData[legIndex].routes;
-    //    for(var routesIndex = 0; routesIndex < routes.length; routesIndex++){
-    //        console.log("0");
-    //        var route = routes[routesIndex];
-    //        if(route.isDefault == 1){
-    //            console.log("1");
-    //            for(var segmentIndex = 0; segmentIndex < route.segments.length; segmentIndex++){
-    //                console.log("2");
-    //                var segment = route.segments[segmentIndex];
-    //                if(segment.isMajor == 1){
-    //                    console.log("3");
-    //                    if(segment.kind == "flight"){
-    //                        addTravelKind("Flight");
-    //                        for(var flightDataIndex = 0; flightDataIndex < segment.flightData.length; flightDataIndex++){
-    //                            var flightData = segment.flightData[flightDataIndex];
-    //                            if(flightData.isFinal != undefined && flightData.isFinal == 1){
-    //                                addFlightData(flightData.Operator, flightData.FlightNumber, flightData.OriginDepartureTime, flightData.DestArrivalTime, flightData.Hops, flightData.OriginAirportCode, flightData.DestinationAirportCode, flightData.OriginAirportName, flightData.DestinationAirportName);
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
+    var itineraryId = randomstring.generate();
+    var htmlFilePath = "public/saved_itinerary/html/"+itineraryId+".html";
+    var pdfFilePath = "public/saved_itinerary/pdf/"+itineraryId+".pdf";
+    var publicPdfFilePath = "saved_itinerary/pdf/"+itineraryId+".pdf";
+    var fileName = itineraryId+".pdf";
     var options = {
-        "html" : "public/templates/layouts/htmlToPDF/file.html",
+        "html" : htmlFilePath,
         "css" : "public/css/bootstrapCSS/bootstrap.min.css",
         //"js" : "Path to additional JavaScript file",
         //"runnings" : "Path to runnings file. Check further below for explanation.",
         "deleteOnAction" : true //(Deletes the created temp file once you access it via toBuffer() or toFile())
     };
 
-    pdf.convert(options, function(result) {
+    fs.writeFile(htmlFilePath, htmlContent, function(err) {
+        if(err) {
+            console.log("error in writefile:"+err);
+            return err;
+        }
+        console.log("The html file was saved!:"+htmlFilePath);
 
-        /* Using a buffer and callback */
-        result.toBuffer(function(returnedBuffer) {});
+        pdf.convert(options, function(result) {
 
-        /* Using a readable stream */
-        var stream = result.toStream();
+            /* Using a buffer and callback */
+            result.toBuffer(function(returnedBuffer) {});
 
-        /* Using the temp file path */
-        var tmpPath = result.getTmpPath();
-        console.log(tmpPath);
+            /* Using a readable stream */
+            var stream = result.toStream();
 
-        /* Using the file writer and callback */
-        result.toFile("file1.pdf", function() {});
+            /* Using the temp file path */
+            var tmpPath = result.getTmpPath();
+            //console.log(tmpPath);
+
+            /* Using the file writer and callback */
+            result.toFile(pdfFilePath, function() {
+                returnPDF(publicPdfFilePath, fileName);
+            });
+        });
+
+
     });
-
-    return "file1.pdf";
 
 }
 
@@ -99,13 +77,13 @@ function getHead(){
 }
 
 function addToTag(tag, content){
-    htmlContent += '<'+tag+'>' + content + '</'+tag + '>';
+    return '<'+tag+'>' + content + '</'+tag + '>';
 }
 
 function getLogo(){
     var logo = '<div class="row">'
         +'<div class="col-xs-3">'
-    +'<img src="/Users/rkapoor/Github/Crawlersforweb/TripPlannerApp/public/images/LogoB.png" alt="tripsonair" class="img-responsive" style="width: 100%">'
+    +'<img src="'+path.resolve(".")+'/public/images/Logo.png" alt="tripsonair" class="img-responsive" style="width: 100%">'
     +'</div>'
     +'</div>';
     return logo;
@@ -749,12 +727,23 @@ function addFlightData(operator, flightNumber, departureTime, arrivalTime, hops,
 }
 
 function getDefaultTrip(travelData){
-    if(travelData.withTaxiRome2rioData.isMajorDefault == 1){
-        return travelData.withTaxiRome2rioData;
+    var travelDataSet = false;
+    if(travelData.withTaxiRome2rioData == undefined || travelData.withTaxiRome2rioData == null){
+        travelData = travelData.withoutTaxiRome2rioData;
+        travelDataSet = true;
     }
-    else {
-        return travelData.withoutTaxiRome2rioData;
+    else if(travelData.withoutTaxiRome2rioData == undefined || travelData.withoutTaxiRome2rioData == null){
+        travelData = travelData.withTaxiRome2rioData;
+        travelDataSet = true;
     }
+
+    if((!travelDataSet) || travelData.isMajorDefault != 1){
+        //There is some problem with the data
+        console.log('There is some problem with the data. Aborting.');
+        //tripNotPossibleResponse(res);
+    }
+
+    return travelData;
 }
 
 function getFormattedDate(date){
