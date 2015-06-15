@@ -158,12 +158,11 @@ function getInnerItineraryPanels(itinerary){
     if(itinerary != undefined){
         for(var destinationIndex = 0; destinationIndex < itinerary.destinations.length; destinationIndex++){
             var destination = itinerary.destinations[destinationIndex];
-            if(destination.hotelDetails != undefined){
-                innerPanels += innerPanelStart;
-                innerPanels += getInnerPlacePanelHeading(destination.name);
-                innerPanels += getItineraryPanels(destination);
-                innerPanels += innerPanelEnd;
-            }
+            innerPanels += innerPanelStart;
+            innerPanels += getInnerPlacePanelHeading(destination.name);
+            innerPanels += getItineraryPanels(destination);
+            innerPanels += innerPanelEnd;
+
         }
         return innerPanels;
     }
@@ -208,6 +207,7 @@ function getItineraryPanels(destination){
     var arrivalPanelDiv = getArrivalPanelDiv(destination.lastMajorSegment);
     var departurePanelDiv = getDeparturePanelDiv(destination.firstMajorSegment);
 
+    var hasHotel = (destination.isHotelRequired == 1);
     var hotel = destination.hotelDetails;
 
     itineraryPanels += arrivalPanelDiv;
@@ -223,12 +223,18 @@ function getItineraryPanels(destination){
         if(dateWisePlaceData != undefined){
             if(dateWisePlaceData.typeOfDay == "0" || dateWisePlaceData.typeOfDay == "3"){
                 if(!(dateWisePlaceData.noPlacesVisited != undefined && dateWisePlaceData.noPlacesVisited == 1)){
-                    var morningCheckInHotelDiv = getMorningCheckInDiv(hotel, dateWisePlaceData);
+                    var morningCheckInHotelDiv = '';
+                    if(hasHotel){
+                        morningCheckInHotelDiv += getMorningCheckInDiv(hotel, dateWisePlaceData);
+                    }
                     itineraryPanels += getCombinedPanel(itineraryPanelsStart, segmentPanelStart, morningCheckInHotelDiv, segmentPanelEnd, itineraryPanelsEnd);
                 }
             }
             else {
-                var hotelDiv = getHotelDiv(hotel, dateWisePlaceData, previousDateWisePlaceData);
+                var hotelDiv = '';
+                if(hasHotel){
+                    hotelDiv += getHotelDiv(hotel, dateWisePlaceData, previousDateWisePlaceData);
+                }
                 itineraryPanels += getCombinedPanel(itineraryPanelsStart, segmentPanelStart, hotelDiv, segmentPanelEnd, itineraryPanelsEnd);
             }
         }
@@ -243,7 +249,10 @@ function getItineraryPanels(destination){
         if(dateWisePlaceData != undefined){
             if(dateWisePlaceData.typeOfDay == "2" || dateWisePlaceData.typeOfDay == "3"){
                 if(!(dateWisePlaceData.noPlacesVisited != undefined && dateWisePlaceData.noPlacesVisited == 1)){
-                    var eveningCheckOutHotelDiv = getEveningCheckOutDiv(hotel, dateWisePlaceData);
+                    var eveningCheckOutHotelDiv = '';
+                    if(hasHotel){
+                        eveningCheckOutHotelDiv += getEveningCheckOutDiv(hotel, dateWisePlaceData);
+                    }
                     itineraryPanels += getCombinedPanel(itineraryPanelsStart, segmentPanelStart, eveningCheckOutHotelDiv, segmentPanelEnd, itineraryPanelsEnd);
                 }
             }
