@@ -21,6 +21,7 @@ function getDestinationsAndStops(travelData)
 		{
 			if(leg.routes[j].isDefault==1)
 			{
+                var stopsFromRome2Rio = leg.routes[j].stops;
 				var segments=leg.routes[j].segments;
 				for(var k=0;k<segments.length;k++)
 				{
@@ -40,7 +41,9 @@ function getDestinationsAndStops(travelData)
 						}
 						stops[t]=
 						{
-							name:segments[k].tName,
+							name:stopsFromRome2Rio[k+1].name,
+                            Latitude: parseFloat(stopsFromRome2Rio[k+1].pos.split(',')[0]),
+                            Longitude: parseFloat(stopsFromRome2Rio[k+1].pos.split(',')[1]),
 							arrivalTime:new Date(segments[k].endTime)
 						};
                         console.log('stops['+t+']:'+JSON.stringify(stops[t]));
