@@ -34,7 +34,7 @@ function getItineraryPDF(travelData, itineraryData, returnPDF){
         "css" : "public/css/bootstrapCSS/bootstrap.min.css",
         //"js" : "Path to additional JavaScript file",
         //"runnings" : "Path to runnings file. Check further below for explanation.",
-        "deleteOnAction" : false //(Deletes the created temp file once you access it via toBuffer() or toFile())
+        "deleteOnAction" : true //(Deletes the created temp file once you access it via toBuffer() or toFile())
     };
 
     fs.writeFile(htmlFilePath, htmlContent, function(err) {
@@ -46,7 +46,7 @@ function getItineraryPDF(travelData, itineraryData, returnPDF){
 
         pdf.convert(options, function(result) {
 
-            console.log("Result:"+JSON.stringify(result));
+            //console.log("Result:"+JSON.stringify(result));
             /* Using a buffer and callback */
             result.toBuffer(function(returnedBuffer) {});
 
@@ -55,7 +55,7 @@ function getItineraryPDF(travelData, itineraryData, returnPDF){
 
             /* Using the temp file path */
             var tmpPath = result.getTmpPath();
-            console.log(tmpPath);
+            //console.log(tmpPath);
 
             /* Using the file writer and callback */
             result.toFile(pdfFilePath, function(err) {
