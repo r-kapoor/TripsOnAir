@@ -11,7 +11,7 @@ function getCityID(cityNames, callback)
 	citiesString += ' \''+cityNames.join('\', \'')+'\' ';
 	//citiesString = citiesString.toUpperCase();
 	//console.log("citiesString:"+citiesString);
-	var queryString = 'SELECT CityID, CityName FROM City WHERE CityName IN ('+citiesString+')';	
+	var queryString = 'SELECT CityID, CityName, AlternateName FROM City_Alternate_Name WHERE AlternateName IN ('+citiesString+')';
 	console.log("getCityID query:"+queryString);
 	connection.query(queryString, function(err, rows, fields) {
 		if (err)
@@ -21,7 +21,12 @@ function getCityID(cityNames, callback)
 	    else{
 	    	for (var i in rows) {
 	    		console.log("Returned Cities from db:"+rows[i].CityID+','+rows[i].CityName);
-	    		cityIDs[cityNames.indexOf(rows[i].CityName)] = rows[i].CityID;
+                var indexOfCity = cityNames.indexOf(rows[i].AlternateName);
+                while(indexOfCity != -1){
+                    cityIDs[indexOfCity] = rows[i].CityID;
+                    cityNames[indexOfCity] = cityNames[indexOfCity]+indexOfCity;
+                    indexOfCity = cityNames.indexOf(rows[i].AlternateName);
+                }
 	    	}
 	    }
 	callback(null, cityIDs);

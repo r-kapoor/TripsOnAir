@@ -46,6 +46,7 @@ function getItineraryPDF(travelData, itineraryData, returnPDF){
 
         pdf.convert(options, function(result) {
 
+            //console.log("Result:"+JSON.stringify(result));
             /* Using a buffer and callback */
             result.toBuffer(function(returnedBuffer) {});
 
@@ -57,7 +58,10 @@ function getItineraryPDF(travelData, itineraryData, returnPDF){
             //console.log(tmpPath);
 
             /* Using the file writer and callback */
-            result.toFile(pdfFilePath, function() {
+            result.toFile(pdfFilePath, function(err) {
+                if(err){
+                    console.log(err);
+                }
                 returnPDF(publicPdfFilePath, fileName);
             });
         });
