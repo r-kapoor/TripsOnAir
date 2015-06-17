@@ -5,7 +5,7 @@
 var cloudinary = require('cloudinary');
 var fs = require('fs');
 var encodePlaceID = require('../../lib/hashEncoderDecoder');
-var lineReader = require('line-reader');
+//var lineReader = require('line-reader');
 var conn = require('../../lib/database');
 
 cloudinary.config({
@@ -41,7 +41,7 @@ function uploadImages()
                 {
                     public_id: encodedPlaceID,
                     eager: [
-                        { width: 300, height: 150, crop: 'limit', format: 'png' }
+                        { width: 250, crop: 'limit', format: 'png' }
                         //{ width: 400, height: 50, crop: 'limit', format: 'png' }
                     ]
                 }
