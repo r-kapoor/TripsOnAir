@@ -16,12 +16,14 @@
     </div>
 </div>
 <div class="col-xs-12">
-    <div ng-if="leftPanel=='places'" ng-repeat="place in allPlaces">
-        <div class="col-xs-4" style="padding: 0;margin-bottom: 0;" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
+    <div ng-if="leftPanel=='places'">
+    <div class="col-xs-4" style="padding: 0px">
+    <div ng-repeat="place in allPlaces" ng-if="$index%3==0">
+        <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
             <div class="wrapper">
                 <a class="thumbnail" style="margin-bottom: 0;">
-                    <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                    <!--<img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,h_150,w_300/{{place.PlaceID}}-1.png" class="img-responsive" style="width: 100%"/>-->
+                    <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                    <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width: 100%"/>
                 </a>
                 <div ng-if="!place.placeAdded" class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)">
                     <i class="glyphicon glyphicon-plus"></i>
@@ -36,6 +38,52 @@
             <!--end of wrapper class-->
         </div>
     </div><!--end of ng-repeat-->
+    </div>
+        <div class="col-xs-4" style="padding: 0px">
+            <div ng-repeat="place in allPlaces" ng-if="$index%3==1">
+                <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
+                    <div class="wrapper">
+                        <a class="thumbnail" style="margin-bottom: 0;">
+                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width: 100%"/>
+                        </a>
+                        <div ng-if="!place.placeAdded" class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </div>
+                        <div class="name">
+                            <p class="name_content">
+                                {{place.Name}}
+                            </p>
+                        </div>
+                        <!--end of description class-->
+                    </div>
+                    <!--end of wrapper class-->
+                </div>
+            </div><!--end of ng-repeat-->
+        </div>
+        <div class="col-xs-4" style="padding: 0px">
+            <div ng-repeat="place in allPlaces" ng-if="$index%3==2">
+                <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
+                    <div class="wrapper">
+                        <a class="thumbnail" style="margin-bottom: 0;">
+                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width: 100%"/>
+                        </a>
+                        <div ng-if="!place.placeAdded" class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </div>
+                        <div class="name">
+                            <p class="name_content">
+                                {{place.Name}}
+                            </p>
+                        </div>
+                        <!--end of description class-->
+                    </div>
+                    <!--end of wrapper class-->
+                </div>
+            </div><!--end of ng-repeat-->
+        </div>
+    </div>
     <div ng-if="leftPanel=='hotels'" ng-repeat="hotel in allHotels">
         <div class="col-xs-4" style="padding: 0;margin-bottom: 0;">
             <div class="wrapper">
