@@ -17,7 +17,7 @@ function postPlaceDetails(placeDetails, callback)
         'ScoreSources='+connection.escape(placeDetails.ScoreSources)+',' +
         'Website='+connection.escape(placeDetails.Website)+',Latitude='+connection.escape(placeDetails.Latitude)+',' +
         'Longitude='+connection.escape(placeDetails.Longitude)+',Time2Cover='+connection.escape(placeDetails.Time2Cover)+',' +
-        'UnescoHeritage='+connection.escape(placeDetails.UnescoHeritage)+
+        'UnescoHeritage='+connection.escape(placeDetails.UnescoHeritage)+',NumberOfImages='+connection.escape(placeDetails.NumberOfImages)+
         ' WHERE PlaceID='+connection.escape(placeDetails.PlaceID)+';';
 
     console.log("SetPlaceDetails query:"+placesQueryString);
