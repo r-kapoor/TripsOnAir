@@ -4,7 +4,7 @@
 
 var cloudinary = require('cloudinary');
 var fs = require('fs');
-var encodePlaceID = require('../../lib/hashEncoderDecoder');
+var encodeID = require('../../lib/hashEncoderDecoder');
 //var lineReader = require('line-reader');
 var conn = require('../../lib/database');
 
@@ -14,7 +14,7 @@ cloudinary.config({
     api_secret: 'R9WfEeCpaAgt4YUbd3Ag_F5YtGA'
 });
 
-function uploadImages()
+function uploadPlaceImages()
 {
     var folder = process.argv[3];
     var path = "../../public/images/"+folder;
@@ -31,7 +31,7 @@ function uploadImages()
             var placeID = idWithImageNumber[0];
             var imageNumber = idWithImageNumber[1].replace ( /[^\d]/g, '' );
             console.log(placeID+","+imageNumber);
-            encodedPlaceID = encodePlaceID.encodePlaceID(parseInt(placeID))+"-"+imageNumber;
+            encodedPlaceID = encodeID.encodePlaceID(parseInt(placeID))+"-"+imageNumber;
 
             console.log("encodePlaceID:"+encodedPlaceID);
             //console.log(files[i]);
@@ -42,6 +42,37 @@ function uploadImages()
                     public_id: encodedPlaceID,
                     eager: [
                         { height: 300, crop: 'limit', format: 'png' },
+                        { width: 250, crop: 'limit', format: 'png' }
+                    ]
+                }
+            )
+        }
+    }
+}
+
+function uploadHotelImages()
+{
+    var folder = process.argv[3];
+    var path = "../../public/images/"+folder;
+    var files = fs.readdirSync(path);
+    var filePath;
+    var encodedHotelID;
+    for(var i in files)
+    {
+        filePath = path+"/"+files[i];
+        console.log(filePath);
+        //console.log(files[i]);
+        if(files[i].indexOf("png")!=-1||files[i].indexOf("jpg")!=-1) {
+            var hotelID = files[i];
+            encodedHotelID = encodeID.encodeHotelID(parseInt(hotelID));
+
+            console.log("encodedHotelID:"+encodedHotelID);
+            cloudinary.uploader.upload(
+                filePath,
+                function(result) { console.log(result); },
+                {
+                    public_id: encodedHotelID,
+                    eager: [
                         { width: 250, crop: 'limit', format: 'png' }
                     ]
                 }
@@ -85,23 +116,17 @@ function updateData()
         }
     }
 }
-//uploadImages();
-//updateData();
-
-//lineReader.eachLine(filePath, function(line, last) {
-//    console.log(line);
-//    console.log("Read one line");
-    //if (0) {
-    //    return false; // stop reading
-    //}
-//});
 
 function onCommandLine()
 {
     var functionName = process.argv[2];
-    if(functionName.toLowerCase()=='uploadimages')
+    if(functionName.toLowerCase()=='uploadplaceimages')
     {
-        uploadImages();
+        uploadPlaceImages();
+    }
+    else if(functionName.toLowerCase()=='uploadhotelimages')
+    {
+        uploadHotelImages();
     }
     else if(functionName.toLowerCase() =='updatedata')
     {
