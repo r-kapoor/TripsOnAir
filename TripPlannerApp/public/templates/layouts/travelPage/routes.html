@@ -9,13 +9,14 @@
     }
 </style>
 <div ng-controller="routesController">
-    <div ng-controller="sarthiController" >
+    <div ng-controller="sarthiController">
+        <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false">
         <div class="col-sm-4">
             <pageslide ps-open="isTravelPanelOpen" ps-size="400px" ps-side="left" ps-class="ng-travel">
                 <!--<div ng-hide="loader">-->
                 <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
                 <!--</div>-->
-                <div class="panel panel-default" style="height: 100vh">
+                <div id="travelPanelIntro" class="panel panel-default" style="height: 100vh">
                     <div class="{{getTransparentClass(1)}} btn" ng-click="isTravelPanelDisable || closeOtherPanels(1)"></div>
                     <div class="panel-body">
                         <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
@@ -501,7 +502,7 @@
             </pageslide>
         </div>
         <div class="col-sm-12">
-            <div class="budget col-xs-2">
+            <div id="budgetPanel" class="budget col-xs-2">
                 <div ng-if="isBudgetPanelOpen" class="panel panel-default">
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -531,4 +532,5 @@
             <div id="map-canvas" style="" ng-controller="sanjayaController"></div>
         </div>
     </div>
+</div>
 </div>

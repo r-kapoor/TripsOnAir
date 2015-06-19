@@ -92,6 +92,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     var HOURS_TO_MILLISECONDS = MINUTES_TO_MILLISECONDS*60;
     var DAYS_TO_MILLISECONDS = HOURS_TO_MILLISECONDS*24;
 
+    var isGuideOpened = false;
+
     $scope.pageSlide = function(){
         $scope.checked1=!$scope.checked1;
         $scope.checked2=!$scope.checked2;
@@ -107,6 +109,32 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         {
             $scope.checked1=false;
         }
+    };
+
+    $scope.IntroOptions = {
+        steps: [
+            {
+                element:  '#travelPanelIntro',
+                intro: "Click to Customize Travel Options",
+                position: "right"
+            },
+            {
+                element: '#budgetPanel',
+                intro: "Keep track of the budget as you modify travel options"
+            },
+            {
+                element: '#saveButton',
+                intro: "Continue when done"
+            }
+        ],
+        scrollToElement: false,
+        showStepNumbers: false,
+        exitOnOverlayClick: true,
+        exitOnEsc:true,
+        nextLabel: '<strong>NEXT!</strong>',
+        prevLabel: '<span style="color:green">Previous</span>',
+        skipLabel: 'Exit',
+        doneLabel: 'Thanks'
     };
 
     function openPanel() {
@@ -238,6 +266,11 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+    function openTravelGuide(){
+        isGuideOpened = true;
+        $scope.introFunction();
+    }
+
     $rootScope.$on('showTravelPanel', function onShowTravelPanel(event, data) {
         openPanel();
         $rootScope.$emit('gettingData');
@@ -256,6 +289,12 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         citiesString += originCity.CityName;
         cityIDsString += originCity.CityID;
         getRoutes(citiesString,cityIDsString,pathArray);
+    });
+
+    $rootScope.$on('guide',function onGuide(){
+        if(isGuideOpened){
+            $scope.introFunction();
+        }
     });
 
     function getRoutes(citiesString,cityIDsString,pathArray)
@@ -296,6 +335,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                 showBudget(data.userTotalbudget);
                 $scope.isBudgetPanelOpen = true;
                 travelData  = data;
+                openTravelGuide();
             }
         });
     }

@@ -25,7 +25,10 @@ module.exports = function concat(grunt) {
                 'public/js/angularController/travelPageAngularController/balarama.js',
                 'public/js/jscrollPaneJS/jquery.mousewheel.js',
                 'public/js/jscrollPaneJS/jquery.jscrollpane.min.js',
-                'public/js/angularJS/angular-jscrollpane.js'
+                'public/js/angularJS/angular-jscrollpane.js',
+                'public/js/angularJS/intro.min.js',
+                'public/js/angularJS/angular-intro.min.js'
+
             ],
             dest : 'public/js/production/travelPage.js'
         }

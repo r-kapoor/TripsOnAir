@@ -5,9 +5,9 @@
     }
 </style>
 <div ng-controller="suryaController">
-    <div class="left-slider">
+    <div ng-intro-options="IntroOptions" ng-intro-method="multiCityIntroFunction" ng-intro-autostart="false" class="left-slider">
         <pageslide ps-open="reorderPanel" ps-size="300px" ps-side="left">
-            <div class="panel panel-default" style="height: 100vh">
+            <div id="reorderPanelIntro" class="panel panel-default" style="height: 100vh">
                 <div class="panel-body">
                     <div class="text-center">
                         <!--<h3>Optimized Order Of Destination</h3>-->

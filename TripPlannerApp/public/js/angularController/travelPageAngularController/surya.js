@@ -7,6 +7,30 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     $scope.reorderList=true;
     $scope.draggableObjects = [];
 
+    $scope.IntroOptions = {
+        steps: [
+            {
+                element:  '#reorderPanelIntro',
+                intro: "Drag and Drop To Reorder Destinations",
+                position: "right"
+            },
+            {
+                element: '#saveButton',
+                intro: "Continue when done"
+            }
+        ],
+        scrollToElement: false,
+        showStepNumbers: false,
+        exitOnOverlayClick: true,
+        exitOnEsc:true,
+        nextLabel: '<strong>NEXT!</strong>',
+        prevLabel: '<span style="color:green">Previous</span>',
+        skipLabel: 'Exit',
+        doneLabel: 'Thanks'
+    };
+
+    var isTravelPanelOpened = false;
+
     var pathArray = [];
     var orderComparisonFactor = 1.4;
     $rootScope.$on('orderReceived', function onOrderReceived(event, data) {
@@ -52,7 +76,14 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
 
     $rootScope.$on('showRoutes',function onShowRoutes(event,data){
         $scope.reorderPanel = false;
+        isTravelPanelOpened = true;
         $rootScope.$emit('showTravelPanel');
+    });
+
+    $rootScope.$on('guide',function onGuide(){
+        if(!isTravelPanelOpened){
+            $scope.multiCityIntroFunction();
+        }
     });
 
     angular.element(window).ready(function () {
@@ -70,11 +101,13 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
                     orderedCities.setPathArray(pathArray);
                     orderedCities.setCityIDs(data.cityIDs);
                     $rootScope.$emit('orderReceived');
+                    $scope.multiCityIntroFunction();
                 }
             );
         }
         else if((pathArray.length>1) && (destinations.length==1))
         {
+            isTravelPanelOpened = true;
             //will be taken care by sarathi
         }
         else {
