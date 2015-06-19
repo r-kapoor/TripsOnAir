@@ -1,7 +1,7 @@
 /**
  * Created by rkapoor on 26/02/15.
  */
-routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', function($scope, $rootScope, $http, $q, $location, orderedCities) {
+routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q', '$location', '$cookies', 'orderedCities', function($scope, $rootScope, $http, $q, $location, $cookies, orderedCities) {
 
     $scope.reorderPanel=false;
     $scope.reorderList=true;
@@ -80,6 +80,33 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
         $rootScope.$emit('showTravelPanel');
     });
 
+    function showMultiCityIntro(){
+        var visitedStatus = $cookies.visitedStatus;
+        console.log('visitedStatus:'+visitedStatus);
+        if(visitedStatus != undefined && visitedStatus != null){
+            //Cookie is present
+            visitedStatus = JSON.parse(visitedStatus);
+            //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
+            var multiCityIntro = visitedStatus.multiCityIntro;
+            console.log(typeof visitedStatus);
+            console.log(multiCityIntro);
+            if(!(multiCityIntro != undefined && multiCityIntro)){
+                //Multicity cookie not present
+                $scope.multiCityIntroFunction();
+                visitedStatus.multiCityIntro = true;
+                $cookies.visitedStatus = JSON.stringify(visitedStatus);
+            }
+        }
+        else{
+            //Cookie is not present
+            $scope.multiCityIntroFunction();
+            $cookies.visitedStatus = JSON.stringify({
+                multiCityIntro: true
+            });
+        }
+
+    }
+
     $rootScope.$on('guide',function onGuide(){
         if(!isTravelPanelOpened){
             $scope.multiCityIntroFunction();
@@ -101,7 +128,7 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
                     orderedCities.setPathArray(pathArray);
                     orderedCities.setCityIDs(data.cityIDs);
                     $rootScope.$emit('orderReceived');
-                    $scope.multiCityIntroFunction();
+                    showMultiCityIntro();
                 }
             );
         }

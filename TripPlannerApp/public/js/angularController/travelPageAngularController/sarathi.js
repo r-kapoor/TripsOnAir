@@ -37,7 +37,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     };
 }]);
 
-routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout) {
+routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', '$cookies', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout, $cookies) {
 
     $scope.isTravelPanelOpen=false;
     $scope.isTravelModesPanelOpen=false;
@@ -268,7 +268,29 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
 
     function openTravelGuide(){
         isGuideOpened = true;
-        $scope.introFunction();
+        var visitedStatus = $cookies.visitedStatus;
+        console.log('visitedStatus:'+visitedStatus);
+        if(visitedStatus != undefined && visitedStatus != null){
+            //Cookie is present
+            visitedStatus = JSON.parse(visitedStatus);
+            //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
+            var travelPanelIntro = visitedStatus.travelPanelIntro;
+            console.log(typeof visitedStatus);
+            console.log(travelPanelIntro);
+            if(!(travelPanelIntro != undefined && travelPanelIntro)){
+                //travelPanelIntro cookie not present
+                $scope.introFunction();
+                visitedStatus.travelPanelIntro = true;
+                $cookies.visitedStatus = JSON.stringify(visitedStatus);
+            }
+        }
+        else{
+            //Cookie is not present
+            $scope.introFunction();
+            $cookies.visitedStatus = JSON.stringify({
+                travelPanelIntro: true
+            });
+        }
     }
 
     $rootScope.$on('showTravelPanel', function onShowTravelPanel(event, data) {
