@@ -11,7 +11,7 @@ function getPlaceDetails(placeID, callback)
 
     var queryString = 'SELECT Type,Taste,Name,a.PlaceID,Address,PinCode,PhoneNo,CityID,Description,Score,ScoreSources,' +
         'Website,Latitude,Longitude,Time2Cover,UnescoHeritage,Timing_ID, TimeStart, TimeEnd, ' +
-        'Days, ChildCharge, AdultCharge, ForeignerCharge FROM ' +
+        'Days, ChildCharge, AdultCharge, ForeignerCharge, NumberOfImages FROM ' +
         '(SELECT * FROM Places WHERE PlaceID = '+connection.escape(placeID)+') a ' +
         'LEFT JOIN ' +
         '(SELECT * FROM PlaceTimings) b ' +

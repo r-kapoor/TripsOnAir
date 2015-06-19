@@ -6,16 +6,13 @@ itineraryModule.controller('detailModalInstanceCtrl', function ($scope, $rootSco
 
     $scope.itemDetails = itemDetails;
     var slides = $scope.slides = [];
-    $scope.addSlide = function() {
-        var newWidth = 600 + slides.length + 1;
+
+    console.log($scope.itemDetails);
+
+    for (var i=0; i<$scope.itemDetails.NumberOfImages; i++) {
         slides.push({
-            image: 'http://placekitten.com/' + newWidth + '/300',
-            text: ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
-            ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
+            image: 'http://res.cloudinary.com/picsonair/image/upload/c_limit,h_300/'+$scope.itemDetails.PlaceID+'-'+(parseInt(i+1))+'.png'
         });
-    };
-    for (var i=0; i<4; i++) {
-        $scope.addSlide();
     }
 
     $scope.getDateFromString = function(timeString)

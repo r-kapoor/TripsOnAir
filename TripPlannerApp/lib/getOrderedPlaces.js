@@ -11,7 +11,7 @@ function getOrderedPlaces(destinationsForPlaces,taste,connection,placesDataCallb
 		}
 	//CityIDsForPlacesDecrypted = hashidEncoder.CityIDsForPlaces
 	var decodedCityIDsForPlaces=hashidEncoder.decodeCityID(CityIDsForPlaces);
-	var queryString = "SELECT a.PlaceID, Taste, Name, Address, CityID, Description, Score, IF(("+tastesSubQuery+"),1,0) AS TasteOrderAttribute, IF(("+familyFriendsSubQuery+"),1,0) AS FamilyFriendsOrderAttribute, Latitude, Longitude, Time2Cover, UnescoHeritage, TimeStart, TimeEnd, Days, ChildCharge, AdultCharge, ForeignerCharge FROM "
+	var queryString = "SELECT a.PlaceID, Taste, Name, Address, CityID, Description, Score, IF(("+tastesSubQuery+"),1,0) AS TasteOrderAttribute, IF(("+familyFriendsSubQuery+"),1,0) AS FamilyFriendsOrderAttribute, Latitude, Longitude, Time2Cover, UnescoHeritage, TimeStart, TimeEnd, Days, ChildCharge, AdultCharge, ForeignerCharge, NumberOfImages FROM "
 					+"(SELECT * FROM Places WHERE CityID IN ("+connection.escape(decodedCityIDsForPlaces)+")) a LEFT OUTER JOIN "
 					+"(SELECT * FROM Place_Charges WHERE PlaceID IN (SELECT PlaceId FROM Places WHERE CityID IN ("+connection.escape(decodedCityIDsForPlaces)+"))) b"
 					+" ON (a.PlaceID = b.PlaceID) LEFT OUTER JOIN "

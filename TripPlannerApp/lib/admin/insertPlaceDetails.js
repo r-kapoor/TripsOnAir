@@ -18,7 +18,7 @@ function insertPlaceDetails(placeDetails, callback)
     connection.connect();
 
     var placesQueryString = "INSERT INTO Places (Type, Taste, Name, Address, PinCode, PhoneNo, CityID, Description, Score, ScoreSources, Website" +
-        ", Latitude, Longitude, Time2Cover, UnescoHeritage)" +
+        ", Latitude, Longitude, Time2Cover, UnescoHeritage, NumberOfImages)" +
         " VALUES " +
         "("+connection.escape(placeDetails.Type)+
         ","+connection.escape(placeDetails.Taste)+
@@ -35,6 +35,7 @@ function insertPlaceDetails(placeDetails, callback)
         ","+connection.escape(placeDetails.Longitude)+
         ","+connection.escape(placeDetails.Time2Cover)+
         ","+connection.escape(placeDetails.UnescoHeritage)+
+        ","+connection.escape(placeDetails.NumberOfImages)+
         ");";
 
     console.log("InsertPlaceDetails query:"+placesQueryString);
