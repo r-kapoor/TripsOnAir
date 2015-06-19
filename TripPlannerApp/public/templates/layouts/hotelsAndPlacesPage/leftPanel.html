@@ -84,25 +84,97 @@
             </div><!--end of ng-repeat-->
         </div>
     </div>
-    <div ng-if="leftPanel=='hotels'" ng-repeat="hotel in allHotels">
-        <div class="col-xs-4" style="padding: 0;margin-bottom: 0;">
-            <div class="wrapper">
-                <a href="#" class="thumbnail" style="margin-bottom: 0;">
-                    <img ng-src="{{hotel.PhotoLink}}" class="img-responsive" style="width: 100%"/>
-                </a>
-                <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
-                    <i class="glyphicon glyphicon-plus"></i>
+    <div ng-if="leftPanel=='hotels'">
+        <div class="col-xs-4" style="padding: 0px">
+            <div ng-repeat="hotel in allHotels" ng-if="$index%3==0">
+                <div style="padding: 0;margin-bottom: 0;position: relative">
+                    <div class="wrapper">
+                        <a class="thumbnail" style="margin-bottom: 0;">
+                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width: 100%"/>
+                        </a>
+                        <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </div>
+                        <div class="name">
+                            <p class="name_content">
+                                {{hotel.Name}}
+                            </p>
+                        </div>
+                        <!--end of description class-->
+                    </div>
+                    <!--end of wrapper class-->
                 </div>
-                <div class="name">
-                    <p class="name_content">
-                        {{hotel.Name}}
-                    </p>
-                </div>
-                <!--end of description class-->
-            </div>
-            <!--end of wrapper class-->
+            </div><!--end of ng-repeat-->
         </div>
-    </div><!--end of ng-repeat-->
+        <div class="col-xs-4" style="padding: 0px">
+            <div ng-repeat="hotel in allHotels" ng-if="$index%3==1">
+                <div style="padding: 0;margin-bottom: 0;position: relative">
+                    <div class="wrapper">
+                        <a class="thumbnail" style="margin-bottom: 0;">
+                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width: 100%"/>
+                        </a>
+                        <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </div>
+                        <div class="name">
+                            <p class="name_content">
+                                {{hotel.Name}}
+                            </p>
+                        </div>
+                        <!--end of description class-->
+                    </div>
+                    <!--end of wrapper class-->
+                </div>
+            </div><!--end of ng-repeat-->
+        </div>
+        <div class="col-xs-4" style="padding: 0px">
+            <div ng-repeat="hotel in allHotels" ng-if="$index%3==2">
+                <div style="padding: 0;margin-bottom: 0;position: relative">
+                    <div class="wrapper">
+                        <a class="thumbnail" style="margin-bottom: 0;">
+                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width: 100%"/>
+                        </a>
+                        <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </div>
+                        <div class="name">
+                            <p class="name_content">
+                                {{hotel.Name}}
+                            </p>
+                        </div>
+                        <!--end of description class-->
+                    </div>
+                    <!--end of wrapper class-->
+                </div>
+            </div><!--end of ng-repeat-->
+        </div>
+    </div>
+
+
+
+
+    <!--<div ng-if="leftPanel=='hotels'" ng-repeat="hotel in allHotels">-->
+        <!--<div class="col-xs-4" style="padding: 0;margin-bottom: 0;">-->
+            <!--<div class="wrapper">-->
+                <!--<a href="#" class="thumbnail" style="margin-bottom: 0;">-->
+                    <!--<img ng-src="{{hotel.PhotoLink}}" class="img-responsive" style="width: 100%"/>-->
+                <!--</a>-->
+                <!--<div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">-->
+                    <!--<i class="glyphicon glyphicon-plus"></i>-->
+                <!--</div>-->
+                <!--<div class="name">-->
+                    <!--<p class="name_content">-->
+                        <!--{{hotel.Name}}-->
+                    <!--</p>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;end of description class&ndash;&gt;-->
+            <!--</div>-->
+            <!--&lt;!&ndash;end of wrapper class&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>&lt;!&ndash;end of ng-repeat&ndash;&gt;-->
     <div ng-controller="jatayuController">
         <div ng-hide="!(leftPanel=='maps')">
             <div fix-top id="map-canvas"></div>
