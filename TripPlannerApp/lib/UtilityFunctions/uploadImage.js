@@ -41,8 +41,8 @@ function uploadImages()
                 {
                     public_id: encodedPlaceID,
                     eager: [
+                        { height: 300, crop: 'limit', format: 'png' },
                         { width: 250, crop: 'limit', format: 'png' }
-                        //{ width: 400, height: 50, crop: 'limit', format: 'png' }
                     ]
                 }
             )
