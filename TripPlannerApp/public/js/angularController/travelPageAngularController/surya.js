@@ -1,11 +1,35 @@
 /**
  * Created by rkapoor on 26/02/15.
  */
-routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', function($scope, $rootScope, $http, $q, $location, orderedCities) {
+routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q', '$location', '$cookies', 'orderedCities', function($scope, $rootScope, $http, $q, $location, $cookies, orderedCities) {
 
     $scope.reorderPanel=false;
     $scope.reorderList=true;
     $scope.draggableObjects = [];
+
+    $scope.IntroOptions = {
+        steps: [
+            {
+                element:  '#reorderPanelIntro',
+                intro: "Drag and Drop To Reorder Destinations",
+                position: "right"
+            },
+            {
+                element: '#saveButton',
+                intro: "Continue when done"
+            }
+        ],
+        scrollToElement: false,
+        showStepNumbers: false,
+        exitOnOverlayClick: true,
+        exitOnEsc:true,
+        nextLabel: '<strong>NEXT!</strong>',
+        prevLabel: '<span style="color:green">Previous</span>',
+        skipLabel: 'Exit',
+        doneLabel: 'Thanks'
+    };
+
+    var isTravelPanelOpened = false;
 
     var pathArray = [];
     var orderComparisonFactor = 1.4;
@@ -52,7 +76,41 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
 
     $rootScope.$on('showRoutes',function onShowRoutes(event,data){
         $scope.reorderPanel = false;
+        isTravelPanelOpened = true;
         $rootScope.$emit('showTravelPanel');
+    });
+
+    function showMultiCityIntro(){
+        var visitedStatus = $cookies.visitedStatus;
+        console.log('visitedStatus:'+visitedStatus);
+        if(visitedStatus != undefined && visitedStatus != null){
+            //Cookie is present
+            visitedStatus = JSON.parse(visitedStatus);
+            //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
+            var multiCityIntro = visitedStatus.multiCityIntro;
+            console.log(typeof visitedStatus);
+            console.log(multiCityIntro);
+            if(!(multiCityIntro != undefined && multiCityIntro)){
+                //Multicity cookie not present
+                $scope.multiCityIntroFunction();
+                visitedStatus.multiCityIntro = true;
+                $cookies.visitedStatus = JSON.stringify(visitedStatus);
+            }
+        }
+        else{
+            //Cookie is not present
+            $scope.multiCityIntroFunction();
+            $cookies.visitedStatus = JSON.stringify({
+                multiCityIntro: true
+            });
+        }
+
+    }
+
+    $rootScope.$on('guide',function onGuide(){
+        if(!isTravelPanelOpened){
+            $scope.multiCityIntroFunction();
+        }
     });
 
     angular.element(window).ready(function () {
@@ -70,11 +128,13 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
                     orderedCities.setPathArray(pathArray);
                     orderedCities.setCityIDs(data.cityIDs);
                     $rootScope.$emit('orderReceived');
+                    showMultiCityIntro();
                 }
             );
         }
         else if((pathArray.length>1) && (destinations.length==1))
         {
+            isTravelPanelOpened = true;
             //will be taken care by sarathi
         }
         else {

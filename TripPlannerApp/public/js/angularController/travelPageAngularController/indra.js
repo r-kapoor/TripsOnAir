@@ -47,6 +47,9 @@ routesModule.controller("indraController", ['$scope', '$rootScope','$location', 
         return $scope.submitFunctionName;
     };
 
+    $scope.guideMe = function(){
+        $rootScope.$emit("guide");
+    };
     //$rootScope.$on('showBudget',function onShowBudget(event,data){
     //    $scope.budgetPercent = data;
     //    $scope.isBudgetPercentShown = true;

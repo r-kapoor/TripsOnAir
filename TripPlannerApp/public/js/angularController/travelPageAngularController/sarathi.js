@@ -37,7 +37,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     };
 }]);
 
-routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout) {
+routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', '$cookies', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout, $cookies) {
 
     $scope.isTravelPanelOpen=false;
     $scope.isTravelModesPanelOpen=false;
@@ -92,6 +92,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     var HOURS_TO_MILLISECONDS = MINUTES_TO_MILLISECONDS*60;
     var DAYS_TO_MILLISECONDS = HOURS_TO_MILLISECONDS*24;
 
+    var isGuideOpened = false;
+
     $scope.pageSlide = function(){
         $scope.checked1=!$scope.checked1;
         $scope.checked2=!$scope.checked2;
@@ -107,6 +109,32 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         {
             $scope.checked1=false;
         }
+    };
+
+    $scope.IntroOptions = {
+        steps: [
+            {
+                element:  '#travelPanelIntro',
+                intro: "Click to Customize Travel Options",
+                position: "right"
+            },
+            {
+                element: '#budgetPanel',
+                intro: "Keep track of the budget as you modify travel options"
+            },
+            {
+                element: '#saveButton',
+                intro: "Continue when done"
+            }
+        ],
+        scrollToElement: false,
+        showStepNumbers: false,
+        exitOnOverlayClick: true,
+        exitOnEsc:true,
+        nextLabel: '<strong>NEXT!</strong>',
+        prevLabel: '<span style="color:green">Previous</span>',
+        skipLabel: 'Exit',
+        doneLabel: 'Thanks'
     };
 
     function openPanel() {
@@ -238,6 +266,33 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+    function openTravelGuide(){
+        isGuideOpened = true;
+        var visitedStatus = $cookies.visitedStatus;
+        console.log('visitedStatus:'+visitedStatus);
+        if(visitedStatus != undefined && visitedStatus != null){
+            //Cookie is present
+            visitedStatus = JSON.parse(visitedStatus);
+            //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
+            var travelPanelIntro = visitedStatus.travelPanelIntro;
+            console.log(typeof visitedStatus);
+            console.log(travelPanelIntro);
+            if(!(travelPanelIntro != undefined && travelPanelIntro)){
+                //travelPanelIntro cookie not present
+                $scope.introFunction();
+                visitedStatus.travelPanelIntro = true;
+                $cookies.visitedStatus = JSON.stringify(visitedStatus);
+            }
+        }
+        else{
+            //Cookie is not present
+            $scope.introFunction();
+            $cookies.visitedStatus = JSON.stringify({
+                travelPanelIntro: true
+            });
+        }
+    }
+
     $rootScope.$on('showTravelPanel', function onShowTravelPanel(event, data) {
         openPanel();
         $rootScope.$emit('gettingData');
@@ -256,6 +311,12 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         citiesString += originCity.CityName;
         cityIDsString += originCity.CityID;
         getRoutes(citiesString,cityIDsString,pathArray);
+    });
+
+    $rootScope.$on('guide',function onGuide(){
+        if(isGuideOpened){
+            $scope.introFunction();
+        }
     });
 
     function getRoutes(citiesString,cityIDsString,pathArray)
@@ -296,6 +357,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                 showBudget(data.userTotalbudget);
                 $scope.isBudgetPanelOpen = true;
                 travelData  = data;
+                openTravelGuide();
             }
         });
     }
