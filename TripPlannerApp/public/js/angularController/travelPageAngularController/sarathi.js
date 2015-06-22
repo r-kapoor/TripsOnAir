@@ -268,7 +268,11 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
 
     function openTravelGuide(){
         isGuideOpened = true;
-        var visitedStatus = $cookies.visitedStatus;
+        var visitedStatus = $cookies.get('visitedStatus');
+        var currentDate = new Date();
+        var options = {
+            expires: new Date(currentDate.getTime() + 30*24*60*60*1000)
+        };
         console.log('visitedStatus:'+visitedStatus);
         if(visitedStatus != undefined && visitedStatus != null){
             //Cookie is present
@@ -281,15 +285,15 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                 //travelPanelIntro cookie not present
                 $scope.introFunction();
                 visitedStatus.travelPanelIntro = true;
-                $cookies.visitedStatus = JSON.stringify(visitedStatus);
+                $cookies.put('visitedStatus', JSON.stringify(visitedStatus), options);
             }
         }
         else{
             //Cookie is not present
             $scope.introFunction();
-            $cookies.visitedStatus = JSON.stringify({
+            $cookies.put('visitedStatus', JSON.stringify({
                 travelPanelIntro: true
-            });
+            }), options);
         }
     }
 
