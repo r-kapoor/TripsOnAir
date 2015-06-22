@@ -81,7 +81,11 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     });
 
     function showMultiCityIntro(){
-        var visitedStatus = $cookies.visitedStatus;
+        var visitedStatus = $cookies.get('visitedStatus');
+        var currentDate = new Date();
+        var options = {
+            expires: new Date(currentDate.getTime() + 30*24*60*60*1000)
+        };
         console.log('visitedStatus:'+visitedStatus);
         if(visitedStatus != undefined && visitedStatus != null){
             //Cookie is present
@@ -94,15 +98,15 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
                 //Multicity cookie not present
                 $scope.multiCityIntroFunction();
                 visitedStatus.multiCityIntro = true;
-                $cookies.visitedStatus = JSON.stringify(visitedStatus);
+                $cookies.put('visitedStatus', JSON.stringify(visitedStatus), options);
             }
         }
         else{
             //Cookie is not present
             $scope.multiCityIntroFunction();
-            $cookies.visitedStatus = JSON.stringify({
+            $cookies.put('visitedStatus',JSON.stringify({
                 multiCityIntro: true
-            });
+            }),options);
         }
 
     }

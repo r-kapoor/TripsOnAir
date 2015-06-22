@@ -14,7 +14,7 @@
             <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
         </ul>
     </nav>
-    <timeline>
+    <timeline id="itineraryPanelIntro">
         <timeline-node ng-if="currentDestination != null" side="right">
             <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.lastMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
             </timeline-badge>

@@ -64,6 +64,43 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     var removedPlacesList = [];
 
+    $scope.IntroOptions = {
+        steps: [
+            {
+                element: '#destinationsIntro',
+                intro: "Switch between destinations"
+            },
+            {
+                element:  '#tabButtonIntro',
+                intro: "Switch between Places, Hotels and Map view",
+                position: "right"
+            },
+            {
+                element:  '#placesPanelIntro',
+                intro: "View the places of the destination. Click + or Drag and Drop places to itinerary to add. Click to get more details of the place.",
+                position: "right"
+            },
+            {
+                element: '#itineraryPanelIntro',
+                intro: "View the itinerary of the destination. Drag and Drop to reorder places. Click X to remove. Click the timing to edit the timing of visit.",
+                position: "left"
+            },
+            {
+                element: '#saveButton',
+                intro: "Save and Download the itinerary when done"
+            }
+        ],
+        scrollToElement: false,
+        showStepNumbers: false,
+        exitOnOverlayClick: true,
+        exitOnEsc:true,
+        nextLabel: '<strong>NEXT!</strong>',
+        prevLabel: '<span style="color:green">Previous</span>',
+        skipLabel: 'Exit',
+        doneLabel: 'Thanks'
+    };
+
+
     //TODO: while adding the place update isSelectedFlag in placeTimings
 
     $scope.getItinerary = function(){
@@ -124,6 +161,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             calculateCityExpenses();
             $rootScope.$emit('dataLoaded');
             $scope.isDataLoaded = true;
+            openTravelGuide();
             //$rootScope.$emit('loadMap',$scope.currentDestination.position);
         })
         .error(
@@ -131,6 +169,38 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             console.log(data || "Backend Request failed");
         });
     };
+
+    function openTravelGuide(){
+        //isGuideOpened = true;
+        //var visitedStatus = $cookies.get('visitedStatus');
+        //var currentDate = new Date();
+        //var options = {
+        //    expires: new Date(currentDate.getTime() + 30*24*60*60*1000)
+        //};
+        //console.log('visitedStatus:'+visitedStatus);
+        //if(visitedStatus != undefined && visitedStatus != null){
+        //    //Cookie is present
+        //    visitedStatus = JSON.parse(visitedStatus);
+        //    //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
+        //    var travelPanelIntro = visitedStatus.travelPanelIntro;
+        //    console.log(typeof visitedStatus);
+        //    console.log(travelPanelIntro);
+        //    if(!(travelPanelIntro != undefined && travelPanelIntro)){
+        //        //travelPanelIntro cookie not present
+        //        $scope.introFunction();
+        //        visitedStatus.travelPanelIntro = true;
+        //        $cookies.put('visitedStatus', JSON.stringify(visitedStatus), options);
+        //    }
+        //}
+        //else{
+        //    //Cookie is not present
+        //    $scope.introFunction();
+        //    $cookies.put('visitedStatus', JSON.stringify({
+        //        travelPanelIntro: true
+        //    }), options);
+        //}
+        $scope.introFunction();
+    }
 
     function initializeMapDataArray(){
         var mapDataArray = [];
