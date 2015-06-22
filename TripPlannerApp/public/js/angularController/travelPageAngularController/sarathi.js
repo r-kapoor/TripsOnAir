@@ -1,38 +1,51 @@
 routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     return function($scope,$rootScope, element, $attrs) {
-        console.log("testing....");
         console.log("element:"+element.class);
 
         if ($scope.$last){
             $timeout(function (){
                 if(element.class=="panel-travel")
                 {
-                    console.log("in panel-travel");
-                    console.log("scrollHeightTravel:"+$("#transcludeTravelPanel")[0].scrollHeight);
+                    //console.log("in panel-travel");
+                    //console.log("scrollHeightTravel:"+$("#transcludeTravelPanel")[0].scrollHeight);
                     $scope.$emit('initialize-pane',"travelPanel");
                 }
             },10);
             $timeout(function (){
                 if(element.class=="panel-travelMode"){
-                    console.log("in panel-travelMode");
-                    console.log("scrollHeightTravelModes:"+$("#transcludeTravelModesPanel").get(0).scrollHeight);
+                    //console.log("in panel-travelMode");
+                    //console.log("scrollHeightTravelModes:"+$("#transcludeTravelModesPanel").get(0).scrollHeight);
                     $scope.$emit('initialize-pane',"travelModesPanel");
                 }
             },1000);
             $timeout(function (){
                 if(element.class=="panel-trainMode"){
-                    console.log("in panel-trainMode");
-                    console.log("scrollHeightTrainMode:"+$("#transcludeTrainPanel").get(0).scrollHeight);
+                    //console.log("in panel-trainMode");
+                    //console.log("scrollHeightTrainMode:"+$("#transcludeTrainPanel").get(0).scrollHeight);
                     $scope.$emit('initialize-pane',"trainPanel");
                 }
             },1000);
             $timeout(function (){
                 if(element.class=="panel-flightMode"){
-                    console.log("in panel-flightMode");
-                    console.log("scrollHeightFlightMode:"+$("#transcludeFlightPanel").get(0).scrollHeight);
+                    //console.log("in panel-flightMode");
+                    //console.log("scrollHeightFlightMode:"+$("#transcludeFlightPanel").get(0).scrollHeight);
                     $scope.$emit('initialize-pane',"flightPanel");
                 }
             },1000);
+            $timeout(function (){
+                if(element.class=="panel-busMode"){
+                    //console.log("in panel-busMode");
+                    //console.log("scrollHeightBusMode:"+$("#transcludeBusPanel").get(0).scrollHeight);
+                    $scope.$emit('initialize-pane',"busPanel");
+                }
+            },1000);
+            $timeout(function (){
+                if(element.class=="panel-cabOperatorMode panel panel-default panel panel-default"){
+                    console.log("in panel-cabOperatorMode");
+                    //console.log("scrollHeightcabOperatorMode:"+$("#transcludecabOperatorPanel").get(0).scrollHeight);
+                    $scope.$emit('initialize-pane',"cabOperatorPanel");
+                }
+            },10);
         }
     };
 }]);
@@ -776,7 +789,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             else if($scope.isFlightClicked) {
                 vehicles = $scope.flights;
             }
-            else if($scope.isCabClicked){
+            else if($scope.isBusClicked){
                 vehicles = $scope.buses;
             }
 
@@ -967,6 +980,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                                 var bus = segments[segmentIndex].busData[busIndex];
                                 if(bus.isFinal!=undefined && bus.isFinal==1)
                                 {
+                                    console.log("bus final 0:"+busIndex);
                                     bus.isFinal = 0;
                                 }
                             }

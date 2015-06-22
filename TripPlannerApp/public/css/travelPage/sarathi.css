@@ -94,3 +94,15 @@
     background-color: #1e1e1e;
     cursor: pointer;
 }
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}

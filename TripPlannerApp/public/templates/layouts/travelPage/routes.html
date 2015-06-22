@@ -194,7 +194,10 @@
             <pageslide ps-open="isModeDetailsPanelOpen" ps-side="left" ps-size="320px">
                 <div class="panel panel-default" style="height: 100vh">
                     <div class="panel-body" style="font-size: 85%">
-                        <div class="panel-trainMode" ng-if="isTrainClicked" ng-repeat="train in trains">
+                        <div ng-if="isTrainClicked" scroll-pane scroll-config="paneConfig" id="trainPanel" style="width:280px;height:100vh">
+                            <div id="transcludeTrainPanel">
+
+                        <div class="panel-trainMode" ng-repeat="train in trains" post-repeat>
                             <div ng-if="train.isRecommended != 0" class="panel {{getPanelClass(train)}}">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -269,12 +272,17 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
+                    </div>
+
                         <!--  </div>
                      </div> -->
                         <!-- <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
                            <div id="transcludeFlightPanel"> -->
-                        <ul class="list-group">
-                            <div ng-if="isFlightClicked" ng-repeat="flight in flights">
+                        <ul ng-if="isFlightClicked" class="list-group">
+                            <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
+                            <div id="transcludeFlightPanel">
+                            <div class="panel-flightMode" ng-repeat="flight in flights" post-repeat>
                                 <li ng-if="flight.isRecommended != 0" class="list-group-item" style="font-size:90%">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -296,11 +304,11 @@
                                             <!--<div class="col-sm-2">{{flight.fare | currency:"&#8377;"}}</div>-->
                                         </div>
 
-                                        <ul class="list-group">
-                                            <div ng-if="isBusClicked" ng-repeat="bus in buses">
-                                                <li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">
-                                            </div>
-                                        </ul>
+                                        <!--<ul class="list-group">-->
+                                            <!--<div ng-if="isBusClicked" ng-repeat="bus in buses">-->
+                                                <!--<li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">-->
+                                            <!--</div>-->
+                                        <!--</ul>-->
                                         <div class="row" style="padding-top: 2%">
                                             <div class="col-xs-6">
                                                 <button datepicker-popup="dd-MMMM-yyyy" ng-model="vehicleDate[$index].dt"
@@ -336,10 +344,14 @@
                                     </div>
                                 </li>
                             </div>
+                            </div>
+                            </div>
                         </ul>
 
-                        <ul class="list-group">
-                            <div ng-if="isBusClicked" ng-repeat="bus in buses">
+                        <ul ng-if="isBusClicked" class="list-group">
+                            <div scroll-pane scroll-config="paneConfig" id="busPanel" style="width:280px;height:100vh">
+                                <div id="transcludeBusPanel">
+                            <div class ="panel-busMode" ng-repeat="bus in buses" post-repeat>
                                 <li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -404,6 +416,8 @@
                                     </div>
                                 </li>
                             </div>
+                            </div>
+                                </div>
                         </ul>
 
                         <div ng-if="isTaxiClicked||isDriveClicked||isCabClicked">
@@ -467,7 +481,10 @@
                         </div>
                         <div ng-if="isCabOperatorClicked">
                             <accordion close-others="true">
-                                <accordion-group ng-repeat="cabDetail in cabDetails" is-open="cabDetailToggle[$index].open">
+                                <div scroll-pane scroll-config="paneConfig" id="cabOperatorPanel" style="width:280px;height:100vh">
+                                    <div id="transcludeCabOperatorPanel">
+
+                                <accordion-group class="panel-cabOperatorMode" ng-repeat="cabDetail in cabDetails" is-open="cabDetailToggle[$index].open" post-repeat>
                                     <accordion-heading>
                                         <div class="{{getAccordionHeadingClass(cabDetail)}}">
                                             {{cabDetail.SegmentType}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': cabDetailToggle[$index].open, 'glyphicon-chevron-right': !cabDetailToggle[$index].open}"></i>
@@ -495,6 +512,8 @@
                                         </div>
                                     </div>
                                 </accordion-group>
+                                </div>
+                                </div>
                             </accordion>
                         </div>
                     </div>
