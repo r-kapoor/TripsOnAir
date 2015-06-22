@@ -8,13 +8,13 @@ inputModule.directive('postRepeat', function($timeout) {
 
         if ($scope.$last){
             $timeout(function (){
-                if(element.class=="panel-selectedDestinations")
+                if(element.class=="panel-selectedDestinations clearfix")
                 {
                     console.log("panel-selectedDestinations");
                     console.log("scrollHeight:"+$("#transcludeDestinationsPanel")[0].scrollHeight);
                     $scope.$emit('initialize-pane',"destinationsPanel");
                 }
-            });
+            },200);
         }
     };
 });
@@ -36,8 +36,8 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
        // var element = angular.element(document.querySelector("#destinationsPanel"));
         var lastDestID =  $scope.destinationCityList[$scope.destinationCityList.length-1].CityID;
         console.log("last city ID:"+lastDestID);
-        var element = angular.element(document.querySelector("#"+lastDestID));
-        element.scrollIntoView();
+        //var element = angular.element(document.querySelector("#"+lastDestID));
+        //element.scrollIntoView();
         //var offset=element.offset();
         //var ele=jQuery('#'+lastDestID).position();
         //console.log("offset:"+ele);

@@ -24,6 +24,19 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff7310', endColorstr='#0000ff',GradientType=0 ); /* IE6-9 */
 }
 
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
 /*.navbar-nav > li {*/
     /*padding-left: 1%;*/
     /*padding-right: 1%;*/
