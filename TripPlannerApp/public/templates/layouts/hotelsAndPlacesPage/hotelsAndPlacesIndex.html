@@ -15,6 +15,7 @@
     <!--<script src="js/angularJS/angular-masonry.js"></script>-->
     <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
     <!--<script src="js/GlobalJSFunctions/googleAnalytics.js"></script>-->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-cookies.js"></script>
     <script src="js/angularJS/angular-scroll.min.js"></script>
 
     <script src="js/angularDirective/fixToTop.js"></script>
@@ -34,6 +35,8 @@
     <script type="text/javascript" src="js/angularDirective/budgetPanelPosition.js"></script>
     <script type="text/javascript" src="js/angularJS/verge.min.js"></script>
     <script type="text/javascript" src="js/angularJS/lodash.min.js"></script>
+    <script type="text/javascript" src="js/angularJS/intro.min.js"></script>
+    <script type="text/javascript" src="js/angularJS/angular-intro.min.js"></script>
 
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
     <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
@@ -48,6 +51,7 @@
     <link rel="stylesheet" href="css/global/pageLoader.css">
     <link rel="stylesheet" href="css/home/flexslider.css">
     <link id="theme-style" rel="stylesheet" href="css/home/style4.css">
+    <link rel="stylesheet" href="css/angularCSS/introjs.min.css">
 </head>
 
 <body>
@@ -64,20 +68,22 @@
 	<div ng-controller="itineraryMainController">
 		<div class="header-top" ng-include src="'templates/layouts/global/header.html'"></div>
         <div ng-controller="shakuniController">
-            <div class="row">
-                <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showCityPanel.html'"></div>
-            </div>
-            <div class="col-xs-6">
+            <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false">
                 <div class="row">
-                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/leftPanel.html'"></div>
+                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showCityPanel.html'"></div>
                 </div>
+                <div class="col-xs-6">
+                    <div class="row">
+                        <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/leftPanel.html'"></div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showItineraryPanel.html'"></div>
+                </div>
+                <div ng-include src="'templates/layouts/hotelsAndPlacesPage/budgetPanel.html'"></div>
+                <div ng-include src="'templates/layouts/hotelsAndPlacesPage/saveModal.html'"></div>
+                <div ng-include src="'templates/layouts/hotelsAndPlacesPage/detailModal.html'"></div>
             </div>
-            <div class="col-xs-6">
-                <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showItineraryPanel.html'"></div>
-            </div>
-            <div ng-include src="'templates/layouts/hotelsAndPlacesPage/budgetPanel.html'"></div>
-            <div ng-include src="'templates/layouts/hotelsAndPlacesPage/saveModal.html'"></div>
-            <div ng-include src="'templates/layouts/hotelsAndPlacesPage/detailModal.html'"></div>
         </div>
         <div ng-controller="hanumanController" class="alert-box">
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>

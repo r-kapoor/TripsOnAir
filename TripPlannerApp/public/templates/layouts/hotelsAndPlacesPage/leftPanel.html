@@ -1,6 +1,6 @@
 
 <div class="col-xs-12" style="padding-bottom: 2%">
-    <div class="btn-group">
+    <div class="btn-group" id="tabButtonIntro">
         <label class="btn btn-primary" ng-model="leftPanel" btn-radio="'places'">
             <i class="col-xs-2 glyphicon glyphicon-eye-open"></i>
             <div class="col-xs-2">Places</div>
@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="col-xs-12">
-    <div ng-if="leftPanel=='places'">
+    <div ng-if="leftPanel=='places'" id="placesPanelIntro">
     <div class="col-xs-4" style="padding: 0px">
     <div ng-repeat="place in allPlaces" ng-if="$index%3==0">
         <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
