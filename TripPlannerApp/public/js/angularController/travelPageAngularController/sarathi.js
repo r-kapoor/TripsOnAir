@@ -10,7 +10,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
                     //console.log("scrollHeightTravel:"+$("#transcludeTravelPanel")[0].scrollHeight);
                     $scope.$emit('initialize-pane',"travelPanel");
                 }
-            },10);
+            },100);
             $timeout(function (){
                 if(element.class=="panel-travelMode"){
                     //console.log("in panel-travelMode");
@@ -45,7 +45,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
                     //console.log("scrollHeightcabOperatorMode:"+$("#transcludecabOperatorPanel").get(0).scrollHeight);
                     $scope.$emit('initialize-pane',"cabOperatorPanel");
                 }
-            },10);
+            },100);
         }
     };
 }]);

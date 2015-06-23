@@ -1,6 +1,24 @@
 /**
  * Created by rkapoor on 26/02/15.
  */
+
+routesModule.directive('postDest', ['$timeout', function($timeout) {
+    return function($scope,$rootScope, element, $attrs) {
+        //console.log("element:"+element.class);
+
+        if ($scope.$last){
+            $timeout(function (){
+                if(element.class=="panel-reorderDest")
+                {
+                    //console.log("in panel-travel");
+                    //console.log("scrollHeightTravel:"+$("#transcludeReorderPanel")[0].scrollHeight);
+                    $scope.$emit('initialize-pane',"reorderDestPanel");
+                }
+            },1000);
+        }
+    };
+}]);
+
 routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q', '$location', '$cookies', 'orderedCities', function($scope, $rootScope, $http, $q, $location, $cookies, orderedCities) {
 
     $scope.reorderPanel=false;
@@ -86,14 +104,14 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
         var options = {
             expires: new Date(currentDate.getTime() + 30*24*60*60*1000)
         };
-        console.log('visitedStatus:'+visitedStatus);
+        //console.log('visitedStatus:'+visitedStatus);
         if(visitedStatus != undefined && visitedStatus != null){
             //Cookie is present
             visitedStatus = JSON.parse(visitedStatus);
             //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
             var multiCityIntro = visitedStatus.multiCityIntro;
-            console.log(typeof visitedStatus);
-            console.log(multiCityIntro);
+            //console.log(typeof visitedStatus);
+            //console.log(multiCityIntro);
             if(!(multiCityIntro != undefined && multiCityIntro)){
                 //Multicity cookie not present
                 $scope.multiCityIntroFunction();

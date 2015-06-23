@@ -13,28 +13,10 @@
         <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false">
         <div class="col-sm-4">
             <pageslide ps-open="isTravelPanelOpen" ps-size="400px" ps-side="left" ps-class="ng-travel">
-                <!--<div ng-hide="loader">-->
-                <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
-                <!--</div>-->
                 <div id="travelPanelIntro" class="panel panel-default" style="height: 100vh">
                     <div class="{{getTransparentClass(1)}} btn" ng-click="isTravelPanelDisable || closeOtherPanels(1)"></div>
                     <div class="panel-body">
                         <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
-                            <!--<p>-->
-                            <!--<div class="panel panel-primary">-->
-                                <!--<div class="panel-heading text-center">-->
-                                    <!--<div class="row">-->
-                                        <!--<h3>Travel Overview</h3>-->
-                                    <!--</div>-->
-                                    <!--<div class="row">-->
-                                        <!--<div class="btn btn-default btn-xs btn-responsive" ng-click="submitTravel()">Submit</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="page-header text-center">-->
-                            <!--<h1><small>Trip Overview</small></h1>-->
-                            <!--</div>-->
-
                             <div scroll-pane scroll-config="paneConfig" id="travelPanel" style="width:380px;height:100vh">
                                 <div id="transcludeTravelPanel">
                                     <div class="panel-travel" ng-repeat="leg in legs" collapse="isTripPanelSetCollapsed" post-repeat>

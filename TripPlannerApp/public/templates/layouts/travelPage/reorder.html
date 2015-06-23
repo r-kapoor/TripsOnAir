@@ -10,20 +10,12 @@
             <div id="reorderPanelIntro" class="panel panel-default" style="height: 100vh">
                 <div class="panel-body">
                     <div class="text-center">
-                        <!--<h3>Optimized Order Of Destination</h3>-->
-                        <!--<div ng-hide="loader">-->
-                        <!--<img src="images/loading.gif" class="img-responsive" style="width: 100%"/>-->
-                        <!--</div>-->
                         <div ng-hide="reorderList">
-                            <!--<div class="panel panel-primary">-->
-                                <!--<div class="panel-heading" style="font-size: small">Drag and Drop To Reorder</div>-->
-                            <!--</div>-->
-                            <!--<h5></h5>-->
-                            <!--<div class="btn btn-default btn-xs btn-responsive" ng-click="showRoutes()">Submit</div>-->
+                            <div scroll-pane scroll-config="paneConfig" id="reorderDestPanel" style="height:100vh">
+                                <div id="transcludeReorderPanel">
                             <div class="row">
                                 <div class="col-xs-2"></div>
                                 <div class="col-xs-8">
-
                                     <ul class="draglist">
                                         <li ng-drop="false">
                                             <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
@@ -40,7 +32,8 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li ng-repeat="obj in draggableObjects" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)">
+
+                                        <li  class="panel-reorderDest" ng-repeat="obj in draggableObjects" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)" post-dest>
                                             <div ng-drag="true" ng-drag-data="obj" ng-class="obj.CityName">
                                                 <div class="wrapper draggable">
                                                     <a href="#" class="thumbnail " style="margin-bottom: -20%;">
@@ -77,6 +70,9 @@
                         </div>
                     </div>
                 </div>
+                </div>
+            </div>
+
             </div>
             <!--<div class="col-xs-2"></div>-->
         </pageslide>
