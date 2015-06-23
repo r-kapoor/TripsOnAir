@@ -1,4 +1,4 @@
-itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData) {
+itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData, $cookies) {
 
     $scope.origin = null;
     $scope.destinations = null;
@@ -68,7 +68,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         steps: [
             {
                 element: '#destinationsIntro',
-                intro: "Switch between destinations"
+                intro: "Switch between destinations",
+                position: "bottom"
             },
             {
                 element:  '#tabButtonIntro',
@@ -170,37 +171,39 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         });
     };
 
-    function openTravelGuide(){
-        //isGuideOpened = true;
-        //var visitedStatus = $cookies.get('visitedStatus');
-        //var currentDate = new Date();
-        //var options = {
-        //    expires: new Date(currentDate.getTime() + 30*24*60*60*1000)
-        //};
-        //console.log('visitedStatus:'+visitedStatus);
-        //if(visitedStatus != undefined && visitedStatus != null){
-        //    //Cookie is present
-        //    visitedStatus = JSON.parse(visitedStatus);
-        //    //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
-        //    var travelPanelIntro = visitedStatus.travelPanelIntro;
-        //    console.log(typeof visitedStatus);
-        //    console.log(travelPanelIntro);
-        //    if(!(travelPanelIntro != undefined && travelPanelIntro)){
-        //        //travelPanelIntro cookie not present
-        //        $scope.introFunction();
-        //        visitedStatus.travelPanelIntro = true;
-        //        $cookies.put('visitedStatus', JSON.stringify(visitedStatus), options);
-        //    }
-        //}
-        //else{
-        //    //Cookie is not present
-        //    $scope.introFunction();
-        //    $cookies.put('visitedStatus', JSON.stringify({
-        //        travelPanelIntro: true
-        //    }), options);
-        //}
-        $scope.introFunction();
+    function openTravelGuide() {
+        var visitedStatus = $cookies.get('visitedStatus');
+        var currentDate = new Date();
+        var options = {
+            expires: new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+        };
+        console.log('visitedStatus:' + visitedStatus);
+        if (visitedStatus != undefined && visitedStatus != null) {
+            //Cookie is present
+            visitedStatus = JSON.parse(visitedStatus);
+            //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
+            var itineraryPanelIntro = visitedStatus.itineraryPanelIntro;
+            console.log(typeof visitedStatus);
+            console.log(itineraryPanelIntro);
+            if (!(itineraryPanelIntro != undefined && itineraryPanelIntro)) {
+                //        //itineraryPanelIntro cookie not present
+                $scope.introFunction();
+                visitedStatus.itineraryPanelIntro = true;
+                $cookies.put('visitedStatus', JSON.stringify(visitedStatus), options);
+            }
+        }
+        else {
+            //Cookie is not present
+            $scope.introFunction();
+            $cookies.put('visitedStatus', JSON.stringify({
+                itineraryPanelIntro: true
+            }), options);
+        }
     }
+
+    $rootScope.$on('guide',function onGuide(){
+        $scope.introFunction();
+    });
 
     function initializeMapDataArray(){
         var mapDataArray = [];
