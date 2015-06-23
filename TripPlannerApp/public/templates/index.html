@@ -58,8 +58,65 @@
     <div ng-include src="'templates/layouts/global/header.html'"></div>
     <div ng-include src="'templates/layouts/home/imageSlider.html'"></div>
     <div ng-include src="'templates/layouts/home/form.html'"></div>
-    <div ng-include src="'templates/layouts/home/howItWorks.html'"></div>
-	<div ng-include src="'templates/layouts/global/footer.html'"></div>
+    <div class="sections-wrapper">
+        <section id="why" class="section why">
+            <div class="container">
+                <h2 class="title text-center">How Tripsonair Works?</h2>
+                <p class="intro text-center">We save your time and effort in planning trips through an automated trip planner. Our state-of-the-art algorithms analyze the available travel options, accommodation and attractions to plan a perfect holiday for you in real-time, which can be further customized and personalized.</p>
+                <div class="row item">
+                    <div class="content col-md-4 col-sm-12 col-xs-12">
+                        <h3 class="title">Input your requirements</h3>
+                        <div class="desc">
+                            <p>Feed your destinations and dates to get the minimum budget.</p>
+                            <p>Estimate your budget & optionally provide your interest.</p>
+                        </div>
+                    </div><!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                        <img class="img-responsive" src="/images/input.png" alt="">
+                    </figure>
+                </div><!--//item-->
+
+                <div class="row item">
+                    <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
+                        <h3 class="title">View and customize travel options</h3>
+                        <div class="desc">
+                            <p>View the best optimized travel plan of your trip.</p>
+                            <p>Customize travel options encompassing flight, bus, train and cab. Also check your budget spent on travel as you make changes.</p>
+                        </div>
+                    </div><!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
+                        <img class="img-responsive" src="/images/travel.png" alt="">
+                    </figure>
+                </div><!--//item-->
+
+                <div class="row item ">
+                    <div class="content col-md-4 col-sm-12 col-xs-12">
+                        <h3 class="title">Personalize your itinerary</h3>
+                        <div class="desc">
+                            <p>Check out the minute to minute itinerary right from the time you land in the city.</p>
+                            <p>Add, remove & change timings of the places of your itinerary while viewing them in the map.</p>
+                        </div>
+                    </div><!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                        <img class="img-responsive" src="/images/itinerary.png" alt="">
+                    </figure>
+                </div><!--//item-->
+
+                <div class="row item last-item">
+                    <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
+                        <h3 class="title">Share itinerary</h3>
+                        <div class="desc">
+                            <p>Save and share itinerary with your friends.</p>
+                        </div>
+                    </div><!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
+                        <img class="img-responsive" src="/images/figure-4.png" alt="">
+                    </figure>
+                </div><!--//item-->
+            </div><!--//container-->
+        </section><!--//why-->
+    </div><!--//section-wrapper-->
+    <div ng-include src="'templates/layouts/global/footer.html'"></div>
 </body>
 
 </html>
