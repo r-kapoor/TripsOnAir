@@ -849,7 +849,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     function setDestinationSpecificModels(){
         $scope.currentDay = 0;
-        var firstDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+        var firstDay = $scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime;
+        if(firstDay == null || firstDay == undefined){
+            //No places being visited on this day
+            firstDay = $scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.arrivalTime;
+        }
+        firstDay = new Date(firstDay);
         $scope.currentDate = firstDay.setHours(0,0,0,0);
         calculateHotelExpenses();
         $scope.allPlaces = $scope.currentDestination.places;
