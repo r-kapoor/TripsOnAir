@@ -38,7 +38,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
                     //console.log("scrollHeightBusMode:"+$("#transcludeBusPanel").get(0).scrollHeight);
                     $scope.$emit('initialize-pane',"busPanel");
                 }
-            },1000);
+            },100);
             $timeout(function (){
                 if(element.class=="panel-cabOperatorMode panel panel-default panel panel-default"){
                     console.log("in panel-cabOperatorMode");
@@ -194,7 +194,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             $scope.isTrainClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
-            }, 800);
+            }, 1000);
         }
         else if(segment.kind == "flight") {
             initializeVehicleDates(segment.flightData,segment.startTime);
@@ -203,7 +203,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             $scope.isFlightClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
-            }, 800);
+            }, 1000);
         }
         else if(segment.kind == "bus")
         {
@@ -213,7 +213,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             $scope.isBusClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
-            }, 800);
+            }, 1000);
         }
         else if(segment.kind=="car"){
             if(segment.subkind != undefined && segment.subkind == "cab") {
