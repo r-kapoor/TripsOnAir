@@ -1,3 +1,29 @@
+itineraryModule.directive('postRepeat', ['$timeout', function($timeout) {
+    return function($scope,$rootScope, element, $attrs) {
+        console.log("element:"+element.class);
+
+        if ($scope.$last){
+            console.log("last");
+            $timeout(function (){
+                if(element.class=="panel-places clearfix")
+                {
+                    console.log("in panel-places");
+                    console.log("scrollHeightTravel:"+$("#transcludePlacesPanel")[0].scrollHeight);
+                    $scope.$emit('initialize-pane',"placesPanel");
+                }
+            },1000);
+            $timeout(function (){
+                if(element.class=="panel-hotels clearfix")
+                {
+                    console.log("in panel-hotels");
+                    console.log("scrollHeightTravel:"+$("#transcludeHotelsPanel")[0].scrollHeight);
+                    $scope.$emit('initialize-pane',"hotelsPanel");
+                }
+            },1000);
+        }
+    };
+}]);
+
 itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData) {
 
     $scope.origin = null;

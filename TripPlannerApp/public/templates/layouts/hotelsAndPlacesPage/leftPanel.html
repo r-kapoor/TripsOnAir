@@ -15,10 +15,13 @@
         </label>
     </div>
 </div>
-<div class="col-xs-12">
+<div fix-top class="col-xs-12">
     <div ng-if="leftPanel=='places'" id="placesPanelIntro">
+
+        <div scroll-pane scroll-config="paneConfig" id="placesPanel" style="width:100%;height:100vh">
+            <div id="transcludePlacesPanel" class="clearfix">
     <div class="col-xs-4" style="padding: 0px">
-    <div ng-repeat="place in allPlaces" ng-if="$index%3==0">
+    <div class="panel-places clearfix" ng-repeat="place in allPlaces" ng-if="$index%3==0" post-repeat>
         <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
             <div class="wrapper">
                 <a class="thumbnail" style="margin-bottom: 0;">
@@ -40,7 +43,7 @@
     </div><!--end of ng-repeat-->
     </div>
         <div class="col-xs-4" style="padding: 0px">
-            <div ng-repeat="place in allPlaces" ng-if="$index%3==1">
+            <div class="panel-places clearfix" ng-repeat="place in allPlaces" ng-if="$index%3==1" post-repeat>
                 <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
                     <div class="wrapper">
                         <a class="thumbnail" style="margin-bottom: 0;">
@@ -62,7 +65,7 @@
             </div><!--end of ng-repeat-->
         </div>
         <div class="col-xs-4" style="padding: 0px">
-            <div ng-repeat="place in allPlaces" ng-if="$index%3==2">
+            <div class="panel-places clearfix" ng-repeat="place in allPlaces" ng-if="$index%3==2" post-repeat>
                 <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
                     <div class="wrapper">
                         <a class="thumbnail" style="margin-bottom: 0;">
@@ -83,10 +86,18 @@
                 </div>
             </div><!--end of ng-repeat-->
         </div>
+
+
+        </div>
+            </div>
     </div>
     <div ng-if="leftPanel=='hotels'">
+
+        <div scroll-pane scroll-config="paneConfig" id="hotelsPanel" style="width:100%;height:100vh">
+            <div id="transcludeHotelsPanel" class="clearfix">
+
         <div class="col-xs-4" style="padding: 0px">
-            <div ng-repeat="hotel in allHotels" ng-if="$index%3==0">
+            <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" ng-if="$index%3==0" post-repeat>
                 <div style="padding: 0;margin-bottom: 0;position: relative">
                     <div class="wrapper">
                         <a class="thumbnail" style="margin-bottom: 0;">
@@ -108,7 +119,7 @@
             </div><!--end of ng-repeat-->
         </div>
         <div class="col-xs-4" style="padding: 0px">
-            <div ng-repeat="hotel in allHotels" ng-if="$index%3==1">
+            <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" ng-if="$index%3==1" post-repeat>
                 <div style="padding: 0;margin-bottom: 0;position: relative">
                     <div class="wrapper">
                         <a class="thumbnail" style="margin-bottom: 0;">
@@ -130,7 +141,7 @@
             </div><!--end of ng-repeat-->
         </div>
         <div class="col-xs-4" style="padding: 0px">
-            <div ng-repeat="hotel in allHotels" ng-if="$index%3==2">
+            <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" ng-if="$index%3==2" post-repeat>
                 <div style="padding: 0;margin-bottom: 0;position: relative">
                     <div class="wrapper">
                         <a class="thumbnail" style="margin-bottom: 0;">
@@ -151,6 +162,11 @@
                 </div>
             </div><!--end of ng-repeat-->
         </div>
+        </div>
+            </div>
+        </div>
+
+
     </div>
 
 
