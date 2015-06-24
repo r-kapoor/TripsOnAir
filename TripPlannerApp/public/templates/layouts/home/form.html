@@ -93,7 +93,7 @@
                                                     <input type="text" ng-model="originCity"
                                                            ng-blur="originSelected(isOpen())"
                                                            placeholder="Enter the origin"
-                                                           typeahead="city as city.CityName for city in cities | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)"
+                                                           typeahead="city as (city.AlternateName +', '+ city.State) for city in cities | filterByCityAndState:$viewValue | orderBy: byMatch($viewValue)"
                                                            class="form-control" aria-describedby="inputError2Status">
                                                 </div>
 
@@ -103,7 +103,7 @@
                                                         <input ng-model="destinationCity"
                                                                ng-blur="destinationSelected()" class="form-control"
                                                                placeholder="{{label}}"
-                                                               typeahead="city as city.CityName for city in cities | filterDestinations | filterByOrigin:originCity | filter:{CityName:$viewValue} | orderBy: byMatch($viewValue)">
+                                                               typeahead="city as (city.AlternateName +', '+ city.State) for city in cities | filterByCityAndState:$viewValue | filterDestinations | filterByOrigin:originCity | orderBy: byMatch($viewValue)">
 
                                                         <div class="input-group-addon " ng-click="destinationSelected()"><i
                                                             class="glyphicon glyphicon-plus cursor-style"></i></div>

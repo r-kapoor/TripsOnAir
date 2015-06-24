@@ -7,7 +7,11 @@ var encodeCityID = require('../../lib/hashEncoderDecoder');
 function populateCityDataService() {
     var connection=conn.conn();
     connection.connect();
-    var queryString = "SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude, IsDestination FROM City;"
+    var queryString = "SELECT a.CityID, CityName, AlternateName, State, CityImage, tier, Latitude, Longitude, IsDestination FROM "
+        +"(SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude, IsDestination FROM City) a "
+        +"JOIN "
+        +"(SELECT CityID, AlternateName FROM City_Alternate_Name) b "
+        +"ON (a.CityID = b.CityID);";
     connection.query(queryString, function(err, rows, fields) {
         if (err)
         {
@@ -36,3 +40,5 @@ function populateCityDataService() {
 }
 
 populateCityDataService();
+
+

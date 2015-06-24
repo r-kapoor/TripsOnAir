@@ -33,6 +33,19 @@ inputModule.filter('filterDestinations', function() {
 
 });
 
+inputModule.filter('filterByCityAndState', function(){
+    return function (items, viewValue){
+        var filtered = [];
+        for (var i = 0; i < items.length; i++){
+            var item = items[i];
+            if(item.AlternateName.toUpperCase().indexOf(viewValue.toUpperCase()) != -1 || item.State.toUpperCase().indexOf(viewValue.toUpperCase()) != -1){
+                filtered.push(item);
+            }
+        }
+        return filtered;
+    }
+});
+
 inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, cityData, formData) {
   $scope.originCity = null;
   $scope.destinationCity = null;
