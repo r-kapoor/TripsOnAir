@@ -29,4 +29,8 @@ itineraryModule.controller('indraController', function($scope, $rootScope, $http
     $scope.setChildClassOnOut = function(){
         $scope.budgetBadgeClass = "";
     };
+
+    $scope.guideMe = function(){
+        $rootScope.$emit("guide");
+    };
 });

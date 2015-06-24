@@ -11,7 +11,7 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
     <!--<script src="//desandro.github.io/imagesloaded/imagesloaded.pkgd.min.js"></script>-->
-    <script src="http://code.angularjs.org/1.3.4/angular.min.js"></script>
+    <script src="http://code.angularjs.org/1.4.0/angular.min.js"></script>
     <!--<script src="js/angularJS/angular-masonry.js"></script>-->
     <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
     <!--<script src="js/GlobalJSFunctions/googleAnalytics.js"></script>-->
@@ -73,7 +73,7 @@
 	<div ng-controller="itineraryMainController">
 		<div class="header-top" ng-include src="'templates/layouts/global/header.html'"></div>
         <div ng-controller="shakuniController">
-            <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false">
+            <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false" ng-intro-autorefresh="true">
                 <div class="row">
                     <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showCityPanel.html'"></div>
                 </div>

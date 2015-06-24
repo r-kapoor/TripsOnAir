@@ -38,7 +38,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
                     //console.log("scrollHeightBusMode:"+$("#transcludeBusPanel").get(0).scrollHeight);
                     $scope.$emit('initialize-pane',"busPanel");
                 }
-            },1000);
+            },100);
             $timeout(function (){
                 if(element.class=="panel-cabOperatorMode panel panel-default panel panel-default"){
                     console.log("in panel-cabOperatorMode");
@@ -94,6 +94,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     $scope.isTravelPanelDisable = false;
     $scope.altTrip = true;
     $scope.segmentHoverClass = "segment-hover";
+
+    $scope.vehicleLimit = 7;
     var defaultRouteData = null;
     var alternateRouteData = null;
     var isOtherTripClicked = false;
@@ -188,22 +190,30 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         if(segment.kind == "train") {
             initializeVehicleDates(segment.trainData,segment.startTime);
             $scope.trains = segment.trainData;
+            $scope.vehicleLimit = 7;
             $scope.isTrainClicked = true;
+            $timeout(function() {
+                $scope.vehicleLimit = undefined;
+            }, 1000);
         }
         else if(segment.kind == "flight") {
             initializeVehicleDates(segment.flightData,segment.startTime);
             $scope.flights = segment.flightData;
+            $scope.vehicleLimit = 7;
+            $scope.isFlightClicked = true;
             $timeout(function() {
-                $scope.isFlightClicked = true;
-            }, 500);
+                $scope.vehicleLimit = undefined;
+            }, 1000);
         }
         else if(segment.kind == "bus")
         {
             initializeVehicleDates(segment.busData,segment.startTime);
             $scope.buses = segment.busData;
+            $scope.vehicleLimit = 7;
+            $scope.isBusClicked = true;
             $timeout(function() {
-                $scope.isBusClicked = true;
-            }, 500);
+                $scope.vehicleLimit = undefined;
+            }, 1000);
         }
         else if(segment.kind=="car"){
             if(segment.subkind != undefined && segment.subkind == "cab") {

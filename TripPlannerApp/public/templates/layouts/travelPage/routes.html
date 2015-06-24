@@ -179,7 +179,7 @@
                         <div ng-if="isTrainClicked" scroll-pane scroll-config="paneConfig" id="trainPanel" style="width:280px;height:100vh">
                             <div id="transcludeTrainPanel">
 
-                        <div class="panel-trainMode" ng-repeat="train in trains" post-repeat>
+                        <div class="panel-trainMode" ng-repeat="train in trains | limitTo: vehicleLimit" post-repeat>
                             <div ng-if="train.isRecommended != 0" class="panel {{getPanelClass(train)}}">
                                 <div class="panel-heading">
                                     <div class="row">
@@ -264,7 +264,7 @@
                         <ul ng-if="isFlightClicked" class="list-group">
                             <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
                             <div id="transcludeFlightPanel">
-                            <div class="panel-flightMode" ng-repeat="flight in flights" post-repeat>
+                            <div class="panel-flightMode" ng-repeat="flight in flights | limitTo: vehicleLimit" post-repeat>
                                 <li ng-if="flight.isRecommended != 0" class="list-group-item" style="font-size:90%">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -333,7 +333,7 @@
                         <ul ng-if="isBusClicked" class="list-group">
                             <div scroll-pane scroll-config="paneConfig" id="busPanel" style="width:280px;height:100vh">
                                 <div id="transcludeBusPanel">
-                            <div class ="panel-busMode" ng-repeat="bus in buses" post-repeat>
+                            <div class ="panel-busMode" ng-repeat="bus in buses | limitTo: vehicleLimit" post-repeat>
                                 <li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">
                                     <div class="row">
                                         <div class="col-sm-12">

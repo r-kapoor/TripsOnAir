@@ -1,8 +1,8 @@
 var Hashids=require('hashids');
-var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
-var hashidscity = new Hashids("encrypting the cityid", 8);
-var hashidshotel = new Hashids("encrypting the hotelid", 8);
-var hashidsplace = new Hashids("encrypting the placeid", 8);
+var hashidsgroup = new Hashids("encrypting the groupid using hash", 16, "0123456789abcdefghijklmnopqrstuvxyz");
+var hashidscity = new Hashids("encrypting the cityid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
+var hashidshotel = new Hashids("encrypting the hotelid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
+var hashidsplace = new Hashids("encrypting the placeid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 
 function encodeCityID(cityID){
 	if(!Array.isArray(cityID))

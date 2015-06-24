@@ -15,7 +15,7 @@
             <div id="navbar-collapse" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav" ng-controller="indraController">
                     <li ng-if="isHomeShown" class="active nav-item"><a href="">Home</a></li>
-                    <li ng-if="isHowItWorksShown" class="nav-item nav-item-cta last"><a  class="btn btn-cta btn-cta-secondary" href="">How it Works</a></li>
+                    <li ng-if="isHowItWorksShown" class="nav-item nav-item-cta last"><a  class="btn btn-cta btn-cta-secondary" href="#why" du-smooth-scroll>How it Works</a></li>
                     <li ng-if="isLogInShown" class="nav-item"><a href="">Log in</a></li>
                     <li id="saveButton" ng-if="isSaveShown" ng-click="submitPage()" class="nav-item"><a href="">{{saveText}}</a></li>
                     <li class="nav-item last" ng-if="isSaveShown" style="padding-top: 15px" ng-click="guideMe()"><i class="glyphicon glyphicon-question-sign"></i></li>
