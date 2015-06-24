@@ -73,7 +73,7 @@
                         Drag Here To Add New Place</br></br>
                     </timeline-content>
                 </timeline-panel>
-                <timeline-panel ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">
+                <timeline-panel id="place-{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}" ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">
                     <timeline-heading>
                         <div class="row">
                             <div class="col-xs-10">

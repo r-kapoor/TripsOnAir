@@ -616,6 +616,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         else {
             calculatePlacesExpenses();
             markPlaceAsAdded(place);
+            scrollToPlace(place.PlaceID);
         }
 
         if(insertedByCreatingPosition)
@@ -624,6 +625,33 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             initializeMapDataArray();
         }
     };
+
+    function scrollToPlace(placeID){
+        function getPlaceElement(tries, callback){
+            $timeout(function(){
+                tries--;
+                element = document.getElementById('place-'+placeID);
+                if(element != null){
+                    callback(null, element);
+                }
+                else if(tries>0){
+                    getPlaceElement(tries, callback);
+                }
+                else {
+                    callback(new Error('No element'));
+                }
+            }, 500);
+        }
+        getPlaceElement(5, function onGettingElement(err, element){
+            if(err){
+                console.log(err);
+            }
+            else{
+                var section = angular.element(element);
+                $document.duScrollToElementAnimated(section);
+            }
+        });
+    }
 
     $scope.dragMove = function(){
         $scope.stopClickClass = 'stop-click';
