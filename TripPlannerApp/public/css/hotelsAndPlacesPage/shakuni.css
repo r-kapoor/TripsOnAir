@@ -76,3 +76,10 @@
 .clearfix {
     display: inline-block;
 }
+.visitTimings{
+    cursor: pointer;
+}
+.visitTimings:hover{
+    background-color: white;
+    color:#000000;
+}

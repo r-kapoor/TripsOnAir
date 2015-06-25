@@ -298,6 +298,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             });
         }
     };
+
     $scope.closeBudgetPanel = function(){
         $scope.isBudgetPanelOpen = false;
     };

@@ -199,7 +199,7 @@ img {
 .img-circle {
   border-radius: 50%; }
 
-.drag-enter {
+li.drag-enter > .timeline-panel{
   border: red solid;
 }
 
