@@ -661,8 +661,17 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         jQuery(".jspContainer").css("overflow","visible");
     };
 
+    $scope.dragStop = function(){
+        var element = jQuery("#placesPanel");
+        jQuery("#placesPanel").css("overflow","hidden");
+        jQuery(".jspContainer").css("overflow","hidden");
+    };
+
     $scope.onDropComplete = function(data, event, index, dateItineraryIndex){
         console.log('Drop Complete:'+JSON.stringify(data));
+        var element = jQuery("#placesPanel");
+        jQuery("#placesPanel").css("overflow","hidden");
+        jQuery(".jspContainer").css("overflow","hidden");
         var dateItinerary = $scope.currentDestination.dateWiseItinerary[dateItineraryIndex];
         var dateItineraryClone = clone(dateItinerary);
         var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
