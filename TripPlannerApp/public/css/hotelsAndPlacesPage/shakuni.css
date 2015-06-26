@@ -35,7 +35,7 @@
     position: fixed;
     left: 0px;
     bottom: 0px;
-    z-index: 2;
+    z-index: 200;
     width: 40%;
 }
 
