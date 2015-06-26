@@ -475,6 +475,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     console.log("GOT THE RIGHT CANDIDATE FOR THIS JOB: "+JSON.stringify(placeAdditionCandidates[selectedIndex.selectedCandidateIndex]));
                     console.log("placeTimingsIndex:"+selectedIndex.selectedPlaceTimingsIndex);
                     insertPlaceIntoItinerary(place, placeAdditionCandidates[selectedIndex.selectedCandidateIndex], selectedIndex.selectedPlaceTimingsIndex);
+                    setSelectedPlaceTimingIndex(place.PlaceTimings, selectedIndex.selectedPlaceTimingsIndex);
                     insertedByCreatingPosition = true;
                 }
             }
@@ -571,6 +572,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             place.placeArrivalTime = arrivalTimeOfPlaceAfter;
                             place.placeDepartureTime = departureTimeOfPlaceAfter;
                             insertPlaceAtLastOfDay(dateWiseItinerary, place);
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, arrivalTimingIndexAfter);
                             insertedByCreatingPosition = true;
 
                         }
@@ -580,6 +582,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             place.placeDepartureTime = departureTimeOfPlaceBefore;
                             place.placeArrivalTime = new Date();
                             insertPlaceAtBeginningOfDay(dateWiseItinerary, place);
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, arrivalTimingIndexBefore);
                             insertedByCreatingPosition = true;
                         }
                     }
@@ -590,12 +593,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             place.placeDepartureTime = departureTimeOfPlaceBefore;
                             place.placeArrivalTime = new Date();
                             insertPlaceAtBeginningOfDay(dateWiseItinerary, place);
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, arrivalTimingIndexBefore);
                             insertedByCreatingPosition = true;
                         }
                         else if(candidates[1]) {
                             place.placeArrivalTime = arrivalTimeOfPlaceAfter;
                             place.placeDepartureTime = departureTimeOfPlaceAfter;
                             insertPlaceAtLastOfDay(dateWiseItinerary, place);
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, arrivalTimingIndexAfter);
                             insertedByCreatingPosition = true;
                         }
                     }
@@ -1322,6 +1327,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             place2.placeArrivalTime = new Date(getTimeFromDate(finalPlace2DepartureTime) - place2.Time2Cover*MINUTES_TO_MILLISECONDS);
             place1.placeArrivalTime = new Date(getTimeFromDate(finalPlace2DepartureTime) + timeBetweenPlaces*HOURS_TO_MILLISECONDS);
             place1.placeDepartureTime = new Date(getTimeFromDate(place1.placeArrivalTime) + place1.Time2Cover*MINUTES_TO_MILLISECONDS);
+            var timingIndexPlace1 = setPlaceTimingsToSelect(place1.placeArrivalTime, place1.PlaceTimings);
+            var timingIndexPlace2 = setPlaceTimingsToSelect(place2.placeArrivalTime, place2.PlaceTimings);
+            setSelectedPlaceTimingIndex(place1.PlaceTimings, timingIndexPlace1);
+            setSelectedPlaceTimingIndex(place2.PlaceTimings, timingIndexPlace2);
+
             dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index1]] = place2;
             dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index2]] = place1;
             dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place2.placeArrivalTime) - timeToPlace2*HOURS_TO_MILLISECONDS);
@@ -1523,6 +1533,19 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         return false;
     }
+
+    function setSelectedPlaceTimingIndex(placeTimings, index){
+        for(var timingIndex=0; timingIndex < placeTimings.length; timingIndex++){
+            placeTimings[timingIndex].isSelected = 0;
+        }
+        if(placeTimings[index]!=undefined){
+            placeTimings[index].isSelected = 1;
+        }
+        else{
+            console.log('Invalid Index:'+index+'in placeTimings:'+JSON.stringify(placeTimings));
+        }
+    }
+
     function replacePlace(place,index,dateItinerary, locationOfArrival, locationOfDeparture)
     {
         var permValue = dateItinerary.permutation[index];
@@ -1542,18 +1565,21 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             if(dateItinerary.permutation.length == 1){
                 //This is the only place of the day
                 if(hasHotel){
-                    if(!placeIsClosedAtTime(oldPlace.placeArrivalTime, place.PlaceTimings)){
+                    var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
+                    if(timingIndex!=-1){
                         var supposedDepartureTime = getPlaceDepartureTimeFromArrival(oldPlace.placeArrivalTime, place.Time2Cover);
-                        if(!placeIsClosedAtTime(supposedDepartureTime, place.PlaceTimings)){
+                        var expectedTimingIndex = getPlaceTimingsToSelect(supposedDepartureTime, place.PlaceTimings);
+                        if(expectedTimingIndex == timingIndex){
+                            //Place is open in same timing at departure
                             place.placeArrivalTime = oldPlace.placeArrivalTime;
                             place.placeDepartureTime = supposedDepartureTime;
                         }
                         else {
                             //the place is closed at departure time
-                            var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
                             place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeEnd, oldPlace.placeArrivalTime);
                             place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime, place.Time2Cover);
                         }
+                        setSelectedPlaceTimingIndex(place.PlaceTimings, timingIndex);
                     }
                     else {
                         var nearestTimingIndex = getNearestTimingIndex(oldPlace.placeArrivalTime, place.PlaceTimings);
@@ -1568,6 +1594,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             place.placeArrivalTime = $scope.getDateFromString(nearestTiming.TimeStart, oldPlace.placeArrivalTime);
                             place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
                         }
+                        setSelectedPlaceTimingIndex(place.PlaceTimings, nearestTimingIndex);
                     }
                     dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - timeToHotel*HOURS_TO_MILLISECONDS);
                     dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
@@ -1589,12 +1616,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             //The place is open at departure time and is the same timing
                             place.placeArrivalTime = supposedPlaceArrivalTime;
                             place.placeDepartureTime = maxPlaceDepartureTime;
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, timingIndex);
                         }
                         else if(timingIndexDeparture == -1){
                             //The place closes before departure time
                             //Fixing the departure time when the place closes
                             place.placeDepartureTime = $scope.getDateFromString(place.PlaceTimings[timingIndex].TimeEnd, oldPlace.placeArrivalTime);
                             place.placeArrivalTime = supposedPlaceArrivalTime;
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, timingIndex);
                         }
                         else {
                             //The place is open at both times but in different place timings
@@ -1606,10 +1635,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             if(durationAccordingToArrival > durationAccordingToDeparture){
                                 place.placeArrivalTime = supposedPlaceArrivalTime;
                                 place.placeDepartureTime = departureTimeAccordingToArrival;
+                                setSelectedPlaceTimingIndex(place.PlaceTimings, timingIndex);
                             }
                             else {
                                 place.placeArrivalTime = arrivalTimeAccordingToDeparture;
                                 place.placeDepartureTime = maxPlaceDepartureTime;
+                                setSelectedPlaceTimingIndex(place.PlaceTimings, timingIndexDeparture);
                             }
                         }
                     }
@@ -1627,6 +1658,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                             else {
                                 place.placeDepartureTime = supposedPlaceDepartureTime;
                             }
+                            setSelectedPlaceTimingIndex(place.PlaceTimings, timingIndex);
                         }
                         else {
                             //Place is closed before reaching the destination
@@ -1670,6 +1702,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
                 openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime,place.PlaceTimings);
 
+                if((openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
+                    setSelectedPlaceTimingIndex(place.PlaceTimings, openingTimeIndexForArrival);
+                }
+
                 checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
                 if(hasHotel){
                     //If has hotel then adjust the hotel timings
@@ -1703,8 +1739,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                     }
                 }
-                var openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
-                var openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime, place.PlaceTimings);
+                openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
+                openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime, place.PlaceTimings);
+                if((openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
+                    setSelectedPlaceTimingIndex(place.PlaceTimings, openingTimeIndexForArrival);
+                }
                 checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
                 if(hasHotel){
                     dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
@@ -1723,8 +1762,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
                 place.placeArrivalTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime) + TimeFromLastPlace*HOURS_TO_MILLISECONDS);
                 place.placeDepartureTime = new Date(getTimeFromDate(nextPlace.placeArrivalTime) - TimeToNextPlace*HOURS_TO_MILLISECONDS);
-                var openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
-                var openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
+                openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
+                openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
+
+                if((openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
+                    setSelectedPlaceTimingIndex(place.PlaceTimings, openingTimeIndexForArrival);
+                }
                 console.log("openingTimeIndexForArrival:"+openingTimeIndexForArrival+",openingTimeIndexForDeparture:"+openingTimeIndexForDeparture);
                 checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
 
