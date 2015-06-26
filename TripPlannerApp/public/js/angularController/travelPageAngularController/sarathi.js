@@ -50,7 +50,7 @@ routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     };
 }]);
 
-routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', '$cookies', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout, $cookies) {
+routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$q', '$location', 'orderedCities', '$timeout', '$cookies', '$window', function($scope, $rootScope, $http, $q, $location, orderedCities, $timeout, $cookies, $window) {
 
     $scope.isTravelPanelOpen=false;
     $scope.isTravelModesPanelOpen=false;
@@ -355,6 +355,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             //console.log("showRoutes response:"+JSON.stringify(data));
             if(data.tripNotPossible != undefined && data.tripNotPossible == 1) {
                 console.log('Page NOT FOUND');
+                $window.location.href = '/tripNotPossible';
             }
             else {
                 dateSet = data.dateSet;

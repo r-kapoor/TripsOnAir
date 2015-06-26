@@ -7,9 +7,10 @@ function chooseMajorDefault(rome2RioDataArray, dates, times, budget, callbackRes
 	var withoutTaxiRome2rioData = rome2RioDataArray[0];
 	var withTaxiRome2rioData = rome2RioDataArray[1];
 
+    var tripNotPossible = false;
     if(withTaxiRome2rioData == null && withoutTaxiRome2rioData == null) {
         console.log("TRIP NOT POSSIBLE WITH ANY MODE OF TRAVEL");
-        callbackResponse(null);
+        tripNotPossible = true;
     }
     else if(withTaxiRome2rioData == null) {
         console.log('TRIP NOT POSSIBLE WITH TAXI');
@@ -43,23 +44,27 @@ function chooseMajorDefault(rome2RioDataArray, dates, times, budget, callbackRes
             withoutTaxiRome2rioData.isMajorDefault = 0;
         }
     }
-
-	var rome2RioDataCombined = {
-		withTaxiRome2rioData: withTaxiRome2rioData,
-		withoutTaxiRome2rioData: withoutTaxiRome2rioData
-	};
-    removeNotRecommendedRoutes(rome2RioDataCombined.withoutTaxiRome2rioData);
-    removeNotRecommendedRoutes(rome2RioDataCombined.withTaxiRome2rioData);
-	callbackResponse(rome2RioDataCombined);
-    console.log('Returning combined data');
-	var fs = require('fs');
-	fs.writeFile("AfterMajorDefault.txt", JSON.stringify(rome2RioDataCombined), function(err) {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log("The file was saved!");
-		}
-	});
+    if(tripNotPossible){
+        callbackResponse(null);
+    }
+    else{
+        var rome2RioDataCombined = {
+            withTaxiRome2rioData: withTaxiRome2rioData,
+            withoutTaxiRome2rioData: withoutTaxiRome2rioData
+        };
+        removeNotRecommendedRoutes(rome2RioDataCombined.withoutTaxiRome2rioData);
+        removeNotRecommendedRoutes(rome2RioDataCombined.withTaxiRome2rioData);
+        callbackResponse(rome2RioDataCombined);
+        console.log('Returning combined data');
+        var fs = require('fs');
+        fs.writeFile("AfterMajorDefault.txt", JSON.stringify(rome2RioDataCombined), function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("The file was saved!");
+            }
+        });
+    }
 }
 
 function removeNotRecommendedRoutes(rome2RioDataObject){

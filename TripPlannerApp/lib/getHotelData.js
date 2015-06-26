@@ -58,7 +58,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
         var k=0;
         if(stopsCityIDs!=undefined)
         {
-            decodedCityIDsWhereHotelIsRequired=decodedCityIDsWhereHotelIsRequired.concat(stopsCityIDs);
+            //decodedCityIDsWhereHotelIsRequired=decodedCityIDsWhereHotelIsRequired.concat(stopsCityIDs);
             if(HotelsInStops.length>0){
                 for(var i=0;i<destinationsAndStops.destinationsWiseStops.length;i++)
                 {
@@ -68,6 +68,10 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                         {
                             console.log("StopID:"+ stopsCityIDs[k]+" added for stop:"+stopsArray[d].name);
                             stopsArray[d].cityID=stopsCityIDs[k];
+                            if(stopsCityIDs[k] != -1){
+                                //A valid stop ID ws found
+                                decodedCityIDsWhereHotelIsRequired.push(stopsCityIDs[k]);
+                            }
                             k++;
                         }
                     }

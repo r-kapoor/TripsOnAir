@@ -107,7 +107,7 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 				console.log("j,k:"+j+","+k);
 				if((allSegments[k].distance <= 800)&&(allSegments[k].isMajor==1))//A part of this route is a car
 				{
-					var source,destination;
+					var source = null,destination = null;
 					if(allSegments[k].vehicle == "train")
 					{
 						//dbquery
@@ -147,6 +147,10 @@ function getTaxiRoute(conn,rome2RioData,numPeople,userBudget,dateSet,dates, time
 							destination="Ooty";
 						}
 					}
+                    if(source == null || destination == null){
+                        //The source and destination could not be ascertained. Leaving this segment.
+                        continue;
+                    }
 					var carRouteDetails=
 						{
 							indexOfLeg:i,

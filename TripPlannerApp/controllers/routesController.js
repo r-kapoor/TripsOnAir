@@ -22,6 +22,7 @@ require('date-utils');
 var async  = require('async');
 
 var tripNotPossibleResponse = function (res) {
+    //res.redirect('/tripNotPossible');
     var model = {
         tripNotPossible: 1
     };
