@@ -45,7 +45,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.hstep = 1;
     $scope.mstep = 15;
     $scope.ismeridian = true;
-    $scope.isFixItinerary = true;
+    $scope.isFixItinerary = {
+        fix:true
+    };
     $scope.isDataLoaded = false;
 
     $scope.currentDate = null;
@@ -298,6 +300,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             });
         }
     };
+
     $scope.closeBudgetPanel = function(){
         $scope.isBudgetPanelOpen = false;
     };
@@ -665,8 +668,17 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         jQuery(".jspContainer").css("overflow","visible");
     };
 
+    $scope.dragStop = function(){
+        var element = jQuery("#placesPanel");
+        jQuery("#placesPanel").css("overflow","hidden");
+        jQuery(".jspContainer").css("overflow","hidden");
+    };
+
     $scope.onDropComplete = function(data, event, index, dateItineraryIndex){
         console.log('Drop Complete:'+JSON.stringify(data));
+        var element = jQuery("#placesPanel");
+        jQuery("#placesPanel").css("overflow","hidden");
+        jQuery(".jspContainer").css("overflow","hidden");
         var dateItinerary = $scope.currentDestination.dateWiseItinerary[dateItineraryIndex];
         var dateItineraryClone = clone(dateItinerary);
         var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
@@ -943,7 +955,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             //alert('Arrival Time cannot be ahead of Departure Time');//ALERT12
             createAlert('timingChangeInvalid');
         }
-        if($scope.isFixItinerary)
+        console.log("$scope.isFixItinerary:"+$scope.isFixItinerary.fix);
+        if($scope.isFixItinerary.fix)
         {
             if(dateItinerary.permutation.length==1)
             {

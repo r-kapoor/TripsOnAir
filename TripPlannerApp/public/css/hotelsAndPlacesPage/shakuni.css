@@ -35,7 +35,7 @@
     position: fixed;
     left: 0px;
     bottom: 0px;
-    z-index: 2;
+    z-index: 200;
     width: 40%;
 }
 
@@ -75,4 +75,11 @@
 
 .clearfix {
     display: inline-block;
+}
+.visitTimings{
+    cursor: pointer;
+}
+.visitTimings:hover{
+    background-color: white;
+    color:#000000;
 }
