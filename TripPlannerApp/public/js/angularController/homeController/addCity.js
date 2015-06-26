@@ -66,8 +66,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         $rootScope.$emit('destinationAdded');
   };
 
-    $scope.originSelected = function(isOpen) {
-        console.log("isOpen:"+isOpen);
+    $scope.originSelected = function() {
         if($scope.originCity!== null && typeof $scope.originCity === 'object') {
             $scope.originValid = true;
             console.log($scope.originCity);
@@ -108,10 +107,10 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         return $scope.originValid;
     };
     $scope.destinationSelected = function() {
-      console.log("in destinationSelected");
-      console.log(typeof $scope.destinationCity);
+      //console.log("in destinationSelected");
+      //console.log(typeof $scope.destinationCity);
       if(formData.getOrigin()!=null){
-        console.log("origin not null");
+        //console.log("origin not null");
         if($scope.destinationCity!==null && $scope.destinationCity.length!=0 && typeof $scope.destinationCity === 'object') {
             $scope.addDestination();
             formData.setDestinations($scope.destinationCityList);
@@ -147,9 +146,6 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
     formData.setDestinations($scope.destinationCityList);
   });
 
-  $scope.hello = function() {
-    console.log("Called");
-  }
 $scope.cities=cityData.getProperty();
 });
 

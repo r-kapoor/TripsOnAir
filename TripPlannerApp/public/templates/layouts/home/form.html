@@ -91,7 +91,7 @@
                                                 <div class="form-group" id="originId">
                                                     <!-- <label for="originCity">Origin City</label> -->
                                                     <input type="text" ng-model="originCity"
-                                                           ng-blur="originSelected(isOpen())"
+                                                           ng-blur="originSelected()"
                                                            placeholder="Enter the origin"
                                                            typeahead="city as (city.AlternateName +', '+ city.State) for city in cities | filterByCityAndState:$viewValue | orderBy: byMatch($viewValue)"
                                                            class="form-control" aria-describedby="inputError2Status">
@@ -105,21 +105,21 @@
                                                                placeholder="{{label}}"
                                                                typeahead="city as (city.AlternateName +', '+ city.State) for city in cities | filterByCityAndState:$viewValue | filterDestinations | filterByOrigin:originCity | orderBy: byMatch($viewValue)">
 
-                                                        <div class="input-group-addon " ng-click="destinationSelected()"><i
-                                                            class="glyphicon glyphicon-plus cursor-style"></i></div>
+                                                        <div class="input-group-addon cursor-style" ng-click="destinationSelected()"><i
+                                                            class="glyphicon glyphicon-plus"></i></div>
                                                     </div>
-                                                    <h5 class="text-center">
-                                                        -- OR --
-                                                    </h5>
+                                                    <!--<h5 class="text-center">-->
+                                                        <!---- OR ---->
+                                                    <!--</h5>-->
 
 
                                                 </div>
                                             </div>
-                                            <div class="checkbox text-center">
-                                                <label> <input ng-model="isSuggestDestinationsOn"
-                                                               type="checkbox"><em>{{helpLabel}}</em>
-                                                </label>
-                                            </div>
+                                            <!--<div class="checkbox text-center">-->
+                                                <!--<label> <input ng-model="isSuggestDestinationsOn"-->
+                                                               <!--type="checkbox"><em>{{helpLabel}}</em>-->
+                                                <!--</label>-->
+                                            <!--</div>-->
 
                                             <!--<button type="submit" class="btn btn-default">Submit</button>-->
                                             <label></label>

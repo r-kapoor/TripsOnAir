@@ -33,7 +33,7 @@ $scope.startMorningTime = function(){
      startEveningTimeId.removeClass("active");
      $scope.tripStartTime.evening=false;
   }
-}
+};
 
 $scope.startEveningTime = function(){
 
@@ -43,7 +43,7 @@ $scope.startEveningTime = function(){
      startMorningTimeId.removeClass("active");
      $scope.tripStartTime.morning=false;
   }
-}
+};
 
 $scope.endMorningTime = function(){
 
@@ -53,7 +53,7 @@ $scope.endMorningTime = function(){
      endEveningTimeId.removeClass("active");
       $scope.tripEndTime.evening=false;
   }
-}
+};
 
 $scope.endEveningTime = function(){
   var endMorningTimeId=angular.element(document.querySelector("#endMorningTimeId"));
@@ -62,7 +62,7 @@ $scope.endEveningTime = function(){
      endMorningTimeId.removeClass("active");
       $scope.tripEndTime.morning=false;
   }
-}
+};
 
   // Disable weekend selection
   $scope.disabled = function(date, mode) {
