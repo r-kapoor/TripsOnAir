@@ -45,7 +45,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.hstep = 1;
     $scope.mstep = 15;
     $scope.ismeridian = true;
-    $scope.isFixItinerary = true;
+    $scope.isFixItinerary = {
+        fix:true
+    };
     $scope.isDataLoaded = false;
 
     $scope.currentDate = null;
@@ -948,7 +950,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             //alert('Arrival Time cannot be ahead of Departure Time');//ALERT12
             createAlert('timingChangeInvalid');
         }
-        if($scope.isFixItinerary)
+        console.log("$scope.isFixItinerary:"+$scope.isFixItinerary.fix);
+        if($scope.isFixItinerary.fix)
         {
             if(dateItinerary.permutation.length==1)
             {
