@@ -401,21 +401,21 @@ select {
   height: 780px;
 }
 .bg-slider-wrapper .flexslider .slide.slide-1 {
-  background: #253340 url('/images/landing.jpg') no-repeat 50% top;
+  background: #253340 url('http://res.cloudinary.com/picsonair/image/upload/landing_qfawu3.png') no-repeat 50% top;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
 .bg-slider-wrapper .flexslider .slide.slide-2 {
-  background: #253340 url('/images/landing.jpg') no-repeat 50% top;
+  background: #253340 url('http://res.cloudinary.com/picsonair/image/upload/landing_qfawu3.png') no-repeat 50% top;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
 .bg-slider-wrapper .flexslider .slide.slide-3 {
-  background: #253340 url('/images/landing.jpg') no-repeat 50% top;
+  background: #253340 url('http://res.cloudinary.com/picsonair/image/upload/landing_qfawu3.png') no-repeat 50% top;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
