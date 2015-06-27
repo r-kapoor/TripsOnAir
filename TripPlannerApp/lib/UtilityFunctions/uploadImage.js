@@ -81,6 +81,37 @@ function uploadHotelImages()
     }
 }
 
+function uploadCityImages()
+{
+    var folder = process.argv[3];
+    var path = "../../public/images/"+folder;
+    var files = fs.readdirSync(path);
+    var filePath;
+    var encodedCityID;
+    for(var i in files)
+    {
+        filePath = path+"/"+files[i];
+        console.log(filePath);
+        //console.log(files[i]);
+        if(files[i].indexOf("png")!=-1||files[i].indexOf("jpg")!=-1) {
+            var hotelID = files[i];
+            encodedCityID = encodeID.encodeCityID(parseInt(hotelID));
+
+            console.log("encodedCityID:"+encodedCityID);
+            cloudinary.uploader.upload(
+                filePath,
+                function(result) { console.log(result); },
+                {
+                    public_id: encodedCityID,
+                    eager: [
+                        { width: 200, crop: 'limit', format: 'png' }
+                    ]
+                }
+            )
+        }
+    }
+}
+
 function updateData()
 {
     var filePath;
@@ -131,6 +162,10 @@ function onCommandLine()
     else if(functionName.toLowerCase() =='updatedata')
     {
         updateData();
+    }
+    else if(functionName.toLowerCase() == 'uploadcityimages')
+    {
+        uploadCityImages();
     }
 }
 
