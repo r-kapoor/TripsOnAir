@@ -329,14 +329,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         //$http.post('/downloadItinerary', {data:responsedata}).success(function(data,status) {
         $http(req).success(function(data,status) {
+            $rootScope.$emit('generatedPDF');
             if(data.success){
-                //var anchor = angular.element('<a/>');
-                //anchor.attr({
-                //    //href: 'data:attachment/pdf;charset=utf-8,' + encodeURI(data),
-                //    href: data.file,
-                //    target: '_blank',
-                //    download: 'itinerary.pdf'
-                //})[0].click();
                 var elem = jQuery('#download');
                 elem.attr('href',data.file);
                 elem[0].click();

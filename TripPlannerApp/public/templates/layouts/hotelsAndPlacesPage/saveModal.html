@@ -4,21 +4,26 @@
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-6">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <input id="textinput" name="textinput" type="text" placeholder="Enter Your Email" class="form-control input-md">
-                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
-                    </fieldset>
-                </form>
-            </div>
+            <!--<div class="col-md-6">-->
+                <!--<form class="form-horizontal">-->
+                    <!--<fieldset>-->
+                        <!--<input id="textinput" name="textinput" type="text" placeholder="Enter Your Email" class="form-control input-md">-->
+                        <!--<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>-->
+                    <!--</fieldset>-->
+                <!--</form>-->
+            <!--</div>-->
 
 
-        <div class="col-md-6" style="border-left:1px solid #ccc;height:160px">
+        <div class="col-md-12 text-center" style="border-left:1px solid #ccc;height:160px">
             <!--<a href="#"><img src="http://techulus.com/buttons/fb.png" /></a><br/>-->
             <!--<a href="#"><img src="http://techulus.com/buttons/tw.png" /></a><br/>-->
             <!--<a href="#"><img src="http://techulus.com/buttons/gplus.png" /></a>-->
-            <div class="btn btn-primary" ng-click="downloadPDF()">Download</div>
+            <div class="row">
+                <!--<img ng-if="!generatingPDF" src="images/loading.gif" height="100px" width="100px">-->
+            </div>
+            <div class="row" >
+                <div class="btn btn-primary btn-block" ng-click="downloadPDF()" ng-disabled="generatingPDF">Download<img ng-if="generatingPDF" src="images/loading2.gif" height="20px" width="20px" style="margin-left: 2%"></div>
+            </div>
         </div>
         </div>
         <!--<div class="row">-->
@@ -46,8 +51,8 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <!--<button class="btn btn-primary" ng-click="ok()">OK</button>-->
+        <button class="btn btn-warning" ng-click="cancel()">OK</button>
     </div>
 </script>
 
