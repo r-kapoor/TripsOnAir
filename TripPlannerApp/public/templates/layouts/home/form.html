@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-2">
             <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
-                <div class="panel panel-primary" style="height: 80vh">
+                <div class="panel panel-primary animate-this" style="height: 80vh">
                     <!--<div class="panel-heading text-center">-->
                         <!--<div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>-->
                     <!--</div>-->
@@ -43,7 +43,7 @@
 
                                             <div class="btn btn-default add-button" ng-click="destinationRemoved(destination)">
                                                 <!-- ng-click="{{destinationSelected($index)}}"-->
-                                                <i class="glyphicon glyphicon-minus"></i>
+                                                <i class="glyphicon glyphicon-remove"></i>
                                             </div>
                                             <div class="name">
                                                 <p id ="reponsiveFont" class="text-center">
@@ -105,7 +105,7 @@
                                                                placeholder="{{label}}"
                                                                typeahead="city as (city.AlternateName +', '+ city.State) for city in cities | filterByCityAndState:$viewValue | filterDestinations | filterByOrigin:originCity | orderBy: byMatch($viewValue)">
 
-                                                        <div class="input-group-addon cursor-style" ng-click="destinationSelected()"><i
+                                                        <div title="Add Destination" class="input-group-addon cursor-style" ng-click="destinationSelected()"><i
                                                             class="glyphicon glyphicon-plus"></i></div>
                                                     </div>
                                                     <!--<h5 class="text-center">-->
@@ -165,7 +165,7 @@
                                                     </div>
                                                     <div class="col-sm-2 col-xs-2">
                                                         <div class="btn-group">
-                                                            <div class="row startTimeE">
+                                                            <div class="row startTimeE" title="Morning">
                                                                 <label id="startMorningTimeId" class="btn btn-default time-picker btn-xs"
                                                                        ng-model="tripStartTime.morning" btn-checkbox ng-click="startMorningTime()">
                                                                     <img ng-src="images/glyphicons-sun.png" style="width: 100%" class="img-responsive">
@@ -173,7 +173,7 @@
                                                                 <a href="#"></a>
                                                             </div>
 
-                                                            <div class="row startTimeE">
+                                                            <div class="row startTimeE" title="Evening">
                                                                 <label id="startEveningTimeId" class="btn btn-default time-picker btn-xs"
                                                                        ng-model="tripStartTime.evening" btn-checkbox ng-click="startEveningTime()">
                                                                     <img ng-src="images/glyphicons-moon.png" style="width: 100%" class="img-responsive">
@@ -216,14 +216,14 @@
                                                     <div class="col-md-2 col-sm-2 col-xs-2">
                                                         <div class="button-toolbar">
                                                             <div class="btn-group">
-                                                                <div class="row endTimeE">
+                                                                <div class="row endTimeE" title="Morning">
                                                                     <label id="endMorningTimeId" class="btn btn-default time-picker btn-xs "
                                                                            ng-model="tripEndTime.morning" btn-checkbox ng-click="endMorningTime()">
                                                                         <img ng-src="images/glyphicons-sun.png" class="img-responsive">
                                                                     </label>
                                                                     <a href="#"></a>
                                                                 </div>
-                                                                <div class="row endTimeE">
+                                                                <div class="row endTimeE" title="Evening">
                                                                     <label id="endEveningTimeId" class="btn btn-default time-picker btn-xs"
                                                                            ng-model="tripEndTime.evening" btn-checkbox ng-click="endEveningTime()">
                                                                         <img ng-src="images/glyphicons-moon.png" class="img-responsive">
@@ -245,48 +245,47 @@
                                                 <div class="btn-group well">
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.RELIGIOUS"
+                                                            <label title="Religious" class="btn btn-default btn-lg" ng-model="checkModel.RELIGIOUS"
                                                                    btn-checkbox>
-                                                                <img src="images/religious.png" class="img-responsive" title="Religious" style="width: 100%"/>
+                                                                <img src="images/religious.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.ADVENTURE"
+                                                            <label title="Adventure" class="btn btn-default btn-lg" ng-model="checkModel.ADVENTURE"
                                                                    btn-checkbox>
-                                                                <img src="images/adventure.png" class="img-responsive" title="Adventure" style="width: 100%"/>
+                                                                <img src="images/adventure.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.BEACHES" btn-checkbox>
-                                                                <img src="images/beach.png" class="img-responsive" title="Beaches" style="width: 100%"/>
+                                                            <label title="Beaches" class="btn btn-default btn-lg" ng-model="checkModel.BEACHES" btn-checkbox>
+                                                                <img src="images/beach.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
                                                             <label class="btn btn-default btn-lg" ng-model="checkModel.LANDMARKS"
                                                                    btn-checkbox>
                                                                 <img src="images/landmark.png" class="img-responsive" title="Landmarks" style="width: 100%"/>
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.NATURE"
+                                                            <label title="Nature" class="btn btn-default btn-lg" ng-model="checkModel.NATURE"
                                                                    btn-checkbox>
-                                                                <img src="images/nature.png" class="img-responsive" title="Nature" style="width: 100%"/>
+                                                                <img src="images/nature.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-12">
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.LIVE_EVENTS" ng-disabled="true"
-                                                                   btn-checkbox>
-                                                                <img src="images/liveEvents.png" class="img-responsive" title="Live Events" style="width: 100%"/>
+                                                            <label tooltip="Live Events: Coming Soon" tooltip-placement="left" tooltip-trigger="mouseenter" class="btn btn-default btn-lg overlay" ng-model="checkModel.LIVE_EVENTS" btn-checkbox>
+                                                                <img src="images/liveEvents.png" class="img-responsive" style="width: 100%">
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.HILL_STATION"
+                                                            <label title="Hill Station" class="btn btn-default btn-lg" ng-model="checkModel.HILL_STATION"
                                                                    btn-checkbox>
-                                                                <img src="images/hillStation.png" class="img-responsive" title="Hill Station" style="width: 100%"/>
+                                                                <img src="images/hillStation.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.ROMANTIC"
+                                                            <label title="Romantic" class="btn btn-default btn-lg" ng-model="checkModel.ROMANTIC"
                                                                    btn-checkbox>
-                                                                <img src="images/romantic.png" class="img-responsive" title="Romantic" style="width: 100%"/>
+                                                                <img src="images/romantic.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.FAMILY"
+                                                            <label title="Family" class="btn btn-default btn-lg" ng-model="checkModel.FAMILY"
                                                                    btn-checkbox>
-                                                                <img src="images/family.png" class="img-responsive" title="Family" style="width: 100%"/>
+                                                                <img src="images/family.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
-                                                            <label class="btn btn-default btn-lg" ng-model="checkModel.FRIENDS"
+                                                            <label title="Friends" class="btn btn-default btn-lg" ng-model="checkModel.FRIENDS"
                                                                    btn-checkbox>
-                                                                <img src="images/friends.png" class="img-responsive" title="Friends" style="width: 100%"/>
+                                                                <img src="images/friends.png" class="img-responsive" style="width: 100%"/>
                                                             </label>
                                                         </div>
                                                     </div>
@@ -296,7 +295,7 @@
                                         <div class="well">
                                             <div class="row">
                                                 <div class="col-sm-8">
-                                                    <div class="row">
+                                                    <div tooltip="Includes travel, accomodation, food, local transport, entry fees" tooltip-placement="top" tooltip-trigger="mouseenter" class="row">
                                                         <label>Budget Per Person :</label> {{value | currency:"&#8377;"}}
                                                     </div>
 

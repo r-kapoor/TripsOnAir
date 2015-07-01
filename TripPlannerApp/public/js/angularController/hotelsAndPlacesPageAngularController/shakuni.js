@@ -135,7 +135,6 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.getItinerary = function(){
 
         $http.get('/planItinerary').success(function(data,status){
-
             responseData = data;
             $scope.origin=data.origin;
             $scope.destinations = data.destinations;
@@ -172,12 +171,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                 }
             }
-
             $scope.travelBudget = parseInt(data.travelBudget) + parseInt(data.minorTravelBudget);
 
             setBudgetModels();
             $scope.totalBudget = parseInt(data.userTotalbudget);
-
             setDestinationSpecificModels();
 
             $scope.isItineraryPlanned=true;
