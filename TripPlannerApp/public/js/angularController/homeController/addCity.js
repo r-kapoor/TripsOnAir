@@ -81,31 +81,24 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
               orgElm.removeClass("has-error");
             }
             $rootScope.$emit('originSelected');
-            /*$timeout(function() {
-                $("#originId").trigger('xyz');
-            }, 0);*/
-            //$scope.triggerOn='xyz';
         }
-        else
-        {
-           /* $timeout(function() {
-                $("#originId").trigger('xyz');
-            }, 0);*/
-            //$scope.triggerOn = 'blur';
-            console.log("has error");
-            var orgElement=angular.element(document.querySelector("#originId"));
-            orgElement.addClass("has-error");
-            $scope.originValid = false;
-        }
+        //else
+        //{
+        //    console.log("has error");
+        //    var orgElement=angular.element(document.querySelector("#originId"));
+        //    orgElement.addClass("has-error");
+        //    $scope.originValid = false;
+        //}
     };
 
-    $scope.isDestinationValid = function(){
-      return $scope.destinationValid;
-    };
+    //$scope.isDestinationValid = function(){
+    //  return $scope.destinationValid;
+    //};
 
-    $scope.isOriginValid = function(){
-        return $scope.originValid;
-    };
+    //$scope.isOriginValid = function(){
+    //    return $scope.originValid;
+    //};
+
     $scope.destinationSelected = function() {
       //console.log("in destinationSelected");
       //console.log(typeof $scope.destinationCity);
@@ -122,12 +115,12 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
             $rootScope.$emit('destinationSelected');
             $scope.destinationValid = true;
         }
-        else
-        {
-          var destElement=angular.element(document.querySelector("#destinationId"));
-            destElement.addClass("has-error");
-            $scope.destinationValid=false;
-        }
+        //else
+        //{
+        //  var destElement=angular.element(document.querySelector("#destinationId"));
+        //    destElement.addClass("has-error");
+        //    $scope.destinationValid=false;
+        //}
       }
     };
 

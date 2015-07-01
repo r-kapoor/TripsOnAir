@@ -90,11 +90,9 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
     $scope.$watch('tripStartTime', function startTimeSelected() {
         formData.setTripStartTime($scope.tripStartTime);
-        $rootScope.$emit('selectionDone');
     }, true);
     $scope.$watch('tripEndTime', function endTimeSelected() {
         formData.setTripEndTime($scope.tripEndTime);
-        $rootScope.$emit('selectionDone');
     }, true);
 
 
@@ -109,14 +107,41 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         var endTimeSet=(formData.getTripEndTime()!=null)&&(formData.getTripEndTime().morning == true || formData.getTripEndTime().evening == true);
         var originSet=formData.getOrigin()!=null;
         var destinationSet=formData.getDestinations().length;
+        var startDateSet = (formData.getStartDate() !== null);
+        var endDateSet = (formData.getEndDate() !== null);
         console.log("isSuggestDestinationsOn:"+$scope.isSuggestDestinationsOn);
-        if(formData.getStartDate() !== null && formData.getEndDate() !== null && startTimeSet && endTimeSet && originSet && (destinationSet > 0 || $scope.isSuggestDestinationsOn)) {
+        if( startDateSet && endDateSet && startTimeSet && endTimeSet && originSet && (destinationSet > 0 || $scope.isSuggestDestinationsOn)) {
             $rootScope.$emit('formComplete');
         }
         else
         {
-            //notify for other inputs
-            console.log("please enter all inputs");
+            if(!originSet){
+                //Origin not valid
+                var orgElement=angular.element(document.querySelector("#originId"));
+                orgElement.addClass("has-error");
+            }
+            if(!(destinationSet > 0 || $scope.isSuggestDestinationsOn)) {
+                var destElement=angular.element(document.querySelector("#destinationId"));
+                destElement.addClass("has-error");
+            }
+            if(!startDateSet){
+                var startDateElement=angular.element(document.querySelector("#depart-date"));
+                startDateElement.removeClass("btn-primary");
+                startDateElement.addClass("btn-danger");
+            }
+            if(!endDateSet){
+                var endDateElement=angular.element(document.querySelector("#arrival-date"));
+                endDateElement.removeClass("btn-primary");
+                endDateElement.addClass("btn-danger");
+            }
+            if(!startTimeSet){
+                var startTimeElement = angular.element(document.querySelectorAll(".startTimeE"));
+                startTimeElement.addClass("time-not-selected");
+            }
+            if(!endTimeSet){
+                var endTimeElement = angular.element(document.querySelectorAll(".endTimeE"));
+                endTimeElement.addClass("time-not-selected");
+            }
         }
     });
 
