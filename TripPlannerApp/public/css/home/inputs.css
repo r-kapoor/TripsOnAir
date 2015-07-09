@@ -37,6 +37,45 @@
     display: inline-block;
 }
 
+.active.time-picker {
+    -webkit-filter: invert(1);
+    filter: invert(1)
+}
+
+.time-not-selected{
+    border:1px solid red;
+}
+
+.animate-this{
+    -webkit-animation: neon 1.5s ease-in-out 3 alternate;
+    -moz-animation: neon 1.5s ease-in-out 3 alternate;
+    animation: neon 1.5s ease-in-out 3 alternate;
+}
+
+@-webkit-keyframes neon {
+    from {
+        box-shadow: 0 0 10px #fff,
+        0 0 20px  #fff,
+        0 0 30px  #fff,
+        0 0 40px #fb742a,
+        0 0 70px  #fb742a
+    }
+    to {
+        box-shadow: 0 0 5px #fff,
+        0 0 10px #fb742a,
+        0 0 15px #fb742a,
+        0 0 20px #fb742a,
+        0 0 35px #fb742a
+    }
+}
+
+.overlay {
+    filter:alpha(opacity=50);
+    -moz-opacity:0.5;
+    -khtml-opacity: 0.5;
+    opacity: 0.5;
+    z-index: 10000;
+}
 /*.navbar-nav > li {*/
     /*padding-left: 1%;*/
     /*padding-right: 1%;*/

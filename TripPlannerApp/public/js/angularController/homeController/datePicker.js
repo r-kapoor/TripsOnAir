@@ -1,7 +1,9 @@
 inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData) {
   $scope.today = function() {
-    $scope.dt1 = new Date();
-    $scope.dt2 = null;
+      $scope.dt1 = new Date();
+      formData.setStartDate($scope.dt1);
+      removeErrorHighlightStartDate();
+      $scope.dt2 = null;
   };
   $scope.today();
 
@@ -15,15 +17,18 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
   $scope.startDateSelected = function() {
 	  if($scope.dt2 !== null) {
 		  $scope.dt2 = $scope.dt1;
+          formData.setEndDate($scope.dt2);
+          removeErrorHighlightEndDate();
 	  }
+      formData.setStartDate($scope.dt1);
+      removeErrorHighlightStartDate();
   };
   $scope.startDateSelected();
 
   $scope.endDateSelected = function() {
-        $scope.heading = 'h4';
-        formData.setStartDate($scope.dt1);
-        formData.setEndDate($scope.dt2);
-        $rootScope.$emit('selectionDone');
+      $scope.heading = 'h4';
+      formData.setEndDate($scope.dt2);
+      removeErrorHighlightEndDate();
   };
 
 $scope.startMorningTime = function(){
@@ -33,7 +38,12 @@ $scope.startMorningTime = function(){
      startEveningTimeId.removeClass("active");
      $scope.tripStartTime.evening=false;
   }
+    removeErrorHighlightStartTime()
 };
+
+    $scope.proceed = function(){
+        $rootScope.$emit('selectionDone');
+    };
 
 $scope.startEveningTime = function(){
 
@@ -43,6 +53,7 @@ $scope.startEveningTime = function(){
      startMorningTimeId.removeClass("active");
      $scope.tripStartTime.morning=false;
   }
+    removeErrorHighlightStartTime();
 };
 
 $scope.endMorningTime = function(){
@@ -53,6 +64,7 @@ $scope.endMorningTime = function(){
      endEveningTimeId.removeClass("active");
       $scope.tripEndTime.evening=false;
   }
+    removeErrorHighlightEndTime();
 };
 
 $scope.endEveningTime = function(){
@@ -62,6 +74,7 @@ $scope.endEveningTime = function(){
      endMorningTimeId.removeClass("active");
       $scope.tripEndTime.morning=false;
   }
+    removeErrorHighlightEndTime();
 };
 
   // Disable weekend selection
@@ -100,9 +113,37 @@ $scope.endEveningTime = function(){
 
   $scope.dateOptions = {
     formatYear: 'yy',
-    startingDay: 1
+    startingDay: 1,
+      showButtonBar: false
   };
 
   $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
   $scope.format = $scope.formats[1];
+    function removeErrorHighlightStartDate(){
+        var startDateElement=angular.element(document.querySelector("#depart-date"));
+        if(startDateElement.hasClass("btn-danger")){
+            startDateElement.removeClass("btn-danger");
+            startDateElement.addClass("btn-primary");
+        }
+    }
+    function removeErrorHighlightEndDate(){
+        var endDateElement=angular.element(document.querySelector("#arrival-date"));
+        if(endDateElement.hasClass("btn-danger")){
+            endDateElement.removeClass("btn-danger");
+            endDateElement.addClass("btn-primary");
+        }
+    }
+    function removeErrorHighlightStartTime(){
+        var startTimeElement = angular.element(document.querySelectorAll(".startTimeE"));
+        if(startTimeElement.hasClass("time-not-selected")){
+            startTimeElement.removeClass("time-not-selected");
+        }
+    }
+    function removeErrorHighlightEndTime(){
+        var endTimeElement = angular.element(document.querySelectorAll(".endTimeE"));
+        if(endTimeElement.hasClass("time-not-selected")){
+            endTimeElement.removeClass("time-not-selected");
+        }
+    }
+
 });

@@ -4,10 +4,10 @@
 itineraryModule.controller('shabariController',  function($scope,$rootScope) {
 
     $scope.isLoaderShown = true;
-    $rootScope.$on("dataLoaded",function onShowTravelPanel(event, data){
+    $rootScope.$on("dataLoaded",function onItineraryPlanned(event, data){
         $scope.isLoaderShown = false;
     });
-    $rootScope.$on("gettingData",function onShowTravelPanel(event, data){
+    $rootScope.$on("gettingData",function onItineraryQuery(event, data){
         $scope.isLoaderShown = true;
     });
 
