@@ -5,6 +5,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 	$scope.isDetailsCollapsed = true;
 	$scope.isOverviewCollapsed = false;
 	$scope.isSuggestDestinationsOn = false;
+    $scope.destinationCityList = formData.getDestinations();
     $scope.helpLabel="Help me choose destinations";
     $scope.numPerson = "4";
       $scope.value = "5000";

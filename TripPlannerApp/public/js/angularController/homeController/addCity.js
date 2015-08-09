@@ -91,6 +91,23 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         //}
     };
 
+    $scope.destinationRemoved = function(removedDestination) {
+        angular.forEach($scope.destinationCityList, function(destination, index) {
+            console.log(destination.CityName + " " + removedDestination.CityName);
+            if(destination.CityName.toLowerCase() === removedDestination.CityName.toLowerCase()) {
+                $scope.destinationCityList.splice(index, 1);
+                formData.setDestinations($scope.destinationCityList);
+            }
+        });
+        if(formData.getDestinations().length==0)
+        {
+            $scope.destinationLabel=true;
+        }
+        $rootScope.$emit('destinationRemoved');
+        $scope.$emit('initialize-pane',"destinationsPanel");
+        //$scope.$broadcast('reinit-pane',"destinationsPanel");
+    };
+
     //$scope.isDestinationValid = function(){
     //  return $scope.destinationValid;
     //};

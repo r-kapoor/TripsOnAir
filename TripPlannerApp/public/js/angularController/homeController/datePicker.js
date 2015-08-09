@@ -9,6 +9,7 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
 
     $scope.heading = 'h5';
 
+    $scope.showWeeks = false;
   $scope.clear = function () {
     $scope.dt1 = null;
     $scope.dt2 = 'Select';
@@ -114,7 +115,8 @@ $scope.endEveningTime = function(){
   $scope.dateOptions = {
     formatYear: 'yy',
     startingDay: 1,
-      showButtonBar: false
+      showButtonBar: false,
+      showWeeks: false
   };
 
   $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];

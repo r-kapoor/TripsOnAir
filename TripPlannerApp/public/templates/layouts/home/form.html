@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-2">
             <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
-                <div class="panel panel-primary animate-this" style="height: 80vh">
+                <div class="panel panel-primary animate-this hidden-xs" style="height: 80vh">
                     <!--<div class="panel-heading text-center">-->
                         <!--<div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>-->
                     <!--</div>-->
@@ -97,6 +97,14 @@
                                                            class="form-control" aria-describedby="inputError2Status">
                                                 </div>
 
+                                                <div class="form-group" ng-repeat="destination in destinationCityList">
+                                                    <div class="input-group">
+                                                    <input readonly type="text" ng-model="destination.AlternateName +', '+ destination.State" class="form-control" aria-describedby="inputError2Status">
+                                                    <div title="Remove Destination" class="input-group-addon cursor-style" ng-click="destinationRemoved(destination)"><i
+                                                        class="glyphicon glyphicon-remove"></i></div>
+                                                        </div>
+                                                </div>
+
                                                 <div class="form-group" id="destinationId">
                                                     <div class="input-group">
                                                         <!--<label for="Destcity1">Destination</label>-->
@@ -127,14 +135,14 @@
                                             <div ng-controller="DatepickerCtrl">
                                                 <div class="row form-group">
                                                     <div class="row">
-                                                        <div class="col-sm-4" style="margin-left: 3%">
+                                                        <div class="col-sm-4 col-xs-4" style="margin-left: 3%">
                                                             <label style="font-size: small"><em>Departure:</em></label>
                                                         </div>
-                                                        <div class="col-sm-4" style="margin-left: 6%">
+                                                        <div class="col-sm-4 col-xs-4" style="margin-left: 6%">
                                                             <label style="font-size: small"><em>Arrival:</em></label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-3 col-xs-3 btn-responsive" style="padding-right: 0px">
+                                                    <div class="col-md-3 col-sm-3 col-xs-4 btn-responsive" style="padding-right: 0px">
                                                         <div class="btn btn-primary" id="depart-date" datepicker-popup="dd-MMMM-yyyy" ng-model="dt1"
                                                                 is-open="opened1" min-date="minDate"
                                                                 datepicker-options="dateOptions" ng-required="true"
@@ -144,10 +152,10 @@
                                                                 <div class="col-sm-1 col-md-1 col-xs-1 h4">
                                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                                 </div>
-                                                                <div class="col-sm-1 col-md-1 col-xs-1 h4">{{dt1 |
+                                                                <div class="date-pick col-sm-1 col-md-1 col-xs-1 h4">{{dt1 |
                                                                     date:'dd' }}
                                                                 </div>
-                                                                <div class="col-sm-2 col-md-2 col-xs-2">
+                                                                <div class="date-pick col-sm-2 col-md-2 col-xs-2">
                                                                     <div class="row">
                                                                         <div class="col-sm-1 col-md-1 col-xs-1 month">{{dt1 |
                                                                             date:'MMM'}}
@@ -183,7 +191,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-3 col-sm-3 col-xs-3" style="padding-right: 0px">
+                                                    <div class="col-md-3 col-sm-3 col-xs-4 arrival-date-picker" style="padding-right: 0px">
                                                         <div class="btn btn-primary" id="arrival-date" datepicker-popup="dd-MMMM-yyyy" ng-model="dt2"
                                                                 is-open="opened2" min-date="minDate1" datepicker-options="dateOptions"
                                                                 ng-required="true" close-text="Close"
@@ -193,10 +201,10 @@
                                                                 <div class="col-sm-2 col-md-2 col-xs-2 h4">
                                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                                 </div>
-                                                                <div class="col-sm-2 col-md-2 col-xs-2 {{heading}}">
+                                                                <div class="date-pick col-sm-2 col-md-2 col-xs-2 {{heading}}">
                                                                     {{(dt2 | date:'dd') || 'Select'}}
                                                                 </div>
-                                                                <div class="col-sm-2 col-md-2 col-xs-2">
+                                                                <div class="date-pick col-sm-2 col-md-2 col-xs-2">
                                                                     <div class="row">
                                                                         <div class="col-sm-1 col-md-1 col-xs-1">{{dt2 |
                                                                             date:'MMM' }}
@@ -233,7 +241,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-2" style="height: 100%">
+                                                    <div class="col-md-2 col-sm-2 col-xs-2 col-xs-offset-6 col-sm-offset-0" style="height: 100%">
                                                         <div class="btn btn-primary btn-lg" style="float: right; height: 100%" ng-click="proceed()"><i class="glyphicon glyphicon-menu-right"></i><i class="glyphicon glyphicon-menu-right"></i><a href="#"></a></div>
                                                     </div>
                                                 </div>
