@@ -25,6 +25,19 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     $scope.reorderList=true;
     $scope.draggableObjects = [];
 
+    $scope.isDestinationsTabActive =  true;
+    $scope.isMapTabActive = false;
+
+    $scope.destinationActive = function(){
+        $scope.isDestinationsTabActive = true;
+        $scope.isMapTabActive = false;
+    };
+
+    $scope.mapActive = function(){
+        $scope.isDestinationsTabActive = false;
+        $scope.isMapTabActive = true;
+    };
+
     $scope.IntroOptions = {
         steps: [
             {

@@ -1,0 +1,10 @@
+.sticky-footer{
+    position: fixed;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    cursor: pointer;
+    display: block;
+    z-index:1005;
+    overflow: hidden;
+}

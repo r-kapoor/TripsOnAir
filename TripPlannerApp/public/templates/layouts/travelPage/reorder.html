@@ -4,77 +4,30 @@
         background: #eee;
     }
 </style>
-<div ng-controller="suryaController">
-    <div ng-intro-options="IntroOptions" ng-intro-method="multiCityIntroFunction" ng-intro-autostart="false" class="left-slider">
-        <pageslide ps-open="reorderPanel" ps-size="300px" ps-side="left">
-            <div id="reorderPanelIntro" class="panel panel-default" style="height: 100vh">
-                <div class="panel-body">
-                    <div class="text-center">
-                        <div ng-hide="reorderList">
-                            <div scroll-pane scroll-config="paneConfig" id="reorderDestPanel" style="height:100vh">
-                                <div id="transcludeReorderPanel">
-                            <div class="row">
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-8">
-                                    <ul class="draglist">
-                                        <li ng-drop="false">
-                                            <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
-                                                <div class="wrapper">
-                                                    <a href="#" class="thumbnail " style="margin-bottom: -20%;">
-                                                        <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                                    </a>
-                                                    <div class="name">
-                                                        <p class="name_content">
-                                                            {{originCity.CityName}}
-                                                        </p>
-                                                    </div>
-                                                    <!--end of description class-->
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                        <li  class="panel-reorderDest" ng-repeat="obj in draggableObjects" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)" post-dest>
-                                            <div ng-drag="true" ng-drag-data="obj" ng-class="obj.CityName">
-                                                <div class="wrapper draggable">
-                                                    <a href="#" class="thumbnail " style="margin-bottom: -20%;">
-                                                        <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/{{obj.CityID}}.png" class="img-responsive" style="width: 200px;min-height: 100px"/>
-                                                    </a>
-                                                    <div class="name">
-                                                        <p class="name_content">
-                                                            {{obj.CityName}}
-                                                        </p>
-                                                    </div>
-                                                    <!--end of description class-->
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li ng-drop="false">
-                                            <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
-                                                <div class="wrapper">
-                                                    <a href="#" class="thumbnail " style="margin-bottom: -20%;">
-                                                        <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                                    </a>
-                                                    <div class="name">
-                                                        <p class="name_content">
-                                                            {{originCity.CityName}}
-                                                        </p>
-                                                    </div>
-                                                    <!--end of description class-->
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-
+<div ng-intro-options="IntroOptions" ng-intro-method="multiCityIntroFunction" ng-intro-autostart="false" class="left-slider">
+    <pageslide ps-open="reorderPanel" ps-size="300px" ps-side="left">
+        <div id="reorderPanelIntro" class="panel panel-default" style="height: 100vh">
+            <div class="panel-body">
+                <div class="text-center">
+                    <div ng-hide="reorderList">
+                        <div scroll-pane scroll-config="paneConfig" id="reorderDestPanel" style="height:100vh">
+                            <div id="transcludeReorderPanel">
+                                <div ng-include src="'templates/layouts/travelPage/reorderPanel.html'"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!--<div class="col-xs-2"></div>-->
+    </pageslide>
+    <div class="hidden-md hidden-lg panel panel-default">
+        <div class="panel-body">
+            <div class="text-center">
+                <div ng-hide="reorderList">
+                    <div ng-include src="'templates/layouts/travelPage/reorderPanel.html'"></div>
                 </div>
             </div>
-
-            </div>
-            <!--<div class="col-xs-2"></div>-->
-        </pageslide>
+        </div>
     </div>
 </div>

@@ -84,14 +84,18 @@
 
 /* Landscape tablets and medium desktops */
 @media (min-width: 992px) and (max-width: 1199px) {
-
+    .date-pick {
+        padding-left: 5px;
+        font-size: small;
+    }
 }
 
 /* Portrait tablets and small desktops */
 @media (min-width: 768px) and (max-width: 991px) {
-    /*.date-pick {*/
-        /*padding-left: 10px;*/
-    /*}*/
+    .date-pick {
+        padding-left: 5px;
+        font-size: small;
+    }
 }
 
 /* Landscape phones and portrait tablets */

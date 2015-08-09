@@ -119,8 +119,60 @@ ul {
     background: #dbdbdb;
 }
 
+.nav-top-fix {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1007;
+}
+
 @media (min-width: 992px) {
     .left-slider {
         top: 60px;
     }
+}
+
+
+
+
+@media (min-width: 1200px) {
+     body{
+         overflow: hidden
+     }
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    body{
+        overflow: hidden
+    }
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    body{
+        overflow: hidden
+    }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    body{
+        overflow-x: hidden
+    }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+    body .ng-pageslide{
+        display: none;
+    }
+    body{
+        overflow-x: hidden
+    }
+}
+
+@media (max-width: 350px) {
+
 }

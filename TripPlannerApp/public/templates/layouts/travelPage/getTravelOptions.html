@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="description" content="Save your time and effort in planning trips through an automated trip planner. Our state-of-the-art algorithms analyze the available travel options, accommodation and attractions to plan a perfect holiday for you in real-time, which can be further customized and personalized.">
     <meta name="keywords" content="Tripsonair, travel planning, trip planning, holiday planner, how to reach, places to visit, flights, trains, bus tickets, hotels, itinerary planning, time to visit, India tourism, holiday packages, how to go">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="http://code.angularjs.org/1.4.0/angular.min.js"></script>
@@ -43,11 +43,12 @@
     <link rel="stylesheet" type="text/css" href="css/JscrollPaneCSS/ItineraryPanelJscrollPane.css">
     <link rel="stylesheet" href="css/travelPage/map.css">
     <link rel="stylesheet" href="css/global/pageLoader.css">
+    <link rel="stylesheet" href="css/global/stickyFooter.css">
     <link rel="stylesheet" href="css/angularCSS/introjs.min.css">
     <!--<link rel="stylesheet" href="css/angularCSS/introjs-rtl.min.css">-->
 
 </head>
-<body style="overflow: hidden">
+<body>
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5RM4BW"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -57,10 +58,14 @@
     '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5RM4BW');</script>
 <!-- End Google Tag Manager -->
-    <div ng-include src="'templates/layouts/global/pageLoader.html'"></div>
-    <div class="header-top" ng-include src="'templates/layouts/global/header.html'"></div>
-    <div ng-include src="'templates/layouts/travelPage/reorder.html'"></div>
-    <div ng-include src="'templates/layouts/travelPage/routes.html'"></div>
+    <!--<div ng-include src="'templates/layouts/global/pageLoader.html'"></div>-->
+    <div class="header-top hidden-xs hidden-sm" ng-include src="'templates/layouts/global/header.html'"></div>
+    <div ng-controller="suryaController">
+        <div class="hidden-md hidden-lg" ng-include src="'templates/layouts/travelPage/mobile/stickyHeader.html'"></div>
+        <div ng-include src="'templates/layouts/travelPage/reorder.html'"></div>
+    </div>
+    <!--<div ng-include src="'templates/layouts/travelPage/routes.html'"></div>-->
+    <div class="hidden-md hidden-lg" ng-include src="'templates/layouts/global/stickyFooter.html'"></div>
 </body>
 
 </html>
