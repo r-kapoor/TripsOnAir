@@ -10,7 +10,7 @@ function getHotelUrl(cityIDs, callback)
 {
     var connection=conn.conn();
     connection.connect();
-    var queryString = 'SELECT HotelID,PhotoLink FROM Hotels_Details_New WHERE CityID IN ('+cityIDs+')';
+    var queryString = 'SELECT HotelID,PhotoLink FROM Hotels_Details WHERE CityID IN ('+cityIDs+')';
     connection.query(queryString, function(err, rows, fields) {
         if (err)
         {
