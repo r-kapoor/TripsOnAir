@@ -127,6 +127,14 @@ ul {
     z-index: 1007;
 }
 
+.reorder-mobile-panel {
+    position: absolute;
+    z-index: 1005;
+    left: 0;
+    margin-bottom: 0;
+    min-height: 100vh;
+}
+
 @media (min-width: 992px) {
     .left-slider {
         top: 60px;

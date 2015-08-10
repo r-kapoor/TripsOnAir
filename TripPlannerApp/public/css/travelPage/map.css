@@ -2,4 +2,7 @@
     width: 100vw;
     height: 100vh;
     background-color: #CCC;
+    position: fixed !important;
+    top: 0;
+    left: 0;
 }

@@ -36,6 +36,7 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     $scope.mapActive = function(){
         $scope.isDestinationsTabActive = false;
         $scope.isMapTabActive = true;
+
     };
 
     $scope.IntroOptions = {
