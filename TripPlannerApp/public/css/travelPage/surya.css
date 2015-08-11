@@ -127,6 +127,14 @@ ul {
     z-index: 1007;
 }
 
+.reorder-mobile-panel {
+    position: absolute;
+    z-index: 1005;
+    left: 0;
+    margin-bottom: 0;
+    min-height: 100vh;
+}
+
 @media (min-width: 992px) {
     .left-slider {
         top: 60px;
@@ -136,35 +144,32 @@ ul {
 
 
 
+/*LG*/
 @media (min-width: 1200px) {
      body{
          overflow: hidden
      }
 }
 
-/* Landscape tablets and medium desktops */
+/* Landscape tablets and medium desktops */ /*MD*/
 @media (min-width: 992px) and (max-width: 1199px) {
     body{
         overflow: hidden
     }
 }
 
-/* Portrait tablets and small desktops */
+/* Portrait tablets and small desktops */ /*SM*/
 @media (min-width: 768px) and (max-width: 991px) {
+    body .ng-pageslide{
+        display: none;
+    }
     body{
         overflow: hidden
     }
 }
 
-/* Landscape phones and portrait tablets */
+/* Landscape phones and portrait tablets */ /*XS*/
 @media (max-width: 767px) {
-    body{
-        overflow-x: hidden
-    }
-}
-
-/* Portrait phones and smaller */
-@media (max-width: 480px) {
     body .ng-pageslide{
         display: none;
     }
@@ -173,6 +178,16 @@ ul {
     }
 }
 
+/* Portrait phones and smaller */ /*XS*/
+@media (max-width: 480px) {
+    body .ng-pageslide{
+        display: none;
+    }
+    body{
+        overflow-x: hidden
+    }
+}
+/*XS*/
 @media (max-width: 350px) {
 
 }

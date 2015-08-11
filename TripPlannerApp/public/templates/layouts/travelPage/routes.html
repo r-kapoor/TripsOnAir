@@ -502,7 +502,7 @@
                 </div>
             </pageslide>
         </div>
-        <div class="col-sm-12">
+        <div class="col-xs-12 col-sm-12">
             <div id="budgetPanel" class="budget col-xs-2">
                 <div ng-if="isBudgetPanelOpen" class="panel panel-default">
                     <ul class="list-group">
@@ -530,7 +530,7 @@
                     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
                 </div>
             </div>
-            <!--<div id="map-canvas" style="" ng-controller="sanjayaController"></div>-->
+            <div id="map-canvas" style="" ng-controller="sanjayaController"></div>
         </div>
     </div>
 </div>
