@@ -38,7 +38,7 @@
             </pageslide>
             <!--Mobile HTML for Travel Panel Starts-->
             <div ng-if="isTravelPanelOpen && !isTravelModesPanelOpen && !isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
-                <div class="panel-body">
+                <div class="panel-body" style="margin-top: 10%">
                     <div class="text-center">
                         <div ng-include src="'templates/layouts/travelPage/travelPanel.html'"></div>
                     </div>
@@ -67,7 +67,10 @@
             <div ng-if="isTravelModesPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
                 <div class="panel-body">
                     <div class="page-header text-center">
-                        <h2><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h2>
+                        <h2>
+                            <i ng-click=closeOtherPanels(1) class="glyphicon glyphicon-arrow-left" style="top:10px;right:15px"></i>
+                            <small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small>
+                        </h2>
                         <small>{{routes.length}} ways of Travel</small>
                     </div>
                     <div class="text-center">
@@ -123,6 +126,11 @@
             <!--Mobile HTML for Mode Details Starts-->
             <div ng-if="isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
                 <div class="panel-body" style="font-size: 85%">
+                    <div class="page-header text-center">
+                        <h3>
+                            <i ng-click=closeOtherPanels(2) class="glyphicon glyphicon-arrow-left" style="top:0px;right:20px">Back</i>
+                        </h3>
+                    </div>
                     <div ng-if="isTrainClicked">
                         <div ng-include src="'templates/layouts/travelPage/trainDetailsPanel.html'"></div>
                     </div>
