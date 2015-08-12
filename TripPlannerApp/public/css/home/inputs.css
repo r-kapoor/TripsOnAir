@@ -79,7 +79,9 @@
 
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
-
+    .back-size{
+        height:90vh;
+    }
 }
 
 /* Landscape tablets and medium desktops */
@@ -87,6 +89,9 @@
     .date-pick {
         padding-left: 5px;
         font-size: small;
+    }
+    .back-size{
+        height:90vh;
     }
 }
 
