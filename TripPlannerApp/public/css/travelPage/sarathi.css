@@ -8,12 +8,6 @@
     border-color: #6ff14f;
 }
 
-.budget {
-    position: absolute;
-    right: 0px;
-    top: 71px;
-    z-index: 2;
-}
 .recommendation{
     position: absolute;
     right: 0px;
@@ -105,4 +99,78 @@
 
 .clearfix {
     display: inline-block;
+}
+
+
+/*LG*/
+@media (min-width: 1200px) {
+    .budget {
+        position: absolute;
+        right: 0px;
+        top: 71px;
+        z-index: 2;
+    }
+}
+
+/* Landscape tablets and medium desktops */ /*MD*/
+@media (min-width: 992px) and (max-width: 1199px) {
+    .budget {
+        position: absolute;
+        right: 0px;
+        top: 71px;
+        z-index: 2;
+    }
+}
+
+/* Portrait tablets and small desktops */ /*SM*/
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .budget{
+        position: absolute;
+        z-index: 1005;
+        left: 0;
+        top:6%;
+        margin-bottom: 0;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+}
+
+/* Landscape phones and portrait tablets */ /*XS*/
+@media (max-width: 767px) {
+
+    .budget{
+        position: absolute;
+        z-index: 1005;
+        left: 0;
+        top:6%;
+        margin-bottom: 0;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+}
+
+/* Portrait phones and smaller */ /*XS*/
+@media (max-width: 480px) {
+    .budget{
+        position: absolute;
+        z-index: 1005;
+        left: 0;
+        top:9%;
+        margin-bottom: 0;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
+}
+/*XS*/
+@media (max-width: 350px) {
+    .budget{
+        position: absolute;
+        z-index: 1005;
+        left: 0;
+        top:16%;
+        margin-bottom: 0;
+        min-height: 100vh;
+        min-width: 100vw;
+    }
 }

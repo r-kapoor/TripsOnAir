@@ -160,7 +160,7 @@
             <!--Mobile HTML for Mode Details Ends-->
         </div>
         <div class="col-xs-12 col-sm-12">
-            <div id="budgetPanel" class="budget col-xs-2 hidden-xs hidden-sm">
+            <div id="budgetPanel" class="col-xs-2 budget hidden-xs hidden-sm">
                 <div ng-if="isBudgetPanelOpen" class="panel panel-default">
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -189,6 +189,36 @@
             </div>
             <div id="map-canvas" style="" ng-controller="sanjayaController"></div>
         </div>
+            <!--Mobile HTML for budget and alert Ends-->
+            <div ng-if="isBudgetPanelOpen" ng-hide="!mobilePanelOpen.budget" class="panel panel-default budget hidden-md hidden-lg">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-xs-7">{{totalBudgetText}}</div>
+                            <div class="col-xs-5">{{totalBudget | currency:"&#8377;":0}}</div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-xs-7">{{travelBudgetText}}</div>
+                            <div class="col-xs-5">{{travelBudget | currency:"&#8377;":0}}</div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-if="minorBudget>0">
+                        <div class="row">
+                            <div class="col-xs-7">{{minorBudgetText}}</div>
+                            <div class="col-xs-5">{{minorBudget | currency:"&#8377;":0}}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div ng-hide="!mobilePanelOpen.alert" class="panel panel-default budget hidden-md hidden-lg">
+                <div ng-controller="balaramaController">
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                </div>
+            </div>
+            <!--Mobile HTML for budget and alert Details Ends-->
     </div>
 </div>
 </div>
