@@ -1,0 +1,28 @@
+<accordion-group class="panel-cabOperatorMode" ng-repeat="cabDetail in cabDetails" is-open="cabDetailToggle[$index].open" post-repeat>
+    <accordion-heading>
+        <div class="{{getAccordionHeadingClass(cabDetail)}}">
+            {{cabDetail.SegmentType}}<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': cabDetailToggle[$index].open, 'glyphicon-chevron-right': !cabDetailToggle[$index].open}"></i>
+        </div>
+    </accordion-heading>
+    <div ng-repeat="operator in cabDetail.OperatorPrices" class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        {{operator.Operator}}
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="row">
+                            {{operator.ActualCabPrice | currency:"&#8377;":0}}
+                        </div>
+                        <div class="row">
+                            <div style="margin-top: 10%">
+                                <div class="btn {{getAddButtonClass(operator)}} btn-block" ng-click="changeCabOperator(cabDetail,operator,$event)">{{getAddButtonText(operator)}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</accordion-group>

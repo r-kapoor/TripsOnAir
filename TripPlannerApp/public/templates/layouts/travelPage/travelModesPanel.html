@@ -1,0 +1,42 @@
+<div class="panel-travelMode" ng-repeat="route in routes" ng-init="routeIndex = $index" post-repeat>
+    <div class="panel panel-default" ng-if="route.isRecommendedRoute != undefined && route.isRecommendedRoute == 1">
+        <div ng-repeat="segment in route.segments">
+            <div ng-if="segment.isMajor != 0">
+                <div  ng-href='#' class="segment-hover {{getModeClass(route,segment)}}" ng-click="openModeDetailsPanel(segment, route, routeIndex, $event,'cabTimings')">
+                    <div class="panel-body">
+                        <div class="col-xs-1">
+                            <div ng-if="segment.majorIndex==0">
+                                {{$parent.$parent.$parent.$index+1}}.
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="{{getIconClass(route)}}"><img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive "></div>
+                            <div class="row text-center" ng-if = "(segment.subkind=='car')" style="font-size: 80%">Drive</div>
+                            <div class="row text-center" ng-if = "(segment.subkind=='taxi')" style="font-size: 80%">Taxi</div>
+                        </div>
+                        <div class="col-xs-5">
+                            <div class="row">
+                                {{getDateFormatted(segment) | date:'mediumDate'}}
+                            </div>
+                            <div class="row">
+                                {{getDateFormatted(segment) | date:'EEE'}}
+                                {{getDateFormatted(segment) | date:'shortTime'}}
+                            </div>
+                            <div class="row">
+                                {{getDuration(segment)}}
+                            </div>
+                        </div>
+                        <div ng-if="isPriceShown(segment)"class="col-xs-2">
+                            {{getPrice(segment) | currency:"&#8377;":0}}
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="segment.majorIndex != route.majorCount">
+                    <div class="panel-body">
+                        VIA {{getStopName($index, route)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

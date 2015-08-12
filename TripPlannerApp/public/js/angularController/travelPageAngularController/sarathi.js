@@ -109,6 +109,21 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
 
     var isGuideOpened = false;
 
+    $scope.mobilePanelOpen = {
+        multiMode: true,
+        multiCity: false,
+        map: false,
+        budget: false,
+        alert: false
+    };
+
+    $scope.openMobilePanel = function(panelName){
+        for(var name in $scope.mobilePanelOpen){
+            $scope.mobilePanelOpen[name] = false;
+        }
+        $scope.mobilePanelOpen[panelName] = true;
+    };
+
     $scope.pageSlide = function(){
         $scope.checked1=!$scope.checked1;
         $scope.checked2=!$scope.checked2;
@@ -187,6 +202,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         $scope.isDriveClicked = false;
         $scope.isTaxiClicked = false;
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
+
         if(segment.kind == "train") {
             initializeVehicleDates(segment.trainData,segment.startTime);
             $scope.trains = segment.trainData;
