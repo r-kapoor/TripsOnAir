@@ -110,18 +110,46 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     var isGuideOpened = false;
 
     $scope.mobilePanelOpen = {
-        multiMode: true,
+        multiMode: false,
         multiCity: false,
         map: false,
         budget: false,
         alert: false
     };
+    $scope.hideMultiMode = false;
+    $scope.hideMultiCity = false;
+    var isInitialMultiMode = $scope.mobilePanelOpen.multiMode;
+    var isInitialMultiTaxi = $scope.mobilePanelOpen.multiCity;
 
+    $scope.getTravelModeStatus = function(panelName){
+        if(panelName=='multiMode')
+        {
+            return $scope.mobilePanelOpen.multiMode;
+        }
+        return $scope.mobilePanelOpen.multiCity;
+    };
     $scope.openMobilePanel = function(panelName){
+
         for(var name in $scope.mobilePanelOpen){
             $scope.mobilePanelOpen[name] = false;
         }
         $scope.mobilePanelOpen[panelName] = true;
+
+        if(alternateRouteData!=null)
+        {
+            if((panelName=='multiMode' && !isInitialMultiMode))
+            {
+                isInitialMultiMode = true;
+                isInitialMultiTaxi = false;
+                $scope.showOtherTrip();
+            }
+            else if((panelName=='multiCity' && !isInitialMultiTaxi))
+            {
+                isInitialMultiTaxi = true;
+                isInitialMultiMode = false;
+                $scope.showOtherTrip();
+            }
+        }
     };
 
     $scope.pageSlide = function(){
@@ -380,20 +408,29 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                 {
                     defaultRouteData = data.withTaxiRome2rioData;
                     alternateRouteData = null;
+                    $scope.hideMultiMode = true;
+                    $scope.mobilePanelOpen.multiMode = true;
+                    $scope.mobilePanelOpen.multiCity = true;
+
                 }
                 else if(data.withTaxiRome2rioData==null)
                 {
                     defaultRouteData = data.withoutTaxiRome2rioData;
                     alternateRouteData = null;
+                    $scope.hideMultiCity = true;
+                    $scope.mobilePanelOpen.multiMode = true;
+                    $scope.mobilePanelOpen.multiCity = true;
                 }
                 else{
                     if(data.withoutTaxiRome2rioData.isMajorDefault == 1) {
                         defaultRouteData = data.withoutTaxiRome2rioData;
                         alternateRouteData = data.withTaxiRome2rioData;
+                        $scope.mobilePanelOpen.multiMode = true;
                     }
                     else {
                         defaultRouteData = data.withTaxiRome2rioData;
                         alternateRouteData = data.withoutTaxiRome2rioData;
+                        $scope.mobilePanelOpen.multiCity = true;
                     }
                 }
                 getAttributesFromRouteData(defaultRouteData);

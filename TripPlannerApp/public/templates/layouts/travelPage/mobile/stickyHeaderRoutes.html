@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs nav-top-fix">
-    <li role="presentation" ng-class="{active: mobilePanelOpen.multiMode}" ng-click="openMobilePanel('multiMode')"><a href="#">Multi-Mode</a></li>
-    <li role="presentation" ng-class="{active: mobilePanelOpen.multiCity}" ng-click="openMobilePanel('multiCity')"><a href="#">Multi-City Taxi</a></li>
+    <li role="presentation" ng-class="{active: getTravelModeStatus('multiMode')}" ng-hide="hideMultiMode" ng-click="openMobilePanel('multiMode')"><a href="#">Multi-Mode</a></li>
+    <li role="presentation" ng-class="{active: getTravelModeStatus('multiCity')}" ng-hide="hideMultiCity" ng-click="openMobilePanel('multiCity')"><a href="#">Multi-City Taxi</a></li>
     <li role="presentation" ng-class="{active: mobilePanelOpen.map}" ng-click="openMobilePanel('map')"><a href="#">Map</a></li>
     <li role="presentation" ng-class="{active: mobilePanelOpen.budget}" ng-click="openMobilePanel('budget')"><a href="#">Budget</a></li>
     <li role="presentation" ng-class="{active: mobilePanelOpen.alert}" ng-click="openMobilePanel('alert')"><a href="#">Alerts</a></li>
