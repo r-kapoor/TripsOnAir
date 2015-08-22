@@ -4,12 +4,12 @@
 <head>
     <title>TripsOnAir: plan trips your way | Online Trip Planner | Find Flights, Trains, Bus, Hotels, Places to Visit</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-w
-    idth, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Save your time and effort in planning trips through an automated trip planner. Our state-of-the-art algorithms analyze the available travel options, accommodation and attractions to plan a perfect holiday for you in real-time, which can be further customized and personalized.">
     <meta name="keywords" content="Tripsonair, travel planning, trip planning, holiday planner, how to reach, places to visit, flights, trains, bus tickets, hotels, itinerary planning, time to visit, India tourism, holiday packages, how to go">
 	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="http://code.angularjs.org/1.3.4/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.4/angular-route.js"></script>
 	<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
     <!--<script src="js/GlobalJSFunctions/googleAnalytics.js"></script>-->
     <script src="js/angularJS/angular-scroll.min.js"></script>
@@ -60,7 +60,114 @@
     <!-- End Google Tag Manager -->
     <div ng-include src="'templates/layouts/global/header.html'"></div>
     <div ng-include src="'templates/layouts/home/imageSlider.html'"></div>
-    <div ng-include src="'templates/layouts/home/form.html'"></div>
+    <!--<div ng-include src="'templates/layouts/home/form.html'"></div>-->
+    <!--STARTING FORM HTML-->
+    <script type="text/ng-template" id="customTemplate.html">
+        <a style="width:100%">
+            <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+        </a>
+    </script>
+
+    <div class="container-fluid jumbotron back-size">
+        <div class="row">
+            <div class="col-sm-2">
+                <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
+                    <div class="panel panel-primary animate-this hidden-xs hidden-sm " style="height: 80vh">
+                        <!--<div class="panel-heading text-center">-->
+                        <!--<div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>-->
+                        <!--</div>-->
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12"><h5>Origin:</h5></div>
+                                <div class="col-sm-12">
+                                    <div class="wrapper">
+                                        <a href="#" class="thumbnail" style="margin-bottom: 0;">
+                                            <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
+                                        </a>
+
+                                        <div class="name">
+                                            <p class="text-center">
+                                                {{origin.CityName}}
+                                            </p>
+                                        </div>
+                                        <!--end of description class-->
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" ng-hide="destinationLabel"><h5>Destination(s):</h5>
+                                    <div scroll-pane scroll-config="paneConfig" id="destinationsPanel" style="width:100%;height: 45vh">
+                                        <div id="transcludeDestinationsPanel" class="clearfix">
+                                            <div class="panel-selectedDestinations clearfix" ng-repeat="destination in destinationCityList" post-repeat>
+                                                <!--<div class="col-sm-12">-->
+                                                <div id={{destination.CityID}} class="wrapper">
+                                                    <a href="#" class="thumbnail" style="margin-bottom: 0;">
+                                                        <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/{{destination.CityID}}.png" class="img-responsive" style="width: 200px;min-height: 100px"/>
+                                                    </a>
+
+                                                    <div class="btn btn-default add-button" ng-click="destinationRemoved(destination)">
+                                                        <!-- ng-click="{{destinationSelected($index)}}"-->
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </div>
+                                                    <div class="name">
+                                                        <p id ="reponsiveFont" class="text-center">
+                                                            {{getDestinationName(destination)}}
+                                                        </p>
+                                                    </div>
+                                                    <!--end of description class-->
+                                                </div>
+                                                <!--</div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-sm-1">-->
+
+            <!--</div>-->
+            <div class="col-sm-12 col-md-10">
+                <div class="row">
+                    <div>
+                        <div style="height:100%" ng-include src="'templates/layouts/home/suggestionsAccordingToSelection.html'"></div>
+                    </div>
+                </div>
+                <div ng-controller="form1Controller" collapse="isFormPanelCollapsed">
+
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div ng-controller="KuberController">
+                            <div class="col-sm-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">{{title}}</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <!--<div id='invalid'></div>-->
+
+                                        <form role="form" autocomplete="off">
+                                            <div ng-view></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--container-->
+                    </div>
+                    <!--jumbotron-->
+                </div>
+                <div class="row">
+                    <div style="height:100%" ng-include src="'templates/layouts/home/destinationsSuggest.html'"></div>
+                </div>
+            </div>
+            <!--main wrapping-->
+
+        </div>
+    </div>
+    <!--ENDING FORM HTML-->
+
     <div class="sections-wrapper">
         <section id="why" class="section why">
             <div class="container">

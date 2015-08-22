@@ -1,15 +1,39 @@
 inputModule.service('formData', function () {
+        var MIN_BUDGET = "5000";
+        var DEFAULT_TASTES = {
+            RELIGIOUS   : false,
+            ADVENTURE   : false,
+            BEACHES     : false,
+            LANDMARKS   : false,
+            NATURE      : false,
+            LIVE_EVENTS : false,
+            HILL_STATION: false,
+            ROMANTIC    : false,
+            FAMILY      : false,
+            FRIENDS     : false
+        };
+        var MIN_NUM_PERSONS = 4;
+        var DEFAULT_TRIP_START_TIME = {
+            morning : false,
+            evening : false
+        };
+        var DEFAULT_TRIP_END_TIME = {
+            morning : false,
+            evening : false
+        };
+        var DEFAULT_BUDGET_MIN = 5000;
         var originCity = null;
         var destinationCities = [];
         var startDate = null;
         var endDate = null;
-        var budget=null;
-        var tastes=null;
-        var tripStartTime = null;
-        var tripEndTime = null;
+        var budget=MIN_BUDGET;
+        var tastes= DEFAULT_TASTES;
+        var tripStartTime = DEFAULT_TRIP_START_TIME;
+        var tripEndTime = DEFAULT_TRIP_END_TIME;
         var originGeoCoordinates = null;
         var remainingDistance = 0;
-        var numPersons=1;
+        var numPersons=MIN_NUM_PERSONS;
+        var minimumBudget = DEFAULT_BUDGET_MIN;
         function removeDuplicates(){
             angular.forEach(destinationCities, function(destinationCity,index){
                 for(var i=index+1;i<destinationCities.length;i++)
@@ -56,6 +80,25 @@ inputModule.service('formData', function () {
             getRemainingDistance: function() {
                 return remainingDistance;
             },
+            getMinimumBudget : function() {
+                return minimumBudget;
+            },
+            getAllData: function(){
+                return {
+                    originCity: originCity,
+                    destinationCities: destinationCities,
+                    startDate: startDate,
+                    endDate: endDate,
+                    budget: budget,
+                    tastes: tastes,
+                    tripStartTime: tripStartTime,
+                    tripEndTime: tripEndTime,
+                    originGeoCoordinates: originGeoCoordinates,
+                    remainingDistance: remainingDistance,
+                    numPersons: numPersons,
+                    minimumBudget: minimumBudget
+                };
+            },
             setOrigin: function(origin) {
                 console.log('Set origin'+origin);
                 originCity = origin;
@@ -94,6 +137,23 @@ inputModule.service('formData', function () {
             setRemainingDistance: function(distance) {
                 remainingDistance = distance;
             },
+            setMinimumBudget: function(minBudget) {
+                minimumBudget = minBudget;
+            },
+            setAllData: function(allData){
+                originCity = allData.originCity;
+                destinationCities = allData.destinationCities;
+                startDate = new Date(allData.startDate);
+                endDate = new Date(allData.endDate);
+                budget = allData.budget;
+                tastes = allData.tastes;
+                tripStartTime = allData.tripStartTime;
+                tripEndTime = allData.tripEndTime;
+                originGeoCoordinates = allData.originGeoCoordinates;
+                remainingDistance = allData.remainingDistance;
+                numPersons = allData.numPersons;
+                minimumBudget = allData.minimumBudget;
+            },
             appendDestination: function(destination) {
                 destinationCities.push(destination);
                 removeDuplicates();
@@ -101,6 +161,15 @@ inputModule.service('formData', function () {
             concatDestinations: function(destinations) {
                 destinationCities = destinationCities.concat(destinations);
                 removeDuplicates();
+            },
+            resetBudget: function(){
+                budget = MIN_BUDGET;
+            },
+            resetTastes: function(){
+                tastes = DEFAULT_TASTES;
+            },
+            resetNumPersons: function(){
+                numPersons = MIN_NUM_PERSONS;
             }
         };
     });
