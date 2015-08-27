@@ -33,4 +33,33 @@
          }
     ]);
 
+    angular.module("ngFixToTop").directive("fixTopMobile", [
+        function() {
+            return {
+                restrict: 'A',
+                link: function($scope, $elem) {
+                    var fixmeTop = $elem.offset().top;
+                    //var width = $elem.width();
+                    jQuery(window).scroll(function() {
+                        var currentScroll = jQuery(window).scrollTop();
+                        if (currentScroll >= fixmeTop) {
+                            $elem.css({
+                                position: 'fixed',
+                                top: '0',
+                                left:'0',
+                                zIndex:'200',
+                                width:'100%'
+                                //left: '0'
+                            });
+                        } else {
+                            $elem.css({
+                                position: 'static'
+                            });
+                        }
+                    });
+                }
+            };
+        }
+    ]);
+
 }).call(this);

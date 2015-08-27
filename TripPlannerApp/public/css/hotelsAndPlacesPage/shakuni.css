@@ -5,10 +5,7 @@
 .cursor-click {
     cursor: pointer;
 }
-.wrapper{
-    float:left; /* important */
-    position:relative; /* important(so we can absolutely position the description div */
-}
+
 .name{
     position:absolute; /* absolute position (so we can position it where we want)*/
     bottom:0px; /* position will be on bottom */
@@ -82,4 +79,50 @@
 .visitTimings:hover{
     background-color: white;
     color:#000000;
+}
+.carousel-indicators li{
+    display: none !important;
+}
+.carousel-control{
+    top:21% !important;
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+    .wrapper{
+        float:left; /* important */
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .wrapper{
+        float:left; /* important */
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+}
+
+/* Portrait tablets and small desktops -sm*/
+@media (min-width: 768px) and (max-width: 991px) {
+    .wrapper{
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .wrapper{
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
+@media (max-width: 350px) {
+
 }

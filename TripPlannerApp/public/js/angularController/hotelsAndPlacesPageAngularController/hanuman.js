@@ -34,6 +34,7 @@ itineraryModule.controller('hanumanController', function($scope, $rootScope, $ht
     $rootScope.$on('showRecommendation',function onShowRecommendation(event,category,params){
         var alert=messages[category];
         var alertClone = JSON.parse(JSON.stringify(alert));
+        console.log("alter:"+JSON.stringify(alert));
         removeAlert(alertClone.kind);
         if(params!=undefined)
         {
