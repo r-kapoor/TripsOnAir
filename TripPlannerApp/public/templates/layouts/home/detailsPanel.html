@@ -1,0 +1,113 @@
+<div class="text-center" collapse="isDetailsCollapsed">
+    <label>Choose Interests</label>
+    <div class="form-group">
+        <div class="btn-group well">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label title="Religious" class="btn btn-default btn-lg" ng-model="checkModel.RELIGIOUS"
+                           btn-checkbox>
+                        <img src="images/religious.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                    <label title="Adventure" class="btn btn-default btn-lg" ng-model="checkModel.ADVENTURE"
+                           btn-checkbox>
+                        <img src="images/adventure.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                    <label title="Beaches" class="btn btn-default btn-lg" ng-model="checkModel.BEACHES" btn-checkbox>
+                        <img src="images/beach.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                    <label class="btn btn-default btn-lg" ng-model="checkModel.LANDMARKS"
+                           btn-checkbox>
+                        <img src="images/landmark.png" class="img-responsive" title="Landmarks" style="width: 100%"/>
+                    </label>
+                    <label title="Nature" class="btn btn-default btn-lg" ng-model="checkModel.NATURE"
+                           btn-checkbox>
+                        <img src="images/nature.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label tooltip="Live Events: Coming Soon" tooltip-placement="left" tooltip-trigger="mouseenter" class="btn btn-default btn-lg overlay" ng-model="checkModel.LIVE_EVENTS" btn-checkbox>
+                        <img src="images/liveEvents.png" class="img-responsive" style="width: 100%">
+                    </label>
+                    <label title="Hill Station" class="btn btn-default btn-lg" ng-model="checkModel.HILL_STATION"
+                           btn-checkbox>
+                        <img src="images/hillStation.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                    <label title="Romantic" class="btn btn-default btn-lg" ng-model="checkModel.ROMANTIC"
+                           btn-checkbox>
+                        <img src="images/romantic.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                    <label title="Family" class="btn btn-default btn-lg" ng-model="checkModel.FAMILY"
+                           btn-checkbox>
+                        <img src="images/family.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                    <label title="Friends" class="btn btn-default btn-lg" ng-model="checkModel.FRIENDS"
+                           btn-checkbox>
+                        <img src="images/friends.png" class="img-responsive" style="width: 100%"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-8">
+                <div tooltip="Includes travel, accomodation, food, local transport, entry fees" tooltip-placement="top" tooltip-trigger="mouseenter" class="row">
+                    <label>Budget Per Person :</label> {{value1 | currency:"&#8377;"}}
+                </div>
+
+                <!--<slider id="budgetSlider" ng-model="sliders.sliderValue" min="{{sliderOptions.min}}"-->
+                        <!--step="{{sliderOptions.step}}"-->
+                        <!--max="{{sliderOptions.max}}"></slider>-->
+                <!--{{myFormater() | currency:"&#8377;"}}-->
+
+                <input ng-model="value1"  type="text" id="mySlider1" slider options="options" />
+            </div>
+            <div  class="col-sm-4">
+                <label>Persons</label>
+                <div class="input-group"  style="width:100%">
+                    <span class="input-group-addon btn cursor-style" ng-click="subPerson()"><i class="glyphicon glyphicon-minus"></i></span>
+                    <input restrict="[^0-9]" ng-model="numPerson" type="text" class="form-control text-center" aria-label="Amount (to the nearest dollar)">
+                    <span class="input-group-addon btn cursor-style" ng-click="addPerson()"><i class="glyphicon glyphicon-plus"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-sm-2 col-sm-offset-1" style="padding-left:0px;">-->
+    <!--<div class="form-group">-->
+    <!--<label for="numP">Persons</label>-->
+    <!--<select ng-model="numPersons" class="form-control" id="numP">-->
+    <!--<option value="1" selected>1</option>-->
+    <!--<option>2</option>-->
+    <!--<option>3</option>-->
+    <!--<option>4</option>-->
+    <!--<option>5</option>-->
+    <!--<option>6</option>-->
+    <!--<option>7</option>-->
+    <!--<option>8</option>-->
+    <!--<option>9</option>-->
+    <!--<option>10</option>-->
+    <!--<option>11</option>-->
+    <!--<option>12</option>-->
+    <!--<option>13</option>-->
+    <!--<option>14</option>-->
+    <!--<option>15</option>-->
+    <!--</select>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <div class="col-md-12 text-center">
+        <button type="button" class="btn btn-primary" ng-model="singleModel"
+                ng-click="submitOrSuggest()" btn-checkbox
+                btn-checkbox-true="1" btn-checkbox-false="0">
+            Submit
+        </button>
+    </div>
+</div>

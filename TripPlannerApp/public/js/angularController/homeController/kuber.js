@@ -1,16 +1,17 @@
-inputModule.controller('KuberController', function($scope, $rootScope, $http, $q, formData, cityData) {
+inputModule.controller('KuberController', function($scope, $rootScope, $http, $q, $location, $window, formData, cityData) {
 //	TODO:outer controller can't pic inner controllers scope variables-check
 //	$scope.originCity = null;
 //	$scope.destinationCity = null;
-	$scope.isDetailsCollapsed = true;
+	$scope.isDetailsCollapsed = false;
 	$scope.isOverviewCollapsed = false;
 	$scope.isSuggestDestinationsOn = false;
     $scope.destinationCityList = formData.getDestinations();
     $scope.helpLabel="Help me choose destinations";
-    $scope.numPerson = "4";
-      $scope.value = "5000";
+    $scope.numPerson = formData.getNumPersons();
+    $scope.value1 = formData.getBudget();
+    //$scope.value1 = 5000;
       $scope.options = {
-        from: 5000,
+        from: formData.getMinimumBudget(),
         to: 100000,
         step: 100,
         dimension: " Rs",
@@ -23,8 +24,9 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         }
       };
 
-      $scope.$watch('value', function(){
-        return $scope.value;
+      $scope.$watch('value1', function(){
+          console.log("WATCH:"+$scope.value1);
+        return $scope.value1;
       });
    /*$scope.sliders = {};
     $scope.sliders.sliderValue = 10000;
@@ -37,17 +39,19 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     $scope.sliders.thirdSliderValue = 0;*/
 
     $scope.submitOrSuggest = function() {
-        formData.setBudget($scope.value);
+        console.log('$scope.value:'+$scope.value1);
+        formData.setBudget($scope.value1);
         formData.setTastes($scope.checkModel);
         formData.setNumPersons($scope.numPerson);
+        $window.sessionStorage.setItem('formData',JSON.stringify(formData.getAllData()));
         if($scope.isSuggestDestinationsOn)
         {
           $rootScope.$emit('suggest');
         }
         else
-         {
+        {
             $rootScope.$emit('submit');
-         }
+        }
     };
 
    /* $scope.$watch('sliderOptions.min', function() {
@@ -79,15 +83,9 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                     //slider = $(element[0]).slider(options);
                 });*/
 
-    $scope.tripStartTime = {
-        morning : false,
-        evening : false
-    };
+    $scope.tripStartTime = formData.getTripStartTime();
 
-    $scope.tripEndTime = {
-        morning : false,
-        evening : false
-    };
+    $scope.tripEndTime = formData.getTripEndTime();
 
     $scope.$watch('tripStartTime', function startTimeSelected() {
         formData.setTripStartTime($scope.tripStartTime);
@@ -102,6 +100,11 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
      $scope.helpLabel="Help me choose more destinations";
     });
 
+    $rootScope.$on('BudgetSet', function(){
+        $scope.value1 = formData.getBudget();
+        $scope.options.from = formData.getMinimumBudget();
+    });
+
     $rootScope.$on('selectionDone', function checkAndShowOtherInputs() {
 
         var startTimeSet=(formData.getTripStartTime()!=null)&&(formData.getTripStartTime().morning == true || formData.getTripStartTime().evening == true);
@@ -112,6 +115,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         var endDateSet = (formData.getEndDate() !== null);
         console.log("isSuggestDestinationsOn:"+$scope.isSuggestDestinationsOn);
         if( startDateSet && endDateSet && startTimeSet && endTimeSet && originSet && (destinationSet > 0 || $scope.isSuggestDestinationsOn)) {
+            var url = $location.path('/setBudget');
             $rootScope.$emit('formComplete');
         }
         else
@@ -147,13 +151,21 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     });
 
 	$rootScope.$on('formComplete', function collapseEvents(event, data) {
-    	$scope.isOverviewCollapsed = true;
+    	//$scope.isOverviewCollapsed = true;
+        //cleanDetailsPanelData();
+        $scope.isDetailsCollapsed = true;
         setTimeout(function () {
             $scope.isDetailsCollapsed = false;
             $scope.setBudgetLimits();
         }, 200);
 
   	});
+
+    function cleanDetailsPanelData(){
+        formData.resetBudget();
+        formData.resetNumPersons();
+        formData.resetTastes();
+    }
 
     $scope.showOtherInputs = function() {
         $rootScope.$emit('formComplete');
@@ -297,6 +309,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
             var destinations = formData.getDestinations();
             var startDate = formData.getStartDate();
             var endDate = formData.getEndDate();
+            console.log(startDate+","+endDate);
             if (origin != null && destinations.length != 0 && startDate != null && endDate != null) {
                 console.log('3');
                 var diff = Math.abs(endDate - startDate);
@@ -344,7 +357,12 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
                         console.log('totalFare:'+totalFare);
                         $scope.options.from=parseInt(totalFare);
-                        $scope.value = $scope.options.from;
+                        $scope.value1 = $scope.options.from;
+                        formData.setMinimumBudget(parseInt(totalFare));
+                        formData.setBudget(parseInt(totalFare));
+                        console.log('$scope.value1:'+$scope.value1);
+                        console.log('$scope.options.from:'+$scope.options.from);
+                        $rootScope.$emit('BudgetSet');
                         //$scope.sliderOptions.min = parseInt(totalFare);
                         //$scope.$render();
                         //console.log($scope.sliderOptions.min);
@@ -380,16 +398,5 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         }
     };
 
-	$scope.checkModel = {
-	RELIGIOUS   : false,
-    ADVENTURE   : false,
-    BEACHES     : false,
-    LANDMARKS   : false,
-    NATURE      : false,
-    LIVE_EVENTS : false,
-    HILL_STATION: false,
-    ROMANTIC    : false,
-    FAMILY      : false,
-    FRIENDS     : false
-  	};
+	$scope.checkModel = formData.getTastes();
 });

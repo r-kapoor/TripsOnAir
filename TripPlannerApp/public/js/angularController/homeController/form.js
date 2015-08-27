@@ -11,36 +11,34 @@ angular.module('scrollLoad', []).directive('whenScrolled', function($document,$w
     };
 });
 
-var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap','ngSlider','scrollLoad','ngJScrollPane','ngRestrictInput','duScroll']);
+var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap','ngSlider','scrollLoad','ngJScrollPane','ngRestrictInput','duScroll','ngRoute']);
 
-inputModule.controller('form1Controller',  function($scope, $rootScope) {
+inputModule.config(['$routeProvider',
+    function($routeProvider) {
+        $routeProvider.
+            when('/', {
+                templateUrl: 'templates/layouts/home/overviewPanel.html'
+                ,controller: 'KuberController'
+            }).
+            when('/setBudget', {
+                templateUrl: 'templates/layouts/home/detailsPanel.html'
+                ,controller: 'KuberController'
+            }).
+            otherwise({
+                redirectTo: '/'
+            });
+    }]);
+
+inputModule.controller('form1Controller',  function($scope, $rootScope, $window, formData) {
+
+    var sessionData = $window.sessionStorage.getItem('formData');
+    if(sessionData != null){
+        formData.setAllData(JSON.parse(sessionData));
+    }
+
     $scope.title='Plan your Trip';
-    $scope.todos = [
-      {text:'learn angular', done:true},
-      {text:'build an angular app', done:false}];
-
-    $scope.addTodo = function() {
-      $scope.todos.push({text:$scope.todoText, done:false});
-      $scope.todoText = '';
-    };
 
     $scope.isFormPanelCollapsed = false;
-
-    $scope.remaining = function() {
-      var count = 0;
-      angular.forEach($scope.todos, function(todo) {
-        count += todo.done ? 0 : 1;
-      });
-      return count;
-    };
-
-    $scope.archive = function() {
-      var oldTodos = $scope.todos;
-      $scope.todos = [];
-      angular.forEach(oldTodos, function(todo) {
-        if (!todo.done) $scope.todos.push(todo);
-      });
-    };
 
     $rootScope.$on('suggest', function collapseEvents(event, data) {
         $scope.isFormPanelCollapsed = true;

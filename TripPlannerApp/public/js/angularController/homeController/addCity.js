@@ -47,9 +47,9 @@ inputModule.filter('filterByCityAndState', function(){
 });
 
 inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, cityData, formData) {
-  $scope.originCity = null;
+  $scope.originCity = formData.getOrigin();
   $scope.destinationCity = null;
-  $scope.destinationCityList=[];
+  $scope.destinationCityList=formData.getDestinations();
   $scope.label="Enter the Destination";
 
     $scope.originValid = true;
