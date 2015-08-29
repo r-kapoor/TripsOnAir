@@ -183,7 +183,7 @@
     </div><!--//bottom-bar-->
 </footer><!--//footer-->
 
-<footer ng-hide="!(lowerPanelContent=='places')" class="sticky-footer text-center" style="padding-top: 0px;z-index:1006;background-color:#f8f8f8">
+<footer ng-if="(lowerPanelContent=='places')" class="sticky-footer text-center" style="padding-top: 0px;z-index:1006;background-color:#f8f8f8">
     <div style="height: 150px">
         <button style="position: absolute;top:0px;right:0px;z-index: 100" ng-click="removeLowerPanel()"><i class="glyphicon glyphicon-remove"></i></button>
         <carousel interval="myInterval" no-wrap="noWrapSlides">
