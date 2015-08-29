@@ -20,19 +20,21 @@
         <!-- Split button -->
 
     <!--</li>-->
-    <li role="presentation" ng-class="{active:true}">
+    <li role="presentation" ng-class="{active:isItineraryPanelOpen}">
         <div class="btn-group" dropdown>
-            <button id="split-button" type="button" class="btn btn-danger">Action</button>
-            <button type="button" class="btn btn-danger" dropdown-toggle>
+            <button id="split-button" type="button" ng-click="openMobilePanel('city')" class="btn btn-primary btn-sm">{{currentDestination.name}}</button>
+            <button type="button" class="btn btn-primary btn-sm" dropdown-toggle>
                 <span class="caret"></span>
                 <span class="sr-only">Split button!</span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="split-button">
-                <li role="menuitem"><a href="#">Action</a></li>
-                <li role="menuitem"><a href="#">Another action</a></li>
-                <li role="menuitem"><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li role="menuitem"><a href="#">Separated link</a></li>
+                <li ng-repeat="destinationWithStop in destinationsWithStop" role="menuitem">
+                    <a ng-if="destinationWithStop.isDestination" ng-click="showDestinationItinerary(destinationWithStop)" href="#">{{destinationWithStop.name}}</a>
+                </li>
+                <!--<li role="menuitem"><a href="#">Another action</a></li>-->
+                <!--<li role="menuitem"><a href="#">Something else here</a></li>-->
+                <!--<li class="divider"></li>-->
+                <!--<li role="menuitem"><a href="#">Separated link</a></li>-->
             </ul>
         </div>
     </li>

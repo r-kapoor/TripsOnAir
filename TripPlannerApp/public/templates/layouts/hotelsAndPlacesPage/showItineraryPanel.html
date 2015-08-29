@@ -7,7 +7,7 @@
 
     <!--</div>-->
     <!--</div>-->
-    <nav class="navbar navbar-default hidden-md hidden-lg" fix-top-mobile collapse="isDateBarCollapsed" style="width: 100%">
+    <nav class="navbar navbar-default hidden-md hidden-lg" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}" fix-top-mobile collapse="isDateBarCollapsed" style="width: 100%;z-index:200">
         <ul class="pager">
             <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>
             <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
@@ -21,7 +21,7 @@
             <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
         </ul>
     </nav>
-    <div style="padding-left: 15px;padding-right: 15px">
+    <div style="padding-left: 15px;padding-right: 15px" ng-class="{itinerary:!isItineraryPanelOpen}">
     <timeline id="itineraryPanelIntro">
         <timeline-node ng-if="currentDestination != null" side="right">
             <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.lastMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">

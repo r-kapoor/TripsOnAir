@@ -12,22 +12,27 @@
                 link: function($scope, $elem) {
                     var fixmeTop = $elem.offset().top;
                     var width = $elem.width();
-                    jQuery(window).scroll(function() {
-                        var currentScroll = jQuery(window).scrollTop();
-                        if (currentScroll >= fixmeTop) {
-                            $elem.css({
-                                position: 'fixed',
-                                top: '0',
-                                zIndex:'200',
-                                width:width
-                            //left: '0'
-                            });
-                        } else {
-                            $elem.css({
-                                position: 'static'
-                            });
-                        }
-                    });
+                    console.log("id:"+$elem.attr('id'));
+                    console.log("device width:"+$(window).width());
+
+                    if(!($(window).width()<=991 && $elem.attr('id')=='map-canvas')){
+                        jQuery(window).scroll(function() {
+                            var currentScroll = jQuery(window).scrollTop();
+                            if (currentScroll >= fixmeTop) {
+                                $elem.css({
+                                    position: 'fixed',
+                                    top: '0',
+                                    zIndex:'200',
+                                    width:width
+                                    //left: '0'
+                                });
+                            } else {
+                                $elem.css({
+                                    position: 'static'
+                                });
+                            }
+                        });
+                    }
                 }
             };
          }
@@ -51,7 +56,8 @@
                                 width:'100%'
                                 //left: '0'
                             });
-                        } else {
+                        }
+                        else {
                             $elem.css({
                                 position: 'static'
                             });

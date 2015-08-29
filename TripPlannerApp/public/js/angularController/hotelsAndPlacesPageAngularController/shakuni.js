@@ -60,6 +60,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.isBudgetPanelOpen = false;
     $scope.isMobileAlertPanelShown = false;
+    $scope.isItineraryPanelOpen = true;
     $scope.totalBudgetText = "Budget";
     $scope.travelBudgetText = "Travel Expenses";
     $scope.otherCitiesBudgetText = "Other Destination(s) Expenses";
@@ -712,16 +713,19 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         {
             $scope.isBudgetPanelOpen = true;
             $scope.isMobileAlertPanelShown = false;
+            $scope.isItineraryPanelOpen = false;
         }
         else if(panel=='alert')
         {
             $scope.isMobileAlertPanelShown = true;
             $scope.isBudgetPanelOpen = false;
+            $scope.isItineraryPanelOpen = false;
         }
         else if(panel=='city')
         {
             $scope.isBudgetPanelOpen = false;
             $scope.isMobileAlertPanelShown = false;
+            $scope.isItineraryPanelOpen = true;
         }
     };
     /** mobile Method end**/
@@ -855,10 +859,12 @@ console.log("content:"+content);
         if($scope.mobileViewLabel=='Map')
         {
             $scope.mobileViewLabel = 'Itinerary';
+            $scope.isItineraryPanelOpen = false;
         }
         else
         {
             $scope.mobileViewLabel = 'Map';
+            $scope.isItineraryPanelOpen = true;
         }
     };
 
@@ -3211,7 +3217,8 @@ console.log("content:"+content);
     };
 
     function createAlert(category,param){
-        $rootScope.$emit('showRecommendation',category,param);
+        console.log("createAlert");
+        $rootScope.$broadcast('showRecommendation',category,param);
     }
 
     function markPlaceAsAdded(place){

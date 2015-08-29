@@ -108,6 +108,9 @@
     .wrapper{
         position:relative; /* important(so we can absolutely position the description div */
     }
+    .itinerary{
+        display: none;
+    }
 }
 
 /* Landscape phones and portrait tablets */
@@ -115,7 +118,9 @@
     .wrapper{
         position:relative; /* important(so we can absolutely position the description div */
     }
-
+    .itinerary{
+        display: none;
+    }
 }
 
 /* Portrait phones and smaller */
@@ -125,4 +130,9 @@
 
 @media (max-width: 350px) {
 
+}
+
+.onMapClick{
+    position: absolute !important;
+    top:0 !important;
 }

@@ -28,6 +28,7 @@
 /* Landscape phones and portrait tablets */
 @media (max-width: 767px) {
     #map-canvas {
+        position: absolute;
         width: 100vw;
         height: 100vh;
         background-color: #CCC;
