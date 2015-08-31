@@ -79,7 +79,7 @@
                     </timeline-heading>
                     <timeline-content class="text-center">
                         <div class="hidden-sm hidden-xs">Drag Here To Add New Place</br></br></div>
-                        <div class="hidden-md hidden-lg">Replace a place here</div>
+                        <div class="hidden-md hidden-lg" ng-click="replaceMe($event,$index, parentIndex)">Replace a place here</div>
                     </timeline-content>
                 </timeline-panel>
                 <timeline-panel id="place-{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}" ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">

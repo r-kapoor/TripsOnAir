@@ -101,8 +101,13 @@
                 <div class="hidden-xs hidden-sm" ng-include src="'templates/layouts/hotelsAndPlacesPage/detailModal.html'"></div>
             </div>
         </div>
-        <div class="alert-box hidden-xs hidden-sm" ng-controller="hanumanController">
-            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        <div ng-controller="hanumanController">
+            <div class="alert-box hidden-xs hidden-sm">
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+            </div>
+            <div class="alert-box hidden-md hidden-lg">
+                <alert ng-if="currentAlert!=null" type="{{currentAlert.type}}" close="closeCurrentAlert()">{{currentAlert.msg}}</alert>
+            </div>
         </div>
         <div>
             <a id="download" style="font-size: 1px; opacity: 0" download="itinerary.pdf"></a>

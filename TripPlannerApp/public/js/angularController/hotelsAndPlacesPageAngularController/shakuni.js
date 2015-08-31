@@ -3217,8 +3217,8 @@ console.log("content:"+content);
     };
 
     function createAlert(category,param){
-        console.log("createAlert");
         $rootScope.$broadcast('showRecommendation',category,param);
+        //$scope.hasAnyAlert =
     }
 
     function markPlaceAsAdded(place){
