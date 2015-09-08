@@ -21,7 +21,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
         }
     }
     for(var k=0;k<destinationsAndStops.destinationsWiseStops.length;k++){
-        console.log('In for loop');
+       //console.log('In for loop');
         var stopsArray = destinationsAndStops.destinationsWiseStops[k];
         for(var d=0;d<stopsArray.length; d++) {
             if(stopsArray[d].isHotelRequired==1)
@@ -34,13 +34,13 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
         }
     }
     if(HotelsInStops.length>0){
-        console.log('length > 0');
+        //console.log('length > 0');
         getCityID.getCityID(HotelsInStops,function onGettingStopsCityIDs(err,stopsCityIDs){
             if(err)
             {
                 throw err;
             }
-            console.log("got Stops cityID:"+stopsCityIDs);
+            //console.log("got Stops cityID:"+stopsCityIDs);
             sendQueryForHotelData(stopsCityIDs);
         });
     }

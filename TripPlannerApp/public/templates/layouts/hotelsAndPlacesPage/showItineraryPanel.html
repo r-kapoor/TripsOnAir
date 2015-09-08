@@ -10,7 +10,7 @@
     <nav class="navbar navbar-default hidden-md hidden-lg" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}" fix-top-mobile collapse="isDateBarCollapsed" style="width: 100%;z-index:200">
         <ul class="pager">
             <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>
-            <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
+            <li>Day {{currentDay+1}}: {{currentDate | date:'mediumDate'}}</li>
             <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
         </ul>
     </nav>
@@ -42,21 +42,30 @@
                 </timeline-badge>
                 <timeline-panel>
                     <timeline-heading>
-                        <timeline-title>{{currentDestination.hotelDetails.Name}}</timeline-title>
-                        <div class="row">
+                        <timeline-title>{{currentDestination.hotelDetails.Name}}
+                            <rating class="hidden-sm hidden-xs" style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
+                        </timeline-title>
+                        <div class="row hidden-md hidden-lg">
                             <p>
-                                <small class="text-muted" style="margin-left: 4%"> Single Room Rent Per Day {{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} </small>
+                                <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night </small>
+                            </p>
+                        </div>
+                        <div class="row hidden-xs hidden-sm">
+                            <p>
+                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night </small>
                             </p>
                         </div>
                         <div class="row">
-                            <div class="col-xs-9 col-md-6">
+                            <div class="col-xs-12 col-md-6">
                                 <p>
                                     <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData, true) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index,true) | date:'shortTime'}} </small>
                                 </p>
                             </div>
-                            <div class="col-xs-3 col-md-6 text-right" style="padding-left: 0px">
+                            <div class="col-xs-12 col-md-6">
                                 <p>
-                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} per person</large>
+                                    <large class="hidden-xs hidden-sm"> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} /person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</large>
+                                    <small class="hidden-md hidden-lg"> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}}/person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</small>
                                 </p>
                             </div>
                         </div>
@@ -175,10 +184,17 @@
                 </timeline-badge>
                 <timeline-panel>
                     <timeline-heading>
-                        <timeline-title>{{currentDestination.hotelDetails.Name}}</timeline-title>
-                        <div class="row">
+                        <timeline-title>{{currentDestination.hotelDetails.Name}}
+                            <rating class="hidden-sm hidden-xs" style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating></timeline-title>
+                        <div class="row hidden-md hidden-lg">
                             <p>
-                                <small class="text-muted" style="margin-left: 4%"> Single Room Rent Per Day {{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} </small>
+                                <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night</small>
+                            </p>
+                        </div>
+                        <div class="row hidden-xs hidden-sm">
+                            <p>
+                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night</small>
                             </p>
                         </div>
                         <div class="row">
@@ -187,9 +203,14 @@
                                     <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index) | date:'shortTime'}} </small>
                                 </p>
                             </div>
-                            <div class="col-xs-3 col-md-6 text-right" style="padding-left: 0px">
+                            <div class="hidden-xs hidden-sm col-md-6 text-right" style="padding-left: 0px">
                                 <p>
-                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} per person</large>
+                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} per person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</large>
+                                </p>
+                            </div>
+                            <div class="hidden-md hidden-lg col-xs-12">
+                                <p>
+                                    <small> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}}/person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</small>
                                 </p>
                             </div>
                         </div>

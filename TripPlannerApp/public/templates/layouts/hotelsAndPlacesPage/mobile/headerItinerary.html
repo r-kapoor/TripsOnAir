@@ -29,7 +29,7 @@
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="split-button">
                 <li ng-repeat="destinationWithStop in destinationsWithStop" role="menuitem">
-                    <a ng-if="destinationWithStop.isDestination" ng-click="showDestinationItinerary(destinationWithStop)" href="#">{{destinationWithStop.name}}</a>
+                    <a ng-if="destinationWithStop.isDestination" ng-click="showDestinationItinerary(destinationWithStop)">{{destinationWithStop.name}}</a>
                 </li>
                 <!--<li role="menuitem"><a href="#">Another action</a></li>-->
                 <!--<li role="menuitem"><a href="#">Something else here</a></li>-->
@@ -38,6 +38,7 @@
             </ul>
         </div>
     </li>
-    <li role="presentation" ng-class="{active: isBudgetPanelOpen}" ng-click="openMobilePanel('expenses')"><a href="#">Expenses</a></li>
-    <li role="presentation" ng-class="{active: isMobileAlertPanelShown}" ng-click="openMobilePanel('alert')"><a href="#">Alerts</a></li>
+    <!--<li role="presentation" ng-class="{active: isBudgetPanelOpen}" ng-click="openMobilePanel('expenses')"><a>Chikmagalur<i class="glyphicon glyphicon-chevron-down" style="top:3px !important;left:5px"></i></a></li>-->
+    <li role="presentation" ng-class="{active: isBudgetPanelOpen}" ng-click="openMobilePanel('expenses')"><a>Expenses</a></li>
+    <li role="presentation" ng-class="{active: isMobileAlertPanelShown}" ng-click="openMobilePanel('alert')"><a>Alerts</a></li>
 </ul>

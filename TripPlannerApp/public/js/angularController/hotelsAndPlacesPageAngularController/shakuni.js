@@ -1982,6 +1982,8 @@ console.log("content:"+content);
             var numberOfRooms = Math.ceil($scope.numberOfPeople/hotelDetails.MaxPersons);
             pricePerPerson = (hotelDetails.Price * numberOfDaysInHotel * numberOfRooms)/$scope.numberOfPeople;
             hotelDetails.pricePerPerson = pricePerPerson;
+            hotelDetails.numberOfDays = numberOfDaysInHotel;
+            hotelDetails.numberOfRooms = numberOfRooms;
         }
         if(currentCity){
             $scope.hotelExpenses = pricePerPerson;

@@ -17,7 +17,6 @@
 </div>
 <div fix-top class="col-xs-12">
     <div class="hidden-xs hidden-sm" ng-if="leftPanel=='places'" id="placesPanelIntro">
-
         <div scroll-pane scroll-config="paneConfig" id="placesPanel" style="width:100%;height:100vh">
             <div id="transcludePlacesPanel" class="clearfix">
                 <div class="col-xs-4" style="padding: 0px">
@@ -102,7 +101,8 @@
                             <div class="wrapper">
                                 <a class="thumbnail" style="margin-bottom: 0;">
                                     <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                                    <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                                    <img ng-if="!hotel.isFromApi" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                                    <img ng-if="hotel.isFromApi" ng-src="http://images.travelnow.com/{{hotel.HotelUrl}}">
                                 </a>
                                 <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
                                     <i class="glyphicon glyphicon-plus"></i>
@@ -124,7 +124,8 @@
                             <div class="wrapper">
                                 <a class="thumbnail" style="margin-bottom: 0;">
                                     <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                                    <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                                    <img ng-if="!hotel.isFromApi" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                                    <img ng-if="hotel.isFromApi" ng-src="http://images.travelnow.com/{{hotel.HotelUrl}}">
                                 </a>
                                 <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
                                     <i class="glyphicon glyphicon-plus"></i>
@@ -146,7 +147,8 @@
                             <div class="wrapper">
                                 <a class="thumbnail" style="margin-bottom: 0;">
                                     <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                                    <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px">
+                                    <img ng-if="!hotel.isFromApi" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px">
+                                    <img ng-if="hotel.isFromApi" ng-src="http://images.travelnow.com/{{hotel.HotelUrl}}">
                                 </a>
                                 <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
                                     <i class="glyphicon glyphicon-plus"></i>
@@ -230,12 +232,16 @@
                 <div class="wrapper">
                     <a class="thumbnail" style="margin-bottom: 0;">
                         <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                        <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;height:150px">
+                        <img ng-if="!hotel.isFromApi" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;height:150px">
+                    <img ng-if="hotel.isFromApi" ng-src="http://images.travelnow.com/{{hotel.HotelUrl}}">
                     </a>
-                    <div ng-if="!hotel.hotelAdded" style="position:absolute;top:0;left:50%;z-index:100" class="btn btn-default" ng-click="addHotel(hotel)">
+                    <div style="position:absolute;top:4%;left:20%;z-index:100" class="btn btn-default">
+                        {{hotel.Price | currency:"&#8377;":0}}
+                    </div>
+                    <div ng-if="!hotel.hotelAdded" style="position:absolute;top:4%;left:59%;z-index:100" class="btn btn-default" ng-click="addHotel(hotel)">
                         Replace
                     </div>
-                    <div ng-if="hotel.hotelAdded" style="position:absolute;top:0;left:50%;z-index:100" class="btn btn-success" ng-click="addHotel(hotel)">
+                    <div ng-if="hotel.hotelAdded" style="position:absolute;top:4%;left:59%;z-index:100" class="btn btn-success">
                         Added
                     </div>
                     <div class="name">
