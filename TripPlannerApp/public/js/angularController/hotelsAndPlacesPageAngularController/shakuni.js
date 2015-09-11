@@ -670,18 +670,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         });
     }
 
-    $scope.dragMove = function(){
-        $scope.stopClickClass = 'stop-click';
-        var element = jQuery("#placesPanel");
-        jQuery("#placesPanel").css("overflow","visible");
-        jQuery(".jspContainer").css("overflow","visible");
-    };
-
-    $scope.dragStop = function(){
-        var element = jQuery("#placesPanel");
-        jQuery("#placesPanel").css("overflow","hidden");
-        jQuery(".jspContainer").css("overflow","hidden");
-    };
+    //$scope.dragMove = function(){
+    //    $scope.stopClickClass = 'stop-click';
+    //    var element = jQuery("#placesPanel");
+    //    jQuery("#placesPanel").css("overflow","visible");
+    //    jQuery(".jspContainer").css("overflow","visible");
+    //};
+    //
+    //$scope.dragStop = function(){
+    //    var element = jQuery("#placesPanel");
+    //    jQuery("#placesPanel").css("overflow","hidden");
+    //    jQuery(".jspContainer").css("overflow","hidden");
+    //};
 
     /** mobile Method start**/
     $scope.replaceLowerPanelPlace= function($event,$index)
