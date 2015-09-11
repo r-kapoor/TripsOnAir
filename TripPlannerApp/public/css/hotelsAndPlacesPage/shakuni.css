@@ -24,6 +24,11 @@
     top: 0px;
     right: 0px;
 }
+.rating{
+    position: absolute;
+    left:8%;
+    top:2%;
+}
 .name_content{
     padding:10px;
     margin:0px;
@@ -76,9 +81,6 @@
 .carousel-indicators li{
     display: none !important;
 }
-.carousel-control{
-    top:21% !important;
-}
 
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
@@ -125,6 +127,9 @@
         z-index: 1006;
         width: 100%;
     }
+    .carousel-control{
+        top:21% !important;
+    }
 }
 
 /* Landscape phones and portrait tablets */
@@ -141,6 +146,9 @@
         bottom: 0px;
         z-index: 1006;
         width: 100%;
+    }
+    .carousel-control{
+        top:21% !important;
     }
 }
 

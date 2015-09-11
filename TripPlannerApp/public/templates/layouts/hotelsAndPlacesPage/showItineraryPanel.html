@@ -48,12 +48,12 @@
                         <div class="row hidden-md hidden-lg">
                             <p>
                                 <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
-                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night </small>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/nyt </small>
                             </p>
                         </div>
                         <div class="row hidden-xs hidden-sm">
                             <p>
-                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night </small>
+                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/night </small>
                             </p>
                         </div>
                         <div class="row">
@@ -62,10 +62,14 @@
                                     <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData, true) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index,true) | date:'shortTime'}} </small>
                                 </p>
                             </div>
-                            <div class="col-xs-12 col-md-6">
+                            <div class="hidden-xs hidden-sm col-md-6 text-right" style="padding-left: 0px">
                                 <p>
-                                    <large class="hidden-xs hidden-sm"> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} /person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</large>
-                                    <small class="hidden-md hidden-lg"> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}}/person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</small>
+                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} per person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</large>
+                                </p>
+                            </div>
+                            <div class="hidden-md hidden-lg col-xs-12">
+                                <p>
+                                    <small> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}}/person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</small>
                                 </p>
                             </div>
                         </div>
@@ -87,8 +91,8 @@
                         </div>
                     </timeline-heading>
                     <timeline-content class="text-center">
-                        <div class="hidden-sm hidden-xs">Drag Here To Add New Place</br></br></div>
-                        <div class="hidden-md hidden-lg" ng-click="replaceMe($event,$index, parentIndex)">Replace a place here</div>
+                        <!--<div class="hidden-sm hidden-xs">Drag Here To Add New Place</br></br></div>-->
+                        <div class="btn btn-primary" ng-click="replaceMe($event,$index, parentIndex)">Replace a place here</div>
                     </timeline-content>
                 </timeline-panel>
                 <timeline-panel id="place-{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}" ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">
@@ -189,12 +193,12 @@
                         <div class="row hidden-md hidden-lg">
                             <p>
                                 <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
-                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night</small>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/night</small>
                             </p>
                         </div>
                         <div class="row hidden-xs hidden-sm">
                             <p>
-                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} avg/night</small>
+                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/night</small>
                             </p>
                         </div>
                         <div class="row">

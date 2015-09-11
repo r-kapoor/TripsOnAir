@@ -86,6 +86,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         placeIndex: -1
     };
     $scope.replacePlaceOn = false;
+    $scope.showPlacesForCustomization = false;
+    $scope.showHotelsForCustomization = false;
+    $scope.showMap = false;
+    $scope.isCustomizationOn = false;
     var responseData;
 
     var SPEED = 15;//km/hr
@@ -1000,6 +1004,73 @@ console.log("content:"+content);
             return false;
         }
         return true;
+    };
+
+    $scope.getItineraryAlignClass = function(alignment){
+        if(alignment=="left")
+        {
+            if($scope.isCustomizationOn)
+            {
+                return("col-md-4");
+            }
+            else
+            {
+                return("col-md-3");
+            }
+        }
+        else if(alignment=="right")
+        {
+            if($scope.isCustomizationOn)
+            {
+                return("col-md-1");
+            }
+            else
+            {
+                return("col-md-3");
+            }
+        }
+        else if(alignment=="middle")
+        {
+            if($scope.isCustomizationOn)
+            {
+                return("col-md-1");
+            }
+            else
+            {
+                return("");
+            }
+        }
+    };
+
+    $scope.customize = function(type)
+    {
+        $scope.showHotelsForCustomization = false;
+        $scope.showPlacesForCustomization = false;
+        $scope.showMap = false;
+        if(type=='places')
+        {
+            $scope.showPlacesForCustomization = true;
+        }
+        else if(type=='hotels')
+        {
+            $scope.showHotelsForCustomization = true;
+        }
+        else if(type=='map')
+        {
+            $scope.showMap = true;
+        }
+        else
+        {
+            $scope.showPlacesForCustomization = false;
+            $scope.showHotelsForCustomization = false;
+        }
+        $scope.isCustomizationOn=!$scope.isCustomizationOn;
+    };
+
+    $scope.getPlaceRating = function(place)
+    {
+        var score = (place.Score)/20;
+        return(Math.round(score*10) / 10);
     };
 
     function setBudgetModels(){

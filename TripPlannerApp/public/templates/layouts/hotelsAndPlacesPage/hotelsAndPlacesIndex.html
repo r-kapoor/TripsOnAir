@@ -28,7 +28,7 @@
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shabari.js"></script>
     <script type="text/javascript" src="js/angularService/hotelsAndPlacesPageAngularService/mapDataService.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/jatayu.js"></script>
-	<script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shakuni.js"></script>
+    <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/shakuni.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/hanuman.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/indra.js"></script>
     <script type="text/javascript" src="js/angularController/hotelsAndPlacesPageAngularController/saveModalInstance.js"></script>
@@ -71,49 +71,51 @@
     '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5RM4BW');</script>
 <!-- End Google Tag Manager -->
-    <div ng-include src="'templates/layouts/global/pageLoader.html'"></div>
-	<div ng-controller="itineraryMainController">
-		<div class="header-top hidden-xs hidden-sm" ng-include src="'templates/layouts/global/header.html'"></div>
-        <div ng-controller="shakuniController">
-            <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false" ng-intro-autorefresh="true">
-                <div class="row">
-                    <div class="hidden-xs hidden-sm" style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showCityPanel.html'"></div>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    <div class="row">
-                        <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/leftPanel.html'"></div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-6" style="padding-left: 0px;padding-right: 0px">
-                    <div class="hidden-md hidden-lg" ng-include src="'templates/layouts/hotelsAndPlacesPage/mobile/headerItinerary.html'"></div>
-                    <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showItineraryPanel.html'"></div>
-                    <div class="hidden-md hidden-lg" ng-if="isBudgetPanelOpen" style="position:absolute;width: 100%;top:30%;left:0;background-color: white;z-index:1005;height:100%">
-                        <div ng-include src="'templates/layouts/hotelsAndPlacesPage/budgetPanel.html'"></div>
-                    </div>
-                    <div class="alert-box" ng-hide="!isMobileAlertPanelShown" ng-controller="hanumanController" style="position:absolute;width: 100%;top:30%;left:0;background-color: white;z-index:1005;height:100%">
-                        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-                    </div>
-                </div>
-                <div class="budget col-xs-2 hidden-xs hidden-sm" budget-panel-position>
+<div ng-include src="'templates/layouts/global/pageLoader.html'"></div>
+<div ng-controller="itineraryMainController">
+    <div class="header-top hidden-xs hidden-sm" ng-include src="'templates/layouts/global/header.html'"></div>
+    <div ng-controller="shakuniController">
+        <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false" ng-intro-autorefresh="true">
+            <div class="row">
+                <div class="hidden-xs hidden-sm" style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showCityPanel.html'"></div>
+            </div>
+            <div class="col-xs-12 col-sm-12 {{getItineraryAlignClass('left')}}">
+                <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/leftPanel.html'"></div>
+            </div>
+            <div class="{{getItineraryAlignClass('middle')}}">
+            </div>
+            <div class="col-xs-12 col-md-6" style="padding-left: 0px;padding-right: 0px">
+                <div class="hidden-md hidden-lg" ng-include src="'templates/layouts/hotelsAndPlacesPage/mobile/headerItinerary.html'"></div>
+                <div style="height:100%" ng-include src="'templates/layouts/hotelsAndPlacesPage/showItineraryPanel.html'"></div>
+                <div class="hidden-md hidden-lg" ng-if="isBudgetPanelOpen" style="position:absolute;width: 100%;top:30%;left:0;background-color: white;z-index:1006;height:100vh">
                     <div ng-include src="'templates/layouts/hotelsAndPlacesPage/budgetPanel.html'"></div>
                 </div>
-                <div class="hidden-xs hidden-sm" ng-include src="'templates/layouts/hotelsAndPlacesPage/saveModal.html'"></div>
-                <div class="hidden-xs hidden-sm" ng-include src="'templates/layouts/hotelsAndPlacesPage/detailModal.html'"></div>
+                <div class="alert-box" ng-hide="!isMobileAlertPanelShown" ng-controller="hanumanController" style="position:absolute;width: 100%;top:30%;left:0;background-color: white;z-index:1006;height:100vh">
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                </div>
             </div>
-        </div>
-        <div ng-controller="hanumanController">
-            <div class="alert-box hidden-xs hidden-sm">
-                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+            <div class="{{getItineraryAlignClass('right')}}">
             </div>
-            <div class="alert-box hidden-md hidden-lg">
-                <alert ng-if="currentAlert!=null" type="{{currentAlert.type}}" close="closeCurrentAlert()">{{currentAlert.msg}}</alert>
+            <div class="budget col-xs-2 hidden-xs hidden-sm" budget-panel-position>
+                <div ng-include src="'templates/layouts/hotelsAndPlacesPage/budgetPanel.html'"></div>
             </div>
+            <div class="hidden-xs hidden-sm" ng-include src="'templates/layouts/hotelsAndPlacesPage/saveModal.html'"></div>
+            <div class="hidden-xs hidden-sm" ng-include src="'templates/layouts/hotelsAndPlacesPage/detailModal.html'"></div>
         </div>
-        <div>
-            <a id="download" style="font-size: 1px; opacity: 0" download="itinerary.pdf"></a>
+    </div>
+    <div ng-controller="hanumanController">
+        <div class="alert-box hidden-xs hidden-sm">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
         </div>
-		<!--<div ng-include src="'templates/layouts/global/footer.html'"></div>-->
-	</div>
+        <div class="alert-box hidden-md hidden-lg">
+            <alert ng-if="currentAlert!=null" type="{{currentAlert.type}}" close="closeCurrentAlert()">{{currentAlert.msg}}</alert>
+        </div>
+    </div>
+    <div>
+        <a id="download" style="font-size: 1px; opacity: 0" download="itinerary.pdf"></a>
+    </div>
+    <!--<div ng-include src="'templates/layouts/global/footer.html'"></div>-->
+</div>
 </body>
 
 </html>

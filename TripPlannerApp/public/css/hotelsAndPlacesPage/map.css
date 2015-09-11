@@ -1,7 +1,7 @@
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
     #map-canvas {
-        width: 50vw;
+        width: 29vw;
         height: 100vh;
         background-color: #CCC;
     }
@@ -10,7 +10,7 @@
 /* Landscape tablets and medium desktops -md*/
 @media (min-width: 992px) and (max-width: 1199px) {
     #map-canvas {
-        width: 50vw;
+        width: 29vw;
         height: 100vh;
         background-color: #CCC;
     }

@@ -12,27 +12,43 @@
                 link: function($scope, $elem) {
                     var fixmeTop = $elem.offset().top;
                     var width = $elem.width();
+                    var id = $elem.attr('id');
                     console.log("id:"+$elem.attr('id'));
                     console.log("device width:"+$(window).width());
 
-                    if(!($(window).width()<=991 && $elem.attr('id')=='map-canvas')){
+                    $( document ).ready(function() {
+                        //if(!($(window).width()<=991 && $elem.attr('id')=='map-canvas')){
                         jQuery(window).scroll(function() {
                             var currentScroll = jQuery(window).scrollTop();
+                            //console.log("currentScroll:"+currentScroll+", fixmeTop:"+fixmeTop);
                             if (currentScroll >= fixmeTop) {
-                                $elem.css({
-                                    position: 'fixed',
-                                    top: '0',
-                                    zIndex:'200',
-                                    width:width
-                                    //left: '0'
-                                });
+                                if((id=='custom-places')||(id=='custom-hotels')||(id=='map-view'))
+                                {
+                                    $elem.css({
+                                        position: 'fixed',
+                                        top: '0',
+                                        zIndex:'200',
+                                        width:(1.38)*width//bit jugaad
+                                    });
+                                }
+                                else
+                                {
+                                    $elem.css({
+                                        position: 'fixed',
+                                        top: '0',
+                                        zIndex:'200',
+                                        width:width
+                                        //left: '0'
+                                    });
+                                }
                             } else {
                                 $elem.css({
                                     position: 'static'
                                 });
                             }
                         });
-                    }
+                        //}
+                    });
                 }
             };
          }

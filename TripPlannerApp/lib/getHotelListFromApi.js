@@ -80,14 +80,15 @@ function getURL(arrivalDate,departureDate,city,latitude,longitude,err)
 {
     var baseURL= "http://api.ean.com/ean-services/rs/hotel/v3/list?";
     var sig = getSignature();
+    var numberOfResults = 30;
     console.log(latitude+","+longitude);
     if(!err)
     {
-        return(baseURL+"arrivalDate="+arrivalDate+"&departureDate="+departureDate+"&apiKey="+api_key+"&sharedSecret="+shared_secret+"&city="+city+"&sig="+sig+"&cid="+cid+"&countryCode="+countryCode+"&currencyCode="+currencyCode+"&sort=PRICE");
+        return(baseURL+"arrivalDate="+arrivalDate+"&departureDate="+departureDate+"&apiKey="+api_key+"&sharedSecret="+shared_secret+"&city="+city+"&sig="+sig+"&cid="+cid+"&countryCode="+countryCode+"&currencyCode="+currencyCode+"&sort=PRICE"+"&numberOfResults="+numberOfResults);
     }
     else
     {
-        return(baseURL+"arrivalDate="+arrivalDate+"&departureDate="+departureDate+"&apiKey="+api_key+"&sharedSecret="+shared_secret+"&latitude="+latitude+"&longitude="+longitude+"&searchRadius=30"+"&searchRadiusUnit=KM"+"&sig="+sig+"&cid="+cid+"&countryCode="+countryCode+"&currencyCode="+currencyCode+"&sort=PRICE");
+        return(baseURL+"arrivalDate="+arrivalDate+"&departureDate="+departureDate+"&apiKey="+api_key+"&sharedSecret="+shared_secret+"&latitude="+latitude+"&longitude="+longitude+"&searchRadius=30"+"&searchRadiusUnit=KM"+"&sig="+sig+"&cid="+cid+"&countryCode="+countryCode+"&currencyCode="+currencyCode+"&sort=PRICE"+"&numberOfResults="+numberOfResults);
     }
 }
 
