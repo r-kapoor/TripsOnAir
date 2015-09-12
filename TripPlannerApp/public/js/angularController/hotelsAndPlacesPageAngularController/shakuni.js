@@ -928,6 +928,51 @@ console.log("content:"+content);
         return "";
     };
 
+    //position previous-'0', next-'1'
+    $scope.changeDestination = function(position)
+    {
+        var index = $scope.destinations.indexOf($scope.currentDestination);
+        if((position=='1')&&index!=-1 && index<$scope.destinations.length-1)
+        {
+            $scope.showDestinationItinerary($scope.destinations[index+1]);
+        }
+        else if((position=='0') && index!=-1 && index>0)
+        {
+            $scope.showDestinationItinerary($scope.destinations[index-1]);
+        }
+    };
+
+    $scope.isDestExist = function(position)
+    {
+        if($scope.currentDestination==null)
+        {
+            return true;
+        }
+        var index = $scope.destinations.indexOf($scope.currentDestination);
+        if(position=='1')
+        {
+            if(index!=-1 && index<$scope.destinations.length-1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(index!=-1 && index>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    };
+
     function getTimeFromPlaces(originPosition, destinationPosition){
         var distance = getDistance(originPosition.Latitude, originPosition.Longitude, destinationPosition.Latitude, destinationPosition.Longitude);
         var time = distance/SPEED;

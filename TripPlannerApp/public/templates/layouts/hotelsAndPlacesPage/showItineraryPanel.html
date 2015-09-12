@@ -7,13 +7,30 @@
 
     <!--</div>-->
     <!--</div>-->
-    <nav class="navbar navbar-default hidden-md hidden-lg" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}" fix-top-mobile collapse="isDateBarCollapsed" style="width: 100%;z-index:200">
-        <ul class="pager">
-            <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>
-            <li>Day {{currentDay+1}}: {{currentDate | date:'mediumDate'}}</li>
-            <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
-        </ul>
-    </nav>
+    <!--<nav class="navbar navbar-default hidden-md hidden-lg" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}" fix-top-mobile collapse="isDateBarCollapsed" style="width: 100%;z-index:200">-->
+        <!--<ul class="pager">-->
+            <!--<li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>-->
+            <!--<li>Day {{currentDay+1}}: {{currentDate | date:'mediumDate'}}</li>-->
+            <!--<li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>-->
+        <!--</ul>-->
+    <!--</nav>-->
+<ul class="list-group hidden-md hidden-lg">
+    <li class="list-group-item text-center">
+        <div class="btn" style="padding-top: 0px;padding-bottom: 0px" ng-click="changeDestination('0')" ng-disabled="!isDestExist('0')"><i class="glyphicon glyphicon-chevron-left"></i></div>
+        {{currentDestination.name}}
+        <div class="btn" style="padding-top: 0px ;padding-bottom: 0px" ng-click="changeDestination('1')" ng-disabled="!isDestExist('1')"><i class="glyphicon glyphicon-chevron-right"></i></div>
+    </li>
+    <li fix-top-mobile class="list-group-item text-center" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}">
+        <a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()" style="padding-top: 0px;padding-bottom: 0px">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        </a>
+        Day {{currentDay+1}}: {{currentDate | date:'mediumDate'}}
+        <a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()" style="padding-top: 0px;padding-bottom: 0px">
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    </li>
+</ul>
+
     <nav class="navbar navbar-default hidden-xs hidden-sm" fix-top collapse="isDateBarCollapsed">
         <ul class="pager">
             <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>
@@ -192,7 +209,7 @@
                         <div class="row hidden-md hidden-lg">
                             <p>
                                 <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
-                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/night</small>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/nyt</small>
                             </p>
                         </div>
                         <div class="row hidden-xs hidden-sm">
