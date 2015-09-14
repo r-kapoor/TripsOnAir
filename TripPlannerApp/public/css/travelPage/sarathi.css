@@ -101,6 +101,13 @@
     display: inline-block;
 }
 
+.ng-pageslide{
+    background: #eee;
+}
+.ng-travel{
+    background: #bbbbbb;
+}
+
 
 /*LG*/
 @media (min-width: 1200px) {

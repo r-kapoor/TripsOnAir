@@ -89,7 +89,7 @@ routesModule.controller('sanjayaController',  ['$scope','$rootScope', '$window',
 
     $scope.initializeMap();
     $scope.addMarker = function(position, char) {
-        console.log('addMarker');
+        console.log('addMarker:'+JSON.stringify(position)+' char:'+ char);
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(position.Latitude, position.Longitude),
             map: $scope.map,
@@ -207,6 +207,7 @@ routesModule.controller('sanjayaController',  ['$scope','$rootScope', '$window',
 
     $rootScope.$on('plotCities', function plotCities(event, data) {
         removeAllMarkers();
+        removeRoutePaths();
         var originCity=orderedCities.getOriginCity();
         $scope.addMarker(originCity,'A');
         var destinations = orderedCities.getOrderedDestinationCities();

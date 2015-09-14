@@ -106,8 +106,11 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     var MINUTES_TO_MILLISECONDS = 60*1000;
     var HOURS_TO_MILLISECONDS = MINUTES_TO_MILLISECONDS*60;
     var DAYS_TO_MILLISECONDS = HOURS_TO_MILLISECONDS*24;
+    var itineraryInputs = null;
 
     var isGuideOpened = false;
+
+    var itineraryID;
 
     $scope.mobilePanelOpen = {
         multiMode: false,
@@ -308,22 +311,10 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     };
 
     angular.element(window).ready(function () {
-        var currentURL = $location.absUrl();
-        var pathArray = currentURL.split('?');
-        var destinations = getParameterByName('dsts').split(";");
-        var originCity  =  getParameterByName('o');
-        var citiesString = "";
-        var cityIDsString = "";
-        if((pathArray.length>1) && (destinations.length==1))
-        {
-            //only one destination
-            $scope.isTravelPanelOpen = true;
-            originCity = JSON.parse(originCity);
-            destinations = JSON.parse(destinations);
-            citiesString+="cities="+originCity.CityName+","+destinations.CityName+","+originCity.CityName;
-            cityIDsString+="cityIDs="+originCity.CityID+","+destinations.CityID+","+originCity.CityName;
-            getRoutes(citiesString,cityIDsString,pathArray);
-        }
+        $scope.isTravelPanelOpen = true;
+        itineraryID = $location.absUrl().split('/')[4].replace(/[^0-9a-z]/g,"");
+        $rootScope.$emit('gettingData');
+        getRoutes(itineraryID);
     });
 
     function getParameterByName(name) {
@@ -390,9 +381,20 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         }
     });
 
-    function getRoutes(citiesString,cityIDsString,pathArray)
+    function getRoutes(itineraryID)
     {
-        var queryString = "/showRoutes?"+citiesString+"&"+cityIDsString+"&"+pathArray[1];
+        var getItineraryQuery = "/getItineraryInputs/"+itineraryID;
+        $http.get(getItineraryQuery).then(
+            function onSuccess(response){
+                console.log('Get Itinerary Inputs Success');
+                itineraryInputs = response.data;
+            },
+            function onFailure(response){
+                console.log("Get Itinerary Inputs Failed:"+JSON.stringify(response));
+
+            }
+        );
+        var queryString = "/showRoutes/"+itineraryID;
         $http.get(queryString).success(function(data,status){
             $rootScope.$emit('dataLoaded');
             $scope.isTravelPanelDataHidden = false;
@@ -469,15 +471,14 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     }
 
     function showCurrentRouteOnMap() {
-        var destinations = getParameterByName('dsts').split(";");
-        var originCity  =  getParameterByName('o');
+        //var destinations = getParameterByName('dsts').split(";");
+        var destinations = itineraryInputs.destinationCities;
+        var originCity  =  itineraryInputs.originCity;
         if(destinations.length==1) {
             //need to plot markers if only one destination
-            originCity = JSON.parse(originCity);
-            destinations = JSON.parse(destinations);
             var data = {
                 origin:originCity,
-                destination:destinations
+                destination:destinations[0]
             };
             $rootScope.$emit('plotMarkers',data);
         }
@@ -1382,14 +1383,26 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         }
         travelData.travelBudget = $scope.travelBudget;
         travelData.minorTravelBudget = $scope.minorBudget;
+
+        var requestURL = "/putRoutesData/"+itineraryID;
+
+        $http({
+            method: "PUT",
+            url: requestURL,
+            data: travelData
+        })
+            .then(
+            function success(response){
+                console.log('RESPONSE:'+JSON.stringify(response.data));
+            },
+            function error(response){
+            }
+        );
+
         travelData = JSON.stringify(travelData);
         var formElement=angular.element('<form>');
-        formElement.attr("action","/"+'showPlacesAndHotels');
-        formElement.attr("method","POST");
-        var d=angular.element("<input type='hidden'/>");
-        d.attr("name","travelData");
-        d.attr("value",travelData);
-        formElement.append(d);
+        formElement.attr("action","/"+'showPlacesAndHotels/'+itineraryID);
+        formElement.attr("method","GET");
         var body=angular.element(document.querySelectorAll("body"));
         body.append(formElement);
         formElement.submit();

@@ -5,7 +5,7 @@ module.exports = function (app) {
     /**
      * Render the second page
      */
-    app.get('/getTravelOptions', function (req, res) {
+    app.get('/getTravelOptions/:itineraryID', function (req, res) {
 
     	console.log("in get travel options");
 

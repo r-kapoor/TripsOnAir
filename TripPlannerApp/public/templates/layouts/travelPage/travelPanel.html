@@ -36,7 +36,7 @@
                 <div ng-if="isSegmentShown(segment,leg)" class="travel-panel">
                     <div class="panel-body travel-panel-body">
                         <div class="col-xs-2">
-                            <img ng-src="images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive icon-hover">
+                            <img ng-src="/images/{{getModeIcon(segment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive icon-hover">
                             <div class="row text-center" ng-if = "(segment.subkind=='car')" style="font-size: 80%">Drive</div>
                             <div class="row text-center" ng-if = "(segment.subkind=='taxi')" style="font-size: 80%">Taxi</div>
                         </div>

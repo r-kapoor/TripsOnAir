@@ -3,6 +3,7 @@ var hashidsgroup = new Hashids("encrypting the groupid using hash", 16, "0123456
 var hashidscity = new Hashids("encrypting the cityid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 var hashidshotel = new Hashids("encrypting the hotelid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 var hashidsplace = new Hashids("encrypting the placeid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
+var hashidsitinerary = new Hashids("encrypting the itineraryid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 
 function encodeCityID(cityID){
 	if(!Array.isArray(cityID))
@@ -18,6 +19,22 @@ function encodeCityID(cityID){
 		}
 		return cityIDencoded;
 	}
+}
+
+function encodeItineraryID(itineraryID){
+    if(!Array.isArray(itineraryID))
+    {
+        return hashidsitinerary.encode(itineraryID);
+    }
+    else
+    {
+        itineraryIDencoded = [];
+        for(var i = 0; i < itineraryID.length; i++)
+        {
+            itineraryIDencoded.push(encodeItineraryID(itineraryID[i]));
+        }
+        return itineraryIDencoded;
+    }
 }
 
 function encodeGroupID(groupID){
@@ -101,6 +118,7 @@ function decodePlaceID(placeID){
 }
 
 module.exports.encodeCityID = encodeCityID;
+module.exports.encodeItineraryID = encodeItineraryID;
 module.exports.encodeGroupID = encodeGroupID;
 module.exports.encodeHotelID = encodeHotelID;
 module.exports.encodePlaceID = encodePlaceID;

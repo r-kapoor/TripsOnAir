@@ -16,30 +16,13 @@ routesModule.controller("indraController", ['$scope', '$rootScope','$location', 
     var isReorder = true;
 
     $scope.submitPage = function(){
-        var currentURL = $location.absUrl();
-        var pathArray = currentURL.split("?");
-        var destinations = getParameterByName("dsts").split(";");
-        if(pathArray.length>1)
-        {
-            if(destinations.length==1)
-            {
-                $rootScope.$emit("submitTravel");
-            }
-            else if(destinations.length>1)
-            {
-                console.log("length>1");
-                if(isReorder)
-                {
-                    console.log("reorder true");
-                    $rootScope.$emit("showRoutes");
-                    isReorder = false;
-                }
-                else
-                {
-                    console.log("reorder false");
-                    $rootScope.$emit("submitTravel");
-                }
-            }
+        var currentPath = $location.path();
+        if(currentPath == '/reorder'){
+            $location.path('/routes');
+            $rootScope.$emit("showRoutes");
+        }
+        else {
+            $rootScope.$emit("submitTravel");
         }
     };
 

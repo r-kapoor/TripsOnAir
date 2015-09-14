@@ -22,14 +22,14 @@ inputModule.config(['$routeProvider',
             }).
             when('/setBudget', {
                 templateUrl: 'templates/layouts/home/detailsPanel.html'
-                ,controller: 'KuberController'
+                ,controller: 'BrahmaController'
             }).
             otherwise({
                 redirectTo: '/'
             });
     }]);
 
-inputModule.controller('form1Controller',  function($scope, $rootScope, $window, formData) {
+inputModule.controller('form1Controller',  function($scope, $rootScope, $window, formData, $timeout) {
 
     var sessionData = $window.sessionStorage.getItem('formData');
     if(sessionData != null){
@@ -42,7 +42,7 @@ inputModule.controller('form1Controller',  function($scope, $rootScope, $window,
 
     $rootScope.$on('suggest', function collapseEvents(event, data) {
         $scope.isFormPanelCollapsed = true;
-    })
+    });
   });
 
 function Main($scope) {

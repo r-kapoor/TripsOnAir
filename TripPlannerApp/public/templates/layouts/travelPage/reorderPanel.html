@@ -5,7 +5,7 @@
                                     <li ng-drop="false">
                                         <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
                                             <div class="wrapper">
-                                                <a href="#" class="thumbnail " style="margin-bottom: -20%;">
+                                                <a class="thumbnail " style="margin-bottom: -20%;">
                                                     <img src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/mk932xa8m6qedp4z.png" class="img-responsive" style="width: 100%"/>
                                                 </a>
                                                 <div class="name">
@@ -21,7 +21,7 @@
                                     <li  class="panel-reorderDest" ng-repeat="obj in draggableObjects" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)" post-dest>
                                         <div ng-drag="true" ng-drag-data="obj" ng-class="obj.CityName">
                                             <div class="wrapper draggable">
-                                                <a href="#" class="thumbnail " style="margin-bottom: -20%;">
+                                                <a class="thumbnail " style="margin-bottom: -20%;">
                                                     <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/{{obj.CityID}}.png" class="img-responsive" style="width: 200px;min-height: 100px"/>
                                                 </a>
                                                 <div class="name">
@@ -36,7 +36,7 @@
                                     <li ng-drop="false">
                                         <div ng-drag="false" ng-drag-data="obj" ng-class="obj.name">
                                             <div class="wrapper">
-                                                <a href="#" class="thumbnail " style="margin-bottom: -20%;">
+                                                <a class="thumbnail " style="margin-bottom: -20%;">
                                                     <img src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/mk932xa8m6qedp4z.png" class="img-responsive" style="width: 100%"/>
                                                 </a>
                                                 <div class="name">

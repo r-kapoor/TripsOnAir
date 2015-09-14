@@ -78,31 +78,37 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
-    $rootScope.$on('submit',function onSubmit(){
-         $scope.onSubmit();
+    $rootScope.$on('submit',function onSubmit(event, itineraryID){
+         $scope.onSubmit(itineraryID);
     });
 
-    $scope.onSubmit = function()
+    $scope.onSubmit = function(itineraryID)
     {
         console.log("OnSubmit");
-        var dto1 = dto();
+        //var dto1 = dto();
         var formElement=angular.element('<form\>');
-        formElement.attr("action","/"+'getTravelOptions');
+        formElement.attr("action",'getTravelOptions/'+itineraryID);
+        console.log('getTravelOptions/'+itineraryID);
         formElement.attr("method","GET");
-        for(var key in dto1)
-        {
-            if (dto1.hasOwnProperty(key)) {
-                console.log("key:"+dto1[key]);
-                var d=angular.element("<input type='hidden'/>");
-                d.attr("name",key);
-                d.attr("value",dto1[key]);
-                formElement.append(d);
-            }
-        }
+
+        //for(var key in dto1)
+        //{
+        //    if (dto1.hasOwnProperty(key)) {
+        //        console.log("key:"+dto1[key]);
+        //        var d=angular.element("<input type='hidden'/>");
+        //        d.attr("name",key);
+        //        d.attr("value",dto1[key]);
+        //        formElement.append(d);
+        //    }
+        //}
+
+
         /*var csrf=$("<input ng-hide="true"/>");
         csrf.attr("name","_csrf");
         csrf.attr("value",csrf_token);
         $("body").append(c);*/
+
+
         var body=angular.element(document.querySelectorAll("body"));
         body.append(formElement);
         formElement.submit();

@@ -1,138 +1,78 @@
-<!DOCTYPE html>
-
-<style type="text/css">
-    .ng-pageslide{
-        background: #eee;
-    }
-    .ng-travel{
-        background: #bbbbbb;
-    }
-</style>
-<div ng-controller="routesController">
-    <div ng-controller="sarthiController">
-        <div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false">
-        <div class="col-sm-4">
-            <div ng-if="!isTravelPanelDataHidden" class="hidden-md hidden-lg" ng-include src="'templates/layouts/travelPage/mobile/stickyHeaderRoutes.html'"></div>
-            <pageslide ps-open="isTravelPanelOpen" ps-size="400px" ps-side="left" ps-class="ng-travel">
-                <div id="travelPanelIntro" class="panel panel-default" style="height: 100vh">
-                    <div class="{{getTransparentClass(1)}} btn" ng-click="isTravelPanelDisable || closeOtherPanels(1)"></div>
-                    <div class="panel-body">
-                        <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
-                            <div scroll-pane scroll-config="paneConfig" id="travelPanel" style="width:380px;height:100vh">
-                                <div id="transcludeTravelPanel">
-                                    <div ng-include src="'templates/layouts/travelPage/travelPanel.html'"></div>
-                                    <div class="panel panel-default" ng-if="isShowOtherTrip()" ng-click="showOtherTrip()">
-                                        <div class="otherTaxiTrip panel-heading text-center">
-                                            <i ng-if="!altTrip" class="glyphicon glyphicon-arrow-left"></i>
-                                            {{getOtherTripText()}}
-                                            <i ng-if="altTrip" class="glyphicon glyphicon-share-alt"></i>
-                                        </div>
+<div ng-intro-options="IntroOptions" ng-intro-method="introFunction" ng-intro-autostart="false">
+    <div class="col-sm-4">
+        <div ng-if="!isTravelPanelDataHidden" class="hidden-md hidden-lg" ng-include src="'/templates/layouts/travelPage/mobile/stickyHeaderRoutes.html'"></div>
+        <pageslide ps-open="isTravelPanelOpen" ps-size="400px" ps-side="left" ps-class="ng-travel">
+            <div id="travelPanelIntro" class="panel panel-default" style="height: 100vh">
+                <div class="{{getTransparentClass(1)}} btn" ng-click="isTravelPanelDisable || closeOtherPanels(1)"></div>
+                <div class="panel-body">
+                    <div ng-hide="isTravelPanelDataHidden" class="travel-pageslide">
+                        <div scroll-pane scroll-config="paneConfig" id="travelPanel" style="width:380px;height:100vh">
+                            <div id="transcludeTravelPanel">
+                                <div ng-include src="'/templates/layouts/travelPage/travelPanel.html'"></div>
+                                <div class="panel panel-default" ng-if="isShowOtherTrip()" ng-click="showOtherTrip()">
+                                    <div class="otherTaxiTrip panel-heading text-center">
+                                        <i ng-if="!altTrip" class="glyphicon glyphicon-arrow-left"></i>
+                                        {{getOtherTripText()}}
+                                        <i ng-if="altTrip" class="glyphicon glyphicon-share-alt"></i>
                                     </div>
-
                                 </div>
+
                             </div>
-                            </p>
                         </div>
-                    </div>
-                </div>
-            </pageslide>
-            <!--Mobile HTML for Travel Panel Starts-->
-            <div ng-if="isTravelPanelOpen && !isTravelModesPanelOpen && !isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
-                <div class="panel-body" style="margin-top: 10%">
-                    <div class="text-center">
-                        <div ng-include src="'templates/layouts/travelPage/travelPanel.html'"></div>
                     </div>
                 </div>
             </div>
-            <!--Mobile HTML for Travel Panel Ends-->
-
-            <pageslide ps-open="isTravelModesPanelOpen" ps-side="left" ps-size="360px">
-                <div class="panel panel-default" style="height: 100vh">
-                    <div class="{{getTransparentClass(2)}}" ng-click="closeOtherPanels(2)"></div>
-                    <div class="panel-body">
-                        <div class="page-header text-center">
-                            <h2><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h2>
-                            <small>{{routes.length}} ways of Travel</small>
-                        </div>
-
-                        <div scroll-pane scroll-config="paneConfig" id="travelModesPanel" style="width:330px;height:100vh">
-                            <div id="transcludeTravelModesPanel">
-                                <div ng-include src="'templates/layouts/travelPage/travelModesPanel.html'"></div>
-                            </div>
-                        </div>
-                    </div>
+        </pageslide>
+        <!--Mobile HTML for Travel Panel Starts-->
+        <div ng-if="isTravelPanelOpen && !isTravelModesPanelOpen && !isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+            <div class="panel-body" style="margin-top: 10%">
+                <div class="text-center">
+                    <div ng-include src="'/templates/layouts/travelPage/travelPanel.html'"></div>
                 </div>
-            </pageslide>
-            <!--Mobile HTML for Travel Modes Starts-->
-            <div ng-if="isTravelModesPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+            </div>
+        </div>
+        <!--Mobile HTML for Travel Panel Ends-->
+
+        <pageslide ps-open="isTravelModesPanelOpen" ps-side="left" ps-size="360px">
+            <div class="panel panel-default" style="height: 100vh">
+                <div class="{{getTransparentClass(2)}}" ng-click="closeOtherPanels(2)"></div>
                 <div class="panel-body">
                     <div class="page-header text-center">
-                        <h2>
-                            <i ng-click=closeOtherPanels(1) class="glyphicon glyphicon-arrow-left" style="top:10px;right:15px"></i>
-                            <small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small>
-                        </h2>
+                        <h2><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h2>
                         <small>{{routes.length}} ways of Travel</small>
                     </div>
-                    <div class="text-center">
-                        <div ng-include src="'templates/layouts/travelPage/travelModesPanel.html'"></div>
+
+                    <div scroll-pane scroll-config="paneConfig" id="travelModesPanel" style="width:330px;height:100vh">
+                        <div id="transcludeTravelModesPanel">
+                            <div ng-include src="'/templates/layouts/travelPage/travelModesPanel.html'"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!--Mobile HTML for Travel Modes Ends-->
-            <pageslide ps-open="isModeDetailsPanelOpen" ps-side="left" ps-size="320px">
-                <div class="panel panel-default" style="height: 100vh">
-                    <div class="panel-body" style="font-size: 85%">
-                        <div ng-if="isTrainClicked" scroll-pane scroll-config="paneConfig" id="trainPanel" style="width:280px;height:100vh">
-                            <div id="transcludeTrainPanel">
-                                <div ng-include src="'templates/layouts/travelPage/trainDetailsPanel.html'"></div>
-                            </div>
-                        </div>
-
-                        <!--  </div>
-                     </div> -->
-                        <!-- <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
-                           <div id="transcludeFlightPanel"> -->
-                        <ul ng-if="isFlightClicked" class="list-group">
-                            <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
-                                <div id="transcludeFlightPanel">
-                                    <div ng-include src="'templates/layouts/travelPage/flightDetailsPanel.html'"></div>
-                                </div>
-                            </div>
-                        </ul>
-
-                        <ul ng-if="isBusClicked" class="list-group">
-                            <div scroll-pane scroll-config="paneConfig" id="busPanel" style="width:280px;height:100vh">
-                                <div id="transcludeBusPanel">
-                                    <div ng-include src="'templates/layouts/travelPage/busDetailsPanel.html'"></div>
-                                </div>
-                            </div>
-                        </ul>
-
-                        <div ng-if="isTaxiClicked||isDriveClicked||isCabClicked">
-                            <div ng-include src="'templates/layouts/travelPage/cabTimingsPanel.html'"></div>
-                        </div>
-                        <div ng-if="isCabOperatorClicked">
-                            <accordion close-others="true">
-                                <div scroll-pane scroll-config="paneConfig" id="cabOperatorPanel" style="width:280px;height:100vh">
-                                    <div id="transcludeCabOperatorPanel">
-                                        <div ng-include src="'templates/layouts/travelPage/cabOperatorPanel.html'"></div>
-                                    </div>
-                                </div>
-                            </accordion>
-                        </div>
-                    </div>
+        </pageslide>
+        <!--Mobile HTML for Travel Modes Starts-->
+        <div ng-if="isTravelModesPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+            <div class="panel-body">
+                <div class="page-header text-center">
+                    <h2>
+                        <i ng-click=closeOtherPanels(1) class="glyphicon glyphicon-arrow-left" style="top:10px;right:15px"></i>
+                        <small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small>
+                    </h2>
+                    <small>{{routes.length}} ways of Travel</small>
                 </div>
-            </pageslide>
-            <!--Mobile HTML for Mode Details Starts-->
-            <div ng-if="isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+                <div class="text-center">
+                    <div ng-include src="'/templates/layouts/travelPage/travelModesPanel.html'"></div>
+                </div>
+            </div>
+        </div>
+        <!--Mobile HTML for Travel Modes Ends-->
+        <pageslide ps-open="isModeDetailsPanelOpen" ps-side="left" ps-size="320px">
+            <div class="panel panel-default" style="height: 100vh">
                 <div class="panel-body" style="font-size: 85%">
-                    <div class="page-header text-center">
-                        <h3>
-                            <i ng-click=closeOtherPanels(2) class="glyphicon glyphicon-arrow-left" style="top:0px;right:20px">Back</i>
-                        </h3>
-                    </div>
-                    <div ng-if="isTrainClicked">
-                        <div ng-include src="'templates/layouts/travelPage/trainDetailsPanel.html'"></div>
+                    <div ng-if="isTrainClicked" scroll-pane scroll-config="paneConfig" id="trainPanel" style="width:280px;height:100vh">
+                        <div id="transcludeTrainPanel">
+                            <div ng-include src="'/templates/layouts/travelPage/trainDetailsPanel.html'"></div>
+                        </div>
                     </div>
 
                     <!--  </div>
@@ -140,57 +80,75 @@
                     <!-- <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
                        <div id="transcludeFlightPanel"> -->
                     <ul ng-if="isFlightClicked" class="list-group">
-                        <div ng-include src="'templates/layouts/travelPage/flightDetailsPanel.html'"></div>
+                        <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
+                            <div id="transcludeFlightPanel">
+                                <div ng-include src="'/templates/layouts/travelPage/flightDetailsPanel.html'"></div>
+                            </div>
+                        </div>
                     </ul>
 
                     <ul ng-if="isBusClicked" class="list-group">
-                        <div ng-include src="'templates/layouts/travelPage/busDetailsPanel.html'"></div>
+                        <div scroll-pane scroll-config="paneConfig" id="busPanel" style="width:280px;height:100vh">
+                            <div id="transcludeBusPanel">
+                                <div ng-include src="'/templates/layouts/travelPage/busDetailsPanel.html'"></div>
+                            </div>
+                        </div>
                     </ul>
 
                     <div ng-if="isTaxiClicked||isDriveClicked||isCabClicked">
-                        <div ng-include src="'templates/layouts/travelPage/cabTimingsPanel.html'"></div>
+                        <div ng-include src="'/templates/layouts/travelPage/cabTimingsPanel.html'"></div>
                     </div>
                     <div ng-if="isCabOperatorClicked">
                         <accordion close-others="true">
-                            <div ng-include src="'templates/layouts/travelPage/cabOperatorPanel.html'"></div>
+                            <div scroll-pane scroll-config="paneConfig" id="cabOperatorPanel" style="width:280px;height:100vh">
+                                <div id="transcludeCabOperatorPanel">
+                                    <div ng-include src="'/templates/layouts/travelPage/cabOperatorPanel.html'"></div>
+                                </div>
+                            </div>
                         </accordion>
                     </div>
                 </div>
             </div>
-            <!--Mobile HTML for Mode Details Ends-->
-        </div>
-        <div class="col-xs-12 col-sm-12">
-            <div id="budgetPanel" class="col-xs-2 budget hidden-xs hidden-sm">
-                <div ng-if="isBudgetPanelOpen" class="panel panel-default">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-7">{{totalBudgetText}}</div>
-                                <div class="col-xs-5">{{totalBudget | currency:"&#8377;":0}}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-7">{{travelBudgetText}}</div>
-                                <div class="col-xs-5">{{travelBudget | currency:"&#8377;":0}}</div>
-                            </div>
-                        </li>
-                        <li class="list-group-item" ng-if="minorBudget>0">
-                            <div class="row">
-                                <div class="col-xs-7">{{minorBudgetText}}</div>
-                                <div class="col-xs-5">{{minorBudget | currency:"&#8377;":0}}</div>
-                            </div>
-                        </li>
-                    </ul>
+        </pageslide>
+        <!--Mobile HTML for Mode Details Starts-->
+        <div ng-if="isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+            <div class="panel-body" style="font-size: 85%">
+                <div class="page-header text-center">
+                    <h3>
+                        <i ng-click=closeOtherPanels(2) class="glyphicon glyphicon-arrow-left" style="top:0px;right:20px">Back</i>
+                    </h3>
                 </div>
-                <div ng-controller="balaramaController">
-                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                <div ng-if="isTrainClicked">
+                    <div ng-include src="'/templates/layouts/travelPage/trainDetailsPanel.html'"></div>
+                </div>
+
+                <!--  </div>
+             </div> -->
+                <!-- <div scroll-pane scroll-config="paneConfig" id="flightPanel" style="width:280px;height:100vh">
+                   <div id="transcludeFlightPanel"> -->
+                <ul ng-if="isFlightClicked" class="list-group">
+                    <div ng-include src="'/templates/layouts/travelPage/flightDetailsPanel.html'"></div>
+                </ul>
+
+                <ul ng-if="isBusClicked" class="list-group">
+                    <div ng-include src="'/templates/layouts/travelPage/busDetailsPanel.html'"></div>
+                </ul>
+
+                <div ng-if="isTaxiClicked||isDriveClicked||isCabClicked">
+                    <div ng-include src="'/templates/layouts/travelPage/cabTimingsPanel.html'"></div>
+                </div>
+                <div ng-if="isCabOperatorClicked">
+                    <accordion close-others="true">
+                        <div ng-include src="'/templates/layouts/travelPage/cabOperatorPanel.html'"></div>
+                    </accordion>
                 </div>
             </div>
-            <div id="map-canvas" style="" ng-controller="sanjayaController"></div>
         </div>
-            <!--Mobile HTML for budget and alert Ends-->
-            <div ng-if="isBudgetPanelOpen" ng-hide="!mobilePanelOpen.budget" class="panel panel-default budget hidden-md hidden-lg">
+        <!--Mobile HTML for Mode Details Ends-->
+    </div>
+    <div class="col-xs-12 col-sm-12">
+        <div id="budgetPanel" class="col-xs-2 budget hidden-xs hidden-sm">
+            <div ng-if="isBudgetPanelOpen" class="panel panel-default">
                 <ul class="list-group">
                     <li class="list-group-item">
                         <div class="row">
@@ -212,13 +170,40 @@
                     </li>
                 </ul>
             </div>
-
-            <div ng-hide="!mobilePanelOpen.alert" class="panel panel-default budget hidden-md hidden-lg">
-                <div ng-controller="balaramaController">
-                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-                </div>
+            <div ng-controller="balaramaController">
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
-            <!--Mobile HTML for budget and alert Details Ends-->
+        </div>
+        <!--<div id="map-canvas" style="" ng-controller="sanjayaController"></div>-->
     </div>
-</div>
+    <!--Mobile HTML for budget and alert Ends-->
+    <div ng-if="isBudgetPanelOpen" ng-hide="!mobilePanelOpen.budget" class="panel panel-default budget hidden-md hidden-lg">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-xs-7">{{totalBudgetText}}</div>
+                    <div class="col-xs-5">{{totalBudget | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-xs-7">{{travelBudgetText}}</div>
+                    <div class="col-xs-5">{{travelBudget | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item" ng-if="minorBudget>0">
+                <div class="row">
+                    <div class="col-xs-7">{{minorBudgetText}}</div>
+                    <div class="col-xs-5">{{minorBudget | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-hide="!mobilePanelOpen.alert" class="panel panel-default budget hidden-md hidden-lg">
+        <div ng-controller="balaramaController">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
+    </div>
+    <!--Mobile HTML for budget and alert Details Ends-->
 </div>

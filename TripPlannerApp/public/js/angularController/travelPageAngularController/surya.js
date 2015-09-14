@@ -39,6 +39,8 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
 
     };
 
+    var itineraryID;
+
     $scope.IntroOptions = {
         steps: [
             {
@@ -78,6 +80,27 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
         var otherIndex = $scope.draggableObjects.indexOf(obj);
         $scope.draggableObjects[index] = obj;
         $scope.draggableObjects[otherIndex] = otherObj;
+
+        var requestURL = "/reorderDestinations/"+itineraryID;
+        var data  = {
+            fromIndex: otherIndex,
+            toIndex: index
+        };
+
+        console.log(JSON.stringify(data));
+
+        $http({
+            method: "PUT",
+            url: requestURL,
+            data: data
+        })
+            .then(
+            function success(response){
+                console.log('RESPONSE:'+JSON.stringify(response.data));
+            },
+            function error(response){
+            }
+        );
 
         var currentOrderWeight = 0;
         var originCityID=$scope.originCity.CityID;
@@ -150,32 +173,34 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     });
 
     angular.element(window).ready(function () {
-        var currentURL = $location.absUrl();
+        //var currentURL = $location.absUrl();
+        //var currentURL = $location.url();
         //console.log('url:'+currentURL);
-        pathArray = currentURL.split('?');
-        var destinations = getParameterByName('dsts').split(";");
-        if((pathArray.length>1) && (destinations.length>1)){
-            $scope.reorderPanel = true;
-            $http.get('/getOptimizeOrder?'+pathArray[1]).success(function(data,status){
-                    orderedCities.setOrderedDestinationCities(data.trip);
-                    orderedCities.setOriginCity(data.origin);
-                    orderedCities.setWeightArray(data.weight);
-                    orderedCities.setMinimumWeight(data.minWeight);
-                    orderedCities.setPathArray(pathArray);
-                    orderedCities.setCityIDs(data.cityIDs);
-                    $rootScope.$emit('orderReceived');
-                    showMultiCityIntro();
-                }
-            );
-        }
-        else if((pathArray.length>1) && (destinations.length==1))
-        {
-            isTravelPanelOpened = true;
-            //will be taken care by sarathi
-        }
-        else {
-            console.log('Page NOT FOUND');
-        }
+        //pathArray = currentURL.split('?');
+        //var destinations = getParameterByName('dsts').split(";");
+        //if((pathArray.length>1) && (destinations.length>1)){
+        $scope.reorderPanel = true;
+        itineraryID = $location.absUrl().split('/')[4].replace(/[^0-9a-z]/g,"");
+        $http.get('/getOptimizeOrder/'+itineraryID).success(function(data,status){
+                orderedCities.setOrderedDestinationCities(data.trip);
+                orderedCities.setOriginCity(data.origin);
+                orderedCities.setWeightArray(data.weight);
+                orderedCities.setMinimumWeight(data.minWeight);
+                orderedCities.setPathArray(pathArray);
+                orderedCities.setCityIDs(data.cityIDs);
+                $rootScope.$emit('orderReceived');
+                showMultiCityIntro();
+            }
+        );
+        //}
+        //else if((pathArray.length>1) && (destinations.length==1))
+        //{
+        //    isTravelPanelOpened = true;
+        //    will be taken care by sarathi
+        //}
+        //else {
+        //    console.log('Page NOT FOUND');
+        //}
     });
 
     function getParameterByName(name) {

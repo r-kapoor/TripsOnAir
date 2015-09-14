@@ -34,6 +34,7 @@ inputModule.service('formData', function () {
         var remainingDistance = 0;
         var numPersons=MIN_NUM_PERSONS;
         var minimumBudget = DEFAULT_BUDGET_MIN;
+        var itineraryID = null;
         function removeDuplicates(){
             angular.forEach(destinationCities, function(destinationCity,index){
                 for(var i=index+1;i<destinationCities.length;i++)
@@ -83,6 +84,9 @@ inputModule.service('formData', function () {
             getMinimumBudget : function() {
                 return minimumBudget;
             },
+            getItineraryID: function() {
+                return itineraryID;
+            },
             getAllData: function(){
                 return {
                     originCity: originCity,
@@ -96,7 +100,8 @@ inputModule.service('formData', function () {
                     originGeoCoordinates: originGeoCoordinates,
                     remainingDistance: remainingDistance,
                     numPersons: numPersons,
-                    minimumBudget: minimumBudget
+                    minimumBudget: minimumBudget,
+                    itineraryID: itineraryID
                 };
             },
             setOrigin: function(origin) {
@@ -140,6 +145,9 @@ inputModule.service('formData', function () {
             setMinimumBudget: function(minBudget) {
                 minimumBudget = minBudget;
             },
+            setItineraryID: function(id) {
+                itineraryID = id;
+            },
             setAllData: function(allData){
                 originCity = allData.originCity;
                 destinationCities = allData.destinationCities;
@@ -153,6 +161,7 @@ inputModule.service('formData', function () {
                 remainingDistance = allData.remainingDistance;
                 numPersons = allData.numPersons;
                 minimumBudget = allData.minimumBudget;
+                itineraryID = allData.itineraryID;
             },
             appendDestination: function(destination) {
                 destinationCities.push(destination);

@@ -49,10 +49,6 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
         removeErrorHighlightStartTime()
     };
 
-    $scope.proceed = function(){
-        $rootScope.$emit('selectionDone');
-    };
-
     $scope.startEveningTime = function(){
 
         var startMorningTimeId=angular.element(document.querySelector("#startMorningTimeId"));
