@@ -3,7 +3,7 @@
 var conn = require('../lib/database');
 var getDestinationsAndStops = require('../lib/getDestinationsAndStops');
 var isHotelRequired=require('../lib/isHotelRequired');
-var getHotelData=require('../lib/getHotelData');
+var getHotelData=require('../lib/getHotelDataUsingApi');
 var getOrderedPlaces= require('../lib/getOrderedPlaces');
 var async  = require('async');
 var selectPlaces = require('../lib/selectPlaces');

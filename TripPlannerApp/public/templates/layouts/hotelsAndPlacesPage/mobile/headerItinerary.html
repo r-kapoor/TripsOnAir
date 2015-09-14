@@ -1,0 +1,44 @@
+<ul class="nav nav-tabs">
+    <!--<li role="presentation">-->
+    <!--<div dropdown>-->
+        <!--&lt;!&ndash;<button id="split-button" type="button" class="btn btn-danger">Action</button>&ndash;&gt;-->
+        <!--<a id="split-button" ng-click="openMobilePanel('city')" href="#">New Delhi</a>-->
+        <!--<button type="button" class="btn btn-primary btn-sm" dropdown-toggle>-->
+            <!--<span class="caret"></span>-->
+        <!--</button>-->
+        <!--<ul class="dropdown-menu" role="menu" aria-labelledby="split-button">-->
+            <!--<div ng-repeat="destinationWithStop in destinationsWithStop">-->
+                <!--<li role="menuitem"  class="text-center" ng-if="destinationWithStop.isDestination" ng-click="showDestinationItinerary(destinationWithStop)">-->
+                    <!--&lt;!&ndash;<button type="button" class="btn {{getButtonClass(destinationWithStop)}} btn-circle" ng-click="showDestinationItinerary(destinationWithStop)">{{$index+1}}</button>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<p>{{destinationWithStop.name}}</p>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li role="menuitem"><a href="#">{{destinationWithStop.name}}</a></li>&ndash;&gt;-->
+                    <!--{{destinationWithStop.name}}-->
+                <!--</li>-->
+            <!--</div>-->
+        <!--</ul>-->
+    <!--</div>-->
+        <!-- Split button -->
+
+    <!--</li>-->
+    <!--<li role="presentation" ng-class="{active:isItineraryPanelOpen}">-->
+        <!--<div class="btn-group" dropdown>-->
+            <!--<button id="split-button" type="button" ng-click="openMobilePanel('city')" class="btn btn-primary btn-sm">{{currentDestination.name}}</button>-->
+            <!--<button type="button" class="btn btn-primary btn-sm" dropdown-toggle>-->
+                <!--<span class="caret"></span>-->
+                <!--<span class="sr-only">Split button!</span>-->
+            <!--</button>-->
+            <!--<ul class="dropdown-menu" role="menu" aria-labelledby="split-button">-->
+                <!--<li ng-repeat="destinationWithStop in destinationsWithStop" role="menuitem">-->
+                    <!--<a ng-if="destinationWithStop.isDestination" ng-click="showDestinationItinerary(destinationWithStop)">{{destinationWithStop.name}}</a>-->
+                <!--</li>-->
+                <!--&lt;!&ndash;<li role="menuitem"><a href="#">Another action</a></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li role="menuitem"><a href="#">Something else here</a></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li class="divider"></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li role="menuitem"><a href="#">Separated link</a></li>&ndash;&gt;-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</li>-->
+    <li role="presentation" ng-class="{active: isItineraryPanelOpen}" ng-click="openMobilePanel('city')"><a>Itinerary</a></li>
+    <li role="presentation" ng-class="{active: isBudgetPanelOpen}" ng-click="openMobilePanel('expenses')"><a>Expenses</a></li>
+    <li role="presentation" ng-class="{active: isMobileAlertPanelShown}" ng-click="openMobilePanel('alert')"><a>Alerts</a></li>
+</ul>

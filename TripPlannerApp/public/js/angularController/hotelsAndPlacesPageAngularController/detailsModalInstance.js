@@ -32,4 +32,7 @@ itineraryModule.controller('detailModalInstanceCtrl', function ($scope, $rootSco
         return "btn-danger";
     };
 
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
 });

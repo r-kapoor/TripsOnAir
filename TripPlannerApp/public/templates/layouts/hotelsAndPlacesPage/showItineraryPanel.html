@@ -1,4 +1,4 @@
-<div>
+<!--<div>-->
     <!--<div class="panel panel-primary" style="margin-left: 2%;margin-right: 2%">-->
     <!--<div class="panel-heading">-->
     <!--<h3 class="panel-title text-center">Your Itinerary</h3>-->
@@ -7,13 +7,38 @@
 
     <!--</div>-->
     <!--</div>-->
-    <nav class="navbar navbar-default" fix-top collapse="isDateBarCollapsed">
+    <!--<nav class="navbar navbar-default hidden-md hidden-lg" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}" fix-top-mobile collapse="isDateBarCollapsed" style="width: 100%;z-index:200">-->
+        <!--<ul class="pager">-->
+            <!--<li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>-->
+            <!--<li>Day {{currentDay+1}}: {{currentDate | date:'mediumDate'}}</li>-->
+            <!--<li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>-->
+        <!--</ul>-->
+    <!--</nav>-->
+<ul class="list-group hidden-md hidden-lg">
+    <li class="list-group-item text-center">
+        <div class="btn" style="padding-top: 0px;padding-bottom: 0px" ng-click="changeDestination('0')" ng-disabled="!isDestExist('0')"><i class="glyphicon glyphicon-chevron-left"></i></div>
+        {{currentDestination.name}}
+        <div class="btn" style="padding-top: 0px ;padding-bottom: 0px" ng-click="changeDestination('1')" ng-disabled="!isDestExist('1')"><i class="glyphicon glyphicon-chevron-right"></i></div>
+    </li>
+    <li fix-top-mobile class="list-group-item text-center" ng-class="{onMapClick:mobileViewLabel=='Itinerary'}">
+        <a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()" style="padding-top: 0px;padding-bottom: 0px">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        </a>
+        Day {{currentDay+1}}: {{currentDate | date:'mediumDate'}}
+        <a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()" style="padding-top: 0px;padding-bottom: 0px">
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    </li>
+</ul>
+
+    <nav class="navbar navbar-default hidden-xs hidden-sm" fix-top collapse="isDateBarCollapsed">
         <ul class="pager">
             <li><a du-smooth-scroll class="btn" ng-click="previousDay()" ng-disabled="isPreviousDisable()">Previous</a></li>
             <li>Day {{currentDay+1}}: {{currentDate | date:'longDate'}}</li>
             <li><a du-smooth-scroll class="btn" ng-click="nextDay()" ng-disabled="isNextDisable()">Next</a></li>
         </ul>
     </nav>
+    <div style="padding-left: 15px;padding-right: 15px" ng-class="{itinerary:!isItineraryPanelOpen}">
     <timeline id="itineraryPanelIntro">
         <timeline-node ng-if="currentDestination != null" side="right">
             <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.lastMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
@@ -34,21 +59,34 @@
                 </timeline-badge>
                 <timeline-panel>
                     <timeline-heading>
-                        <timeline-title>{{currentDestination.hotelDetails.Name}}</timeline-title>
-                        <div class="row">
+                        <timeline-title>{{currentDestination.hotelDetails.Name}}
+                            <rating class="hidden-sm hidden-xs" style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
+                        </timeline-title>
+                        <div class="row hidden-md hidden-lg">
                             <p>
-                                <small class="text-muted" style="margin-left: 4%"> Single Room Rent Per Day {{currentDestination.hotelDetails.Price | currency:"&#8377;"}} </small>
+                                <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/nyt </small>
+                            </p>
+                        </div>
+                        <div class="row hidden-xs hidden-sm">
+                            <p>
+                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/night </small>
                             </p>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-12 col-md-6">
                                 <p>
                                     <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData, true) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index,true) | date:'shortTime'}} </small>
                                 </p>
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="hidden-xs hidden-sm col-md-6 text-right" style="padding-left: 0px">
                                 <p>
-                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;"}} per person</large>
+                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} per person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</large>
+                                </p>
+                            </div>
+                            <div class="hidden-md hidden-lg col-xs-12">
+                                <p>
+                                    <small> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}}/person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</small>
                                 </p>
                             </div>
                         </div>
@@ -57,7 +95,7 @@
             </timeline-node>
 
 
-            <timeline-node ng-repeat="permValue in dateItinerary.permutation track by $index" side="right" ng-drop="true" ng-drop-success="onDropComplete($data,$event, $index, $parent.$index)"  ng-drag="true" ng-drag-data="{isSwap: true, permutationIndex: $index, dateItineraryIndex: $parent.$index}" ng-drag-success="onDragComplete($data,$event)" ng-center-anchor="true" ng-drag-move="dragMove()" ng-drag-stop="dragStop()">
+            <timeline-node ng-repeat="permValue in dateItinerary.permutation track by $index" side="right">
                 <timeline-badge class="info"><i class="glyphicon glyphicon-eye-open"></i>
                 </timeline-badge>
                 <timeline-panel style="border: dashed" ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1">
@@ -70,11 +108,14 @@
                         </div>
                     </timeline-heading>
                     <timeline-content class="text-center">
-                        Drag Here To Add New Place</br></br>
+                        <div class="btn btn-primary" ng-click="replaceMe($event,$index, parentIndex)">Replace a place here</div>
                     </timeline-content>
                 </timeline-panel>
                 <timeline-panel id="place-{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}" ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">
                     <timeline-heading>
+                        <div ng-if="replacePlaceOn" style="position:absolute;top:0;height: 100%;width:100%;z-index:100;opacity: 0.6;background-color: grey;left: 0px">
+                            <div  class="btn btn-primary" style="top:50%;position: absolute;left:20%" ng-click="replaceMe($event,$index, parentIndex)">Replace Here</div>
+                        </div>
                         <div class="row">
                             <div class="col-xs-10">
                                 <timeline-title>{{dateItinerary.dateWisePlaceData.placesData[permValue].Name}}</timeline-title>
@@ -133,28 +174,27 @@
 
                         </div>
                         <div ng-if="!dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming" class="row">
-                            <div class="col-xs-8">
+                            <div class="col-xs-9">
                                 <p>
                                     <small ng-click="enableChangeTimings(dateItinerary,$index)" class="text-muted visitTimings"><i class="glyphicon glyphicon-time"></i> {{dateItinerary.dateWisePlaceData.placesData[permValue].placeArrivalTime | date:'shortTime'}} - {{dateItinerary.dateWisePlaceData.placesData[permValue].placeDepartureTime | date:'shortTime'}} </small>
                                 </p>
                             </div>
-                            <div ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].AdultCharge > 0" class="col-xs-4 text-right">
+                            <div ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].AdultCharge > 0" class="col-xs-3 text-right" style="padding-left: 0px">
                                 <p>
-                                    <large> {{dateItinerary.dateWisePlaceData.placesData[permValue].AdultCharge | currency:"&#8377;"}}</large>
+                                    <large> {{dateItinerary.dateWisePlaceData.placesData[permValue].AdultCharge | currency:"&#8377;":0}}</large>
                                 </p>
                             </div>
                         </div>
                     </timeline-heading>
 
                     <timeline-content ng-if="!dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming">
-                        <div class="col-xs-6">
+                        <div class="col-md-6 col-xs-12 col-sm-12">
                             <!--<img class="img-responsive" src="http://www.freeimages.com/assets/183333/1833326510/wood-weel-1444183-m.jpg">-->
                             <img class="img-responsive" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,h_150,w_300/{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}-1.png">
                         </div>
-                        <div class="col-xs-6 description-wrap">
+                        <div class="col-md-6 description-wrap hidden-xs hidden-sm">
                             <p>{{dateItinerary.dateWisePlaceData.placesData[permValue].Description}}</p>
                         </div>
-
                     </timeline-content>
                 </timeline-panel>
             </timeline-node>
@@ -164,21 +204,33 @@
                 </timeline-badge>
                 <timeline-panel>
                     <timeline-heading>
-                        <timeline-title>{{currentDestination.hotelDetails.Name}}</timeline-title>
-                        <div class="row">
+                        <timeline-title>{{currentDestination.hotelDetails.Name}}
+                            <rating class="hidden-sm hidden-xs" style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating></timeline-title>
+                        <div class="row hidden-md hidden-lg">
                             <p>
-                                <small class="text-muted" style="margin-left: 4%"> Single Room Rent Per Day {{currentDestination.hotelDetails.Price | currency:"&#8377;"}} </small>
+                                <rating style="margin-left: 4%" ng-model="currentDestination.hotelDetails.Rating" max=5 readonly=true></rating>
+                                <small class="text-muted hidden-md hidden-lg" style="margin-left: 20%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/nyt</small>
+                            </p>
+                        </div>
+                        <div class="row hidden-xs hidden-sm">
+                            <p>
+                                <small class="text-muted" style="margin-left: 4%">{{currentDestination.hotelDetails.Price | currency:"&#8377;":0}} room/night</small>
                             </p>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-9 col-md-6">
                                 <p>
                                     <small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{getHotelEntryTime(dateItinerary.dateWisePlaceData) | date:'shortTime'}} - {{getHotelExitTime(dateItinerary.dateWisePlaceData, $index) | date:'shortTime'}} </small>
                                 </p>
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="hidden-xs hidden-sm col-md-6 text-right" style="padding-left: 0px">
                                 <p>
-                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;"}} per person</large>
+                                    <large> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}} per person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</large>
+                                </p>
+                            </div>
+                            <div class="hidden-md hidden-lg col-xs-12">
+                                <p>
+                                    <small> {{currentDestination.hotelDetails.pricePerPerson | currency:"&#8377;":0}}/person({{currentDestination.hotelDetails.numberOfDays}} nights,{{currentDestination.hotelDetails.numberOfRooms}} rooms)</small>
                                 </p>
                             </div>
                         </div>

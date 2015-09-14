@@ -35,6 +35,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.allPlaces = [];
     $scope.allHotels=[];
     $scope.leftPanel = 'places';
+    $scope.mobileViewLabel = 'Map';
+    $scope.lowerPanelContent = 'default';
+    $scope.replaceLabel = 'Replace';
     $scope.currentDestination = null;
 
     $scope.stopClickClass = 'cursor-click';
@@ -56,6 +59,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.destinationsWithStop = [];//Only used in showCityPanel
 
     $scope.isBudgetPanelOpen = false;
+    $scope.isMobileAlertPanelShown = false;
+    $scope.isItineraryPanelOpen = true;
     $scope.totalBudgetText = "Budget";
     $scope.travelBudgetText = "Travel Expenses";
     $scope.otherCitiesBudgetText = "Other Destination(s) Expenses";
@@ -76,6 +81,15 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.isNewPlace = false;
     $scope.animationsEnabled = true;
+    $scope.replaceData = {
+        isSwap: false,
+        placeIndex: -1
+    };
+    $scope.replacePlaceOn = false;
+    $scope.showPlacesForCustomization = false;
+    $scope.showHotelsForCustomization = false;
+    $scope.showMap = false;
+    $scope.isCustomizationOn = false;
     var responseData;
 
     var SPEED = 15;//km/hr
@@ -237,9 +251,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         mapData.setRouteDataUpdated(mapDataArray);
     }
-    $scope.loadMaps = function(){
+    $scope.loadMaps = function(mapId){
         console.log('Load');
-        $scope.$broadcast('loadMap',$scope.currentDestination.position);
+        $scope.$broadcast('loadMap',$scope.currentDestination.position,mapId);
 
         loadItinerary();
     };
@@ -300,6 +314,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.closeBudgetPanel = function(){
         $scope.isBudgetPanelOpen = false;
+    };
+
+    $scope.saveItineraryMobile = function(){
+        $rootScope.$emit("submitPage");
     };
 
     $rootScope.$on("toggleBudgetPanel",function(){
@@ -652,18 +670,69 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         });
     }
 
-    $scope.dragMove = function(){
-        $scope.stopClickClass = 'stop-click';
-        var element = jQuery("#placesPanel");
-        jQuery("#placesPanel").css("overflow","visible");
-        jQuery(".jspContainer").css("overflow","visible");
+    //$scope.dragMove = function(){
+    //    $scope.stopClickClass = 'stop-click';
+    //    var element = jQuery("#placesPanel");
+    //    jQuery("#placesPanel").css("overflow","visible");
+    //    jQuery(".jspContainer").css("overflow","visible");
+    //};
+    //
+    //$scope.dragStop = function(){
+    //    var element = jQuery("#placesPanel");
+    //    jQuery("#placesPanel").css("overflow","hidden");
+    //    jQuery(".jspContainer").css("overflow","hidden");
+    //};
+
+    /** mobile Method start**/
+    $scope.replaceLowerPanelPlace= function($event,$index)
+    {
+        if($scope.replacePlaceOn)
+        {
+            $scope.replacePlaceOn = false;
+            $scope.replaceLabel = 'Replace';
+        }
+        else
+        {
+            $scope.replaceData.placeIndex = $index;
+            $scope.replacePlaceOn = true;
+            $scope.replaceLabel = 'undo';
+        }
     };
 
-    $scope.dragStop = function(){
-        var element = jQuery("#placesPanel");
-        jQuery("#placesPanel").css("overflow","hidden");
-        jQuery(".jspContainer").css("overflow","hidden");
+    $scope.replaceMe = function(event,index,dateItineraryIndex)
+    {
+        console.log("replaceMe:"+index+","+dateItineraryIndex);
+        if($scope.replaceData.placeIndex!=-1 && $scope.replacePlaceOn)
+        {
+            $scope.onDropComplete($scope.replaceData,event,index,dateItineraryIndex);
+        }
+        $scope.replaceData.placeIndex=-1;
+        $scope.replacePlaceOn = false;
+        $scope.replaceLabel = 'Replace';
     };
+
+    $scope.openMobilePanel = function(panel)
+    {
+        if(panel=='expenses')
+        {
+            $scope.isBudgetPanelOpen = true;
+            $scope.isMobileAlertPanelShown = false;
+            $scope.isItineraryPanelOpen = false;
+        }
+        else if(panel=='alert')
+        {
+            $scope.isMobileAlertPanelShown = true;
+            $scope.isBudgetPanelOpen = false;
+            $scope.isItineraryPanelOpen = false;
+        }
+        else if(panel=='city')
+        {
+            $scope.isBudgetPanelOpen = false;
+            $scope.isMobileAlertPanelShown = false;
+            $scope.isItineraryPanelOpen = true;
+        }
+    };
+    /** mobile Method end**/
 
     $scope.onDropComplete = function(data, event, index, dateItineraryIndex){
         console.log('Drop Complete:'+JSON.stringify(data));
@@ -683,7 +752,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             //console.log("replacePlace:"+replacePlace(currentPlaceClone,index,dateItineraryClone));
             if(replacePlace(currentPlaceClone,index,dateItineraryClone, locationOfArrival, locationOfDeparture))
             {
-                console.log("REplace PLace");
+                console.log("Replace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
                 calculatePlacesExpenses();
                 markPlaceAsAdded(currentPlace);
@@ -772,6 +841,37 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         setMapData(dateItineraryIndex);
     };
 
+    $scope.showLowerPanel = function(content){
+console.log("content:"+content);
+        if(content=='places')
+        {
+            $scope.lowerPanelContent = 'places';
+        }
+        else if(content=='hotels')
+        {
+            $scope.lowerPanelContent = 'hotels';
+        }
+    };
+
+    $scope.removeLowerPanel = function(){
+        console.log("editRemoveLowerPanel:"+$scope.lowerPanelContent);
+        $scope.lowerPanelContent = 'default';
+    };
+
+    $scope.changeView = function(){
+
+        if($scope.mobileViewLabel=='Map')
+        {
+            $scope.mobileViewLabel = 'Itinerary';
+            $scope.isItineraryPanelOpen = false;
+        }
+        else
+        {
+            $scope.mobileViewLabel = 'Map';
+            $scope.isItineraryPanelOpen = true;
+        }
+    };
+
     $scope.getTimeToPlaceText = function(dateItinerary, index){
         var originPosition;
         if(index == 0){
@@ -826,6 +926,51 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             return "Approx Travel Time To "+destinationPosition.name + " is "+formattedTime;
         }
         return "";
+    };
+
+    //position previous-'0', next-'1'
+    $scope.changeDestination = function(position)
+    {
+        var index = $scope.destinations.indexOf($scope.currentDestination);
+        if((position=='1')&&index!=-1 && index<$scope.destinations.length-1)
+        {
+            $scope.showDestinationItinerary($scope.destinations[index+1]);
+        }
+        else if((position=='0') && index!=-1 && index>0)
+        {
+            $scope.showDestinationItinerary($scope.destinations[index-1]);
+        }
+    };
+
+    $scope.isDestExist = function(position)
+    {
+        if($scope.currentDestination==null)
+        {
+            return true;
+        }
+        var index = $scope.destinations.indexOf($scope.currentDestination);
+        if(position=='1')
+        {
+            if(index!=-1 && index<$scope.destinations.length-1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(index!=-1 && index>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     };
 
     function getTimeFromPlaces(originPosition, destinationPosition){
@@ -904,6 +1049,73 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             return false;
         }
         return true;
+    };
+
+    $scope.getItineraryAlignClass = function(alignment){
+        if(alignment=="left")
+        {
+            if($scope.isCustomizationOn)
+            {
+                return("col-md-4");
+            }
+            else
+            {
+                return("col-md-3");
+            }
+        }
+        else if(alignment=="right")
+        {
+            if($scope.isCustomizationOn)
+            {
+                return("col-md-1");
+            }
+            else
+            {
+                return("col-md-3");
+            }
+        }
+        else if(alignment=="middle")
+        {
+            if($scope.isCustomizationOn)
+            {
+                return("col-md-1");
+            }
+            else
+            {
+                return("");
+            }
+        }
+    };
+
+    $scope.customize = function(type)
+    {
+        $scope.showHotelsForCustomization = false;
+        $scope.showPlacesForCustomization = false;
+        $scope.showMap = false;
+        if(type=='places')
+        {
+            $scope.showPlacesForCustomization = true;
+        }
+        else if(type=='hotels')
+        {
+            $scope.showHotelsForCustomization = true;
+        }
+        else if(type=='map')
+        {
+            $scope.showMap = true;
+        }
+        else
+        {
+            $scope.showPlacesForCustomization = false;
+            $scope.showHotelsForCustomization = false;
+        }
+        $scope.isCustomizationOn=!$scope.isCustomizationOn;
+    };
+
+    $scope.getPlaceRating = function(place)
+    {
+        var score = (place.Score)/20;
+        return(Math.round(score*10) / 10);
     };
 
     function setBudgetModels(){
@@ -1886,6 +2098,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var numberOfRooms = Math.ceil($scope.numberOfPeople/hotelDetails.MaxPersons);
             pricePerPerson = (hotelDetails.Price * numberOfDaysInHotel * numberOfRooms)/$scope.numberOfPeople;
             hotelDetails.pricePerPerson = pricePerPerson;
+            hotelDetails.numberOfDays = numberOfDaysInHotel;
+            hotelDetails.numberOfRooms = numberOfRooms;
         }
         if(currentCity){
             $scope.hotelExpenses = pricePerPerson;
@@ -3121,7 +3335,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     function createAlert(category,param){
-        $rootScope.$emit('showRecommendation',category,param);
+        $rootScope.$broadcast('showRecommendation',category,param);
+        //$scope.hasAnyAlert =
     }
 
     function markPlaceAsAdded(place){

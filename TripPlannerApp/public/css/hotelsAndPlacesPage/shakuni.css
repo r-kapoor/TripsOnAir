@@ -5,10 +5,7 @@
 .cursor-click {
     cursor: pointer;
 }
-.wrapper{
-    float:left; /* important */
-    position:relative; /* important(so we can absolutely position the description div */
-}
+
 .name{
     position:absolute; /* absolute position (so we can position it where we want)*/
     bottom:0px; /* position will be on bottom */
@@ -27,22 +24,20 @@
     top: 0px;
     right: 0px;
 }
+.rating{
+    position: absolute;
+    left:8%;
+    top:2%;
+}
 .name_content{
     padding:10px;
     margin:0px;
 }
-.alert-box {
-    position: fixed;
-    left: 0px;
-    bottom: 0px;
-    z-index: 200;
-    width: 40%;
-}
 
 .budget {
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 1%;
+    top: 9%;
     z-index: 2;
 }
 .header-top{
@@ -82,4 +77,91 @@
 .visitTimings:hover{
     background-color: white;
     color:#000000;
+}
+.carousel-indicators li{
+    display: none !important;
+}
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+    .wrapper{
+        float:left; /* important */
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+    .alert-box {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        z-index: 200;
+        width: 40%;
+    }
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .wrapper{
+        float:left; /* important */
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+    .alert-box {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        z-index: 200;
+        width: 40%;
+    }
+}
+
+/* Portrait tablets and small desktops -sm*/
+@media (min-width: 768px) and (max-width: 991px) {
+    .wrapper{
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+    .itinerary{
+        display: none;
+    }
+    .alert-box {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        z-index: 1006;
+        width: 100%;
+    }
+    .carousel-control{
+        top:21% !important;
+    }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .wrapper{
+        position:relative; /* important(so we can absolutely position the description div */
+    }
+    .itinerary{
+        display: none;
+    }
+    .alert-box {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        z-index: 1006;
+        width: 100%;
+    }
+    .carousel-control{
+        top:21% !important;
+    }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}
+
+@media (max-width: 350px) {
+
+}
+
+.onMapClick{
+    position: absolute !important;
+    top:0 !important;
 }

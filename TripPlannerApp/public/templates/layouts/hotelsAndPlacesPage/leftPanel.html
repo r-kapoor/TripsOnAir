@@ -1,199 +1,176 @@
-
-<div class="col-xs-12" style="padding-bottom: 2%">
-    <div class="btn-group" id="tabButtonIntro">
-        <label class="btn btn-primary" ng-model="leftPanel" btn-radio="'places'">
-            <i class="col-xs-2 glyphicon glyphicon-eye-open"></i>
-            <div class="col-xs-2">Places</div>
-        </label>
-        <label class="btn btn-primary" ng-model="leftPanel" btn-radio="'maps'" ng-click="loadMaps()">
-            <i class="col-xs-2 glyphicon glyphicon-map-marker"></i>
-            <div class="col-xs-2">Maps</div>
-        </label>
-        <label ng-hide="!(currentDestination.isHotelRequired != undefined && currentDestination.isHotelRequired == 1)" class="btn btn-primary" ng-model="leftPanel" btn-radio="'hotels'">
-            <i class="col-xs-2 glyphicon glyphicon-home"></i>
-            <div class="col-xs-2">Hotels</div>
-        </label>
+<div class="list-group hidden-xs hidden-sm" ng-if="!isCustomizationOn" fix-top>
+    <button type="button" style="width:20vw" class="list-group-item" ng-click="customize('places')">Customize Places</button>
+    <button type="button" style="width:20vw" class="list-group-item" ng-click="customize('hotels')">Replace Hotel</button>
+    <button type="button" style="width:20vw" class="list-group-item" ng-click="customize('map');loadMaps('map-canvas')">View Itinerary with Map</button>
+</div>
+<div id="custom-places" ng-if="showPlacesForCustomization" class="panel panel-default" fix-top style="height:100vh">
+    <div class="panel-heading" style="width: 100%">
+        Adventure Religious Hill Station
+        <button style="float: right" ng-click="customize()"><i class="glyphicon glyphicon-remove"></i></button>
+    </div>
+    <div scroll-pane scroll-config="paneConfig" id="placesPanel" style="width:100%;height:100vh">
+        <div id="transcludePlacesPanel" class="clearfix">
+            <div class="panel-body">
+                <div class="panel-places clearfix" ng-repeat="place in allPlaces" post-repeat style="width: 100%">
+                    <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass">
+                        <div class="wrapper col-md-8">
+                            <a class="thumbnail col-md-11" style="margin-bottom: 0;">
+                                <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                                <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                            </a>
+                            <span class="label label-success rating">{{getPlaceRating(place)}}</span>
+                            <div ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:14% !important;top:2%" ng-click="replaceLowerPanelPlace($event,$index)">
+                                <i class="glyphicon glyphicon-retweet"></i>
+                            </div>
+                            <div ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:27% !important;top:2%" ng-click="addPlace($event, place)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                            </div>
+                            <div ng-if="place.placeAdded" class="btn btn-success btn-sm add-button" style="right:14% !important;">
+                                <i class=" glyphicon glyphicon-ok"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="padding:0px">
+                            <h5>{{place.Name}}</h5>
+                        </div>
+                        <div class="btn btn-primary btn-sm" ng-click="showLeftPanelDetails(place)">Details</div>
+                        <!--end of wrapper class-->
+                    </div>
+                </div><!--end of ng-repeat-->
+            </div>
+        </div>
     </div>
 </div>
-<div fix-top class="col-xs-12">
-    <div ng-if="leftPanel=='places'" id="placesPanelIntro">
 
-        <div scroll-pane scroll-config="paneConfig" id="placesPanel" style="width:100%;height:100vh">
-            <div id="transcludePlacesPanel" class="clearfix">
-    <div class="col-xs-4" style="padding: 0px">
-    <div class="panel-places clearfix" ng-repeat="place in allPlaces" ng-if="$index%3==0" post-repeat>
-        <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
-            <div class="wrapper">
-                <a class="thumbnail" style="margin-bottom: 0;">
-                    <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                    <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width:250px;min-height:128px"/>
-                </a>
-                <div ng-if="!place.placeAdded" class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)" du-smooth-scroll>
-                    <i class="glyphicon glyphicon-plus"></i>
-                </div>
-                <div class="name">
-                    <p class="name_content">
-                        {{place.Name}}
-                    </p>
-                </div>
-                <!--end of description class-->
-            </div>
-            <!--end of wrapper class-->
-        </div>
-    </div><!--end of ng-repeat-->
+<div id='custom-hotels' ng-if="showHotelsForCustomization" class="panel panel-default" fix-top style="height:100vh" xmlns="http://www.w3.org/1999/html">
+
+    <div class="panel-heading">
+        Budget Hotels
+        <button style="float: right" ng-click="customize()"><i class="glyphicon glyphicon-remove"></i></button>
     </div>
-        <div class="col-xs-4" style="padding: 0px">
-            <div class="panel-places clearfix" ng-repeat="place in allPlaces" ng-if="$index%3==1" post-repeat>
-                <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
-                    <div class="wrapper">
-                        <a class="thumbnail" style="margin-bottom: 0;">
-                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width:250px;min-height:128px"/>
-                        </a>
-                        <div ng-if="!place.placeAdded" class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)">
-                            <i class="glyphicon glyphicon-plus"></i>
+    <div scroll-pane scroll-config="paneConfig" id="hotelsPanel" style="width:100%;height:100vh">
+        <div id="transcludeHotelsPanel" class="clearfix">
+            <div class="panel-body">
+                <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" style="width: 100%" post-repeat>
+                    <div style="padding: 0;margin-bottom: 0;position: relative">
+                        <div class="wrapper col-md-8">
+                            <a class="thumbnail col-md-11" style="margin-bottom: 0;">
+                                <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                                <img ng-if="!hotel.isFromApi" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                                <img ng-if="hotel.isFromApi" ng-src="http://images.travelnow.com/{{hotel.HotelUrl}}">
+                            </a>
+                            <div ng-if="!hotel.hotelAdded" class="btn btn-default btn-sm add-button" style="right:14% !important;" ng-click="addHotel(hotel)">
+                                <i class="glyphicon glyphicon-retweet"></i>
+                            </div>
+                            <div ng-if="hotel.hotelAdded" class="btn btn-success btn-sm add-button" style="right:14% !important;">
+                                <i class=" glyphicon glyphicon-ok"></i>
+                            </div>
                         </div>
+                        <div class="col-md-4" style="padding:0px">
+                            <h5>{{hotel.Name}}</h5>
+                            <rating ng-model="hotel.Rating" max=5 readonly=true></rating>
+                            </br>
+                            <small>{{hotel.Price | currency:"&#8377;":0}} room/night </small>
+                            </br>
+                        </div>
+                        <!--end of wrapper class-->
+                    </div>
+                </div><!--end of ng-repeat-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-controller="jatayuController">
+    <div ng-hide="!(showMap)&&!(mobileViewLabel=='Itinerary')">
+        <div id="map-view" class="panel panel-default" fix-top style="left:0px">
+            <div class="panel-heading hidden-xs hidden-md">
+                Map View
+                <button style="float: right" ng-click="customize()"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>
+            <div class="panel-body">
+                <div id="map-canvas"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="sticky-footer text-center hidden-md hidden-lg" style="padding-top: 0px">
+    <div class="bottom-bar">
+        <div class="container" style="background-color: #f8f8f8;border-color: #e7e7e7">
+            <div class="btn btn-primary" ng-click="loadMaps('map-canvas');changeView()">{{mobileViewLabel}}</div>
+            <div class="btn btn-primary" ng-click="showLowerPanel('places')">Places</div>
+            <div class="btn btn-primary" ng-click="showLowerPanel('hotels')">Hotels</div>
+            <div class="btn btn-primary" ng-click="saveItineraryMobile()">Save</div>
+        </div><!--//container-->
+    </div><!--//bottom-bar-->
+</footer><!--//footer-->
+
+<footer ng-if="(lowerPanelContent=='places')" class="sticky-footer text-center" style="padding-top: 0px;z-index:1006;background-color:#f8f8f8">
+    <div style="height: 150px">
+        <button style="position: absolute;top:0px;right:0px;z-index: 100" ng-click="removeLowerPanel()"><i class="glyphicon glyphicon-remove"></i></button>
+        <carousel interval="myInterval" no-wrap="noWrapSlides">
+            <slide ng-repeat="place in allPlaces" active="place.active">
+                <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" class="text-center">
+                    <div class="wrapper" class="text-center">
+                        <a class="thumbnail" style="margin-bottom: 0;">
+                            <img ng-click="showLeftPanelDetails(place)" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,h_150,w_300/{{place.PlaceID}}-1.png" class="img-responsive" style="margin:auto;">
+                            <div ng-if="!place.placeAdded">
+                                <div class="btn btn-default" style="position:absolute;top:0;left:50%;z-index:100" ng-click="replaceLowerPanelPlace($event,$index)">
+                                    <!--<i class="glyphicon glyphicon-plus"></i>-->
+                                    {{replaceLabel}}
+                                </div>
+                            </div>
+                            <div ng-if="!place.placeAdded">
+                                <div class="btn btn-default" style="position:absolute;top:0;right:50%;z-index:100" ng-click="addPlace($event, place)">
+                                    <!--<i class="glyphicon glyphicon-plus"></i>-->
+                                    Add
+                                </div>
+                            </div>
+                            <div ng-if="place.placeAdded">
+                                <div class="btn btn-success" style="position:absolute;top:0;right:50%;z-index:100">
+                                    <!--<i class="glyphicon glyphicon-plus"></i>-->
+                                    Added
+                                </div>
+                            </div>
+                        </a>
                         <div class="name">
                             <p class="name_content">
                                 {{place.Name}}
                             </p>
                         </div>
-                        <!--end of description class-->
                     </div>
-                    <!--end of wrapper class-->
                 </div>
-            </div><!--end of ng-repeat-->
-        </div>
-        <div class="col-xs-4" style="padding: 0px">
-            <div class="panel-places clearfix" ng-repeat="place in allPlaces" ng-if="$index%3==2" post-repeat>
-                <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" ng-drag="!place.placeAdded" ng-drag-data="{isSwap: false, placeIndex: $index}" ng-click="showLeftPanelDetails(place)">
-                    <div class="wrapper">
-                        <a class="thumbnail" style="margin-bottom: 0;">
-                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width:250px;min-height:128px"/>
-                        </a>
-                        <div ng-if="!place.placeAdded" class="btn btn-default add-button" ng-drag="false" ng-cancel-drag ng-click="addPlace($event, place)">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </div>
-                        <div class="name">
-                            <p class="name_content">
-                                {{place.Name}}
-                            </p>
-                        </div>
-                        <!--end of description class-->
-                    </div>
-                    <!--end of wrapper class-->
-                </div>
-            </div><!--end of ng-repeat-->
-        </div>
-
-
-        </div>
-            </div>
+            </slide>
+        </carousel>
     </div>
-    <div ng-if="leftPanel=='hotels'">
-
-        <div scroll-pane scroll-config="paneConfig" id="hotelsPanel" style="width:100%;height:100vh">
-            <div id="transcludeHotelsPanel" class="clearfix">
-
-        <div class="col-xs-4" style="padding: 0px">
-            <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" ng-if="$index%3==0" post-repeat>
-                <div style="padding: 0;margin-bottom: 0;position: relative">
-                    <div class="wrapper">
-                        <a class="thumbnail" style="margin-bottom: 0;">
-                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
-                        </a>
-                        <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </div>
-                        <div class="name">
-                            <p class="name_content">
-                                {{hotel.Name}}
-                            </p>
-                        </div>
-                        <!--end of description class-->
+</footer>
+<footer ng-if="lowerPanelContent=='hotels'" class="sticky-footer text-center" style="padding-top: 0px;z-index:1006;background-color:#f8f8f8">
+    <div style="height: 150px">
+        <button style="position: absolute;top:0px;right:0px;z-index: 100" ng-click="removeLowerPanel()"><i class="glyphicon glyphicon-remove"></i></button>
+        <carousel interval="myInterval" no-wrap="noWrapSlides">
+            <slide ng-repeat="hotel in allHotels" active="hotel.active">
+                <div class="wrapper">
+                    <a class="thumbnail" style="margin-bottom: 0;">
+                        <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                        <img ng-if="!hotel.isFromApi" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;height:150px">
+                        <img ng-if="hotel.isFromApi" ng-src="http://images.travelnow.com/{{hotel.HotelUrl}}">
+                    </a>
+                    <div style="position:absolute;top:4%;left:20%;z-index:100" class="btn btn-default">
+                        {{hotel.Price | currency:"&#8377;":0}}
                     </div>
-                    <!--end of wrapper class-->
-                </div>
-            </div><!--end of ng-repeat-->
-        </div>
-        <div class="col-xs-4" style="padding: 0px">
-            <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" ng-if="$index%3==1" post-repeat>
-                <div style="padding: 0;margin-bottom: 0;position: relative">
-                    <div class="wrapper">
-                        <a class="thumbnail" style="margin-bottom: 0;">
-                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px"/>
-                        </a>
-                        <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </div>
-                        <div class="name">
-                            <p class="name_content">
-                                {{hotel.Name}}
-                            </p>
-                        </div>
-                        <!--end of description class-->
+                    <div ng-if="!hotel.hotelAdded" style="position:absolute;top:4%;left:59%;z-index:100" class="btn btn-default" ng-click="addHotel(hotel)">
+                        Replace
                     </div>
-                    <!--end of wrapper class-->
-                </div>
-            </div><!--end of ng-repeat-->
-        </div>
-        <div class="col-xs-4" style="padding: 0px">
-            <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" ng-if="$index%3==2" post-repeat>
-                <div style="padding: 0;margin-bottom: 0;position: relative">
-                    <div class="wrapper">
-                        <a class="thumbnail" style="margin-bottom: 0;">
-                            <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{hotel.HotelID}}.png" class="img-responsive" style="width:250px;min-height:128px">
-                        </a>
-                        <div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">
-                            <i class="glyphicon glyphicon-plus"></i>
-                        </div>
-                        <div class="name">
-                            <p class="name_content">
-                                {{hotel.Name}}
-                            </p>
-                        </div>
-                        <!--end of description class-->
+                    <div ng-if="hotel.hotelAdded" style="position:absolute;top:4%;left:59%;z-index:100" class="btn btn-success">
+                        Added
                     </div>
-                    <!--end of wrapper class-->
+                    <div class="name">
+                        <p class="name_content">
+                            {{hotel.Name}}
+                        </p>
+                    </div>
+                    <!--end of description class-->
                 </div>
-            </div><!--end of ng-repeat-->
-        </div>
-        </div>
-            </div>
-        </div>
-
-
+            </slide>
+        </carousel>
     </div>
-
-
-
-
-    <!--<div ng-if="leftPanel=='hotels'" ng-repeat="hotel in allHotels">-->
-        <!--<div class="col-xs-4" style="padding: 0;margin-bottom: 0;">-->
-            <!--<div class="wrapper">-->
-                <!--<a href="#" class="thumbnail" style="margin-bottom: 0;">-->
-                    <!--<img ng-src="{{hotel.PhotoLink}}" class="img-responsive" style="width: 100%"/>-->
-                <!--</a>-->
-                <!--<div ng-if="!hotel.hotelAdded" class="btn btn-default add-button" ng-click="addHotel(hotel)">-->
-                    <!--<i class="glyphicon glyphicon-plus"></i>-->
-                <!--</div>-->
-                <!--<div class="name">-->
-                    <!--<p class="name_content">-->
-                        <!--{{hotel.Name}}-->
-                    <!--</p>-->
-                <!--</div>-->
-                <!--&lt;!&ndash;end of description class&ndash;&gt;-->
-            <!--</div>-->
-            <!--&lt;!&ndash;end of wrapper class&ndash;&gt;-->
-        <!--</div>-->
-    <!--</div>&lt;!&ndash;end of ng-repeat&ndash;&gt;-->
-    <div ng-controller="jatayuController">
-        <div ng-hide="!(leftPanel=='maps')">
-            <div fix-top id="map-canvas"></div>
-        </div>
-    </div>
-</div>
+</footer>

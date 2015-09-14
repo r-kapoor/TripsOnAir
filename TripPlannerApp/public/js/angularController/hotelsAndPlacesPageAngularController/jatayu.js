@@ -36,10 +36,10 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
     $scope.map;
 
     $scope.zoom = $scope.zoomConstants.CITY;
-    $scope.initializeMap = function() {
+    $scope.initializeMap = function(mapId) {
         function initialize() {
             $scope.isMapInitialized = true;
-            var mapCanvas = document.getElementById('map-canvas');
+            var mapCanvas = document.getElementById(mapId);
             var mapOptions = {
                 center: new google.maps.LatLng($scope.centerPosition.Latitude, $scope.centerPosition.Longitude),
                 zoom: $scope.zoom,
@@ -60,11 +60,11 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
         });
     };
 
-    $scope.$on('loadMap',function onLoadMap(event, position){
+    $scope.$on('loadMap',function onLoadMap(event, position,mapId){
         console.log('loadMap');
         if(!$scope.isMapInitialized){
             $scope.centerPosition = position;
-            $scope.initializeMap();
+            $scope.initializeMap(mapId);
         }
     });
 
@@ -146,8 +146,6 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
         markers = [];
     }
 
-
-
     $scope.addMarker = function(position, char) {
         console.log('addMarker');
         var marker = new google.maps.Marker({
@@ -172,6 +170,7 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
         //setAllMap();
     };
     $scope.showRoute = function(originPosition, destinationPosition,dateItineraryIndex,waypoints) {
+        console.log("in map show route");
         var directionsService = new google.maps.DirectionsService();
         var directionsRequest = {
             origin: new google.maps.LatLng(originPosition.Latitude, originPosition.Longitude),

@@ -5,6 +5,7 @@
 itineraryModule.controller('hanumanController', function($scope, $rootScope, $http, $q, $location, $timeout) {
 
     $scope.alerts = [];
+    $scope.currentAlert = null;
     var isBudgetAlertPresent=false;
     var messages =
     {
@@ -31,6 +32,9 @@ itineraryModule.controller('hanumanController', function($scope, $rootScope, $ht
         $scope.alerts.splice(index, 1);
     };
 
+    $scope.closeCurrentAlert = function(){
+        $scope.currentAlert = null;
+    };
     $rootScope.$on('showRecommendation',function onShowRecommendation(event,category,params){
         var alert=messages[category];
         var alertClone = JSON.parse(JSON.stringify(alert));
@@ -40,6 +44,8 @@ itineraryModule.controller('hanumanController', function($scope, $rootScope, $ht
             alertClone.msg = alertClone.msg.replace('?',params);
         }
         $scope.alerts.push(alertClone);
+        $scope.currentAlert = JSON.parse(JSON.stringify(alertClone));
+        $timeout(function(){$scope.currentAlert = null}, 2500);
     });
 
     $rootScope.$on('hideRecommendation',function onHideRecommendation(event,kind){
