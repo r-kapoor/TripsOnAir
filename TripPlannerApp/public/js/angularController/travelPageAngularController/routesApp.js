@@ -40,7 +40,12 @@ routesModule.controller('routesController',  ['$scope', '$rootScope','$location'
             }
         });
     }
-    openRelevantRoute();
+
+    angular.element(window).ready(function () {
+        if($location.path() == '/'){
+            openRelevantRoute();
+        }
+    });
 
     function getReorderNeeded(itineraryID, callback){
         var requestURL = "/getReorderNeeded/"+itineraryID;

@@ -4,6 +4,7 @@ var hashidscity = new Hashids("encrypting the cityid", 16, "0123456789abcdefghij
 var hashidshotel = new Hashids("encrypting the hotelid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 var hashidsplace = new Hashids("encrypting the placeid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 var hashidsitinerary = new Hashids("encrypting the itineraryid", 16, "0123456789abcdefghijklmnopqrstuvxyz");
+var hashidspermalink = new Hashids("encrypting the permalink", 16, "0123456789abcdefghijklmnopqrstuvxyz");
 
 function encodeCityID(cityID){
 	if(!Array.isArray(cityID))
@@ -19,6 +20,22 @@ function encodeCityID(cityID){
 		}
 		return cityIDencoded;
 	}
+}
+
+function encodePermalink(ID){
+    if(!Array.isArray(ID))
+    {
+        return hashidspermalink.encode(ID);
+    }
+    else
+    {
+        var IDsEncoded = [];
+        for(var i = 0; i < ID.length; i++)
+        {
+            IDsEncoded.push(encodePermalink(ID[i]));
+        }
+        return IDsEncoded;
+    }
 }
 
 function encodeItineraryID(itineraryID){
@@ -101,6 +118,22 @@ function decodeCityID(cityID){
 	}
 }
 
+function decodePermalink(ID){
+    if(!Array.isArray(ID))
+    {
+        return parseInt(hashidspermalink.decode(ID));
+    }
+    else
+    {
+        var IDsDecoded = [];
+        for(var i = 0; i < ID.length; i++)
+        {
+            IDsDecoded.push(decodePermalink(ID[i]));
+        }
+        return IDsDecoded;
+    }
+}
+
 function decodePlaceID(placeID){
     if(!Array.isArray(placeID))
     {
@@ -124,3 +157,5 @@ module.exports.encodeHotelID = encodeHotelID;
 module.exports.encodePlaceID = encodePlaceID;
 module.exports.decodeCityID = decodeCityID;
 module.exports.decodePlaceID = decodePlaceID;
+module.exports.encodePermalink = encodePermalink;
+module.exports.decodePermalink = decodePermalink;

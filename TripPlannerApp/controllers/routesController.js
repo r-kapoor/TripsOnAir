@@ -61,6 +61,17 @@ module.exports=function (app){
                     else {
                         res.json(saveObject.routesData);
                     }
+                    if(saveObject.state != 3){
+                        saveObject.state = 3;
+                        redisClient.set(itineraryID, JSON.stringify(saveObject), function(err){
+                            if (err){
+                                console.log('Error in setting itinerary:'+err);
+                            }
+                            else {
+                                console.log('Successfully set');
+                            }
+                        });
+                    }
                 }
                 else{
                     //The routes needs to be found

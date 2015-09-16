@@ -36,92 +36,126 @@ module.exports = function(app) {
                 res.status(400).json({error: 'Itinerary ID Invalid'})
             }
             else {
-                var connection=conn.conn();
-                connection.connect();
-
                 var saveObject = JSON.parse(itinerary);
-                var travelData = saveObject.routesData;
 
-                var numOfPeople = travelData.numPeople;
-                var totalBudget=travelData.userTotalbudget;
-                var travelBudget = travelData.travelBudget;
-                var minorTravelBudget = travelData.minorTravelBudget;
-                var tastes  = travelData.tastes;
-
-                var travelDataSet = false;
-                if(travelData.withTaxiRome2rioData == undefined || travelData.withTaxiRome2rioData == null){
-                    travelData = travelData.withoutTaxiRome2rioData;
-                    travelDataSet = true;
+                var state = saveObject.state;
+                if(state > 4){
+                    res.json(saveObject.itineraryData);
                 }
-                else if(travelData.withoutTaxiRome2rioData == undefined || travelData.withoutTaxiRome2rioData == null){
-                    travelData = travelData.withTaxiRome2rioData;
-                    travelDataSet = true;
-                }
-
-                if((!travelDataSet) || travelData.isMajorDefault != 1){
-                    //There is some problem with the data
-                    console.log('There is some problem with the data. Aborting.');
-                    tripNotPossibleResponse(res);
-                }
-
                 else {
-                    console.log('plan itinerary called1');
-                    var destinationsAndStops=getDestinationsAndStops.getDestinationsAndStops(travelData);
-                    console.log('plan itinerary called2');
-                    var destinationsForPlaces=clone.clone(destinationsAndStops);
-                    isHotelRequired.isHotelRequired(destinationsAndStops);
-                    //console.log(JSON.stringify(destinationsAndStops));
-                    /*for(var i=0;i<destinationsAndStops.destinations.length;i++)
-                     {
-                     console.log("destinations:"+JSON.stringify(destinationsAndStops.destinations[i]));
-                     console.log("stops:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[i]));
-                     }*/
-                    //console.log("LastStop:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));
+                    var connection=conn.conn();
+                    connection.connect();
 
 
-                    async.parallel(
-                        [
-                            function hotelDataIfHotelRequired(hotelDataCallback){
-                                if(destinationsAndStops.numOfCitiesWhereHotelRequired>0)
-                                {
-                                    console.log("TotalUserBudget:"+totalBudget);
-                                    var hotelBudget=(totalBudget-travelData.TravelBudget)/2;
-                                    getHotelData.getHotelData(destinationsAndStops,hotelBudget, numOfPeople,connection,hotelDataCallback);
+                    var travelData = saveObject.routesData;
+
+                    var numOfPeople = travelData.numPeople;
+                    var totalBudget=travelData.userTotalbudget;
+                    var travelBudget = travelData.travelBudget;
+                    var minorTravelBudget = travelData.minorTravelBudget;
+                    var tastes  = travelData.tastes;
+
+                    console.log('DATA COMING TO 3rd PAGE:'+JSON.stringify(travelData));
+
+                    var travelDataSet = false;
+                    if(travelData.withTaxiRome2rioData == undefined || travelData.withTaxiRome2rioData == null){
+                        travelData = travelData.withoutTaxiRome2rioData;
+                        travelDataSet = true;
+                    }
+                    else if(travelData.withoutTaxiRome2rioData == undefined || travelData.withoutTaxiRome2rioData == null){
+                        travelData = travelData.withTaxiRome2rioData;
+                        travelDataSet = true;
+                    }
+
+                    if(!travelDataSet){
+                        if(travelData.withTaxiRome2rioData.isMajorDefault == 1){
+                            travelData = travelData.withTaxiRome2rioData;
+                            travelDataSet = true;
+                        }
+                        else if(travelData.withoutTaxiRome2rioData.isMajorDefault == 1){
+                            travelData = travelData.withoutTaxiRome2rioData;
+                            travelDataSet = true;
+                        }
+                    }
+
+                    if((!travelDataSet) || travelData.isMajorDefault != 1){
+                        //There is some problem with the data
+                        console.log('There is some problem with the data. Aborting.');
+                        tripNotPossibleResponse(res);
+                    }
+
+                    else {
+                        console.log('plan itinerary called1');
+                        var destinationsAndStops=getDestinationsAndStops.getDestinationsAndStops(travelData);
+                        console.log('plan itinerary called2');
+                        var destinationsForPlaces=clone.clone(destinationsAndStops);
+                        isHotelRequired.isHotelRequired(destinationsAndStops);
+                        //console.log(JSON.stringify(destinationsAndStops));
+                        /*for(var i=0;i<destinationsAndStops.destinations.length;i++)
+                         {
+                         console.log("destinations:"+JSON.stringify(destinationsAndStops.destinations[i]));
+                         console.log("stops:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[i]));
+                         }*/
+                        //console.log("LastStop:"+JSON.stringify(destinationsAndStops.destinationsWiseStops[destinationsAndStops.destinationsWiseStops.length-1]));
+
+
+                        async.parallel(
+                            [
+                                function hotelDataIfHotelRequired(hotelDataCallback){
+                                    if(destinationsAndStops.numOfCitiesWhereHotelRequired>0)
+                                    {
+                                        console.log("TotalUserBudget:"+totalBudget);
+                                        var hotelBudget=(totalBudget-travelData.TravelBudget)/2;
+                                        getHotelData.getHotelData(destinationsAndStops,hotelBudget, numOfPeople,connection,hotelDataCallback);
+                                    }
+                                    else {
+                                        hotelDataCallback(null, destinationsAndStops);
+                                    }
+                                },
+                                function placesData(placesDataCallback){
+                                    getOrderedPlaces.getOrderedPlaces(destinationsForPlaces,tastes,connection,placesDataCallback);
+
                                 }
-                                else {
-                                    hotelDataCallback(null, destinationsAndStops);
+                            ],
+                            //callback
+                            function(err, results) {
+                                connection.end();
+                                var destinationAndStops = selectPlaces.selectPlaces(results[0], results[1]);
+                                getDayWisePlaces.getDayWisePlaces(destinationAndStops);
+                                var error = getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
+                                if(error != undefined){
+                                    throw error;
                                 }
-                            },
-                            function placesData(placesDataCallback){
-                                getOrderedPlaces.getOrderedPlaces(destinationsForPlaces,tastes,connection,placesDataCallback);
+                                destinationAndStops.userTotalbudget = totalBudget;
+                                destinationAndStops.numPeople = numOfPeople;
+                                destinationAndStops.tastes = tastes;
+                                destinationAndStops.travelBudget = travelBudget;
+                                destinationAndStops.minorTravelBudget = minorTravelBudget;
 
-                            }
-                        ],
-                        //callback
-                        function(err, results) {
-                            connection.end();
-                            var destinationAndStops = selectPlaces.selectPlaces(results[0], results[1]);
-                            getDayWisePlaces.getDayWisePlaces(destinationAndStops);
-                            var error = getOptimizedItinerary.getOptimizedItinerary(destinationAndStops);
-                            if(error != undefined){
-                                throw error;
-                            }
-                            destinationAndStops.userTotalbudget = totalBudget;
-                            destinationAndStops.numPeople = numOfPeople;
-                            destinationAndStops.tastes = tastes;
-                            destinationAndStops.travelBudget = travelBudget;
-                            destinationAndStops.minorTravelBudget = minorTravelBudget;
+                                res.json(destinationAndStops);
 
-                            res.json(destinationAndStops);
-                            var fs = require('fs');
-                            fs.writeFile("AfterItineraryPlanning.txt", JSON.stringify(destinationAndStops), function(err) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    console.log("The file was saved!");
-                                }
+                                //Updating and saving the saveObject
+                                saveObject.state = 4;
+                                saveObject.itineraryData = destinationAndStops;
+                                redisClient.set(itineraryID, JSON.stringify(saveObject), function(err){
+                                    if (err){
+                                        console.log('Error in setting itinerary:'+err);
+                                    }
+                                    else {
+                                        console.log('Successfully set');
+                                    }
+                                });
+
+                                var fs = require('fs');
+                                fs.writeFile("AfterItineraryPlanning.txt", JSON.stringify(destinationAndStops), function(err) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        console.log("The file was saved!");
+                                    }
+                                });
                             });
-                        });
+                    }
                 }
             }
         });

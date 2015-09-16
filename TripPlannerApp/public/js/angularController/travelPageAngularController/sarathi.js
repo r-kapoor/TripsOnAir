@@ -394,7 +394,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
 
             }
         );
-        var queryString = "/showRoutes/"+itineraryID;
+        var randomString = Math.random(); //For forcing
+        var queryString = "/showRoutes/"+itineraryID+"?nocache="+randomString;
         $http.get(queryString).success(function(data,status){
             $rootScope.$emit('dataLoaded');
             $scope.isTravelPanelDataHidden = false;
@@ -474,14 +475,14 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         //var destinations = getParameterByName('dsts').split(";");
         var destinations = itineraryInputs.destinationCities;
         var originCity  =  itineraryInputs.originCity;
-        if(destinations.length==1) {
+        //if(destinations.length==1) {
             //need to plot markers if only one destination
             var data = {
                 origin:originCity,
-                destination:destinations[0]
+                destinations:destinations
             };
             $rootScope.$emit('plotMarkers',data);
-        }
+        //}
         $rootScope.$emit('removeSegments');
         for(var legIndex in $scope.legs) {
             for(var segmentIndex in $scope.legs[legIndex].defaultRoute.segments) {

@@ -19,11 +19,16 @@
             <!--<a href="#"><img src="http://techulus.com/buttons/tw.png" /></a><br/>-->
             <!--<a href="#"><img src="http://techulus.com/buttons/gplus.png" /></a>-->
             <div class="row">
+                <!--SHARE {{permalink}}-->
                 <!--<img ng-if="!generatingPDF" src="images/loading.gif" height="100px" width="100px">-->
             </div>
             <div class="row" >
                 <div class="btn btn-primary btn-block" ng-click="downloadPDF()" ng-disabled="generatingPDF">Download<img ng-if="generatingPDF" src="images/loading2.gif" height="20px" width="20px" style="margin-left: 2%"></div>
             </div>
+            <div class=" row btn btn-primary" ng-click="shareItinerary()">
+                Share
+            </div>
+            <input ng-if="isShareOn" id="permalinkItinerary" value="{{permalink}}">
         </div>
         </div>
         <!--<div class="row">-->

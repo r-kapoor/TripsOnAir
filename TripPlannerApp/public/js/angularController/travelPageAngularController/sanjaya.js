@@ -241,9 +241,11 @@ routesModule.controller('sanjayaController',  ['$scope','$rootScope', '$window',
         console.log("plotMarkers called");
         removeAllMarkers();
         var originCity = data.origin;
-        var destinationCity = data.destination;
+        var destinations = data.destinations;
         $scope.addMarker(originCity,'A');
-        $scope.addMarker(destinationCity, String.fromCharCode('A'.charCodeAt() + 1));
+        for(var i =0;i<destinations.length;i++) {
+            $scope.addMarker(destinations[i], String.fromCharCode('A'.charCodeAt() + i + 1));
+        }
         //$scope.addMarker(destinationCity, String.fromCharCode('A'.charCodeAt() + i+1));
 
     });

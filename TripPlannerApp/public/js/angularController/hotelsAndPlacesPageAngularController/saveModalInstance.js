@@ -3,6 +3,8 @@
  */
 itineraryModule.controller('ModalInstanceCtrl', function ($scope, $rootScope,$modalInstance) {
 
+    $scope.permalink = "Getting Link..";
+    $scope.isShareOn = false;
     $scope.generatingPDF = false;
     $scope.downloadPDF = function(){
         $scope.generatingPDF = true;
@@ -17,4 +19,13 @@ itineraryModule.controller('ModalInstanceCtrl', function ($scope, $rootScope,$mo
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
+
+    $scope.shareItinerary = function()
+    {
+        $scope.isShareOn = true;
+    };
+
+    $rootScope.$on('gotPermalink',function onGotPermalink(event,permalink){
+        $scope.permalink = permalink;
+    });
 });
