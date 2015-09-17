@@ -17,7 +17,7 @@
     "async": "~1.2.0",
     "change-case": "~2.3.0",
     "config": "^1.16.0",
-    "connect-redis": "^1.4.7",
+    "connect-redis": "~1.4.6",
     "date-utils": "~1.2.17",
     "dustjs-helpers": "~1.7.1",
     "dustjs-linkedin": "~2.7.1",
