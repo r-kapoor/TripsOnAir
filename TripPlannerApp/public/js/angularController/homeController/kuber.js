@@ -24,6 +24,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
     $scope.proceed = function checkAndShowOtherInputs() {
         console.log('PROCEED');
+        mixpanel.track('Proceed');
         var startTimeSet=(formData.getTripStartTime()!=null)&&(formData.getTripStartTime().morning == true || formData.getTripStartTime().evening == true);
         var endTimeSet=(formData.getTripEndTime()!=null)&&(formData.getTripEndTime().morning == true || formData.getTripEndTime().evening == true);
         var originSet=formData.getOrigin()!=null;

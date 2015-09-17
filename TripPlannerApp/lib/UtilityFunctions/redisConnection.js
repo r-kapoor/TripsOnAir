@@ -3,11 +3,13 @@
  */
 
 var redis = require("redis");
-
+var config = require("config");
 var client = null;
 function getClient(){
+
     if(client == null){
-        client = redis.createClient();
+        client = redis.createClient(6379, config.get('redis-host'), {});
+        //client = redis.createClient();
         client.on("error", function (err) {
             console.log("Error Creating REDIS client:" + err);
         });

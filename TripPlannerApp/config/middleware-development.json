@@ -22,7 +22,7 @@
         "session": {
             "module": "connect-redis",
             "config": {
-                "host":"tripsonair-primary.hkwkqx.0001.apse1.cache.amazonaws.com"
+                "host":"127.0.0.1"
             },
             "secret": "300b6574099026c0e2c46130fb62531d2e7ff6e1"
         }
