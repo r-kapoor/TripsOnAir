@@ -15,8 +15,15 @@ function getClient(){
         });
         client.on('connect', function() {
             console.log('Connected to Redis');
-            client.set('itineraryID', 0, function() {
-                return client;
+            client.get('itineraryID', function(err, value) {
+                if (err || value == null) {
+                    client.set('itineraryID', 0, function() {
+                        return client;
+                    });
+                }
+                else{
+                    return client;
+                }
             });
         });
     }
