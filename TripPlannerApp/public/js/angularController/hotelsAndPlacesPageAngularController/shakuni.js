@@ -296,22 +296,37 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.showDestinationItinerary = function(destination) {
+        console.log('showDestinationItinerary CLICKED');
+
         $scope.currentDestination.isCurrent = false;
         destination.isCurrent = true;
         $scope.currentDestination = destination;
 
+        console.log('showDestinationItinerary CLICKED 1');
+
         setBudgetModels();
 
+        console.log('showDestinationItinerary CLICKED 2');
         setDestinationSpecificModels();
 
+        console.log('showDestinationItinerary CLICKED 3');
+
         initializeMapDataArray();
+
+        console.log('showDestinationItinerary CLICKED 4');
         $scope.currentDestination.position = {
             Latitude:parseFloat($scope.currentDestination.pos.split(',')[0]),
             Longitude:parseFloat($scope.currentDestination.pos.split(',')[1])
         };
         calculatePlacesExpenses();
+
+        console.log('showDestinationItinerary CLICKED 5');
         calculateCityExpenses();
+
+        console.log('showDestinationItinerary CLICKED 6');
         $rootScope.$emit('newPlace', destination.name);
+
+        console.log('showDestinationItinerary CLICKED 7');
     };
 
     $scope.showLeftPanelDetails = function(item) {
@@ -1223,7 +1238,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         $scope.currentDate = firstDay.setHours(0,0,0,0);
         calculateHotelExpenses();
         $scope.allPlaces = $scope.currentDestination.places;
-        $scope.allHotels = $scope.currentDestination.hotels;
+        if($scope.currentDestination.hotels != undefined){
+            $scope.allHotels = $scope.currentDestination.hotels;
+        }
+        else{
+            $scope.allHotels = [];
+        }
     }
 
     function setMapData(dateItineraryIndex){
@@ -2168,7 +2188,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         if(destination.isHotelRequired == 1){
             var hotelDetails = destination.hotelDetails;
-            $scope.hotelExpensesText = $scope.currentDestination.hotelDetails.Name;
+            if($scope.currentDestination.isHotelRequired == 1){
+                $scope.hotelExpensesText = $scope.currentDestination.hotelDetails.Name;
+            }
             var numberOfDaysInHotel = 0;
             hotelDetails.checkInTime = new Date(hotelDetails.checkInTime);
             hotelDetails.checkOutTime = new Date(hotelDetails.checkOutTime);

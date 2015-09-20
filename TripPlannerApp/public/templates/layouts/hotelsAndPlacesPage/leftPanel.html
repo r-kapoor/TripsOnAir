@@ -50,6 +50,9 @@
     <div scroll-pane scroll-config="paneConfig" id="hotelsPanel" style="width:100%;height:100vh">
         <div id="transcludeHotelsPanel" class="clearfix">
             <div class="panel-body">
+                <div ng-if="allHotels.length == 0">
+                    There is no Hotel Required for {{currentDestination.name}}
+                </div>
                 <div class="panel-hotels clearfix" ng-repeat="hotel in allHotels" style="width: 100%" post-repeat>
                     <div style="padding: 0;margin-bottom: 0;position: relative">
                         <div class="wrapper col-md-8">

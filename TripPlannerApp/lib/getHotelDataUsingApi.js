@@ -169,10 +169,13 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                 var destIndex=destinationsAndStops.destinations.indexOf(citiesWhereHotelIsRequired[k]);
                 console.log("DestIndex:"+destIndex);
                 console.log(JSON.stringify(hotelData[k]));
-                destinationsAndStops.destinations[destIndex].hotelDetails=hotelData[k];
-                destinationsAndStops.destinations[destIndex].hotelDetails.hotelAdded = true;
-                destinationsAndStops.destinations[destIndex].hotels = hotels[k];
-                setHotelIndices(destinationsAndStops.destinations[destIndex].hotels);
+                if(destIndex != -1){
+                    //The is hotel required for the destination
+                    destinationsAndStops.destinations[destIndex].hotelDetails=hotelData[k];
+                    destinationsAndStops.destinations[destIndex].hotelDetails.hotelAdded = true;
+                    destinationsAndStops.destinations[destIndex].hotels = hotels[k];
+                    setHotelIndices(destinationsAndStops.destinations[destIndex].hotels);
+                }
             }
             console.log("--------------------------");
             for(var i=0;i<destinationsAndStops.destinations.length;i++)
