@@ -29,7 +29,7 @@ inputModule.config(['$routeProvider',
             });
     }]);
 
-inputModule.controller('form1Controller',  function($scope, $rootScope, $window, formData, $timeout) {
+inputModule.controller('form1Controller',  function($scope, $rootScope, $window, formData) {
 
     var sessionData = $window.sessionStorage.getItem('formData');
     if(sessionData != null){
@@ -42,6 +42,11 @@ inputModule.controller('form1Controller',  function($scope, $rootScope, $window,
 
     $rootScope.$on('suggest', function collapseEvents(event, data) {
         $scope.isFormPanelCollapsed = true;
+    });
+
+    angular.element(document).ready(function onReady(){
+        //mixpanel.time_event('Cities Input');
+        mixPanelTimeEvent('Cities Input');
     });
   });
 

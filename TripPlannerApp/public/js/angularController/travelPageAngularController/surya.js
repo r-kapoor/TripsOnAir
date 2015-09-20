@@ -40,6 +40,7 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     };
 
     var itineraryID;
+    var reorderTimes = 0; //For MixPanel
 
     $scope.IntroOptions = {
         steps: [
@@ -76,6 +77,7 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     });
 
     $scope.onDropComplete = function (index, obj, evt) {
+        reorderTimes++;
         var otherObj = $scope.draggableObjects[index];
         var otherIndex = $scope.draggableObjects.indexOf(obj);
         $scope.draggableObjects[index] = obj;
@@ -130,6 +132,10 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
     };
 
     $rootScope.$on('showRoutes',function onShowRoutes(event,data){
+        //MixPanel Tracking
+        mixPanelTrack('Submit Reorder', {
+            "ReorderTimes": reorderTimes
+        });
         $scope.reorderPanel = false;
         isTravelPanelOpened = true;
         $rootScope.$emit('showTravelPanel');
@@ -189,6 +195,8 @@ routesModule.controller('suryaController', ['$scope', '$rootScope', '$http', '$q
                 orderedCities.setPathArray(pathArray);
                 orderedCities.setCityIDs(data.cityIDs);
                 $rootScope.$emit('orderReceived');
+                //MixPanel Timing
+                mixPanelTimeEvent('Submit Reorder');
                 showMultiCityIntro();
             }
         );

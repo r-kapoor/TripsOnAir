@@ -24,7 +24,6 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
     $scope.proceed = function checkAndShowOtherInputs() {
         console.log('PROCEED');
-        mixpanel.track('Proceed');
         var startTimeSet=(formData.getTripStartTime()!=null)&&(formData.getTripStartTime().morning == true || formData.getTripStartTime().evening == true);
         var endTimeSet=(formData.getTripEndTime()!=null)&&(formData.getTripEndTime().morning == true || formData.getTripEndTime().evening == true);
         var originSet=formData.getOrigin()!=null;
@@ -36,8 +35,27 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
             var url = $location.path('/setBudget');
             $scope.isOverviewCollapsed = true;
             $scope.setBudgetLimits();
+
+            //MixPanel Tracking
+            var destinations = formData.getDestinations();
+            var trackObject = {
+                "Origin": formData.getOrigin().CityName,
+                "Destinations": destinationNames(destinations),
+                "StartDate": formData.getStartDate().toISOString(),
+                "EndDate": formData.getEndDate().toISOString(),
+                "NumberOfDestinations": destinations.length,
+                "DestinationGroups": appendNames(destinations)
+            };
+            mixObjectsTag(formData.getTripStartTime(), trackObject, 'Start');
+            mixObjectsTag(formData.getTripEndTime(), trackObject, 'End');
+            console.log('trackObject:'+JSON.stringify(trackObject));
+            //mixpanel.track('Cities Input', trackObject);
+            mixPanelTrack('Cities Input', trackObject);
             $rootScope.$on('$viewContentLoaded', function() {
                 $rootScope.$broadcast('formComplete');
+                //MixPanel Timing
+                //mixpanel.time_event('Budget Input');
+                mixPanelTimeEvent('Budget Input');
             });
         }
         else
@@ -72,10 +90,36 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         }
     };
 
+    function destinationNames(destinations){
+        var destinationNamesList = [];
+        for(var i = 0; i < destinations.length; i++){
+            destinationNamesList.push(destinations[i].CityName);
+        }
+        return destinationNamesList;
+    }
+    function appendNames(destinations){
+        var appendedDestinations = "";
+        for(var i = 0; i < destinations.length; i++){
+            appendedDestinations += destinations[i].CityName;
+            if(i != destinations.length - 1){
+                appendedDestinations += '-';
+            }
+        }
+        return appendedDestinations;
+    }
+
     function cleanDetailsPanelData(){
         formData.resetBudget();
         formData.resetNumPersons();
         formData.resetTastes();
+    }
+
+    function mixObjectsTag(source, target, tag) {
+        for(var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[tag+key] = source[key];
+            }
+        }
     }
 
     $scope.getLocation = function(queryString, deferred) {

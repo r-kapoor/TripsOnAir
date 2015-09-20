@@ -35,6 +35,15 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
         formData.setBudget($scope.value1);
         formData.setTastes($scope.checkModel);
         formData.setNumPersons($scope.numPerson);
+        //Mix Panel Tracking
+        var trackingObject = {
+            "Budget": formData.getBudget(),
+            "NumberOfPersons": formData.getNumPersons()
+        };
+        mixObjects(formData.getTastes(), trackingObject);
+        console.log('Tracking Object:'+JSON.stringify(trackingObject));
+        //mixpanel.track('Budget Input', trackingObject);
+        mixPanelTrack('Budget Input', trackingObject);
         $window.sessionStorage.setItem('formData',JSON.stringify(formData.getAllData()));
         putDetailedData();
         if($scope.isSuggestDestinationsOn)
@@ -46,6 +55,14 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
             $rootScope.$emit('submit', itineraryID);//For selectedDestinationsPanelController to handle
         }
     };
+
+    function mixObjects(source, target) {
+        for(var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key];
+            }
+        }
+    }
 
     $rootScope.$on('BudgetSet', function(){
         $scope.value1 = formData.getBudget();

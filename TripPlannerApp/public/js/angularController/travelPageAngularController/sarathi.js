@@ -112,6 +112,13 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
 
     var itineraryID;
 
+    //For MixPanel
+    var tripTypeSwappedCount = 0;
+    var openTravelModesPanelCount = 0;
+    var openModeDetailsPanelCount = 0;
+    var travelModeChangedCount = 0;
+    var cabOperatorClickCount =0;
+
     $scope.mobilePanelOpen = {
         multiMode: false,
         multiCity: false,
@@ -206,6 +213,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     }
 
     $scope.openTravelModesPanel = function(leg, clickEvent, index) {
+        openTravelModesPanelCount++;//For MixPanel
         if($scope.isModeDetailsPanelOpen) {
             $scope.isModeDetailsPanelOpen = false;
         }
@@ -222,6 +230,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     };
 
     $scope.openModeDetailsPanel = function(segment,route,routeIndex, clickEvent, custom) {
+        openModeDetailsPanelCount++;//For MixPanel
         $scope.currentSegment = segment;
         $scope.currentRoute = route;
         $scope.currentRouteIndex = routeIndex;
@@ -266,6 +275,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             if(segment.subkind != undefined && segment.subkind == "cab") {
                 if(custom != undefined) {
                     if(custom == 'cabOperator') {
+                        cabOperatorClickCount++;//For MixPanel
                         $scope.isTravelModesPanelOpen = false;
                         $scope.isCabOperatorClicked = true;
                         $scope.cabDetails = segment.CabDetails;
@@ -397,6 +407,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         var randomString = Math.random(); //For forcing
         var queryString = "/showRoutes/"+itineraryID+"?nocache="+randomString;
         $http.get(queryString).success(function(data,status){
+            //MixPanel Timimg
+            mixPanelTimeEvent('Submit Routes');
             $rootScope.$emit('dataLoaded');
             $scope.isTravelPanelDataHidden = false;
             //console.log("showRoutes response:"+JSON.stringify(data));
@@ -714,6 +726,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     };
 
     $scope.showOtherTrip = function() {
+        tripTypeSwappedCount++;
         $scope.isTripPanelSetCollapsed = true;
         isOtherTripClicked = !isOtherTripClicked;
         $timeout(function openCollapsedPanelSet(){
@@ -838,6 +851,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     };
 
     $scope.addToTrip = function(vehicle,$index,$event) {
+        travelModeChangedCount++;//For MixPanel
         var allSegmentSelected = false;
         if($scope.vehicleDate[$index].dt == null) {
             $event.preventDefault();
@@ -1365,6 +1379,15 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
      */
     $rootScope.$on('submitTravel',function onSubmitTravel(event, data)
     {
+        //MixPanel Tracking
+        mixPanelTrack('Submit Routes', {
+            "SingleTypeTrip": !$scope.isShowOtherTrip(),
+            "TripTypeSwapCount": tripTypeSwappedCount,
+            "ModeDetailsPanelClickedCount": openModeDetailsPanelCount,
+            "TravelDetailsPanelClickedCount": openTravelModesPanelCount,
+            "TravelModeChangedCount": travelModeChangedCount,
+            "CabOperatorClickCount": cabOperatorClickCount
+        });
         console.log("submitTravel");
         console.log(defaultRouteData);
         if(defaultRouteData!=null)

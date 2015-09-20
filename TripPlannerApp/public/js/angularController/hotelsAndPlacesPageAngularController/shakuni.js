@@ -108,6 +108,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     var itineraryID;
 
+    //Mix Panel
+    var mapClickCount = 0;
+    var budgetClickCount = 0;
+    var changeTimingsCount = 0;
+
     $scope.IntroOptions = {
         steps: [
             {
@@ -152,6 +157,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         itineraryID = $location.absUrl().split('/')[4].replace(/[^0-9a-z]/g,"");
 
         $http.get('/planItinerary/'+itineraryID).success(function(data,status){
+            //Mix Panel
+            //mixpanel.time_event("CustomizePlaces");
+            //mixpanel.time_event("CustomizeHotels");
+            //mixpanel.time_event("SaveItinerary");
+            mixPanelTimeEvent('CustomizePlaces');
+            mixPanelTimeEvent('CustomizeHotels');
+            mixPanelTimeEvent('SaveItinerary');
+
             responseData = data;
             $scope.origin=data.origin;
             $scope.destinations = data.destinations;
@@ -256,6 +269,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
     $scope.loadMaps = function(mapId){
         console.log('Load');
+        mapClickCount++;//for mix panel
         $scope.$broadcast('loadMap',$scope.currentDestination.position,mapId);
 
         loadItinerary();
@@ -272,6 +286,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         calculateHotelEntryExitTime(hotel);
         calculateHotelExpenses();
         initializeMapDataArray();
+        //Mix Panel
+        //mixpanel.track('AddHotel',{
+        //    "HotelPrice":hotel.Price
+        //});
+        mixPanelTrack('AddHotel',{
+            "HotelPrice":hotel.Price
+        });
     };
 
     $scope.showDestinationItinerary = function(destination) {
@@ -325,9 +346,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $rootScope.$on("toggleBudgetPanel",function(){
         $scope.isBudgetPanelOpen = !$scope.isBudgetPanelOpen;
+        budgetClickCount++;//Mix Panel
     });
 
     $rootScope.$on("submitPage",function(){
+
+        //Mix Panel
+        mixPanelTrack("SaveItinerary",{
+            "MapClickCount":mapClickCount,
+            "BudgetClickCount":budgetClickCount,
+            "changeTimingsCount":changeTimingsCount
+        });
+
         //open Modal
 
         var req = {
@@ -395,7 +425,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.addPlace = function(event, place) {
         event.stopPropagation();
         console.log("ADD:"+JSON.stringify(place));
-
+        //Mix panel
+        //mixpanel.track('AddPlace',{
+        //    "PlaceTaste":place.Taste
+        //});
+        mixPanelTrack('AddPlace',{
+            "PlaceTaste":place.Taste
+        });
 
         var hasHotel = ($scope.currentDestination.isHotelRequired == 1);
         var locationOfArrival = $scope.currentDestination.LocationOfArrival;
@@ -751,6 +787,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             $scope.isBudgetPanelOpen = true;
             $scope.isMobileAlertPanelShown = false;
             $scope.isItineraryPanelOpen = false;
+            budgetClickCount++;//Mix Panel
         }
         else if(panel=='alert')
         {
@@ -879,10 +916,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         if(content=='places')
         {
             $scope.lowerPanelContent = 'places';
+            //mixpanel.track('CustomizePlaces');
+            //mixpanel.time_event("AddPlace");
+            mixPanelTrack('CustomizePlaces');
+            mixPanelTimeEvent("AddPlace");
         }
         else if(content=='hotels')
         {
             $scope.lowerPanelContent = 'hotels';
+            //mixpanel.track('CustomizeHotels');
+            //mixpanel.time_event("AddHotel");
+            mixPanelTrack('CustomizeHotels');
+            mixPanelTimeEvent('AddHotel');
         }
     };
 
@@ -1042,6 +1087,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.setUserTimings= function(dateItinerary,dateItineraryIndex,index){
         console.log(dateItinerary );
+        changeTimingsCount++;//Mix Panel
         console.log("index:"+index+",date:"+dateItineraryIndex);
         fixItineraryOnChangeTimings(dateItinerary,dateItineraryIndex,index);
         dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone;
@@ -1128,10 +1174,19 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         if(type=='places')
         {
             $scope.showPlacesForCustomization = true;
+            //mix panel
+            //mixpanel.track('CustomizePlaces');
+            //mixpanel.time_event("AddPlace");
+            mixPanelTrack('CustomizePlaces');
+            mixPanelTimeEvent('AddPlace');
         }
         else if(type=='hotels')
         {
             $scope.showHotelsForCustomization = true;
+            //mixpanel.track('CustomizeHotels');
+            //mixpanel.time_event("AddHotel");
+            mixPanelTrack('CustomizeHotels');
+            mixPanelTimeEvent('AddHotel');
         }
         else if(type=='map')
         {
