@@ -28,6 +28,7 @@ function isHotelRequired(destinationsAndStops)
 		destinationsAndStops.destinations[i].isHotelRequired=0;//By default
 		if(hours>=20)
 		{
+
 			destinationsAndStops.destinations[i].isHotelRequired=1;
 			numCitiesHotelRequired++;
 		}
@@ -37,7 +38,9 @@ function isHotelRequired(destinationsAndStops)
 			{
 				if(hours>=5)
 				{
+                    console.log("hours:"+hours);
 					destinationsAndStops.destinations[i].isHotelRequired=1;
+                    numCitiesHotelRequired++;
 				}
 			}
 		}
