@@ -13,12 +13,14 @@ adminModule.controller('placesController',  function($scope, $rootScope, $routeP
 
         $http.get('/addorchangeplace/places?id='+placeID).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
+            $scope.alerts.push({ type: 'success', msg: 'Success' });
             $scope.place = data;
 
         })
             .error(
             function(data, status) {
                 console.log(data || "Backend Request failed");
+                $scope.alerts.push({ type: 'danger', msg: 'Failed to fetch data' });
             });
     };
     $scope.getPlaceDetails();
@@ -51,6 +53,73 @@ adminModule.controller('placesController',  function($scope, $rootScope, $routeP
 
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
+    };
+
+});
+
+adminModule.controller('crawlPlacesController',  function($scope, $rootScope, $routeParams, $http, $location) {
+
+    $scope.alerts = [];
+    $scope.place = null;
+
+    $scope.getPlaceDetails = function(){
+
+        var placeID = $routeParams.placeId;
+
+        $http.get('/addorchangeplace/crawledPlaces?id='+placeID).success(function(data,status){
+            console.log("Place response:"+JSON.stringify(data));
+            $scope.place = data;
+            $scope.alerts = [{ type: 'success', msg: 'Success' }];
+        })
+            .error(
+            function(data, status) {
+                console.log(data || "Backend Request failed");
+                $scope.alerts = [{ type: 'danger', msg: 'Failed to fetch data' }];
+            });
+        $scope.alerts = [{type: 'success', msg:' Fetching Data...'}];
+    };
+    $scope.getPlaceDetails();
+
+    $scope.submit = function() {
+        console.log(JSON.stringify($scope.place));
+        $scope.alerts = [{type: 'success', msg:'Submitting Data...'}];
+        $http.post('/addorchangeplace/newPlace',{
+            placeDetails: $scope.place
+        }).success(function(data,status){
+            console.log("Place response:"+JSON.stringify(data));
+            if(data.Status == "SUCCESS"){
+                $scope.alerts = [{ type: 'success', msg: 'Success with place id:'+data.placeID }];
+                $scope.place = null;
+            }
+            else {
+                $scope.alerts = [{ type: 'danger', msg: 'Failed' }];
+            }
+        })
+            .error(
+            function(data, status) {
+                $scope.alerts = [{ type: 'danger', msg: 'Failed' }];
+                console.log(data || "Backend Request failed");
+            });
+    };
+
+    $scope.nextPlace = function(){
+        var nextPlaceID = parseInt($routeParams.placeId)+1;
+        $location.path( '/insertCrawledPlace/'+ nextPlaceID);
+        $scope.alerts = [];
+    };
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
+
+    $scope.addTimings = function () {
+        $scope.place.PlaceTimings.push({});
+    };
+
+    $scope.removeTimings = function(){
+        if($scope.place.PlaceTimings.length > 1){
+            $scope.place.PlaceTimings.splice($scope.place.PlaceTimings.length-1,1);
+        }
     };
 
 });

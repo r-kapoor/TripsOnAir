@@ -8,6 +8,7 @@
 'use strict';
 
 var getPlaceDetails = require('../lib/admin/getPlaceDetails');
+var getCrawledPlaceDetails = require('../lib/admin/getCrawledPlaceDetails');
 var postPlaceDetails = require('../lib/admin/postPlaceDetails');
 var insertPlaceDetails = require('../lib/admin/insertPlaceDetails');
 var tasteIntegerToObject = require('../lib/UtilityFunctions/tasteObjectToIntegerAdmin');
@@ -91,6 +92,16 @@ module.exports=function (app){
     {
         //Getting the paramters passed
         res.sendfile('./public/templates/layouts/admin/index.html');
+    });
+
+    app.get('/addorchangeplace/crawledPlaces', function(req, res){
+        var placeID = req.param('id');
+        getCrawledPlaceDetails.getCrawledPlaceDetails(placeID, function respondWithPlace(placeObject){
+            if(placeObject != undefined){
+                placeObject.Taste = tasteIntegerToObject.tasteIntegerToObject(placeObject.Taste);
+            }
+            res.json(placeObject);
+        });
     });
 
 };
