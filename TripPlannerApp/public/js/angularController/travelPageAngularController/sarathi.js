@@ -1374,6 +1374,137 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         }
     };
 
+    $scope.getDayNightNumInDestination = function(index){
+
+        if(index>0 && index<=$scope.legs.length-1)
+        {
+
+            var previousLeg = $scope.legs[index-1];
+            var destArrivalTime = null;
+            var destDepartTime = null;
+            //get the end time of the last major segment of previous leg
+            for(var i=0;i<previousLeg.defaultRoute.segments.length;i++)
+            {
+                if(previousLeg.defaultRoute.segments[i].isMajor==1)
+                {
+                    destArrivalTime = new Date(previousLeg.defaultRoute.segments[i].endTime);
+                }
+            }
+            //get the startTime of current leg first major segment
+            var currentLeg = $scope.legs[index];
+            for(var k =0;k<currentLeg.defaultRoute.segments.length;k++)
+            {
+                if(currentLeg.defaultRoute.segments[k].isMajor ==1)
+                {
+                    destDepartTime = new Date(currentLeg.defaultRoute.segments[k].startTime);
+                    break;
+                }
+            }
+
+            if(destArrivalTime>destDepartTime)
+            {
+                return "0 days";
+            }
+
+            var numDays = 0;
+            var numNights = 0;
+            var inBetween = 0;
+
+            var arrivalHour = destArrivalTime.getHours();
+            var departHour = destDepartTime.getHours();
+
+            console.log('arrivalHour:'+arrivalHour);
+            console.log('departHour:'+departHour);
+
+            if(arrivalHour<3)
+            {
+                numNights+=2;
+                numDays+=1;
+            }
+            else if(arrivalHour<16)
+            {
+                numDays+=1;
+                numNights+=1;
+            }
+            else
+            {
+                numNights+=1;
+            }
+
+            if(departHour>12)
+            {
+                numDays+=1;
+            }
+            console.log('numDays:'+numDays);
+
+            var destArrivalTimeClone = new Date(getTimeFromDate(destArrivalTime));
+            destArrivalTimeClone.setDate(destArrivalTimeClone.getDate()+1);
+            destArrivalTimeClone.setHours(0,0,0,0);
+            var destDepartTimeClone = new Date(getTimeFromDate(destDepartTime));
+            destDepartTimeClone.setHours(0,0,0,0);
+
+            inBetween += (getTimeFromDate(destDepartTimeClone) - getTimeFromDate(destArrivalTimeClone)) / (DAYS_TO_MILLISECONDS);
+            console.log('inBetween:'+inBetween);
+            numDays+=inBetween;
+            numNights+=inBetween;
+            //if(getTimeFromDate(hotelDetails.checkOutTime) > getTimeFromDate(checkOutTimeClone)) {
+            //    numberOfDaysInHotel += 1;
+            //}
+
+            if(numDays>0 && numNights>0)
+            {
+                return numDays+" Days,"+numNights+" Nights";
+            }
+            else if(numDays>0)
+            {
+                return numDays+" Days";
+            }
+            else if(numNights>0)
+            {
+                return numNights+" Nights";
+            }
+            else
+            {
+                return "0 days";
+            }
+        }
+        else
+        {
+            return "";
+        }
+
+        //var startDestDateWithTime = null;
+        //var endDestDateWithTime = null;
+        //var lastMajorSegment = null;
+        //for(var i=0;i<segments.length;i++)
+        //{
+        //    if(segments[i].isMajor==1)
+        //    {
+        //        lastMajorSegment = segments[i];
+        //        if(startDestDateWithTime==null)
+        //        {
+        //            //first major segment
+        //            startDestDateWithTime = new Date(segments[i].startTime);
+        //        }
+        //    }
+        //}
+        //if(lastMajorSegment!=null)
+        //{
+        //    endDestDateWithTime = new Date(lastMajorSegment.endTime);
+        //}
+        //
+        //return(startDestDateWithTime+","+endDestDateWithTime);
+        //console.log(startDestDateWithTime+","+endDestDateWithTime);
+    };
+
+    function getTimeFromDate(date){
+        if(date instanceof Date){
+            return date.getTime();
+        }
+        date = new Date(date);
+        return date.getTime();
+    }
+
     /**
      * Submit Button
      */

@@ -2198,13 +2198,17 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             checkInTimeClone.setHours(12,0,0,0);
             var checkOutTimeClone = new Date(getTimeFromDate(hotelDetails.checkOutTime));
             checkOutTimeClone.setHours(12,0,0,0);
-            if(getTimeFromDate(hotelDetails.checkInTime) < getTimeFromDate(checkInTimeClone)) {
+            //if(getTimeFromDate(hotelDetails.checkInTime) < getTimeFromDate(checkInTimeClone)) {
+            //    numberOfDaysInHotel += 1;
+            //}
+            if(hotelDetails.checkInTime.getHours()<6)
+            {
                 numberOfDaysInHotel += 1;
             }
             numberOfDaysInHotel += (getTimeFromDate(checkOutTimeClone) - getTimeFromDate(checkInTimeClone)) / (DAYS_TO_MILLISECONDS);
-            if(getTimeFromDate(hotelDetails.checkOutTime) > getTimeFromDate(checkOutTimeClone)) {
-                numberOfDaysInHotel += 1;
-            }
+            //if(getTimeFromDate(hotelDetails.checkOutTime) > getTimeFromDate(checkOutTimeClone)) {
+            //    numberOfDaysInHotel += 1;
+            //}
             var numberOfRooms = Math.ceil($scope.numberOfPeople/hotelDetails.MaxPersons);
             pricePerPerson = (hotelDetails.Price * numberOfDaysInHotel * numberOfRooms)/$scope.numberOfPeople;
             hotelDetails.pricePerPerson = pricePerPerson;
