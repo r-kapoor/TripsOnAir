@@ -94,6 +94,8 @@
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     <div>
         <button type="button" class="btn btn-default" ng-click="submit()">Submit the changes</button>
+        <button type="button" class="btn btn-default" ng-click="addTimings()">Add Timings</button>
+        <button type="button" class="btn btn-default" ng-click="removeTimings()">Remove Last Timings</button>
         <button type="button" class="btn btn-default" ng-click="getPlaceDetails()">Reload</button>
         <button type="button" class="btn btn-default" ng-click="nextPlace()">Next</button>
     </div>

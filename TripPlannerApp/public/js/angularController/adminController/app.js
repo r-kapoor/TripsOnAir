@@ -22,6 +22,10 @@ adminModule.config(['$routeProvider',
                 templateUrl: 'templates/layouts/admin/newPlace.html',
                 controller: 'newPlaceController'
             }).
+            when('/insertCrawledPlace/:placeId', {
+                templateUrl: 'templates/layouts/admin/places.html',
+                controller: 'crawlPlacesController'
+            }).
             otherwise({
                 redirectTo: '/'
             });

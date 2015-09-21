@@ -2,29 +2,35 @@
  * @author rajat
  */
 
-function conn(database)
+function conn(database, type)
 {
     var mysql = require('mysql');
     if(database== undefined){
         database = 'Holiday';
     }
 
-    var connection = mysql.createConnection(
-        {
-            host     : 'singapore-mysql-instance1.cp4adwqmzvxv.ap-southeast-1.rds.amazonaws.com',
-            port     : '3306',
-            user     : 'adminTripsonair1',
-            password : 'adminDB!master',
-            database : database
-            //  host     : '127.0.0.1',
-            //  port     : '3306',
-            //  user     : 'adminzESTl5F',
-            //  password : 'duKiwg4kLMSV',
-            //  database : 'Holiday'
-
-        }
-    );
-
+    if(type == undefined){
+        var connection = mysql.createConnection(
+            {
+                host     : 'singapore-mysql-instance1.cp4adwqmzvxv.ap-southeast-1.rds.amazonaws.com',
+                port     : '3306',
+                user     : 'adminTripsonair1',
+                password : 'adminDB!master',
+                database : database
+            }
+        );
+    }
+    else {
+        connection = mysql.createConnection(
+            {
+                host     : '127.0.0.1',
+                port     : '3306',
+                user     : 'adminzESTl5F',
+                password : 'duKiwg4kLMSV',
+                database : database
+            }
+        );
+    }
     return connection;
 }
 module.exports.conn = conn;

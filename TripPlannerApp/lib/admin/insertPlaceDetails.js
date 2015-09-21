@@ -119,7 +119,7 @@ function insertPlaceDetails(placeDetails, callback)
                                 });
                             }
                             console.log('success!');
-                            callback({Status: "SUCCESS"});
+                            callback({Status: "SUCCESS", placeID:placeResult.insertId});
 
                             connection.end();
                         });
