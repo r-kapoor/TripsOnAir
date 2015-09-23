@@ -73,13 +73,14 @@ function insertPlaceDetails(placeDetails, callback)
                     console.log('Inserted in Place Charges for Place ID:' + placeResult.insertId);
 
                     var timingsQueryStringArray = [];
+                    var imagesQueryStringArray = [];
                     for(var i in placeDetails.PlaceTimings) {
                         timingsQueryStringArray.push('INSERT INTO PlaceTimings (PlaceID, TimeStart,TimeEnd, Days) VALUES('+
                         placeResult.insertId+
                         ','+connection.escape(placeDetails.PlaceTimings[i].TimeStart)+
                         ','+connection.escape(placeDetails.PlaceTimings[i].TimeEnd)+
                         ','+connection.escape(placeDetails.PlaceTimings[i].Days)+
-                        ');')
+                        ');');
                     }
 
                     console.log("Insert Timings query:"+timingsQueryStringArray);
@@ -88,7 +89,7 @@ function insertPlaceDetails(placeDetails, callback)
                         executeNextTimingsQuery();
                     }
                     else {
-                        commitTransaction();
+                        insertPlaceImages();
                     }
 
                     function executeNextTimingsQuery() {
@@ -105,10 +106,50 @@ function insertPlaceDetails(placeDetails, callback)
                                 executeNextTimingsQuery();
                             }
                             else {
-                                commitTransaction();
+                                insertPlaceImages();
                             }
 
                         })
+                    }
+
+                    function executeNextImagesQuery() {
+                        connection.query(imagesQueryStringArray[0], function(err, result){
+                            if(err) {
+                                connection.rollback(function() {
+                                    throw err;
+                                });
+                            }
+
+                            console.log('Inserted in Place Image with Image ID:' + result.insertId);
+                            imagesQueryStringArray.splice(0,1);
+                            if(imagesQueryStringArray.length > 0) {
+                                executeNextImagesQuery();
+                            }
+                            else {
+                                commitTransaction();
+                            }
+                        })
+                    }
+
+                    function insertPlaceImages(){
+                        imagesQueryStringArray = [];
+                        for(var i in placeDetails.PlaceImages) {
+                            imagesQueryStringArray.push('INSERT INTO Place_Images (PlaceID, CreditName,CreditURL, ImageURL) VALUES('+
+                            placeResult.insertId+
+                            ','+connection.escape(placeDetails.PlaceImages[i].CreditName)+
+                            ','+connection.escape(placeDetails.PlaceImages[i].CreditURL)+
+                            ','+connection.escape(placeDetails.PlaceImages[i].ImageURL)+
+                            ');')
+                        }
+
+                        console.log("Insert Timings query:"+imagesQueryStringArray);
+
+                        if(imagesQueryStringArray.length > 0) {
+                            executeNextImagesQuery();
+                        }
+                        else {
+                            commitTransaction();
+                        }
                     }
 
                     function commitTransaction() {

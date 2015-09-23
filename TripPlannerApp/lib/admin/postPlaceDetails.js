@@ -29,6 +29,15 @@ function postPlaceDetails(placeDetails, callback)
                 'TimeEnd='+connection.escape(placeDetails.PlaceTimings[i].TimeEnd)+',Days='+placeDetails.PlaceTimings[i].Days+' WHERE' +
             ' Timing_ID='+connection.escape(placeDetails.PlaceTimings[i].TimingID)+';');
         }
+        else {
+            //This is a new timing, needs to be inserted
+            timingsQueryStringArray.push('INSERT INTO PlaceTimings (PlaceID, TimeStart,TimeEnd, Days) VALUES('+
+            placeDetails.PlaceID+
+            ','+connection.escape(placeDetails.PlaceTimings[i].TimeStart)+
+            ','+connection.escape(placeDetails.PlaceTimings[i].TimeEnd)+
+            ','+connection.escape(placeDetails.PlaceTimings[i].Days)+
+            ');');
+        }
     }
 
     console.log("SetTimings query:"+timingsQueryStringArray);
@@ -36,6 +45,27 @@ function postPlaceDetails(placeDetails, callback)
     var chargesQueryString = 'UPDATE Place_Charges SET ChildCharge='+connection.escape(placeDetails.ChildCharge)+',AdultCharge='+connection.escape(placeDetails.AdultCharge)+',ForeignerCharge='+connection.escape(placeDetails.ForeignerCharge)+' WHERE PlaceID='+connection.escape(placeDetails.PlaceID)+';';
 
     console.log("SetCharges query:"+chargesQueryString);
+
+    var imagesQueryStringArray = [];
+    for(i in placeDetails.PlaceImages) {
+        if(placeDetails.PlaceImages[i].ImgID != null){
+            //This is an existing image. Needs to be updated
+            imagesQueryStringArray.push('UPDATE Place_Images SET CreditName='+connection.escape(placeDetails.PlaceImages[i].CreditName)+',' +
+            'CreditURL='+connection.escape(placeDetails.PlaceImages[i].CreditURL)+',ImageURL='+placeDetails.PlaceImages[i].ImageURL+' WHERE' +
+            ' ImgID='+connection.escape(placeDetails.PlaceImages[i].ImgID)+';');
+        }
+        else {
+            //This is a new image. Needs to be inserted
+            imagesQueryStringArray.push('INSERT INTO Place_Images (PlaceID, CreditName,CreditURL, ImageURL) VALUES('+
+            placeDetails.PlaceID+
+            ','+connection.escape(placeDetails.PlaceImages[i].CreditName)+
+            ','+connection.escape(placeDetails.PlaceImages[i].CreditURL)+
+            ','+connection.escape(placeDetails.PlaceImages[i].ImageURL)+
+            ');');
+        }
+    }
+
+    console.log("SetImages query:"+imagesQueryStringArray);
 
     connection.beginTransaction(
         function(err) {
@@ -64,7 +94,7 @@ function postPlaceDetails(placeDetails, callback)
                         executeNextTimingsQuery();
                     }
                     else {
-                        commitTransaction();
+                        insertPlaceImages();
                     }
 
                     function executeNextTimingsQuery() {
@@ -75,16 +105,52 @@ function postPlaceDetails(placeDetails, callback)
                                 });
                             }
 
-                            console.log('changed ' + result.changedRows + ' rows in PlaceTimings');
+                            if(result != undefined && result.changedRows != undefined){
+                                console.log('changed ' + result.changedRows + ' rows in PlaceTimings');
+                            }
                             timingsQueryStringArray.splice(0,1);
                             if(timingsQueryStringArray.length > 0) {
                                 executeNextTimingsQuery();
                             }
                             else {
-                                commitTransaction();
+                                insertPlaceImages();
                             }
 
                         })
+                    }
+
+                    function executeNextImagesQuery() {
+                        connection.query(imagesQueryStringArray[0], function(err, result){
+                            if(err) {
+                                connection.rollback(function() {
+                                    throw err;
+                                });
+                            }
+
+                            if(result != undefined && result.changedRows != undefined){
+                                console.log('changed ' + result.changedRows + ' rows in Place_Images');
+                            }
+                            else {
+                                console.log('Inserted in Place_Images');
+                            }
+
+                            imagesQueryStringArray.splice(0,1);
+                            if(imagesQueryStringArray.length > 0) {
+                                executeNextImagesQuery();
+                            }
+                            else {
+                                commitTransaction();
+                            }
+                        })
+                    }
+
+                    function insertPlaceImages(){
+                        if(imagesQueryStringArray.length > 0) {
+                            executeNextImagesQuery();
+                        }
+                        else {
+                            commitTransaction();
+                        }
                     }
 
                     function commitTransaction() {

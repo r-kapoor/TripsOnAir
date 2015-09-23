@@ -91,12 +91,26 @@
         <label for="NumberOfImages">NumberOfImages:</label>
         <input type="text" ng-model="place.NumberOfImages" class="form-control" id="NumberOfImages">
     </div>
+    <div ng-repeat="placeImages in place.PlaceImages">
+        <div class="form-group">
+            <label for="CreditName">CreditName:</label>
+            <input type="text" ng-model="placeImages.CreditName" class="form-control" id="CreditName">
+        </div>
+        <div class="form-group">
+            <label for="CreditURL">CreditURL:</label>
+            <input type="text" ng-model="placeImages.CreditURL" class="form-control" id="CreditURL">
+        </div>
+        <div class="form-group">
+            <label for="ImageURL">ImageURL:</label>
+            <input type="text" ng-model="placeImages.ImageURL" class="form-control" id="ImageURL">
+        </div>
+    </div>
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     <div>
-        <button type="button" class="btn btn-default" ng-click="submit()">Submit the changes</button>
-        <button type="button" class="btn btn-default" ng-click="addTimings()">Add Timings</button>
-        <button type="button" class="btn btn-default" ng-click="removeTimings()">Remove Last Timings</button>
-        <button type="button" class="btn btn-default" ng-click="getPlaceDetails()">Reload</button>
-        <button type="button" class="btn btn-default" ng-click="nextPlace()">Next</button>
+        <button type="button" class="btn btn-default" ng-click="submit()">{{submitText}}</button>
+        <button type="button" class="btn btn-default" ng-if="enableTimingAddition" ng-click="addTimings()">Add Timings</button>
+        <button type="button" class="btn btn-default" ng-if="enableTimingAddition" ng-click="removeTimings()">Remove Last Timings</button>
+        <button type="button" class="btn btn-default" ng-if="enableReload" ng-click="getPlaceDetails()">Reload</button>
+        <button type="button" class="btn btn-default" ng-if="enableNext" ng-click="nextPlace()">Next</button>
     </div>
 </div>
