@@ -10,7 +10,7 @@ function getPlaceDetails(placeID, callback)
     connection.connect();
 
     var queryString = 'SELECT Type,Taste,Name,a.PlaceID,Address,PinCode,PhoneNo,CityID,Description,Score,ScoreSources,' +
-        'Website,Latitude,Longitude,Time2Cover,UnescoHeritage,Timing_ID, TimeStart, TimeEnd, ' +
+        'Website,Latitude,Longitude,Time2Cover,UnescoHeritage,Timing_ID, TimeStart, TimeEnd, CreditName, CreditURL, ImageURL, ' +
         'Days, ChildCharge, AdultCharge, ForeignerCharge, NumberOfImages FROM ' +
         '(SELECT * FROM Places WHERE PlaceID = '+connection.escape(placeID)+') a ' +
         'LEFT JOIN ' +
@@ -18,7 +18,10 @@ function getPlaceDetails(placeID, callback)
         'ON (a.PlaceID = b.PlaceID)' +
         'LEFT JOIN ' +
         '(SELECT * FROM Place_Charges) c ' +
-        'ON (b.PlaceID = c.PlaceID)';
+        'ON (b.PlaceID = c.PlaceID)' +
+        'LEFT JOIN ' +
+        '(SELECT * FROM Place_Images) d ' +
+        'ON (c.PlaceID = d.PlaceID);';
 
     console.log("getPlaceDetails query:"+queryString);
     connection.query(queryString, function(err, rows, fields) {
@@ -28,6 +31,7 @@ function getPlaceDetails(placeID, callback)
         }
         else{
             var placeTimings = [];
+            var placeImages = []
             for(var i in rows){
                 placeTimings.push({
                     TimingID:rows[i].Timing_ID,
@@ -35,9 +39,15 @@ function getPlaceDetails(placeID, callback)
                     TimeEnd:rows[i].TimeEnd,
                     Days:rows[i].Days
                 });
+                placeImages.push({
+                    CreditName:rows[i].CreditName,
+                    CreditURL:rows[i].CreditURL,
+                    ImageURL:rows[i].ImageURL
+                });
             }
             if(rows[0] != undefined){
                 rows[0].PlaceTimings = placeTimings;
+                rows[0].PlaceImages = placeImages;
             }
             callback(rows[0]);
         }

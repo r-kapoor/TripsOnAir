@@ -7,6 +7,11 @@ adminModule.controller('placesController',  function($scope, $rootScope, $routeP
     $scope.alerts = [];
     $scope.place = null;
 
+    $scope.enableTimingAddition = false;
+    $scope.enableReload = true;
+    $scope.enableNext = true;
+    $scope.submitText = 'Submit the changes';
+
     $scope.getPlaceDetails = function(){
 
        var placeID = $routeParams.placeId;
@@ -61,6 +66,10 @@ adminModule.controller('crawlPlacesController',  function($scope, $rootScope, $r
 
     $scope.alerts = [];
     $scope.place = null;
+    $scope.enableTimingAddition = true;
+    $scope.enableReload = true;
+    $scope.enableNext = true;
+    $scope.submitText = 'Submit the changes';
 
     $scope.getPlaceDetails = function(){
 
@@ -68,6 +77,7 @@ adminModule.controller('crawlPlacesController',  function($scope, $rootScope, $r
 
         $http.get('/addorchangeplace/crawledPlaces?id='+placeID).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
+            data.PlaceImages = [{}];
             $scope.place = data;
             $scope.alerts = [{ type: 'success', msg: 'Success' }];
         })
@@ -83,7 +93,12 @@ adminModule.controller('crawlPlacesController',  function($scope, $rootScope, $r
     $scope.submit = function() {
         console.log(JSON.stringify($scope.place));
         $scope.alerts = [{type: 'success', msg:'Submitting Data...'}];
-        $http.post('/addorchangeplace/newPlace',{
+        if($scope.place.PlaceImages[0].ImageURL == null){
+            //No Image added
+            $scope.place.PlaceImages = [];
+        }
+
+            $http.post('/addorchangeplace/newPlace',{
             placeDetails: $scope.place
         }).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
@@ -129,6 +144,10 @@ adminModule.controller('newPlaceController', function($scope, $http){
     $scope.alerts = [];
     $scope.place = {};
     $scope.place.PlaceTimings = [{}];
+    $scope.enableTimingAddition = true;
+    $scope.enableReload = false;
+    $scope.enableNext = false;
+    $scope.submitText = 'Submit the New Place';
 
     $scope.loadEmptyPlace = function(){
         $http.get('/addorchangeplace/newPlace')

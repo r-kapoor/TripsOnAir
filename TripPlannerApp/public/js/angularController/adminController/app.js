@@ -19,7 +19,7 @@ adminModule.config(['$routeProvider',
                 controller: 'placesController'
             }).
             when('/newPlace', {
-                templateUrl: 'templates/layouts/admin/newPlace.html',
+                templateUrl: 'templates/layouts/admin/places.html',
                 controller: 'newPlaceController'
             }).
             when('/insertCrawledPlace/:placeId', {
