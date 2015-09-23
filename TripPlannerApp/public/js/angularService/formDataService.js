@@ -24,6 +24,7 @@ inputModule.service('formData', function () {
         var DEFAULT_BUDGET_MIN = 5000;
         var originCity = null;
         var destinationCities = [];
+        var suggestDestinationOn = false;
         var startDate = null;
         var endDate = null;
         var budget=MIN_BUDGET;
@@ -53,6 +54,9 @@ inputModule.service('formData', function () {
             },
             getDestinations: function () {
                 return destinationCities;
+            },
+            getSuggestDestinationOn: function(){
+                return suggestDestinationOn;
             },
             getStartDate: function() {
                 return startDate;
@@ -112,6 +116,9 @@ inputModule.service('formData', function () {
                 console.log('Set destination:'+JSON.stringify(destinations));
                 destinationCities = destinations;
                 removeDuplicates();
+            },
+            setSuggestDestinationOn: function(suggestDest){
+                suggestDestinationOn = suggestDest;
             },
             setStartDate: function(start) {
                 console.log('Set Start Date');

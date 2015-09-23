@@ -187,7 +187,7 @@ mixpanel.init("a431d4f9df736a613fac228545d188ad");
     </div>
     <!--ENDING FORM HTML-->
 
-    <div class="sections-wrapper">
+    <div ng-controller="KrishnaController" class="sections-wrapper" collapse="!isSuggestCollapsed">
         <section id="why" class="section why">
             <div class="container">
                 <h2 class="title text-center">How Tripsonair Works?</h2>
@@ -245,7 +245,7 @@ mixpanel.init("a431d4f9df736a613fac228545d188ad");
             </div><!--//container-->
         </section><!--//why-->
     </div><!--//section-wrapper-->
-    <div ng-include src="'templates/layouts/global/footer.html'"></div>
+    <div ng-controller="KrishnaController" collapse="!isSuggestCollapsed" ng-include src="'templates/layouts/global/footer.html'"></div>
 </body>
 
 </html>

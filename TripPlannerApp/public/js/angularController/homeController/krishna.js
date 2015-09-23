@@ -2,7 +2,7 @@
  * Created by rkapoor on 15/12/14.
  */
 
-inputModule.controller('KrishnaController', function($scope, $rootScope, $http, $q, formData, cityData) {
+inputModule.controller('KrishnaController', function($scope, $rootScope, $http, $q, formData,$location, cityData) {
 //	TODO:outer controller can't pic inner controllers scope variables-check
 //	$scope.originCity = null;
 //	$scope.destinationCity = null;
@@ -10,10 +10,17 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     $scope.isSuggestCollapsed = true;
     $scope.formSubmitted = false;
     $rootScope.$on('suggest',function suggestDestinations(){
+        var url = $location.path('/suggestions');
+        console.log("in suggest Dest");
         $scope.formSubmitted = true;
         $scope.isSuggestCollapsed = false;
         $scope.suggestAllDestinations();
     });
+
+    $rootScope.$on('detailsLoad', function collapseSuggestions() {
+        $scope.isSuggestCollapsed = true;
+    });
+
     $scope.requestSemaphoreSingleCities = false;
     $scope.requestSemaphoreMultiCities = false;
     $scope.suggestDestCount = 0;
@@ -56,7 +63,6 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     $scope.suggestAllDestinations=function() {
         var origin=formData.getOrigin();
         $scope.getLocation($scope.locationQueryString(origin),$scope.createQuery);
-
 
     };
 

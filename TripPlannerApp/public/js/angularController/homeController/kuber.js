@@ -3,7 +3,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
     $scope.isOverviewCollapsed = false;
     $scope.isSuggestDestinationsOn = false;
     $scope.destinationCityList = formData.getDestinations();
-    $scope.helpLabel="Help me choose destinations";
+    $scope.helpLabel="Don't know where to go";
 
     $scope.tripStartTime = formData.getTripStartTime();
 
@@ -19,7 +19,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
 
     $rootScope.$on('destinationAdded',function()
     {
-        $scope.helpLabel="Help me choose more destinations";
+        $scope.helpLabel="Don't know where else to go";
     });
 
     $scope.proceed = function checkAndShowOtherInputs() {
@@ -31,6 +31,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
         var startDateSet = (formData.getStartDate() !== null);
         var endDateSet = (formData.getEndDate() !== null);
         console.log("isSuggestDestinationsOn:"+$scope.isSuggestDestinationsOn);
+        formData.setSuggestDestinationOn($scope.isSuggestDestinationsOn);
         if( startDateSet && endDateSet && startTimeSet && endTimeSet && originSet && (destinationSet > 0 || $scope.isSuggestDestinationsOn)) {
             var url = $location.path('/setBudget');
             $scope.isOverviewCollapsed = true;
@@ -44,7 +45,8 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                 "StartDate": formData.getStartDate().toISOString(),
                 "EndDate": formData.getEndDate().toISOString(),
                 "NumberOfDestinations": destinations.length,
-                "DestinationGroups": appendNames(destinations)
+                "DestinationGroups": appendNames(destinations),
+                "suggestDestination":formData.getSuggestDestinationOn()
             };
             mixObjectsTag(formData.getTripStartTime(), trackObject, 'Start');
             mixObjectsTag(formData.getTripEndTime(), trackObject, 'End');

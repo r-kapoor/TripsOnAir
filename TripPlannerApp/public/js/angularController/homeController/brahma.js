@@ -6,9 +6,9 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
     var itineraryID = formData.getItineraryID();
     $scope.isDetailsCollapsed = false;
     $scope.isOverviewCollapsed = false;
-    $scope.isSuggestDestinationsOn = false;
+    //$scope.isSuggestDestinationsOn = true;
     $scope.destinationCityList = formData.getDestinations();
-    $scope.helpLabel="Help me choose destinations";
+    //$scope.helpLabel="Help me choose destinations";
     $scope.numPerson = formData.getNumPersons();
     $scope.value1 = formData.getBudget();
     //$scope.value1 = 5000;
@@ -25,6 +25,8 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
             pointer: {"background-color": "red"}
         }
     };
+
+    $rootScope.$emit('detailsLoad');
 
     $scope.$watch('value1', function(){
         return $scope.value1;
@@ -46,7 +48,7 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
         mixPanelTrack('Budget Input', trackingObject);
         $window.sessionStorage.setItem('formData',JSON.stringify(formData.getAllData()));
         putDetailedData();
-        if($scope.isSuggestDestinationsOn)
+        if(formData.getSuggestDestinationOn())
         {
             $rootScope.$emit('suggest');
         }

@@ -24,6 +24,9 @@ inputModule.config(['$routeProvider',
                 templateUrl: 'templates/layouts/home/detailsPanel.html'
                 ,controller: 'BrahmaController'
             }).
+            when('/suggestions',{
+
+            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -42,6 +45,10 @@ inputModule.controller('form1Controller',  function($scope, $rootScope, $window,
 
     $rootScope.$on('suggest', function collapseEvents(event, data) {
         $scope.isFormPanelCollapsed = true;
+    });
+
+    $rootScope.$on('detailsLoad', function unCollapseEvents(event, data) {
+        $scope.isFormPanelCollapsed = false;
     });
 
     angular.element(document).ready(function onReady(){
