@@ -87,54 +87,56 @@ mixpanel.init("a431d4f9df736a613fac228545d188ad");
         </a>
     </script>
 
-    <div class="container-fluid jumbotron back-size">
-        <div class="row">
-            <div class="col-sm-2">
-                <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
-                    <div class="panel panel-primary animate-this hidden-xs hidden-sm " style="height: 80vh">
-                        <!--<div class="panel-heading text-center">-->
-                        <!--<div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>-->
-                        <!--</div>-->
+    <div ng-controller="KrishnaController">
+        <div class="container-fluid jumbotron back-size">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div ng-controller="selectedDestinationsPanelController" collapse="isSelectedPanelCollapsed">
+                        <div class="panel panel-primary animate-this hidden-xs hidden-sm " style="height: 80vh">
+                            <!--<div class="panel-heading text-center">-->
+                            <!--<div ng-hide="submitItinerary"  class="btn btn-default btn-xs btn-responsive" ng-click="onSubmit()">Submit</div>-->
+                            <!--</div>-->
 
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-sm-12"><h5>Origin:</h5></div>
-                                <div class="col-sm-12">
-                                    <div class="wrapper">
-                                        <a href="#" class="thumbnail" style="margin-bottom: 0;">
-                                            <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                        </a>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-12"><h5>Origin:</h5></div>
+                                    <div class="col-sm-12">
+                                        <div class="wrapper">
+                                            <a href="#" class="thumbnail" style="margin-bottom: 0;">
+                                                <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
+                                            </a>
 
-                                        <div class="name">
-                                            <p class="text-center">
-                                                {{origin.CityName}}
-                                            </p>
+                                            <div class="name">
+                                                <p class="text-center">
+                                                    {{origin.CityName}}
+                                                </p>
+                                            </div>
+                                            <!--end of description class-->
                                         </div>
-                                        <!--end of description class-->
                                     </div>
-                                </div>
-                                <div class="col-sm-12" ng-hide="destinationLabel"><h5>Destination(s):</h5>
-                                    <div scroll-pane scroll-config="paneConfig" id="destinationsPanel" style="width:100%;height: 45vh">
-                                        <div id="transcludeDestinationsPanel" class="clearfix">
-                                            <div class="panel-selectedDestinations clearfix" ng-repeat="destination in destinationCityList" post-repeat>
-                                                <!--<div class="col-sm-12">-->
-                                                <div id={{destination.CityID}} class="wrapper">
-                                                    <a href="#" class="thumbnail" style="margin-bottom: 0;">
-                                                        <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/{{destination.CityID}}.png" class="img-responsive" style="width: 200px;min-height: 100px"/>
-                                                    </a>
+                                    <div class="col-sm-12" ng-hide="destinationLabel"><h5>Destination(s):</h5>
+                                        <div scroll-pane scroll-config="paneConfig" id="destinationsPanel" style="width:100%;height: 45vh">
+                                            <div id="transcludeDestinationsPanel" class="clearfix">
+                                                <div class="panel-selectedDestinations clearfix" ng-repeat="destination in destinationCityList" post-repeat>
+                                                    <!--<div class="col-sm-12">-->
+                                                    <div id={{destination.CityID}} class="wrapper">
+                                                        <a href="#" class="thumbnail" style="margin-bottom: 0;">
+                                                            <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_200/{{destination.CityID}}.png" class="img-responsive" style="width: 200px;min-height: 100px"/>
+                                                        </a>
 
-                                                    <div class="btn btn-default add-button" ng-click="destinationRemoved(destination)">
-                                                        <!-- ng-click="{{destinationSelected($index)}}"-->
-                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                        <div class="btn btn-default add-button" ng-click="destinationRemoved(destination)">
+                                                            <!-- ng-click="{{destinationSelected($index)}}"-->
+                                                            <i class="glyphicon glyphicon-remove"></i>
+                                                        </div>
+                                                        <div class="name">
+                                                            <p id ="reponsiveFont" class="text-center">
+                                                                {{getDestinationName(destination)}}
+                                                            </p>
+                                                        </div>
+                                                        <!--end of description class-->
                                                     </div>
-                                                    <div class="name">
-                                                        <p id ="reponsiveFont" class="text-center">
-                                                            {{getDestinationName(destination)}}
-                                                        </p>
-                                                    </div>
-                                                    <!--end of description class-->
+                                                    <!--</div>-->
                                                 </div>
-                                                <!--</div>-->
                                             </div>
                                         </div>
                                     </div>
@@ -143,109 +145,111 @@ mixpanel.init("a431d4f9df736a613fac228545d188ad");
                         </div>
                     </div>
                 </div>
-            </div>
-            <!--<div class="col-sm-1">-->
+                <!--<div class="col-sm-1">-->
 
-            <!--</div>-->
-            <div class="col-sm-12 col-md-10">
-                <div class="row">
-                    <div>
-                        <div style="height:100%" ng-include src="'templates/layouts/home/suggestionsAccordingToSelection.html'"></div>
-                    </div>
-                </div>
-                <div ng-controller="form1Controller" collapse="isFormPanelCollapsed">
-
+                <!--</div>-->
+                <div class="col-sm-12 col-md-10">
                     <div class="row">
-                        <div class="col-sm-2"></div>
-                        <div ng-controller="KuberController">
-                            <div class="col-sm-6">
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">{{title}}</h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <!--<div id='invalid'></div>-->
+                        <div>
+                            <div style="height:100%" ng-include src="'templates/layouts/home/suggestionsAccordingToSelection.html'"></div>
+                        </div>
+                    </div>
+                    <div ng-controller="form1Controller" collapse="isFormPanelCollapsed">
 
-                                        <form role="form" autocomplete="off">
-                                            <div ng-view></div>
-                                        </form>
+                        <div class="row">
+                            <div class="col-sm-2"></div>
+                            <div ng-controller="KuberController">
+                                <div class="col-sm-6">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">{{title}}</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <!--<div id='invalid'></div>-->
+
+                                            <form role="form" autocomplete="off">
+                                                <div ng-view></div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <!--container-->
                         </div>
-                        <!--container-->
+                        <!--jumbotron-->
                     </div>
-                    <!--jumbotron-->
+                    <div class="row">
+                        <div style="height:100%" ng-include src="'templates/layouts/home/destinationsSuggest.html'"></div>
+                    </div>
                 </div>
-                <div class="row">
-                    <div style="height:100%" ng-include src="'templates/layouts/home/destinationsSuggest.html'"></div>
-                </div>
-            </div>
-            <!--main wrapping-->
+                <!--main wrapping-->
 
+            </div>
+        </div>
+        <!--ENDING FORM HTML-->
+
+        <div>
+            <div class="sections-wrapper" collapse="!isSuggestCollapsed">
+                <section id="why" class="section why">
+                    <div class="container">
+                        <h2 class="title text-center">How Tripsonair Works?</h2>
+                        <p class="intro text-center">We save your time and effort in planning trips through an automated trip planner. Our state-of-the-art algorithms analyze the available travel options, accommodation and attractions to plan a perfect holiday for you in real-time, which can be further customized and personalized.</p>
+                        <div class="row item">
+                            <div class="content col-md-4 col-sm-12 col-xs-12">
+                                <h3 class="title">Input your requirements</h3>
+                                <div class="desc">
+                                    <p>Feed your destinations and dates to get the minimum budget.</p>
+                                    <p>Estimate your budget & optionally provide your interest.</p>
+                                </div>
+                            </div><!--//content-->
+                            <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                                <img class="img-responsive" src="/images/input.png" alt="">
+                            </figure>
+                        </div><!--//item-->
+
+                        <div class="row item">
+                            <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
+                                <h3 class="title">View and customize travel options</h3>
+                                <div class="desc">
+                                    <p>View the best optimized travel plan of your trip.</p>
+                                    <p>Customize travel options encompassing flight, bus, train and cab. Also check your budget spent on travel as you make changes.</p>
+                                </div>
+                            </div><!--//content-->
+                            <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
+                                <img class="img-responsive" src="/images/travel.png" alt="">
+                            </figure>
+                        </div><!--//item-->
+
+                        <div class="row item ">
+                            <div class="content col-md-4 col-sm-12 col-xs-12">
+                                <h3 class="title">Personalize your itinerary</h3>
+                                <div class="desc">
+                                    <p>Check out the minute to minute itinerary right from the time you land in the city.</p>
+                                    <p>Add, remove & change timings of the places of your itinerary while viewing them in the map.</p>
+                                </div>
+                            </div><!--//content-->
+                            <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                                <img class="img-responsive" src="/images/itinerary.png" alt="">
+                            </figure>
+                        </div><!--//item-->
+
+                        <div class="row item last-item">
+                            <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
+                                <h3 class="title">Share itinerary</h3>
+                                <div class="desc">
+                                    <p>Save and share itinerary with your friends.</p>
+                                </div>
+                            </div><!--//content-->
+                            <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
+                                <img class="img-responsive" src="/images/figure-4.png" alt="">
+                            </figure>
+                        </div><!--//item-->
+                    </div><!--//container-->
+                </section><!--//why-->
+            </div><!--//section-wrapper-->
+            <div collapse="!isSuggestCollapsed" ng-include src="'templates/layouts/global/footer.html'"></div>
         </div>
     </div>
-    <!--ENDING FORM HTML-->
-
-    <div ng-controller="KrishnaController" class="sections-wrapper" collapse="!isSuggestCollapsed">
-        <section id="why" class="section why">
-            <div class="container">
-                <h2 class="title text-center">How Tripsonair Works?</h2>
-                <p class="intro text-center">We save your time and effort in planning trips through an automated trip planner. Our state-of-the-art algorithms analyze the available travel options, accommodation and attractions to plan a perfect holiday for you in real-time, which can be further customized and personalized.</p>
-                <div class="row item">
-                    <div class="content col-md-4 col-sm-12 col-xs-12">
-                        <h3 class="title">Input your requirements</h3>
-                        <div class="desc">
-                            <p>Feed your destinations and dates to get the minimum budget.</p>
-                            <p>Estimate your budget & optionally provide your interest.</p>
-                        </div>
-                    </div><!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-                        <img class="img-responsive" src="/images/input.png" alt="">
-                    </figure>
-                </div><!--//item-->
-
-                <div class="row item">
-                    <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
-                        <h3 class="title">View and customize travel options</h3>
-                        <div class="desc">
-                            <p>View the best optimized travel plan of your trip.</p>
-                            <p>Customize travel options encompassing flight, bus, train and cab. Also check your budget spent on travel as you make changes.</p>
-                        </div>
-                    </div><!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
-                        <img class="img-responsive" src="/images/travel.png" alt="">
-                    </figure>
-                </div><!--//item-->
-
-                <div class="row item ">
-                    <div class="content col-md-4 col-sm-12 col-xs-12">
-                        <h3 class="title">Personalize your itinerary</h3>
-                        <div class="desc">
-                            <p>Check out the minute to minute itinerary right from the time you land in the city.</p>
-                            <p>Add, remove & change timings of the places of your itinerary while viewing them in the map.</p>
-                        </div>
-                    </div><!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-                        <img class="img-responsive" src="/images/itinerary.png" alt="">
-                    </figure>
-                </div><!--//item-->
-
-                <div class="row item last-item">
-                    <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
-                        <h3 class="title">Share itinerary</h3>
-                        <div class="desc">
-                            <p>Save and share itinerary with your friends.</p>
-                        </div>
-                    </div><!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
-                        <img class="img-responsive" src="/images/figure-4.png" alt="">
-                    </figure>
-                </div><!--//item-->
-            </div><!--//container-->
-        </section><!--//why-->
-    </div><!--//section-wrapper-->
-    <div ng-controller="KrishnaController" collapse="!isSuggestCollapsed" ng-include src="'templates/layouts/global/footer.html'"></div>
 </body>
 
 </html>
