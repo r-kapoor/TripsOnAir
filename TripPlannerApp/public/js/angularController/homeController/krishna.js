@@ -31,6 +31,12 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     $scope.range=0;
     $scope.originToLastSelectedCityDistance;
 
+    var cityBatchsize = 10;
+    var groupBatchSize = 4;
+
+    var completeDestinations = [];
+    var remainderDestinations = [];
+
     $scope.userInputData=null;
 
     $scope.getClassCol = function(index) {
@@ -72,10 +78,11 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             $scope.requestSemaphoreSingleCities = true;
             var suggestDestData = data;
             suggestDestData.next = $scope.suggestDestCount;
-            $scope.suggestDestCount += 5;
+            suggestDestData.batchsize = cityBatchsize;
+            $scope.suggestDestCount += cityBatchsize;
             $http.get('/suggestDest',{params:suggestDestData}).success(function(data,status){
                     $scope.requestSemaphoreSingleCities = false;
-                    console.log("Success");
+                    //console.log("Success with data:"+JSON.stringify(data));
                     $scope.singleCitiesData(data,status);
                 }
             )
@@ -88,7 +95,8 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             $scope.requestSemaphoreMultiCities = true;
             var suggestGroupsData = JSON.parse(JSON.stringify(data));
             suggestGroupsData.next = $scope.suggestGroupsCount;
-            $scope.suggestGroupsCount += 4;
+            suggestGroupsData.batchsize = groupBatchSize;
+            $scope.suggestGroupsCount += groupBatchSize;
             $http.get('/suggestGroups',{params:suggestGroupsData}).success(function(data,status){
                     $scope.requestSemaphoreMultiCities = false;
                     console.log("Success");
@@ -107,17 +115,47 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         $scope.orgLong=data.orgLong;
         $scope.range=data.range;
 
+        console.log('LENGHT:'+data.CityList.length);
         angular.forEach(data.CityList, function(city, index) {
             city.CityCount = $scope.singleCityCount;
             $scope.singleCityCount += 1;
         });
-        $scope.destinations = $scope.destinations.concat(data.CityList);
+        //Stop making any further calls
+        var cityListLength = data.CityList.length;
+        if(cityListLength < cityBatchsize) {
+            //The number is less than expected. The data has finished
+            console.log('Data Cities:'+JSON.stringify(data.CityList));
+            $scope.requestSemaphoreSingleCities = true;
+            if(cityListLength % 5==0){
+                completeDestinations = completeDestinations.concat(data.CityList);
+                $scope.destinations = completeDestinations.concat(remainderDestinations);
+            }
+            else {
+                var toBeConcat = parseInt(cityListLength/5)*5;
+                var remainder = cityListLength%5;
+                if(remainder == 2){
+                    //This will fit with no issues
+                    toBeConcat += 2;
+                    remainder = 0
+                }
+                else if(remainder == 3 || remainder == 4){
+                    toBeConcat += 2; //2 will fit
+                    remainder = remainder - 2;
+                }
+                var remainderCities = data.CityList.splice(toBeConcat,remainder);
+                completeDestinations = completeDestinations.concat(data.CityList);
+                remainderDestinations = remainderDestinations.concat(remainderCities);
+                $scope.destinations = completeDestinations.concat(remainderDestinations);
+                console.log('Remainder Cities:'+JSON.stringify(remainderCities));
+                console.log('Concat Cities:'+JSON.stringify(data.CityList));
+            }
+        }
+        else {
+            completeDestinations= completeDestinations.concat(data.CityList);
+            $scope.destinations = completeDestinations.concat(remainderDestinations);
+        }
         $scope.markSelectedDestinations();
         $scope.markOutOfBudgetDestinations();
-        //Stop making any further calls
-        if(data.CityList.length < 5) {
-            $scope.requestSemaphoreSingleCities = true;
-        }
     };
 
     $scope.multiCitiesData=function(multiCitydata,status){
@@ -161,13 +199,35 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 });
             }
         });
-        $scope.destinations = $scope.destinations.concat(groupsList);
+
+        var groupsLength = groupsList.length;
+
+        //Stop making any further calls
+        if(groupsLength < groupBatchSize) {
+            $scope.requestSemaphoreMultiCities = true;
+            if(groupsLength % 2 == 0){
+                //No issues. Can be inserted as is.
+                completeDestinations = completeDestinations.concat(groupsList);
+                $scope.destinations = completeDestinations.concat(remainderDestinations);
+            }
+            else {
+                var toBeConcat = parseInt(groupsLength/2)*2;
+                var remainder = 1;
+                var remainderCities = groupsList.splice(toBeConcat,remainder);
+                completeDestinations = completeDestinations.concat(groupsList);
+                remainderDestinations = remainderDestinations.concat(remainderCities);
+                $scope.destinations = completeDestinations.concat(remainderDestinations);
+                console.log('Remainder Groups:'+JSON.stringify(remainderCities));
+                console.log('Concat Groups:'+JSON.stringify(groupsList));
+            }
+        }
+        else {
+            completeDestinations = completeDestinations.concat(groupsList);
+            $scope.destinations = completeDestinations.concat(remainderDestinations);
+        }
         $scope.markSelectedDestinations();
         $scope.markOutOfBudgetDestinations();
-        //Stop making any further calls
-        if(groupsList.length < 4) {
-            $scope.requestSemaphoreMultiCities = true;
-        }
+
     };
 
         $scope.createQuery=function(data,status){
@@ -247,7 +307,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     });
 
     $rootScope.$on('destinationSelectedFromCarousel', function onDestinationSelectedFromCarousel() {
-        console.log("carousel selection:");
+        //console.log("carousel selection:");
         $scope.markSelectedDestinations();
         $scope.markOutOfBudgetDestinations();
         $rootScope.$broadcast('reinit-pane',"destinationsPanel");
@@ -352,20 +412,20 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                             suggestedDestination.CityDataFromGroup[suggestedDestination.CityDataFromGroup.length - 1].Longitude,
                             $scope.orgLat, $scope.orgLong
                         )));
-                console.log(suggestedDestination.CityName+":1totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
+                //console.log(suggestedDestination.CityName+":1totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
                 if(totalEstimatedDistance > $scope.range) {
-                    console.log("red");
+                    //console.log("red");
                     suggestedDestination.outOfBudget = 'out-of-budget';
                 }
                 else {
-                    console.log("not red");
+                    //console.log("not red");
                     suggestedDestination.outOfBudget = null;
                 }
             }
             else {
                 var totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance + parseInt(calcDist(endLat, endLong, suggestedDestination.Latitude, suggestedDestination.Longitude)) +
                 parseInt(calcDist(suggestedDestination.Latitude, suggestedDestination.Longitude, $scope.orgLat, $scope.orgLong)));
-                console.log(suggestedDestination.CityName+":2totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
+                //console.log(suggestedDestination.CityName+":2totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
                 if(totalEstimatedDistance > $scope.range) {
                     suggestedDestination.outOfBudget = 'out-of-budget';
                 }
