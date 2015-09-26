@@ -78,6 +78,7 @@ adminModule.controller('crawlPlacesController',  function($scope, $rootScope, $r
         $http.get('/addorchangeplace/crawledPlaces?id='+placeID).success(function(data,status){
             console.log("Place response:"+JSON.stringify(data));
             data.PlaceImages = [{}];
+            data.PlaceDates = [{}];
             $scope.place = data;
             $scope.alerts = [{ type: 'success', msg: 'Success' }];
         })
@@ -96,6 +97,10 @@ adminModule.controller('crawlPlacesController',  function($scope, $rootScope, $r
         if($scope.place.PlaceImages[0].ImageURL == null){
             //No Image added
             $scope.place.PlaceImages = [];
+        }
+        if($scope.place.PlaceDates[0].PlaceStartDate == null){
+            //No Dates added
+            $scope.place.PlaceDates = [];
         }
 
             $http.post('/addorchangeplace/newPlace',{

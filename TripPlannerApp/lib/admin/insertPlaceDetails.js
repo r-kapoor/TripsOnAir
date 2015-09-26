@@ -74,6 +74,7 @@ function insertPlaceDetails(placeDetails, callback)
 
                     var timingsQueryStringArray = [];
                     var imagesQueryStringArray = [];
+                    var datesQueryStringArray = [];
                     for(var i in placeDetails.PlaceTimings) {
                         timingsQueryStringArray.push('INSERT INTO PlaceTimings (PlaceID, TimeStart,TimeEnd, Days) VALUES('+
                         placeResult.insertId+
@@ -126,7 +127,30 @@ function insertPlaceDetails(placeDetails, callback)
                                 executeNextImagesQuery();
                             }
                             else {
-                                commitTransaction();
+                                insertPlaceDates();
+                            }
+                        })
+                    }
+
+                    function executeNextDatesQuery() {
+                        connection.query(datesQueryStringArray[0], function(err, result){
+                            if(err) {
+                                connection.rollback(function() {
+                                    console.log("ROLLBACK");
+                                });
+                                console.log("ERROR:"+err);
+                                throw err;
+                            }
+                            else
+                            {
+                                console.log('Inserted in Place Date with Date ID:' + result.insertId);
+                                datesQueryStringArray.splice(0,1);
+                                if(datesQueryStringArray.length > 0) {
+                                    executeNextDatesQuery();
+                                }
+                                else {
+                                    commitTransaction();
+                                }
                             }
                         })
                     }
@@ -142,10 +166,31 @@ function insertPlaceDetails(placeDetails, callback)
                             ');')
                         }
 
-                        console.log("Insert Timings query:"+imagesQueryStringArray);
+                        console.log("Insert Images query:"+imagesQueryStringArray);
 
                         if(imagesQueryStringArray.length > 0) {
                             executeNextImagesQuery();
+                        }
+                        else {
+                            insertPlaceDates();
+                        }
+                    }
+
+                    function insertPlaceDates(){
+                        datesQueryStringArray = [];
+                        for(var i in placeDetails.PlaceDates) {
+                            datesQueryStringArray.push('INSERT INTO Place_Dates (PlaceID, PlaceStartDate,PlaceEndDate, IsYearRelevant) VALUES('+
+                            placeResult.insertId+
+                            ','+connection.escape(placeDetails.PlaceDates[i].PlaceStartDate)+
+                            ','+connection.escape(placeDetails.PlaceDates[i].PlaceEndDate)+
+                            ','+connection.escape(placeDetails.PlaceDates[i].IsYearRelevant)+
+                            ');')
+                        }
+
+                        console.log("Insert Dates query:"+datesQueryStringArray);
+
+                        if(datesQueryStringArray.length > 0) {
+                            executeNextDatesQuery();
                         }
                         else {
                             commitTransaction();
