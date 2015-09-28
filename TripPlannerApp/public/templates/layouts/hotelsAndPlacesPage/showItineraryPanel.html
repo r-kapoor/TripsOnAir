@@ -41,7 +41,7 @@
     <div style="padding-left: 15px;padding-right: 15px" ng-class="{itinerary:!isItineraryPanelOpen}">
     <timeline id="itineraryPanelIntro">
         <timeline-node ng-if="currentDestination != null" side="right">
-            <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.lastMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+            <timeline-badge class="info"><img ng-src="/images/{{getModeIcon(currentDestination.lastMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
             </timeline-badge>
             <timeline-panel>
                 <timeline-heading>
@@ -240,7 +240,7 @@
         </timeline>
 
         <timeline-node ng-if="currentDestination != null" side="right">
-            <timeline-badge class="info"><img ng-src="images/{{getModeIcon(currentDestination.firstMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
+            <timeline-badge class="info"><img ng-src="/images/{{getModeIcon(currentDestination.firstMajorSegment)}}.png" style="margin:auto; font-size: 2em; margin-top: 30%" class="img-responsive">
             </timeline-badge>
             <timeline-panel>
                 <timeline-heading>
