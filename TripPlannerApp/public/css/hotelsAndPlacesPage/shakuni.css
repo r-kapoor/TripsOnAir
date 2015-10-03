@@ -165,3 +165,7 @@
     position: absolute !important;
     top:0 !important;
 }
+
+.sprite1{
+    background:url(http://res.cloudinary.com/picsonair/image/upload/v1443893055/sprite_obiwjm.png);
+}

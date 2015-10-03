@@ -181,3 +181,7 @@
         min-width: 100vw;
     }
 }
+
+.sprite1{
+    background:url(http://res.cloudinary.com/picsonair/image/upload/v1443893055/sprite_obiwjm.png);
+}
