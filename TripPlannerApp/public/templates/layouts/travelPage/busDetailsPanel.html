@@ -1,30 +1,30 @@
 <div class ="panel-busMode" ng-repeat="bus in buses | limitTo: vehicleLimit" post-repeat>
     <li ng-if="bus.isRecommended != 0" class="list-group-item" style="font-size:90%">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="col-sm-2">
+            <div class="col-sm-12 col-xs-12">
+                <div class="col-sm-2 col-xs-1">
                     <div class="row"> {{bus.OriginDepartureTime|formatTime}}</div>
                 </div>
-                <div class="col-sm-1">
+                <div class="col-sm-1 col-xs-1">
                     <i class="glyphicon glyphicon-arrow-right" style="font-size:small"></i>
                 </div>
-                <div class="col-sm-3 col-sm-offset-1">
+                <div class="col-sm-3 col-sm-offset-1 col-xs-3 col-xs-offset-1">
                     <div class="row">{{bus.DestArrivalTime|formatTime}}</div>
                     <div class="row">
                         <small>{{getNthDay(bus)}}</small>
                     </div>
                 </div>
-                <div class="col-sm-4" style="font-weight: bold;font-size: medium">
+                <div class="col-sm-4 col-xs-4" style="font-weight: bold;font-size: medium">
                     <div class="row" style="color:orange">{{bus.fare | currency:"&#8377;":0}}</div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <div class="col-sm-6">
+            <div class="col-sm-12 col-xs-12">
+                <div class="col-sm-6 col-xs-6">
                     <div class="row">{{bus.Operator|titleCase}}</div>
                 </div>
-                <div class="col-sm-5 col-sm-offset-1">
+                <div class="col-sm-5 col-sm-offset-1 col-xs-5">
                     <div class="row">{{bus.Type}}</div>
                 </div>
             </div>

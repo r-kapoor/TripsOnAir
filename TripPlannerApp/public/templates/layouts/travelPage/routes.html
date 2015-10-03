@@ -37,8 +37,8 @@
             <div class="panel panel-default" style="height: 100vh">
                 <div class="{{getTransparentClass(2)}}" ng-click="closeOtherPanels(2)"></div>
                 <div class="panel-body">
-                    <div class="page-header text-center">
-                        <h2><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h2>
+                    <div class="page-header text-center" style="margin-top: 10px;margin-bottom: 10px">
+                        <h3><small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small></h3>
                         <small>{{routes.length}} ways of Travel</small>
                     </div>
 
@@ -53,13 +53,13 @@
         <!--Mobile HTML for Travel Modes Starts-->
         <div ng-if="isTravelModesPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
             <div class="panel-body">
-                <div class="page-header text-center">
-                    <h2>
-                        <i ng-click=closeOtherPanels(1) class="glyphicon glyphicon-arrow-left" style="top:10px;right:15px"></i>
-                        <small>{{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}</small>
-                    </h2>
+                <p class="navbar-text text-center" style="margin-bottom: 0px">
+                    <i ng-click=closeOtherPanels(1) class="glyphicon glyphicon-arrow-left" style="top:10px;right:15px"></i>
+                    {{getSourceCityFromLeg()}} - {{getDestinationCityFromLeg()}}
+                </p>
+                <p class="navbar-text text-center" style="margin-top:0px">
                     <small>{{routes.length}} ways of Travel</small>
-                </div>
+                </p>
                 <div class="text-center">
                     <div ng-include src="'/templates/layouts/travelPage/travelModesPanel.html'"></div>
                 </div>
@@ -113,11 +113,16 @@
         <!--Mobile HTML for Mode Details Starts-->
         <div ng-if="isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
             <div class="panel-body" style="font-size: 85%">
-                <div class="page-header text-center">
-                    <h3>
-                        <i ng-click=closeOtherPanels(2) class="glyphicon glyphicon-arrow-left" style="top:0px;right:20px">Back</i>
-                    </h3>
-                </div>
+                <!--<div class="page-header text-center">-->
+                    <!--<h3>-->
+                        <!--<i ng-click=closeOtherPanels(2) class="glyphicon glyphicon-arrow-left" style="top:0px;right:20px">Back</i>-->
+                    <!--</h3>-->
+                <!--</div>-->
+                <p class="navbar-text text-center" style="font-size: 18px !important;">
+                    <i ng-click=closeOtherPanels(2) class="glyphicon glyphicon-arrow-left" style="top:0px;right:20px">
+                        Back
+                    </i>
+                </p>
                 <div ng-if="isTrainClicked">
                     <div ng-include src="'/templates/layouts/travelPage/trainDetailsPanel.html'"></div>
                 </div>

@@ -52,12 +52,13 @@
                                 {{getDuration(segment)}}
                             </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-xs-3" style="padding-right: 0">
                             {{getDateFormatted(segment) | date:'shortTime'}}
                         </div>
-                        <div ng-if="isPriceShown(segment)" class="col-xs-3">
+                        <div ng-if="isPriceShown(segment)" class="col-xs-2" style="padding-right: 0">
                             {{getPrice(segment) | currency:"&#8377;":0}}
                         </div>
+                        <div class="col-xs-1"  style="padding-right: 0"><i class="glyphicon glyphicon-chevron-right" style="padding-left: 4px"></i></div>
                     </div>
                     <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center footPanel">Leave Taxi at {{getEndCityForTaxi(segment)}}</div>
                 </div>
