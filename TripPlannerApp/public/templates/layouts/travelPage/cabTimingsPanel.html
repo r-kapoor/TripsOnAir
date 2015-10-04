@@ -2,31 +2,39 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-5 col-xs-5" style="padding-top: 10%">
-                <button datepicker-popup="dd-MMMM-yyyy" ng-model="cabDate.dt"
-                        is-open="cabDate.opened" min-date="cabDate.minDate"
-                        max-date="cabDate.maxDate"
-                        datepicker-options="dateOptions" ng-required="true"
-                        close-text="Close" ng-click="openCabDate($event)" ng-disabled="cabDate.disabled">
-                    <div class="row">
-                        <div class="col-xs-2 h5" style="padding-left: 13px">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </div>
-                        <div class="col-xs-2 h5" style="padding-left: 13px">{{(cabDate.dt | date:'dd') || 'Select'}}
-                        </div>
-                        <div class="col-xs-4" style="padding-left: 13px">
-                            <div class="row">
-                                <div class="col-xs-2 month">{{cabDate.dt |
-                                    date:'MMM'}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 day">{{cabDate.dt |
-                                    date:'EEE'}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </button>
+                <div class="btn-group {{getDateDropdownOpenClassCab()}}">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="openDateDropdownCab($event)" aria-haspopup="true" aria-expanded="false">
+                        {{(cabDate.dt | date:'mediumDate') || 'Select'}}<span ng-if="!cabDate.disabled" class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-click="setCurrentDateInDropdownCab($index)" ng-repeat="currentDate in cabDate.dateLimits"><a href="">{{(currentDate | date:'mediumDate')}}</a></li>
+                    </ul>
+                </div>
+                <!--<button datepicker-popup="dd-MMMM-yyyy" ng-model="cabDate.dt"-->
+                        <!--is-open="cabDate.opened" min-date="cabDate.minDate"-->
+                        <!--max-date="cabDate.maxDate"-->
+                        <!--datepicker-options="dateOptions" ng-required="true"-->
+                        <!--close-text="Close" ng-click="openCabDate($event)" ng-disabled="cabDate.disabled">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-2 h5" style="padding-left: 13px">-->
+                            <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-2 h5" style="padding-left: 13px">{{(cabDate.dt | date:'dd') || 'Select'}}-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-4" style="padding-left: 13px">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-2 month">{{cabDate.dt |-->
+                                    <!--date:'MMM'}}-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-2 day">{{cabDate.dt |-->
+                                    <!--date:'EEE'}}-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</button>-->
             </div>
             <table class="ng-isolate-scope ng-dirty ng-valid-parse ng-valid ng-valid-time">
                 <tbody>
