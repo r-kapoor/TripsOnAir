@@ -14,7 +14,6 @@
                         config = $scope.$eval($attrs.scrollConfig);
                     }
                     $scope.$on("initialize-pane",function(event,id){
-                        console.log("initialize-pane:"+id);
                         jQuery("#" + id).jScrollPane(config);
                         return $scope.pane = jQuery("#" + id).data("jsp");
                     });
@@ -29,7 +28,6 @@
                     // }
                     return $scope.$on("reinit-pane", function(event, id) {
                         if (id === $attrs.id && $scope.pane) {
-                            console.log("Reinit pane " + id);
                             settings ={
                                 verticalDragMinHeight: 10
                             };

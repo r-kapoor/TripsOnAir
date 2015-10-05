@@ -1,6 +1,5 @@
 routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     return function($scope,$rootScope, element, $attrs) {
-        console.log("element:"+element.class);
 
         if ($scope.$last){
             $timeout(function (){
@@ -282,29 +281,30 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
 
         if(segment.kind == "train") {
+            $scope.isTrainClicked = true;
             initializeVehicleDates(segment.trainData,segment.startTime);
             $scope.trains = segment.trainData;
             $scope.vehicleLimit = 7;
-            $scope.isTrainClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
             }, 1000);
         }
         else if(segment.kind == "flight") {
+            $scope.isFlightClicked = true;
             initializeVehicleDates(segment.flightData,segment.startTime);
             $scope.vehicleLimit = undefined;
             $scope.flights = segment.flightData;
-            $scope.isFlightClicked = true;
             //$timeout(function() {
+            //    initializeVehicleDates(segment.flightData.slice(7),segment.startTime);
             //    $scope.vehicleLimit = undefined;
-            //}, 1000);
+            //}, 3000);
         }
         else if(segment.kind == "bus")
         {
+            $scope.isBusClicked = true;
             initializeVehicleDates(segment.busData,segment.startTime);
             $scope.buses = segment.busData;
             $scope.vehicleLimit = 7;
-            $scope.isBusClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
             }, 1000);
@@ -1469,9 +1469,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             var arrivalHour = destArrivalTime.getHours();
             var departHour = destDepartTime.getHours();
 
-            console.log('arrivalHour:'+arrivalHour);
-            console.log('departHour:'+departHour);
-
             if(arrivalHour<3)
             {
                 numNights+=2;
@@ -1491,7 +1488,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             {
                 numDays+=1;
             }
-            console.log('numDays:'+numDays);
 
             var destArrivalTimeClone = new Date(getTimeFromDate(destArrivalTime));
             destArrivalTimeClone.setDate(destArrivalTimeClone.getDate()+1);
@@ -1500,7 +1496,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             destDepartTimeClone.setHours(0,0,0,0);
 
             inBetween += (getTimeFromDate(destDepartTimeClone) - getTimeFromDate(destArrivalTimeClone)) / (DAYS_TO_MILLISECONDS);
-            console.log('inBetween:'+inBetween);
             numDays+=inBetween;
             numNights+=inBetween;
             //if(getTimeFromDate(hotelDetails.checkOutTime) > getTimeFromDate(checkOutTimeClone)) {
