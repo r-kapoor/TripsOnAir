@@ -21,12 +21,13 @@
                                     </div>
                                     <div ng-repeat="cabOperator in cabDetail.OperatorPrices">
                                         <div ng-if="cabOperator.isFinal != undefined && cabOperator.isFinal == 1">
-                                            <div class="col-xs-4">
+                                            <div class="col-xs-4" style="padding-left: 4px">
                                                 {{cabOperator.Operator}}
                                             </div>
-                                            <div class="col-xs-4">
+                                            <div class="col-xs-3">
                                                 {{cabOperator.ActualCabPrice | currency:"&#8377;":0}}
                                             </div>
+                                            <div class="col-xs-1"  style="padding-right: 0;padding-top:10px;padding-left: 0px"><i class="glyphicon glyphicon-pencil" style="padding-left: 4px"></i></div>
                                         </div>
                                     </div>
                                 </div>
@@ -58,7 +59,7 @@
                         <div ng-if="isPriceShown(segment)" class="col-xs-2" style="padding-right: 0">
                             {{getPrice(segment) | currency:"&#8377;":0}}
                         </div>
-                        <div class="col-xs-1"  style="padding-right: 0"><i class="glyphicon glyphicon-chevron-right" style="padding-left: 4px"></i></div>
+                        <div class="col-xs-1"  style="padding-right: 0;padding-top:10px"><i class="glyphicon glyphicon-pencil" style="padding-left: 4px"></i></div>
                     </div>
                     <div ng-if ="isPanelFooterShown(segment)" class="panel-footer text-center footPanel">Leave Taxi at {{getEndCityForTaxi(segment)}}</div>
                 </div>
