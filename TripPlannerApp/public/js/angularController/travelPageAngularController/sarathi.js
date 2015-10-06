@@ -1,6 +1,5 @@
 routesModule.directive('postRepeat', ['$timeout', function($timeout) {
     return function($scope,$rootScope, element, $attrs) {
-        console.log("element:"+element.class);
 
         if ($scope.$last){
             $timeout(function (){
@@ -96,6 +95,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     $scope.segmentHoverClass = "segment-hover";
 
     $scope.vehicleLimit = 7;
+
+    $scope.dpopen = false;
     var defaultRouteData = null;
     var alternateRouteData = null;
     var isOtherTripClicked = false;
@@ -130,6 +131,42 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     $scope.hideMultiCity = false;
     var isInitialMultiMode = $scope.mobilePanelOpen.multiMode;
     var isInitialMultiTaxi = $scope.mobilePanelOpen.multiCity;
+
+    $scope.openDateDropdown = function($event, index) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.vehicleDate[index].opened = !$scope.vehicleDate[index].opened;
+    };
+
+    $scope.openDateDropdownCab = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.cabDate.opened = !$scope.cabDate.opened;
+    };
+
+    $scope.getDateDropdownOpenClass = function(index){
+        if($scope.vehicleDate[index].opened){
+            return "open";
+        }
+        return "";
+    };
+
+    $scope.getDateDropdownOpenClassCab = function(){
+        if($scope.cabDate.opened){
+            return "open";
+        }
+        return "";
+    };
+
+    $scope.setCurrentDateInDropdown = function(index, vehicleIndex){
+        $scope.vehicleDate[vehicleIndex].dt = $scope.vehicleDate[vehicleIndex].dateLimits[index];
+        $scope.vehicleDate[vehicleIndex].opened = false;
+    };
+
+    $scope.setCurrentDateInDropdownCab = function(index){
+        $scope.cabDate.dt = $scope.cabDate.dateLimits[index];
+        $scope.cabDate.opened = false;
+    };
 
     $scope.getTravelModeStatus = function(panelName){
         if(panelName=='multiMode')
@@ -244,29 +281,30 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         $scope.isModeDetailsPanelOpen = !$scope.isModeDetailsPanelOpen;
 
         if(segment.kind == "train") {
+            $scope.isTrainClicked = true;
             initializeVehicleDates(segment.trainData,segment.startTime);
             $scope.trains = segment.trainData;
             $scope.vehicleLimit = 7;
-            $scope.isTrainClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
             }, 1000);
         }
         else if(segment.kind == "flight") {
-            initializeVehicleDates(segment.flightData,segment.startTime);
-            $scope.flights = segment.flightData;
-            $scope.vehicleLimit = 7;
             $scope.isFlightClicked = true;
-            $timeout(function() {
-                $scope.vehicleLimit = undefined;
-            }, 1000);
+            initializeVehicleDates(segment.flightData,segment.startTime);
+            $scope.vehicleLimit = undefined;
+            $scope.flights = segment.flightData;
+            //$timeout(function() {
+            //    initializeVehicleDates(segment.flightData.slice(7),segment.startTime);
+            //    $scope.vehicleLimit = undefined;
+            //}, 3000);
         }
         else if(segment.kind == "bus")
         {
+            $scope.isBusClicked = true;
             initializeVehicleDates(segment.busData,segment.startTime);
             $scope.buses = segment.busData;
             $scope.vehicleLimit = 7;
-            $scope.isBusClicked = true;
             $timeout(function() {
                 $scope.vehicleLimit = undefined;
             }, 1000);
@@ -856,6 +894,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         if($scope.vehicleDate[$index].dt == null) {
             $event.preventDefault();
             $event.stopPropagation();
+            $scope.dpopen = true;
             $scope.vehicleDate[$index].opened = true;
         }
         else {
@@ -1175,6 +1214,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                         dt:startTime,
                         opened:false,
                         disabled:false,
+                        dateLimits:vehicleData[i].dateLimits,
                         minDate:vehicleData[i].dateLimits[0],
                         maxDate:vehicleData[i].dateLimits[vehicleData[i].dateLimits.length-1]
                     };
@@ -1185,6 +1225,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                         dt:null,
                         opened:false,
                         disabled:false,
+                        dateLimits:vehicleData[i].dateLimits,
                         minDate:vehicleData[i].dateLimits[0],
                         maxDate:vehicleData[i].dateLimits[vehicleData[i].dateLimits.length-1]
                     };
@@ -1195,6 +1236,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                     dt:vehicleData[i].dateLimits[0],
                     opened:false,
                     disabled:true,
+                    dateLimits:vehicleData[i].dateLimits,
                     minDate:vehicleData[i].dateLimits[0],
                     maxDate:vehicleData[i].dateLimits[0]
                 };
@@ -1204,6 +1246,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                     dt:null,
                     opened:false,
                     disabled:false,
+                    dateLimits:vehicleData[i].dateLimits,
                     minDate:null,
                     maxDate:null
                 };
@@ -1228,6 +1271,18 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             disabled = true;
         }
 
+        console.log(minDate);
+        console.log(maxDate);
+
+        var dateLimits = [];
+        var currentDate = new Date(minDate.getTime());
+        while(currentDate.getDate() <= maxDate.getDate()){
+            dateLimits.push(new Date(currentDate.getTime()));
+            currentDate.setTime(currentDate.getTime() + DAYS_TO_MILLISECONDS);
+        }
+
+        console.log('DateLimits:'+dateLimits);
+
         if($scope.currentRoute.isDefault != undefined && $scope.currentRoute.isDefault == 1) {
             dt = startTime;
         }
@@ -1235,6 +1290,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             dt:dt,
             opened:false,
             disabled:disabled,
+            dateLimits:dateLimits,
             minDate:minDate,
             maxDate:maxDate
         };
@@ -1413,9 +1469,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             var arrivalHour = destArrivalTime.getHours();
             var departHour = destDepartTime.getHours();
 
-            console.log('arrivalHour:'+arrivalHour);
-            console.log('departHour:'+departHour);
-
             if(arrivalHour<3)
             {
                 numNights+=2;
@@ -1435,7 +1488,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             {
                 numDays+=1;
             }
-            console.log('numDays:'+numDays);
 
             var destArrivalTimeClone = new Date(getTimeFromDate(destArrivalTime));
             destArrivalTimeClone.setDate(destArrivalTimeClone.getDate()+1);
@@ -1444,7 +1496,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             destDepartTimeClone.setHours(0,0,0,0);
 
             inBetween += (getTimeFromDate(destDepartTimeClone) - getTimeFromDate(destArrivalTimeClone)) / (DAYS_TO_MILLISECONDS);
-            console.log('inBetween:'+inBetween);
             numDays+=inBetween;
             numNights+=inBetween;
             //if(getTimeFromDate(hotelDetails.checkOutTime) > getTimeFromDate(checkOutTimeClone)) {

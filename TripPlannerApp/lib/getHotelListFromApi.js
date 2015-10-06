@@ -18,9 +18,9 @@ function getSignature()
     return (md5(api_key+shared_secret+timeStamp));
 }
 
-function getHotelList(arrivalDate,departureDate,cityName,cityID,latitude,longitude,numOfPeople,connection,err,callback)
+function getHotelList(arrivalDate,departureDate,cityName,cityID,latitude,longitude,numOfPeople,connection,generateFromLatLong,callback)
 {
-    var url=getURL(arrivalDate,departureDate,cityName,latitude,longitude,err);
+    var url=getURL(arrivalDate,departureDate,cityName,latitude,longitude,generateFromLatLong);
     console.log("url:"+url);
     var client = new Client();
     client.registerMethod("jsonMethod", url, "GET");
@@ -29,10 +29,11 @@ function getHotelList(arrivalDate,departureDate,cityName,cityID,latitude,longitu
         if(data.HotelListResponse.EanWsError!=undefined)
         {
             var errorObj = data.HotelListResponse.EanWsError;
-            if(errorObj.handling.toLowerCase().indexOf("recoverable")!=-1 && errorObj.presentationMessage.toLowerCase().indexOf("multiple locations found"))
+            console.log('ERROR OBJECT:'+JSON.stringify(errorObj));
+            if(errorObj.handling.toLowerCase().indexOf("recoverable")!=-1 && errorObj.presentationMessage.toLowerCase().indexOf("multiple locations found")!= -1)
             {
-                console.log("Multiple location found for "+city);
-                getHotelList(arrivalDate,departureDate,cityName,cityID,latitude,longitude,true,callback);
+                console.log("Multiple location found for "+cityName);
+                getHotelList(arrivalDate,departureDate,cityName,cityID,latitude,longitude,numOfPeople,connection,true,callback);
             }
             //else if(errorCount==0 && errorObj.presentationMessage.toLowerCase().indexOf("no results available")!=-1)
             //{
@@ -76,18 +77,21 @@ function getHotelList(arrivalDate,departureDate,cityName,cityID,latitude,longitu
     });
 }
 
-function getURL(arrivalDate,departureDate,city,latitude,longitude,err)
+function getURL(arrivalDate,departureDate,city,latitude,longitude,generateFromLatLong)
 {
+    console.log('generateFromLatLong:'+generateFromLatLong);
     var baseURL= "http://api.ean.com/ean-services/rs/hotel/v3/list?";
     var sig = getSignature();
     var numberOfResults = 30;
     console.log(latitude+","+longitude);
-    if(!err)
+    if(!generateFromLatLong)
     {
+        console.log('Generating from City Name');
         return(baseURL+"arrivalDate="+arrivalDate+"&departureDate="+departureDate+"&apiKey="+api_key+"&sharedSecret="+shared_secret+"&city="+city+"&sig="+sig+"&cid="+cid+"&countryCode="+countryCode+"&currencyCode="+currencyCode+"&sort=PRICE"+"&numberOfResults="+numberOfResults);
     }
     else
     {
+        console.log('Generating from Lat Long');
         return(baseURL+"arrivalDate="+arrivalDate+"&departureDate="+departureDate+"&apiKey="+api_key+"&sharedSecret="+shared_secret+"&latitude="+latitude+"&longitude="+longitude+"&searchRadius=30"+"&searchRadiusUnit=KM"+"&sig="+sig+"&cid="+cid+"&countryCode="+countryCode+"&currencyCode="+currencyCode+"&sort=PRICE"+"&numberOfResults="+numberOfResults);
     }
 }

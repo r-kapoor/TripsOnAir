@@ -135,6 +135,7 @@ function getFlightData(conn, rome2RioData, dateSet,budget, dates, times, ratingR
                                             rows[t].isRecommended=0;
                                         }
                                         rows[t].dateLimits = flightDateLimits;
+                                        rows[t].flightIndex = t;
                                         flightData.push(rows[t]);
                                     }
                                 }

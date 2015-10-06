@@ -32,6 +32,25 @@ function getDataRome2rio(origin,dest,originID,destID,callback)
 		var parsedData = JSON.parse(data);
 		parsedData.places[0].cityID = originID;
 		parsedData.places[1].cityID = destID;
+
+        if(parsedData.airlines != undefined){
+            delete parsedData.airlines;
+        }
+        if(parsedData.aircrafts != undefined){
+            delete parsedData.aircrafts;
+        }
+        if(parsedData.agencies != undefined){
+            delete parsedData.agencies;
+        }
+
+        for(var i = 0; i < parsedData.routes.length; i++){
+            var route = parsedData.routes[i];
+            for (var j = 0; j < route.segments.length; j++){
+                if (route.segments[j].itineraries != undefined){
+                    delete route.segments[j].itineraries;
+                }
+            }
+        }
 		callback(null, parsedData);
 	});
 }

@@ -31,31 +31,39 @@
         </div>
         <div class="row" style="padding-top: 2%">
             <div class="col-xs-6">
-                <button datepicker-popup="dd-MMMM-yyyy" ng-model="vehicleDate[$index].dt"
-                        is-open="vehicleDate[$index].opened" min-date="vehicleDate[$index].minDate"
-                        max-date="vehicleDate[$index].maxDate"
-                        datepicker-options="dateOptions" ng-required="true"
-                        close-text="Close" ng-click="open($event,$index)" ng-disabled="vehicleDate[$index].disabled" date-disabled="disabled(date, mode, bus)">
-                    <div class="row">
-                        <div class="col-xs-1 h5">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </div>
-                        <div class="col-xs-1 h5">{{(vehicleDate[$index].dt | date:'dd') || 'Select'}}
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="row">
-                                <div class="col-xs-2 month">{{vehicleDate[$index].dt |
-                                    date:'MMM'}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 day">{{vehicleDate[$index].dt |
-                                    date:'EEE'}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </button>
+                <div class="btn-group {{getDateDropdownOpenClass($index)}}">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="openDateDropdown($event, $index)" aria-haspopup="true" aria-expanded="false">
+                        {{(vehicleDate[$index].dt | date:'mediumDate') || 'Select'}}<span ng-if="!vehicleDate[$index].disabled" class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li ng-click="setCurrentDateInDropdown($index, $parent.$index)" ng-repeat="currentDate in vehicleDate[$index].dateLimits"><a href="">{{(currentDate | date:'mediumDate')}}</a></li>
+                    </ul>
+                </div>
+                <!--<button datepicker-popup="dd-MMMM-yyyy" ng-model="vehicleDate[$index].dt"-->
+                        <!--is-open="vehicleDate[$index].opened" min-date="vehicleDate[$index].minDate"-->
+                        <!--max-date="vehicleDate[$index].maxDate"-->
+                        <!--datepicker-options="dateOptions" ng-required="true"-->
+                        <!--close-text="Close" ng-click="open($event,$index)" ng-disabled="vehicleDate[$index].disabled" date-disabled="disabled(date, mode, bus)">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-1 h5">-->
+                            <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-1 h5">{{(vehicleDate[$index].dt | date:'dd') || 'Select'}}-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-4">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-2 month">{{vehicleDate[$index].dt |-->
+                                    <!--date:'MMM'}}-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-2 day">{{vehicleDate[$index].dt |-->
+                                    <!--date:'EEE'}}-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</button>-->
             </div>
             <div class="col-xs-4 col-xs-offset-1">
                 <div class="btn {{getAddButtonClass(bus)}}" ng-click="addToTrip(bus,$index,$event)">{{getAddButtonText(bus)}}</div>

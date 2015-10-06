@@ -159,6 +159,8 @@ adminModule.controller('newPlaceController', function($scope, $http){
             .success(function(data, status){
                 $scope.place = data;
                 $scope.place.PlaceTimings = [{}];
+                $scope.place.PlaceImages = [{}];
+                $scope.place.PlaceDates = [{}];
             })
             .error(function(data, status){
                 console.log('Backend Request Failed');
@@ -169,6 +171,14 @@ adminModule.controller('newPlaceController', function($scope, $http){
 
     $scope.submit = function() {
         console.log(JSON.stringify($scope.place));
+        if($scope.place.PlaceImages[0].ImageURL == null){
+            //No Image added
+            $scope.place.PlaceImages = [];
+        }
+        if($scope.place.PlaceDates[0].PlaceStartDate == null || $scope.place.PlaceDates[0].PlaceStartDate == undefined){
+            //No Dates added
+            $scope.place.PlaceDates = [];
+        }
         $http.post('/addorchangeplace/newPlace',{
             placeDetails: $scope.place
         }).success(function(data,status){
