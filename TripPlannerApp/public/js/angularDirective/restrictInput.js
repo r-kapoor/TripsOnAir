@@ -20,7 +20,7 @@
                             $parse(iAttrs.ngModel).assign(scope,value.substring(0,value.length-1));
                             return;
                         }
-                        if(value.charAt(0)=="0")
+                        if(parseInt(value)==0)
                         {
                             $parse(iAttrs.ngModel).assign(scope,"");
                             return;
