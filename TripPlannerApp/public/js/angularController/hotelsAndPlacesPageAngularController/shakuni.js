@@ -121,19 +121,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 position: "bottom"
             },
             {
-                element:  '#tabButtonIntro',
-                intro: "Switch between Places, Hotels and Map view",
-                position: "right"
-            },
-            {
-                element:  '#placesPanelIntro',
-                intro: "View the places of the destination. Click + or Drag and Drop places to itinerary to add. Click to get more details of the place.",
-                position: "right"
-            },
-            {
                 element: '#itineraryPanelIntro',
-                intro: "View the itinerary of the destination. Drag and Drop to reorder places. Click X to remove. Click the timing to edit the timing of visit.",
+                intro: "View the itinerary of the destination. Click X to remove the place. Click the timing to edit the timing of visit.",
                 position: "left"
+            },
+            {
+                element:  '#leftPanelIntro',
+                intro: "Add or replace Places, change Hotel and View Map of the Itinerary",
+                position: "right"
             },
             {
                 element: '#saveButton',
