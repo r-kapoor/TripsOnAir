@@ -1,22 +1,22 @@
 itineraryModule.directive('postRepeat', ['$timeout', function($timeout) {
     return function($scope,$rootScope, element, $attrs) {
-        console.log("element:"+element.class);
+        //console.log("element:"+element.class);
 
         if ($scope.$last){
-            console.log("last");
+            //console.log("last");
             $timeout(function (){
                 if(element.class=="panel-places clearfix")
                 {
-                    console.log("in panel-places");
-                    console.log("scrollHeightTravel:"+$("#transcludePlacesPanel")[0].scrollHeight);
+                    //console.log("in panel-places");
+                    //console.log("scrollHeightTravel:"+$("#transcludePlacesPanel")[0].scrollHeight);
                     $scope.$emit('initialize-pane',"placesPanel");
                 }
             },1000);
             $timeout(function (){
                 if(element.class=="panel-hotels clearfix")
                 {
-                    console.log("in panel-hotels");
-                    console.log("scrollHeightTravel:"+$("#transcludeHotelsPanel")[0].scrollHeight);
+                    //console.log("in panel-hotels");
+                    //console.log("scrollHeightTravel:"+$("#transcludeHotelsPanel")[0].scrollHeight);
                     $scope.$emit('initialize-pane',"hotelsPanel");
                 }
             },1000);
@@ -24,7 +24,7 @@ itineraryModule.directive('postRepeat', ['$timeout', function($timeout) {
     };
 }]);
 
-itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData, $cookies, $location) {
+itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData, $cookies, $location,$window) {
 
     $scope.origin = null;
     $scope.destinations = null;
@@ -217,12 +217,15 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             calculateCityExpenses();
             $rootScope.$emit('dataLoaded');
             $scope.isDataLoaded = true;
-            openTravelGuide();
+            if($window.innerWidth>=992)//only for desktop
+            {
+                openTravelGuide();
+            }
             //$rootScope.$emit('loadMap',$scope.currentDestination.position);
         })
             .error(
             function(data, status) {
-                console.log(data || "Backend Request failed");
+                //console.log(data || "Backend Request failed");
             });
     };
 
@@ -232,14 +235,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var options = {
             expires: new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000)
         };
-        console.log('visitedStatus:' + visitedStatus);
+        //console.log('visitedStatus:' + visitedStatus);
         if (visitedStatus != undefined && visitedStatus != null) {
             //Cookie is present
             visitedStatus = JSON.parse(visitedStatus);
             //visitedStatus = JSON.parse(visitedStatus);//Double parsing as 1 parse returns string
             var itineraryPanelIntro = visitedStatus.itineraryPanelIntro;
-            console.log(typeof visitedStatus);
-            console.log(itineraryPanelIntro);
+            //console.log(typeof visitedStatus);
+            //console.log(itineraryPanelIntro);
             if (!(itineraryPanelIntro != undefined && itineraryPanelIntro)) {
                 //        //itineraryPanelIntro cookie not present
                 $scope.introFunction();
@@ -268,7 +271,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         mapData.setRouteDataUpdated(mapDataArray);
     }
     $scope.loadMaps = function(mapId){
-        console.log('Load');
+        //console.log('Load');
         mapClickCount++;//for mix panel
         $scope.$broadcast('loadMap',$scope.currentDestination.position,mapId);
 
@@ -296,37 +299,37 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.showDestinationItinerary = function(destination) {
-        console.log('showDestinationItinerary CLICKED');
+        //console.log('showDestinationItinerary CLICKED');
 
         $scope.currentDestination.isCurrent = false;
         destination.isCurrent = true;
         $scope.currentDestination = destination;
 
-        console.log('showDestinationItinerary CLICKED 1');
+       // console.log('showDestinationItinerary CLICKED 1');
 
         setBudgetModels();
 
-        console.log('showDestinationItinerary CLICKED 2');
+        //console.log('showDestinationItinerary CLICKED 2');
         setDestinationSpecificModels();
 
-        console.log('showDestinationItinerary CLICKED 3');
+        //console.log('showDestinationItinerary CLICKED 3');
 
         initializeMapDataArray();
 
-        console.log('showDestinationItinerary CLICKED 4');
+        //console.log('showDestinationItinerary CLICKED 4');
         $scope.currentDestination.position = {
             Latitude:parseFloat($scope.currentDestination.pos.split(',')[0]),
             Longitude:parseFloat($scope.currentDestination.pos.split(',')[1])
         };
         calculatePlacesExpenses();
 
-        console.log('showDestinationItinerary CLICKED 5');
+        //console.log('showDestinationItinerary CLICKED 5');
         calculateCityExpenses();
 
-        console.log('showDestinationItinerary CLICKED 6');
+        //console.log('showDestinationItinerary CLICKED 6');
         $rootScope.$emit('newPlace', destination.name);
 
-        console.log('showDestinationItinerary CLICKED 7');
+        //console.log('showDestinationItinerary CLICKED 7');
     };
 
     $scope.showLeftPanelDetails = function(item) {
@@ -387,7 +390,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         $http(req)
             .then(
             function onSuccess(response){
-                console.log('RESPONSE:'+JSON.stringify(response.data));
+                //console.log('RESPONSE:'+JSON.stringify(response.data));
                 var permalink = response.data.permalink;
                 var host = $location.host();
                 var port = $location.port();
@@ -398,7 +401,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     permalink = host + ':' + port + permalink;
                 }
                 $rootScope.$emit('gotPermalink',permalink);
-                console.log('PERMALINK:'+permalink);
+                //console.log('PERMALINK:'+permalink);
             },
             function onFailure(){}
         );
@@ -431,7 +434,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         }).error(
             function(data, status) {
-                console.log(data || "Cannot Download. Backend Request failed");
+                //console.log(data || "Cannot Download. Backend Request failed");
             });
 
     });
@@ -439,7 +442,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.addPlace = function(event, place) {
         event.stopPropagation();
-        console.log("ADD:"+JSON.stringify(place));
+        //console.log("ADD:"+JSON.stringify(place));
         //Mix panel
         //mixpanel.track('AddPlace',{
         //    "PlaceTaste":place.Taste
@@ -463,7 +466,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var currentPlace = place;
             var currentPlaceClone = clone(currentPlace);
             if(replacePlace(currentPlaceClone,removedPlacesList[i].index,dateItineraryClone, locationOfArrival, locationOfDeparture)) {
-                console.log("REplace PLace");
+                //console.log("REplace PLace");
                 $scope.currentDestination.dateWiseItinerary[removedPlacesList[i].dateItineraryIndex] = dateItineraryClone;
                 currentPlaceClone.isPlaceRemoved = 0;
                 isInsertedInPlaceHolder = true;
@@ -472,19 +475,19 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
 
         if(isInsertedInPlaceHolder){
-            console.log('Inserted In Place Holder');
+            //console.log('Inserted In Place Holder');
             //set data for map
             setMapData(removedPlacesList[i].dateItineraryIndex);
             removedPlacesList.splice(i,1);
         }
         else {
-            console.log('Not Inserted In Place Holder, Trying to insert elsewhere');
+            //console.log('Not Inserted In Place Holder, Trying to insert elsewhere');
             var Time2Cover = place.Time2Cover;
 
             if(hasHotel) {
                 var placeAdditionCandidates = [];
                 for(var itineraryIndex in $scope.currentDestination.dateWiseItinerary){
-                    console.log(itineraryIndex);
+                    //console.log(itineraryIndex);
                     itineraryIndex = parseInt(itineraryIndex);
                     var dateWiseItinerary = $scope.currentDestination.dateWiseItinerary[itineraryIndex];
                     var dateWisePlaceData = dateWiseItinerary.dateWisePlaceData;
@@ -503,12 +506,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                     }
                     if(itineraryIndex < $scope.currentDestination.dateWiseItinerary.length - 1) {
-                        console.log("not morning check in");
+                        //console.log("not morning check in");
                         //This is not the last date in dateWiseItinerary
                         //console.log($scope.currentDestination.dateWiseItinerary);
                         //console.log($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1]);
                         if ((dateWisePlaceData.endSightSeeingTime != undefined) && ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime != undefined) && ($scope.currentDestination.dateWiseItinerary[itineraryIndex].dateWisePlaceData.noPlacesVisited == undefined)) {
-                            console.log("nightMorning");
+                            //console.log("nightMorning");
                             if (timeDifferenceGreaterThan(dateWisePlaceData.endSightSeeingTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover)) {
                                 placeAdditionCandidates.push({
                                     type: 'nightMorning',
@@ -520,7 +523,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         else if (dateWisePlaceData.endSightSeeingTime != undefined && $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.typeOfDay == 2) {
                             //This is one before last day
                             if ($scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.noPlacesVisited == 1) {
-                                console.log("CHECKOUT CASE:"+dateWisePlaceData.endSightSeeingTime +","+ $scope.currentDestination.hotelDetails.checkOutTime+","+ REST_TIME * 60 + Time2Cover)
+                                //console.log("CHECKOUT CASE:"+dateWisePlaceData.endSightSeeingTime +","+ $scope.currentDestination.hotelDetails.checkOutTime+","+ REST_TIME * 60 + Time2Cover)
                                 if (timeDifferenceGreaterThan(dateWisePlaceData.endSightSeeingTime, $scope.currentDestination.hotelDetails.checkOutTime, REST_TIME * 60 + Time2Cover)) {
                                     placeAdditionCandidates.push({
                                         type: 'checkOut',
@@ -532,9 +535,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                         else {
                             if(dateWisePlaceData.typeOfDay == 0){
-                                console.log("TYPE OF DAY:0");
+                                //console.log("TYPE OF DAY:0");
                                 if(timeDifferenceGreaterThan($scope.currentDestination.hotelDetails.checkInTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover)){
-                                    console.log("timeDifference Greater");
+                                    //console.log("timeDifference Greater");
                                     placeAdditionCandidates.push({
                                         type: 'checkIn',
                                         dateWiseItinerary: dateWiseItinerary,
@@ -545,7 +548,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                     }
                     if(dateWisePlaceData.typeOfDay == 2){
-                        console.log("LAST DAY ADDITION");
+                        //console.log("LAST DAY ADDITION");
                         //This is the last day
                         if(dateWisePlaceData.endSightSeeingTime != undefined && !(dateWisePlaceData.noPlacesVisited != undefined && dateWiseItinerary.noPlacesVisited == 1)){
                             //There are some places to visit on that day
@@ -559,17 +562,17 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                     }
                 }
-                console.log('Candidates:'+JSON.stringify(placeAdditionCandidates));
+                //console.log('Candidates:'+JSON.stringify(placeAdditionCandidates));
                 var selectedIndex =chooseBestCandidate(placeAdditionCandidates, place);
                 if(selectedIndex.selectedCandidateIndex == -1||selectedIndex.selectedPlaceTimingsIndex == -1)
                 {
-                    console.log("NO CANDIDATE TILL NOW");
+                    //console.log("NO CANDIDATE TILL NOW");
 
                 }
                 else
                 {
-                    console.log("GOT THE RIGHT CANDIDATE FOR THIS JOB: "+JSON.stringify(placeAdditionCandidates[selectedIndex.selectedCandidateIndex]));
-                    console.log("placeTimingsIndex:"+selectedIndex.selectedPlaceTimingsIndex);
+                    //console.log("GOT THE RIGHT CANDIDATE FOR THIS JOB: "+JSON.stringify(placeAdditionCandidates[selectedIndex.selectedCandidateIndex]));
+                    //console.log("placeTimingsIndex:"+selectedIndex.selectedPlaceTimingsIndex);
                     insertPlaceIntoItinerary(place, placeAdditionCandidates[selectedIndex.selectedCandidateIndex], selectedIndex.selectedPlaceTimingsIndex);
                     setSelectedPlaceTimingIndex(place.PlaceTimings, selectedIndex.selectedPlaceTimingsIndex);
                     insertedByCreatingPosition = true;
@@ -626,40 +629,40 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         if(arrivalTimingIndexAfter!= -1 && departureTimingIndexAfter != -1){
                             if(arrivalTimingIndexAfter != departureTimingIndexAfter){
                                 //Place closed in between
-                                console.log('Place closed in between after last place');
+                                //console.log('Place closed in between after last place');
                                 candidates[1] = false;
                             }
                         }
                         else {
                             //Place closed at both timings
-                            console.log('Place closed at both timings after last place');
+                            //console.log('Place closed at both timings after last place');
                             candidates[1] = false;
                         }
                     }
                     else {
-                        console.log('timeAvailableAfterLastPlace < 0');
+                        //console.log('timeAvailableAfterLastPlace < 0');
                         candidates[1] = false;
                     }
                     if(timeAvailableBeforeFirstPlace > 0){
                         //There is time to insert place before first place
                         arrivalTimeOfPlaceBefore = new Date(getTimeFromDate(startSightSeeingTime) + timeFromArrivalPlace * HOURS_TO_MILLISECONDS);
                         departureTimeOfPlaceBefore = new Date(getTimeFromDate(firstPlaceArrivalTime) - timeToFirstPlace * HOURS_TO_MILLISECONDS);
-                        console.log('arrival:'+arrivalTimeOfPlaceBefore + ' departure:'+departureTimeOfPlaceBefore);
+                        //console.log('arrival:'+arrivalTimeOfPlaceBefore + ' departure:'+departureTimeOfPlaceBefore);
                         arrivalTimingIndexBefore = getPlaceTimingsToSelect(arrivalTimeOfPlaceBefore,place.PlaceTimings);
                         departureTimingIndexBefore = getPlaceTimingsToSelect(departureTimeOfPlaceBefore, place.PlaceTimings);
                         if(arrivalTimingIndexBefore!=-1 && departureTimingIndexBefore != -1){
                             if(arrivalTimingIndexBefore != departureTimingIndexBefore){
-                                console.log('Place closed in between before first place');
+                               // console.log('Place closed in between before first place');
                                 candidates[0]=false;
                             }
                         }
                         else{
-                            console.log('Place closed at both timings before first place');
+                            //console.log('Place closed at both timings before first place');
                             candidates[0]=false;
                         }
                     }
                     else {
-                        console.log('timeAvailableBeforeFirstPlace < 0');
+                        //console.log('timeAvailableBeforeFirstPlace < 0');
                         candidates[0] = false;
                     }
                     if(candidates[0] && candidates[1]){
@@ -673,7 +676,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
                         }
                         else {
-                            console.log(arrivalTimeOfPlaceBefore + "---" + departureTimeOfPlaceBefore);
+                            //console.log(arrivalTimeOfPlaceBefore + "---" + departureTimeOfPlaceBefore);
                             place.placeArrivalTime = arrivalTimeOfPlaceBefore;
                             place.placeDepartureTime = departureTimeOfPlaceBefore;
                             place.placeArrivalTime = new Date();
@@ -684,7 +687,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                     else {
                         if(candidates[0]){
-                            console.log(arrivalTimeOfPlaceBefore + "---" + departureTimeOfPlaceBefore);
+                            //console.log(arrivalTimeOfPlaceBefore + "---" + departureTimeOfPlaceBefore);
                             place.placeArrivalTime = arrivalTimeOfPlaceBefore;
                             place.placeDepartureTime = departureTimeOfPlaceBefore;
                             place.placeArrivalTime = new Date();
@@ -785,7 +788,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     $scope.replaceMe = function(event,index,dateItineraryIndex)
     {
-        console.log("replaceMe:"+index+","+dateItineraryIndex);
+        //console.log("replaceMe:"+index+","+dateItineraryIndex);
         if($scope.replaceData.placeIndex!=-1 && $scope.replacePlaceOn)
         {
             $scope.onDropComplete($scope.replaceData,event,index,dateItineraryIndex);
@@ -820,7 +823,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     /** mobile Method end**/
 
     $scope.onDropComplete = function(data, event, index, dateItineraryIndex){
-        console.log('Drop Complete:'+JSON.stringify(data));
+        //console.log('Drop Complete:'+JSON.stringify(data));
         var element = jQuery("#placesPanel");
         jQuery("#placesPanel").css("overflow","hidden");
         jQuery(".jspContainer").css("overflow","hidden");
@@ -837,7 +840,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             //console.log("replacePlace:"+replacePlace(currentPlaceClone,index,dateItineraryClone));
             if(replacePlace(currentPlaceClone,index,dateItineraryClone, locationOfArrival, locationOfDeparture))
             {
-                console.log("Replace PLace");
+                //console.log("Replace PLace");
                 $scope.currentDestination.dateWiseItinerary[dateItineraryIndex] = dateItineraryClone;
                 calculatePlacesExpenses();
                 markPlaceAsAdded(currentPlace);
@@ -927,7 +930,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.showLowerPanel = function(content){
-        console.log("content:"+content);
+        //console.log("content:"+content);
         if(content=='places')
         {
             $scope.lowerPanelContent = 'places';
@@ -947,7 +950,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.removeLowerPanel = function(){
-        console.log("editRemoveLowerPanel:"+$scope.lowerPanelContent);
+        //console.log("editRemoveLowerPanel:"+$scope.lowerPanelContent);
         $scope.lowerPanelContent = 'default';
     };
 
@@ -1101,9 +1104,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.setUserTimings= function(dateItinerary,dateItineraryIndex,index){
-        console.log(dateItinerary );
+        //console.log(dateItinerary );
         changeTimingsCount++;//Mix Panel
-        console.log("index:"+index+",date:"+dateItineraryIndex);
+        //console.log("index:"+index+",date:"+dateItineraryIndex);
         fixItineraryOnChangeTimings(dateItinerary,dateItineraryIndex,index);
         dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone;
         dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone;
@@ -1266,7 +1269,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             //alert('Arrival Time cannot be ahead of Departure Time');//ALERT12
             createAlert('timingChangeInvalid');
         }
-        console.log("$scope.isFixItinerary:"+$scope.isFixItinerary.fix);
+        //console.log("$scope.isFixItinerary:"+$scope.isFixItinerary.fix);
         if($scope.isFixItinerary.fix)
         {
             if(dateItinerary.permutation.length==1)
@@ -1555,18 +1558,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     timingIndex--;
                 }
             }
-            console.log(JSON.stringify(place1TimingsArray));
+            //console.log(JSON.stringify(place1TimingsArray));
             //Place1TimingsArray now contains ranges of time when place1 can be reached
 
             for(var timeIndex =0;timeIndex<place1TimingsArray.length;timeIndex++)
             {
-                console.log("timeBetweenPlaces:"+timeBetweenPlaces);
+               // console.log("timeBetweenPlaces:"+timeBetweenPlaces);
                 var place1TimeStart = getTimeFromDate(place1TimingsArray[timeIndex].timeStart);
                 var place1TimeEnd = getTimeFromDate(place1TimingsArray[timeIndex].timeEnd);
                 place1TimingsArray[timeIndex].timeStart = new Date(place1TimeStart - timeBetweenPlaces*HOURS_TO_MILLISECONDS);
                 place1TimingsArray[timeIndex].timeEnd = new Date(place1TimeEnd - timeBetweenPlaces*HOURS_TO_MILLISECONDS);
             }
-            console.log(JSON.stringify(place1TimingsArray));
+            //console.log(JSON.stringify(place1TimingsArray));
             //Now place1TimingsArray contains ranges of time when place1 can be left
 
             for(var place2TimeIndex =0;place2TimeIndex<place2TimingsArray.length;place2TimeIndex++)
@@ -1578,7 +1581,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     place2TimeIndex--;
                 }
             }
-            console.log(JSON.stringify(place2TimingsArray));
+            //console.log(JSON.stringify(place2TimingsArray));
             //place2TimingsArray contains time ranges when place2 can be left according to place2 is open
 
             //Taking intersection of arrays
@@ -1597,8 +1600,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                 }
             }
-            console.log(JSON.stringify(placeTimingsFinalArray));
-            console.log(place1DepartureTime);
+            //console.log(JSON.stringify(placeTimingsFinalArray));
+            //console.log(place1DepartureTime);
 
             if(placeTimingsFinalArray.length>0)
             {
@@ -1609,16 +1612,16 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     var timeEnd = placeTimingsFinalArray[finalPlaceTimingsIndex].timeEnd;
                     if(getTimeFromDate(timeStart)<=getTimeFromDate(place1DepartureTime) && getTimeFromDate(timeEnd)>=getTimeFromDate(place1DepartureTime))
                     {
-                        console.log('in if');
+                        //console.log('in if');
                         finalPlace2DepartureTime = place1DepartureTime;
                         break;
                     }
                     else
                     {
-                        console.log('In else');
+                        //console.log('In else');
                         if(getTimeFromDate(timeStart)>getTimeFromDate(place1DepartureTime))
                         {
-                            console.log('In 2nd if');
+                            //console.log('In 2nd if');
                             var timeDiff = getTimeFromDate(timeStart)-getTimeFromDate(place1DepartureTime);
                             if(minTimeDifference==-1 || minTimeDifference>timeDiff)
                             {
@@ -1628,7 +1631,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                         else if(getTimeFromDate(timeEnd)<getTimeFromDate(place1DepartureTime))
                         {
-                            console.log('In 2nd else');
+                            //console.log('In 2nd else');
                             var timeDiff = getTimeFromDate(place1DepartureTime)-getTimeFromDate(timeEnd);
                             if(minTimeDifference==-1 || minTimeDifference>timeDiff)
                             {
@@ -1638,7 +1641,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         }
                     }
                 }
-                console.log(JSON.stringify(placeTimingsFinalArray));
+                //console.log(JSON.stringify(placeTimingsFinalArray));
             }
             else
             {
@@ -1646,7 +1649,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 // alert("place is closed");//ALERT8
                 createAlert('reorderAndClosed');
             }
-            console.log(finalPlace2DepartureTime);
+            //console.log(finalPlace2DepartureTime);
             place2.placeDepartureTime = finalPlace2DepartureTime;
             place2.placeArrivalTime = new Date(getTimeFromDate(finalPlace2DepartureTime) - place2.Time2Cover*MINUTES_TO_MILLISECONDS);
             place1.placeArrivalTime = new Date(getTimeFromDate(finalPlace2DepartureTime) + timeBetweenPlaces*HOURS_TO_MILLISECONDS);
@@ -1786,8 +1789,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var timeFromPlace1 = distFromPlace1/SPEED;
             var place1DepartureTime = new Date(getTimeFromDate(place3.placeArrivalTime) - timeFromPlace1*HOURS_TO_MILLISECONDS);
 
-            console.log(place1DepartureTime);
-            console.log(place2ArrivalTime);
+            //console.log(place1DepartureTime);
+            //console.log(place2ArrivalTime);
 
             var selectedPlace2TimeIndex = getPlaceTimingsToSelect(place2ArrivalTime,place2.PlaceTimings);
             var selectedPlace1TimeIndex = getPlaceTimingsToSelect(place1DepartureTime,place1.PlaceTimings);
@@ -1795,8 +1798,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var time2CoverCombined = getTimeFromDate(place1DepartureTime) - getTimeFromDate(place2ArrivalTime) - timeBetweenPlaces*HOURS_TO_MILLISECONDS;
             var time2CoverPlace1 = time2CoverCombined * (place1.Time2Cover / (place1.Time2Cover + place2.Time2Cover));
             var time2CoverPlace2 = time2CoverCombined - time2CoverPlace1;
-            console.log(time2CoverCombined);
-            console.log(time2CoverPlace1 + " - "+ time2CoverPlace2);
+            //console.log(time2CoverCombined);
+            //console.log(time2CoverPlace1 + " - "+ time2CoverPlace2);
             var place2DepartureTime = new Date(getTimeFromDate(place2ArrivalTime) + time2CoverPlace2);
             var place1ArrivalTime = new Date(getTimeFromDate(place1DepartureTime) - time2CoverPlace1);
 
@@ -1816,8 +1819,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         return true;
                     }
                     else {
-                        console.log(JSON.stringify(place1.PlaceTimings[selectedPlace1TimeIndex]) +" for "+place1ArrivalTime);
-                        console.log(JSON.stringify(place2.PlaceTimings[selectedPlace2TimeIndex]) +" for "+place2DepartureTime);
+                        //console.log(JSON.stringify(place1.PlaceTimings[selectedPlace1TimeIndex]) +" for "+place1ArrivalTime);
+                        //console.log(JSON.stringify(place2.PlaceTimings[selectedPlace2TimeIndex]) +" for "+place2DepartureTime);
                         //alert('Place closed at departure/arrival times');//ALERT10
                         if(isPlace1Closed && isPlace2Closed)
                         {
@@ -1866,7 +1869,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             placeTimings[index].isSelected = 1;
         }
         else{
-            console.log('Invalid Index:'+index+'in placeTimings:'+JSON.stringify(placeTimings));
+            //console.log('Invalid Index:'+index+'in placeTimings:'+JSON.stringify(placeTimings));
         }
     }
 
@@ -2092,7 +2095,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 if((openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
                     setSelectedPlaceTimingIndex(place.PlaceTimings, openingTimeIndexForArrival);
                 }
-                console.log("openingTimeIndexForArrival:"+openingTimeIndexForArrival+",openingTimeIndexForDeparture:"+openingTimeIndexForDeparture);
+                //console.log("openingTimeIndexForArrival:"+openingTimeIndexForArrival+",openingTimeIndexForDeparture:"+openingTimeIndexForDeparture);
                 checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
 
             }
@@ -2272,7 +2275,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     function calculateCityExpenses(){
-        console.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
+        //.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
         $scope.cityExpenses = $scope.hotelExpenses + $scope.placesExpenses + $scope.localTravelAndFoodExpenses;
         calculateBudgetPercent();
     }
@@ -2281,7 +2284,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var totalExpenses = $scope.travelBudget + $scope.cityExpenses + $scope.otherCitiesExpenses;
         var percent = parseInt((totalExpenses * 100)/ $scope.totalBudget);
         $rootScope.$emit('budgetChanged', percent);
-        console.log('budgetChanged');
+        //console.log('budgetChanged');
     }
 
     function calculateOtherCitiesExpenses() {
@@ -2303,38 +2306,38 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     function insertPlaceIntoItinerary(place, candidate, selectedPlaceTimingIndex){
-        console.log('insertPlaceIntoItinerary');
+        //console.log('insertPlaceIntoItinerary');
         var freeTiming = candidate.freeTimingsArray[selectedPlaceTimingIndex];
-        console.log(freeTiming.freeStartTime + " = "+ freeTiming.lowestTime);
+        //console.log(freeTiming.freeStartTime + " = "+ freeTiming.lowestTime);
         var dateWiseItinerary = candidate.dateWiseItinerary;
         var nextDateWiseItinerary = $scope.currentDestination.dateWiseItinerary[candidate.dateWiseItineraryIndex+1];
 
         if(candidate.type == "nightMorning" || candidate.type == "checkIn" || candidate.type == "checkOut") {
             if(freeTiming.insertionDay == 0) {
                 //The insertion is on the same day
-                console.log('insertion is on the same day');
+                //console.log('insertion is on the same day');
                 //The place has to inserted as the last place of the day
                 insertPlaceAtLastOfDay(dateWiseItinerary, place);
                 place.placeArrivalTime = freeTiming.lowestTime;
                 if(getTimeFromDate(freeTiming.freeStartTime) == getTimeFromDate(freeTiming.lowestTime)) {
                     //The starting of the free time is the same as lowest time when that place can be reached
                     //So this place can be inserted at that time
-                    console.log('place can be inserted at start of free time');
+                    //console.log('place can be inserted at start of free time');
                 }
                 else {
                     //The place is not open when person is reaching there
                     if(candidate.type != "checkIn") {
                         //Make Departure time from last place equal to endTime or Max time so that person reach at new place near by opening time
-                        console.log("Increasing Departure Time of Previous Place");
+                       // console.log("Increasing Departure Time of Previous Place");
                         //Departing from place
                         increaseDepartureTimeOfPreviousPlace(dateWiseItinerary, place, freeTiming);
                     }
                 }
                 setPlaceDepartureTime(place, freeTiming);
-                console.log("Place.placeDepartureTime:"+place.placeDepartureTime);
-                console.log("place.timeToHotel:"+place.timeToHotel);
+                //console.log("Place.placeDepartureTime:"+place.placeDepartureTime);
+                //console.log("place.timeToHotel:"+place.timeToHotel);
                 dateWiseItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + place.timeToHotel * HOURS_TO_MILLISECONDS);
-                console.log("dateWiseItinerary.endSightSeeingTime:"+dateWiseItinerary.dateWisePlaceData.endSightSeeingTime);
+                //console.log("dateWiseItinerary.endSightSeeingTime:"+dateWiseItinerary.dateWisePlaceData.endSightSeeingTime);
                 if(candidate.type == "checkIn") {
                     dateWiseItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - place.timeToHotel * HOURS_TO_MILLISECONDS);
                 }
@@ -2345,13 +2348,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
             else if(freeTiming.insertionDay == 1){
                 //The insertion is on the next day
-                console.log('insertion on next day');
+                //console.log('insertion on next day');
                 insertPlaceAtBeginningOfDay(nextDateWiseItinerary, place);
                 place.placeDepartureTime = freeTiming.highestTime;
                 if(getTimeFromDate(freeTiming.freeEndTime) == getTimeFromDate(freeTiming.highestTime)) {
                     //The starting of the free time is the same as lowest time when that place can be reached
                     //So this place can be inserted at that time
-                    console.log('place can be inserted at end of free time');
+                    //console.log('place can be inserted at end of free time');
                 }
                 else {
                     if(candidate.type != "checkOut") {
@@ -2364,22 +2367,22 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 {
                     nextDateWiseItinerary.dateWisePlaceData.noPlacesVisited = 0;
                 }
-                console.log("nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime:"+nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime+","+place.timeToHotel);
+                //console.log("nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime:"+nextDateWiseItinerary.dateWisePlaceData.startSightSeeingTime+","+place.timeToHotel);
                 if(candidate.type == "checkOut") {
                     nextDateWiseItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + place.timeToHotel * HOURS_TO_MILLISECONDS);
                 }
             }
         }
         else if(candidate.type == "morningCheckIn") {
-            console.log('morningCheckIn');
+            //console.log('morningCheckIn');
             //The insertion is on the same day
-            console.log('insertion is on the same day');
+            //console.log('insertion is on the same day');
             insertPlaceAtBeginningOfDay(dateWiseItinerary, place);
             place.placeDepartureTime = freeTiming.highestTime;
             if(getTimeFromDate(freeTiming.freeStartTime) == getTimeFromDate(freeTiming.lowestTime)) {
                 //The starting of the free time is the same as lowest time when that place can be reached
                 //So this place can be inserted at that time
-                console.log('place can be inserted at end of free time');
+                //console.log('place can be inserted at end of free time');
             }
             else {
                 decreaseArrivalTimeOfNextPlace(dateWiseItinerary, place, freeTiming);
@@ -2389,15 +2392,15 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         }
         else if(candidate.type == "eveningCheckOut") {
-            console.log('eveningCheckOut');
+            //console.log('eveningCheckOut');
             //The insertion is on the same day
-            console.log('insertion is on the same day');
+            //console.log('insertion is on the same day');
             insertPlaceAtLastOfDay(dateWiseItinerary, place);
             place.placeArrivalTime = freeTiming.lowestTime;
             if(getTimeFromDate(freeTiming.freeStartTime) == getTimeFromDate(freeTiming.lowestTime)) {
                 //The starting of the free time is the same as lowest time when that place can be reached
                 //So this place can be inserted at that time
-                console.log('place can be inserted at start of free time');
+                //console.log('place can be inserted at start of free time');
             }
             else {
                 increaseDepartureTimeOfPreviousPlace(dateWiseItinerary, place, freeTiming);
@@ -2420,7 +2423,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 if(candidate.type == 'morningCheckIn' || candidate.type == 'eveningCheckOut') {
                     if(!checkIfPlaceIsOpenOnDay(place.Days, candidate.dateWiseItinerary.dateWisePlaceData.currentDate)){
                         candidates.splice(candidateIndex,1);
-                        console.log('Place is not open on day:'+candidateIndex);
+                        //console.log('Place is not open on day:'+candidateIndex);
                         candidateIndex--;
                     }
                     else {
@@ -2442,7 +2445,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     if(candidate.isOpenOnDay == undefined){
                         //Closed on both days
                         candidates.splice(candidateIndex, 1);
-                        console.log('Place is not open on both days:'+candidateIndex);
+                        //console.log('Place is not open on both days:'+candidateIndex);
                         candidateIndex--;
                     }
                 }
@@ -2463,7 +2466,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 {
                     if(!((getTimeFromDate(freeTimingsArray[freeTimingsIndex].freeEndTime) - getTimeFromDate(freeTimingsArray[freeTimingsIndex].freeStartTime)>=place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)))
                     {
-                        console.log("Removing time :"+freeTimingsArray[freeTimingsIndex].freeEndTime +" - "+ freeTimingsArray[freeTimingsIndex].freeStartTime +" >= "+ place.Time2Cover*RATIO);
+                       // console.log("Removing time :"+freeTimingsArray[freeTimingsIndex].freeEndTime +" - "+ freeTimingsArray[freeTimingsIndex].freeStartTime +" >= "+ place.Time2Cover*RATIO);
                         freeTimingsArray.splice(freeTimingsIndex,1);
                         freeTimingsIndex--;
                     }
@@ -2471,7 +2474,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 if(freeTimingsArray.length==0)
                 {
                     candidates.splice(candidateIndex,1);
-                    console.log('Duration is less that time to cover:'+candidateIndex);
+                    //console.log('Duration is less that time to cover:'+candidateIndex);
                     candidateIndex--;
                 }
                 else
@@ -2484,11 +2487,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         {
             for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
                 var candidate = candidates[candidateIndex];
-                console.log('For candidate:'+candidateIndex);
+                //console.log('For candidate:'+candidateIndex);
                 checkIfPlaceIsOpenOnFreeTimings(candidate,place);
                 if(candidate.freeTimingsArray.length==0){
                     candidates.splice(candidateIndex,1);
-                    console.log('Place is not open on free timings:'+candidateIndex);
+                    //console.log('Place is not open on free timings:'+candidateIndex);
                     candidateIndex--;
                 }
 
@@ -2520,10 +2523,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     function combineDays(placeTimings) {
         var combinedDays = "";
         for(var i = 0; i < placeTimings.length; i++) {
-            console.log('placeTimings['+i+']:'+JSON.stringify(placeTimings[i]));
+            //console.log('placeTimings['+i+']:'+JSON.stringify(placeTimings[i]));
             var days = placeTimings[i].Days;
             if(days == null || days == undefined) {
-                console.log('WARNING: The place does not have any timings. Assuming it is open all days');
+               // console.log('WARNING: The place does not have any timings. Assuming it is open all days');
                 placeTimings[i].Days = "0";
                 placeTimings[i].TimeStart = "11:00:00";
                 placeTimings[i].TimeEnd = "07:00:00";
@@ -2623,8 +2626,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 freeTimings.freeEndTime = new Date(getTimeFromDate(nextDayFirstPlace.placeArrivalTime) - timeToNextDayFirstPlace*HOURS_TO_MILLISECONDS);
                 freeTimings.freeStartTime = new Date(getTimeFromDate(candidate.dateWiseItinerary.dateWisePlaceData.endSightSeeingTime) + REST_TIME*HOURS_TO_MILLISECONDS*RATIO+time2Hotel*HOURS_TO_MILLISECONDS);
                 freeTimingsArray.push(freeTimings);
-                console.log("freeTimingsArray:"+JSON.stringify(freeTimingsArray));
-                console.log('nextDayFirstPlace:'+nextDayFirstPlace.Name);
+                //console.log("freeTimingsArray:"+JSON.stringify(freeTimingsArray));
+                //console.log('nextDayFirstPlace:'+nextDayFirstPlace.Name);
             }
         }
         else if(candidate.type == 'checkIn'){
@@ -2665,7 +2668,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else if(candidate.type == 'checkOut'){
 
-            console.log('Enters checkout');
+            //console.log('Enters checkout');
             var lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
             lastPlace.placeDepartureTime = new Date(lastPlace.placeDepartureTime);
             var distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
@@ -2673,10 +2676,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var distanceToHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
             var time2Hotel = distanceToHotel / SPEED;
             place.timeToHotel = time2Hotel;
-            console.log(candidate.isOpenOnDay);
+            //console.log(candidate.isOpenOnDay);
             if(candidate.isOpenOnDay ==1 || candidate.isOpenOnDay ==3)
             {
-                console.log('Open on 1st day');
+                //console.log('Open on 1st day');
                 var freeTimings = {
                     insertionDay: 0,//Same Day
                     freeStartTime:new Date(),
@@ -2689,7 +2692,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
             if((candidate.isOpenOnDay == 2 || candidate.isOpenOnDay == 3))
             {
-                console.log('Open on 2nd day');
+                //console.log('Open on 2nd day');
                 var freeTimings = {
                     insertionDay: 1,//Next Day
                     freeStartTime:new Date(),
@@ -2724,7 +2727,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     function checkIfPlaceIsOpenOnFreeTimings(candidate,place){
-        console.log('In checkIfPlaceIsOpenOnFreeTimings');
+        //console.log('In checkIfPlaceIsOpenOnFreeTimings');
         for(var candidateTimingsIndex =0;candidateTimingsIndex<candidate.freeTimingsArray.length;candidateTimingsIndex++)
         {
             var freeStartTime = candidate.freeTimingsArray[candidateTimingsIndex].freeStartTime;
@@ -2732,7 +2735,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var candidateTimingValid = false;
             for(var placeTimingsIndex = 0; placeTimingsIndex<place.PlaceTimings.length;placeTimingsIndex++) {
                 if (checkIfPlaceIsOpenOnDay(place.PlaceTimings[placeTimingsIndex].Days, freeStartTime)) {
-                    console.log('Place is Open on day :'+candidateTimingsIndex);
+                    //console.log('Place is Open on day :'+candidateTimingsIndex);
                     if (compareTimings(place.PlaceTimings[placeTimingsIndex], place.Time2Cover, candidate.freeTimingsArray[candidateTimingsIndex])) {
                         candidate.placeTimingsIndex = placeTimingsIndex;
                         candidateTimingValid = true;
@@ -2970,8 +2973,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             highestTime = TimeEnd;
         }
 
-        console.log("highestTime:"+highestTime);
-        console.log("lowestTime:"+lowestTime);
+        //console.log("highestTime:"+highestTime);
+        //console.log("lowestTime:"+lowestTime);
         freeTimings.highestTime = highestTime;
         freeTimings.lowestTime = lowestTime;
 
@@ -3163,7 +3166,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     function insertPlaceAtBeginningOfDay(dateWiseItinerary, place) {
-        console.log('Place:'+JSON.stringify(place));
+        //console.log('Place:'+JSON.stringify(place));
         var placesLength = dateWiseItinerary.dateWisePlaceData.placesData.push(place);
         dateWiseItinerary.permutation.splice(0,0,placesLength - 1);
     }
@@ -3213,7 +3216,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     $scope.removePlace=function(dateItinerary,dateItineraryIndex, index ){
-        console.log("place removed:"+index +", date index:"+dateItineraryIndex);
+        //console.log("place removed:"+index +", date index:"+dateItineraryIndex);
 
         removedPlacesList.push({
             dateItineraryIndex:dateItineraryIndex,
@@ -3228,7 +3231,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     };
 
     $scope.removePlaceHolder=function(dateItinerary,index, dateItineraryIndex){
-        console.log("place removed:"+index);
+        //console.log("place removed:"+index);
 
         //Removing from removed places list so that new place is not added there
         for(var i = 0; i < removedPlacesList.length; i++){
@@ -3269,7 +3272,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else
         {
-            console.log('Neither 1st place or last place');
+            //console.log('Neither 1st place or last place');
             var lastPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index-1]];
             var nextPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
             var lastPlaceTimings = getSelectedPlaceTimings(lastPlace);
@@ -3282,13 +3285,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             if(getTimeFromDate(maxPlaceDepartureTime) >= getTimeFromDate(supposedLastPlaceDepartTime))
             {
                 lastPlace.placeDepartureTime = supposedLastPlaceDepartTime;
-                console.log('Extending last place departure time. This covers the gap');
+                //console.log('Extending last place departure time. This covers the gap');
             }
             else
             {
                 //The last place cannot be extended to cover the complete time vacated by the removed place
                 lastPlace.placeDepartureTime = maxPlaceDepartureTime;
-                console.log('Extending last place departure time. This does not cover the gap');
+                //console.log('Extending last place departure time. This does not cover the gap');
                 //Decreasing the arrival time of the next places to cover the vacated time
                 var timeCoveredInBetween = false;
                 for(var placeIndex = index; placeIndex < dateItinerary.permutation.length; placeIndex++) {
@@ -3303,35 +3306,35 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     if(maxPlaceArrivalTime<=supposedCurrentPlaceArrivalTime){
                         currentPlace.placeArrivalTime = supposedCurrentPlaceArrivalTime;
                         timeCoveredInBetween = true;
-                        console.log('Decreasing current place arrival time. This covers the gap');
+                        //console.log('Decreasing current place arrival time. This covers the gap');
                         break;
                     }
                     else {
                         if(getTimeFromDate(supposedCurrentPlaceArrivalTime) >= getTimeFromDate(currentPlaceStartTime)) {
                             //The place is open at the time of reaching but time2cover does not satisfy
-                            console.log('Place is open at time of arrival but does not satisfy time2cover');
-                            console.log('Place opens at:'+currentPlaceStartTime);
-                            console.log('Max of opening time and time2cover constraint:'+maxPlaceArrivalTime);
+                            //console.log('Place is open at time of arrival but does not satisfy time2cover');
+                            //console.log('Place opens at:'+currentPlaceStartTime);
+                            //console.log('Max of opening time and time2cover constraint:'+maxPlaceArrivalTime);
                             currentPlace.placeArrivalTime = maxPlaceArrivalTime;
                             currentPlace.placeDepartureTime = new Date(getTimeFromDate(currentPlace.placeArrivalTime) + currentPlace.Time2Cover*MINUTES_TO_MILLISECONDS*MAX_RATIO);
-                            console.log('Decreasing current place arrival time and departure time. This does not cover the gap');
+                            //console.log('Decreasing current place arrival time and departure time. This does not cover the gap');
                         }
                         else {
                             //The place is not opened yet
-                            console.log('Place not open at time of arrival');
-                            console.log('Place opens at:'+currentPlaceStartTime);
-                            console.log('Max of opening time and time2cover constraint:'+maxPlaceArrivalTime);
+                            //console.log('Place not open at time of arrival');
+                            //console.log('Place opens at:'+currentPlaceStartTime);
+                            //console.log('Max of opening time and time2cover constraint:'+maxPlaceArrivalTime);
                             if(getTimeFromDate(maxPlaceArrivalTime) > getTimeFromDate(currentPlaceStartTime)){
                                 //The place opens before the time2cover constraint is satisfied
                                 currentPlace.placeArrivalTime = currentPlaceStartTime;//At this time time2cover constraint is not satisfied
                                 currentPlace.placeDepartureTime = new Date(getTimeFromDate(currentPlace.placeArrivalTime) + currentPlace.Time2Cover*MINUTES_TO_MILLISECONDS*MAX_RATIO);
-                                console.log('Decreasing current place arrival time and departure time. This does not cover the gap');
+                                //console.log('Decreasing current place arrival time and departure time. This does not cover the gap');
                             }
                             else {
                                 //The place opens on or after the time2cover constraint is satisfied
                                 currentPlace.placeArrivalTime = maxPlaceArrivalTime;
                                 timeCoveredInBetween = true;
-                                console.log('Decreasing current place arrival time. This covers the gap');
+                                //console.log('Decreasing current place arrival time. This covers the gap');
                                 break;
                             }
                         }
@@ -3341,7 +3344,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 if(!timeCoveredInBetween){
                     //The ripple reached the last place
                     //Need to fix the hotel arrival time
-                    console.log('Need to fix hotel arrival time');
+                    //console.log('Need to fix hotel arrival time');
                     var lastPlaceToHotelDistance = getDistance(lastPlace.Latitude, lastPlace.Longitude, hotel.Latitude, hotel.Longitude);
                     var timeFromLastPlaceToHotel = lastPlaceToHotelDistance/SPEED;
                     dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime) + timeFromLastPlaceToHotel*HOURS_TO_MILLISECONDS);
@@ -3390,7 +3393,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         if(($scope.currentDay < $scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[$scope.currentDay+1].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[$scope.currentDay+1].dateWisePlaceData.noPlacesVisited == 1)){
             $scope.currentDay += 1;
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
-            console.log($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
+            //console.log($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = currentDay.setHours(0,0,0,0);
             var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
             //console.log('day-'+($scope.currentDay));
@@ -3406,7 +3409,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);
             $scope.currentDate = currentDay.setHours(0,0,0,0);
             var section = angular.element(document.getElementById('day-'+($scope.currentDay)));
-            console.log('day-'+($scope.currentDay));
+            //console.log('day-'+($scope.currentDay));
             //console.log(section);
             $document.duScrollToElementAnimated(section);
             loadItinerary();
@@ -3420,7 +3423,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     }
 
     $scope.changeCurrentDate = function(item){
-        console.log("day visible:"+(parseInt(item)+1));
+        //console.log("day visible:"+(parseInt(item)+1));
         if((parseInt(item)<=$scope.currentDestination.dateWiseItinerary.length-1) && !($scope.currentDestination.dateWiseItinerary[parseInt(item)].dateWisePlaceData.noPlacesVisited!=undefined && $scope.currentDestination.dateWiseItinerary[parseInt(item)].dateWisePlaceData.noPlacesVisited == 1)){
             $scope.currentDay = parseInt(item);
             var currentDay = new Date($scope.currentDestination.dateWiseItinerary[$scope.currentDay].dateWisePlaceData.startSightSeeingTime);

@@ -10,7 +10,7 @@ itineraryModule.controller('indraController', function($scope, $rootScope, $http
     $scope.budgetPercent = 0;
 
     $rootScope.$on('budgetChanged',  function onBudgetChanged(event, percent) {
-        console.log('budgetChanged:'+percent);
+        //console.log('budgetChanged:'+percent);
         $scope.budgetPercent = percent;
     });
 

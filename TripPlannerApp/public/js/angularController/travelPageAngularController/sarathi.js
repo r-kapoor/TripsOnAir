@@ -450,7 +450,10 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                 showBudget(data.userTotalbudget);
                 $scope.isBudgetPanelOpen = true;
                 travelData  = data;
-                openTravelGuide();
+                if($window.innerWidth>=992)//only for desktop
+                {
+                    openTravelGuide();
+                }
             }
         });
     }
