@@ -1,9 +1,9 @@
 <div class = "panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-5 col-xs-5" style="padding-top: 10%">
+            <div class="col-sm-5 col-xs-5" style="padding-top: 12%">
                 <div class="btn-group {{getDateDropdownOpenClassCab()}}">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="openDateDropdownCab($event)" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" style="padding-left: 4px;padding-right: 4px" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="openDateDropdownCab($event)" aria-haspopup="true" aria-expanded="false">
                         {{(cabDate.dt | date:'mediumDate') || 'Select'}}<span ng-if="!cabDate.disabled" class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
