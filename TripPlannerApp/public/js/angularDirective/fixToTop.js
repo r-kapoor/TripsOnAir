@@ -13,8 +13,8 @@
                     var fixmeTop = $elem.offset().top;
                     var width = $elem.width();
                     var id = $elem.attr('id');
-                    console.log("id:"+$elem.attr('id'));
-                    console.log("device width:"+$(window).width());
+                    //console.log("id:"+$elem.attr('id'));
+                    //console.log("device width:"+$(window).width());
 
                     $( document ).ready(function() {
                         //if(!($(window).width()<=991 && $elem.attr('id')=='map-canvas')){

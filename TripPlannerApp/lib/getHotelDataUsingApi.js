@@ -66,6 +66,10 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                     {
                         var hotel=results[i].HotelListResponse.HotelList.HotelSummary[j];
                         var room = hotel.RoomRateDetailsList.RoomRateDetails;
+                        if(hotel.name!=undefined && hotel.name.indexOf("amp;")!=-1)//remove unnecessary chars
+                        {
+                            hotel.name = hotel.name.replace("amp;","");
+                        }
                         var row = {
                             HotelID:hotel.hotelId,
                             Name:hotel.name,
