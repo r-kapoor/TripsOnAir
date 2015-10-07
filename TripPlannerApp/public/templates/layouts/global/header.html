@@ -21,9 +21,9 @@
                     <li ng-if="isHowItWorksShown" class="nav-item nav-item-cta last"><a  class="btn btn-cta btn-cta-secondary" href="#why" du-smooth-scroll>How it Works</a></li>
                     <li ng-if="isLogInShown" class="nav-item"><a href="">Log in</a></li>
                     <li class="nav-item" ng-if="isSaveShown" title="Guide Me" style="padding-top: 15px;padding-right: 10px;cursor: pointer" ng-click="guideMe()"><i class="glyphicon glyphicon-question-sign"></i></li>
-                    <li id="saveButton" ng-if="isSaveShown" ng-click="submitPage()" class="nav-item"><a href="">{{saveText}}</a></li>
+                    <li id="saveButton" ng-if="isSaveShown" ng-click="submitPage()" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">{{saveText}}</a></li>
                     <li ng-if="isSignUpShown" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Sign Up Free</a></li>
-                    <li id="budgetHeadBtn" ng-if="isBudgetPercentShown" ng-mouseover="setChildClassOnHover()" ng-mouseleave="setChildClassOnOut()" ng-click="toggleBudgetPanel()" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Budget Spent<span class="badge {{budgetBadgeClass}}">{{budgetPercent}}%</span></a></li>
+                    <li id="budgetHeadBtn" style="padding-left: 5px" ng-if="isBudgetPercentShown" ng-mouseover="setChildClassOnHover()" ng-mouseleave="setChildClassOnOut()" ng-click="toggleBudgetPanel()" class="nav-item nav-item-cta last"><a class="btn btn-cta btn-cta-secondary" href="">Budget Spent<span class="badge {{budgetBadgeClass}}">{{budgetPercent}}%</span></a></li>
                 </ul><!--//nav-->
             </div><!--//navabr-collapse-->
         </nav><!--//main-nav-->
