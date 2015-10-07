@@ -1,3 +1,10 @@
+<div ng-if="isShowOtherTrip()" ng-click="showOtherTrip()">
+    <div class="otherTaxiTrip option-mode text-center">
+        <i ng-if="!altTrip" class="glyphicon glyphicon-chevron-left"></i>
+        {{getOtherTripText()}}
+        <i ng-if="altTrip" class="glyphicon glyphicon-chevron-right"></i>
+    </div>
+</div>
 <div class="panel-travel" ng-repeat="leg in legs" collapse="isTripPanelSetCollapsed" post-repeat>
     <div class="panel panel-default">
         <div class="panel-body">

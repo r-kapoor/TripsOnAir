@@ -121,16 +121,11 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     var cabOperatorClickCount =0;
 
     $scope.mobilePanelOpen = {
-        multiMode: false,
-        multiCity: false,
         map: false,
         budget: false,
-        alert: false
+        alert: false,
+        travelMode:true
     };
-    $scope.hideMultiMode = false;
-    $scope.hideMultiCity = false;
-    var isInitialMultiMode = $scope.mobilePanelOpen.multiMode;
-    var isInitialMultiTaxi = $scope.mobilePanelOpen.multiCity;
 
     $scope.openDateDropdown = function($event, index) {
         $event.preventDefault();
@@ -168,35 +163,12 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         $scope.cabDate.opened = false;
     };
 
-    $scope.getTravelModeStatus = function(panelName){
-        if(panelName=='multiMode')
-        {
-            return $scope.mobilePanelOpen.multiMode;
-        }
-        return $scope.mobilePanelOpen.multiCity;
-    };
     $scope.openMobilePanel = function(panelName){
 
         for(var name in $scope.mobilePanelOpen){
             $scope.mobilePanelOpen[name] = false;
         }
         $scope.mobilePanelOpen[panelName] = true;
-
-        if(alternateRouteData!=null)
-        {
-            if((panelName=='multiMode' && !isInitialMultiMode))
-            {
-                isInitialMultiMode = true;
-                isInitialMultiTaxi = false;
-                $scope.showOtherTrip();
-            }
-            else if((panelName=='multiCity' && !isInitialMultiTaxi))
-            {
-                isInitialMultiTaxi = true;
-                isInitialMultiMode = false;
-                $scope.showOtherTrip();
-            }
-        }
     };
 
     $scope.pageSlide = function(){
@@ -260,10 +232,6 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         console.log('currentLegIndex:'+index);
         $scope.routes = leg.routes;
         clickEvent.stopPropagation();
-        //var travelPanel=angular.element(document.querySelector(".travel-panel"));
-        //travelPanel.removeAttr('ng-click');
-        //var travelPageSlide=angular.element(document.querySelector(".travel-pageslide"));
-        //travelPageSlide.attr('ng-click','closeOtherPanels(1)');
     };
 
     $scope.openModeDetailsPanel = function(segment,route,routeIndex, clickEvent, custom) {
@@ -461,29 +429,20 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
                 {
                     defaultRouteData = data.withTaxiRome2rioData;
                     alternateRouteData = null;
-                    $scope.hideMultiMode = true;
-                    $scope.mobilePanelOpen.multiMode = true;
-                    $scope.mobilePanelOpen.multiCity = true;
-
                 }
                 else if(data.withTaxiRome2rioData==null)
                 {
                     defaultRouteData = data.withoutTaxiRome2rioData;
                     alternateRouteData = null;
-                    $scope.hideMultiCity = true;
-                    $scope.mobilePanelOpen.multiMode = true;
-                    $scope.mobilePanelOpen.multiCity = true;
                 }
                 else{
                     if(data.withoutTaxiRome2rioData.isMajorDefault == 1) {
                         defaultRouteData = data.withoutTaxiRome2rioData;
                         alternateRouteData = data.withTaxiRome2rioData;
-                        $scope.mobilePanelOpen.multiMode = true;
                     }
                     else {
                         defaultRouteData = data.withTaxiRome2rioData;
                         alternateRouteData = data.withoutTaxiRome2rioData;
-                        $scope.mobilePanelOpen.multiCity = true;
                     }
                 }
                 getAttributesFromRouteData(defaultRouteData);
@@ -786,12 +745,12 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             if(isOtherTripClicked)
             {
                 $scope.altTrip = false;
-                return "Back To Multi-Mode Travel";
+                return "Option 2";
             }
             else
             {
                 $scope.altTrip = true;
-                return "Check Out Multi-Mode Travel For This Trip";
+                return "Option 1";
             }
         }
         else
@@ -799,12 +758,12 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
             if(isOtherTripClicked)
             {
                 $scope.altTrip = false;
-                return "Back To MultiCityTaxi Travel";
+                return "Option 2";
             }
             else
             {
                 $scope.altTrip = true;
-                return "Check Out MultiCityTaxi Travel For This Trip";
+                return "Option 1";
             }
         }
     };
@@ -1613,23 +1572,4 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
         body.append(formElement);
         formElement.submit();
     });
-
-    //$scope.submitTravel = function(){
-    //    console.log("submitTravel");
-    //    defaultRouteData.isMajorDefault=1;
-    //    alternateRouteData.isMajorDefault=0;
-    //    travelData.travelBudget = $scope.travelBudget;
-    //    travelData.minorTravelBudget = $scope.minorBudget;
-    //    travelData = JSON.stringify(travelData);
-    //    var formElement=angular.element('<form\>');
-    //    formElement.attr("action","/"+'showPlacesAndHotels');
-    //    formElement.attr("method","POST");
-    //    var d=angular.element("<input type='hidden'/>");
-    //    d.attr("name","travelData");
-    //    d.attr("value",travelData);
-    //    formElement.append(d);
-    //    var body=angular.element(document.querySelectorAll("body"));
-    //    body.append(formElement);
-    //    formElement.submit();
-    //};
 }]);

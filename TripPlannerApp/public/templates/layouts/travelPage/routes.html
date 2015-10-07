@@ -9,14 +9,6 @@
                         <div scroll-pane scroll-config="paneConfig" id="travelPanel" style="width:380px;height:100vh">
                             <div id="transcludeTravelPanel">
                                 <div ng-include src="'/templates/layouts/travelPage/travelPanel.html'"></div>
-                                <div class="panel panel-default" ng-if="isShowOtherTrip()" ng-click="showOtherTrip()">
-                                    <div class="otherTaxiTrip panel-heading text-center">
-                                        <i ng-if="!altTrip" class="glyphicon glyphicon-arrow-left"></i>
-                                        {{getOtherTripText()}}
-                                        <i ng-if="altTrip" class="glyphicon glyphicon-share-alt"></i>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -24,8 +16,8 @@
             </div>
         </pageslide>
         <!--Mobile HTML for Travel Panel Starts-->
-        <div ng-if="isTravelPanelOpen && !isTravelModesPanelOpen && !isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
-            <div class="panel-body" style="margin-top: 10%">
+        <div ng-if="isTravelPanelOpen && !isTravelModesPanelOpen && !isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.travelMode)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+            <div class="panel-body" style="margin-top: 5%">
                 <div class="text-center">
                     <div ng-include src="'/templates/layouts/travelPage/travelPanel.html'"></div>
                 </div>
@@ -51,7 +43,7 @@
             </div>
         </pageslide>
         <!--Mobile HTML for Travel Modes Starts-->
-        <div ng-if="isTravelModesPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+        <div ng-if="isTravelModesPanelOpen" ng-hide="!(mobilePanelOpen.travelMode)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
             <div class="panel-body">
                 <p class="navbar-text text-center" style="margin-bottom: 0px">
                     <i ng-click=closeOtherPanels(1) class="glyphicon glyphicon-arrow-left" style="top:10px;right:15px"></i>
@@ -111,7 +103,7 @@
             </div>
         </pageslide>
         <!--Mobile HTML for Mode Details Starts-->
-        <div ng-if="isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.multiMode || mobilePanelOpen.multiCity)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
+        <div ng-if="isModeDetailsPanelOpen" ng-hide="!(mobilePanelOpen.travelMode)" class="hidden-md hidden-lg panel panel-default reorder-mobile-panel">
             <div class="panel-body" style="font-size: 85%">
                 <!--<div class="page-header text-center">-->
                     <!--<h3>-->
@@ -181,9 +173,9 @@
         </div>
         <!--<div id="map-canvas" style="" ng-controller="sanjayaController"></div>-->
     </div>
-    <!--Mobile HTML for budget and alert Ends-->
+    <!--Mobile HTML for budget and alert Starts-->
     <div ng-if="isBudgetPanelOpen" ng-hide="!mobilePanelOpen.budget" class="panel panel-default budget hidden-md hidden-lg">
-        <ul class="list-group">
+        <ul class="list-group" style="padding-top: 52px">
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-xs-7">{{totalBudgetText}}</div>
@@ -205,7 +197,7 @@
         </ul>
     </div>
 
-    <div ng-hide="!mobilePanelOpen.alert" class="panel panel-default budget hidden-md hidden-lg">
+    <div ng-hide="!mobilePanelOpen.alert" class="panel panel-default budget hidden-md hidden-lg" style="padding-top: 55px">
         <div ng-controller="balaramaController">
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
         </div>
