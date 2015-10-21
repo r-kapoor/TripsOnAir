@@ -15,6 +15,13 @@ itineraryModule.controller('detailModalInstanceCtrl', function ($scope, $rootSco
         });
     }
 
+    if($scope.itemDetails.NumberOfImages==0)
+    {
+        slides.push({
+            image: 'http://res.cloudinary.com/picsonair/image/upload/v1445451772/NA_vjx1ej.png'
+        });
+    }
+
     $scope.getDateFromString = function(timeString)
     {
         var timeStringArray = timeString.split(':');
