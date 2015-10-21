@@ -16,7 +16,10 @@
                         <div class="wrapper col-md-8">
                             <a class="thumbnail col-md-11" style="margin-bottom: 0;">
                                 <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
-                                <img ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="width:250px;min-height:128px"/>
+                                <img ng-if="place.NumberOfImages>0" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,w_250/{{place.PlaceID}}-1.png" class="img-responsive" style="
+                                width:250px;min-height:128px"/>
+                                <img ng-if="place.NumberOfImages==0" ng-src="http://res.cloudinary.com/picsonair/image/upload/v1445451772/NA_vjx1ej.png" class="img-responsive" style="
+                                width:250px;min-height:128px"/>
                             </a>
                             <span class="label label-success rating">{{getPlaceRating(place)}}</span>
                             <div ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:14% !important;top:2%" ng-click="replaceLowerPanelPlace($event,$index)">
@@ -115,7 +118,9 @@
                 <div style="padding: 0;margin-bottom: 0;position: relative" ng-class="stopClickClass" class="text-center">
                     <div class="wrapper" class="text-center">
                         <a class="thumbnail" style="margin-bottom: 0;">
-                            <img ng-click="showLeftPanelDetails(place)" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,h_150,w_300/{{place.PlaceID}}-1.png" class="img-responsive" style="margin:auto;">
+                            <img ng-if="place.NumberOfImages>0" ng-click="showLeftPanelDetails(place)" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,h_150,w_300/{{place.PlaceID}}-1.png" class="img-responsive" style="margin:auto;">
+                            <img ng-if="place.NumberOfImages==0" ng-click="showLeftPanelDetails(place)" ng-src="http://res.cloudinary.com/picsonair/image/upload/v1445451772/NA_vjx1ej.png" class="img-responsive" style="margin:auto;">
+
                             <div ng-if="!place.placeAdded">
                                 <div class="btn btn-default" style="position:absolute;top:0;left:50%;z-index:100" ng-click="replaceLowerPanelPlace($event,$index)">
                                     <!--<i class="glyphicon glyphicon-plus"></i>-->

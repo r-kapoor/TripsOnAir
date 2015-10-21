@@ -62,14 +62,29 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
             {
                 if(results[i].isFromApi)
                 {
-                    for(var j=0;j<results[i].HotelListResponse.HotelList['@size'];j++)
+                    var hotelLength = results[i].HotelListResponse.HotelList['@size'];
+                    for(var j=0;j<hotelLength;j++)
                     {
-                        var hotel=results[i].HotelListResponse.HotelList.HotelSummary[j];
+                        var hotel;
+                        if(hotelLength==1)
+                        {
+                            hotel=results[i].HotelListResponse.HotelList.HotelSummary;
+                        }
+                        else
+                        {
+                            hotel=results[i].HotelListResponse.HotelList.HotelSummary[j];
+                        }
+
                         var room = hotel.RoomRateDetailsList.RoomRateDetails;
                         if(hotel.name!=undefined && hotel.name.indexOf("amp;")!=-1)//remove unnecessary chars
                         {
                             hotel.name = hotel.name.replace("amp;","");
                         }
+                        if(hotel.name!=undefined && hotel.name.indexOf("&apos;")!=-1)//remove unnecessary chars
+                        {
+                            hotel.name = hotel.name.replace("&apos;","'");
+                        }
+
                         var row = {
                             HotelID:hotel.hotelId,
                             Name:hotel.name,
@@ -85,6 +100,11 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                             Price:room.RateInfo.ChargeableRateInfo['@total'],
                             isFromApi:true
                         };
+
+                        //if(row.HotelUrl=="")//if pic not available from api
+                        //{
+                        //    row.HotelUrl = "http://res.cloudinary.com/picsonair/image/upload/v1445451772/NA_vjx1ej.png";
+                        //}
                         console.log(row);
 
                         if(hotelData[i]==undefined)
