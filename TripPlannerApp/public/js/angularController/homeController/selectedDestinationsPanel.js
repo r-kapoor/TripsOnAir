@@ -19,7 +19,7 @@ inputModule.directive('postRepeat', function($timeout) {
     };
 });
 
-inputModule.controller('selectedDestinationsPanelController', function($scope, $rootScope, $http, $q, formData, cityData) {
+inputModule.controller('selectedDestinationsPanelController', function($scope, $rootScope, $http, $q, $window, formData, cityData) {
     $scope.origin = null;
     $scope.destinationCityList = [];
     $scope.isSelectedPanelCollapsed = true;
@@ -84,6 +84,7 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
 
     $scope.onSubmit = function(itineraryID)
     {
+        $window.sessionStorage.setItem('formData',JSON.stringify(formData.getAllData()));
         console.log("OnSubmit");
         //var dto1 = dto();
         var formElement=angular.element('<form\>');

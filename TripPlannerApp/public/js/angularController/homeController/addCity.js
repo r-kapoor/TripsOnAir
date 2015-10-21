@@ -50,6 +50,8 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
   $scope.originCity = formData.getOrigin();
   $scope.destinationCity = null;
   $scope.destinationCityList=formData.getDestinations();
+
+    console.log('DESTINATIONS IN LIST:'+JSON.stringify($scope.destinationCityList));
   $scope.label="Enter the Destination";
 
     $scope.originValid = true;

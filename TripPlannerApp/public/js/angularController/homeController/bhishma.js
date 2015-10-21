@@ -1,5 +1,6 @@
 inputModule.controller('BhishmaController', function($scope, $rootScope, $http, $q, formData, cityData) {
     $scope.isCarouselCollapsed = true;
+    $scope.isSuggestionAccordingToSelectionCollapsed = false;
     $scope.suggestionsAccordingToSelection = [];
     $scope.myInterval = 5000;
     $scope.requestSemaphoreSuggestionsAccordingToSelection = false;
@@ -17,6 +18,14 @@ inputModule.controller('BhishmaController', function($scope, $rootScope, $http, 
         $scope.isCarouselCollapsed = true;
         $scope.createQuery();
     }
+
+    $rootScope.$on('detailsLoad', function collapseSuggestions() {
+        $scope.isSuggestionAccordingToSelectionCollapsed = true;
+    });
+
+    $rootScope.$on('suggest', function onSuggest(){
+        $scope.isSuggestionAccordingToSelectionCollapsed = false;
+    });
 
     $scope.createQuery=function(){
         var originGeoCoordinates = formData.getOriginGeoCoordinates();

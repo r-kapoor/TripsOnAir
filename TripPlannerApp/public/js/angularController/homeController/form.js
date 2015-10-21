@@ -1,38 +1,4 @@
-angular.module('scrollLoad', []).directive('whenScrolled', function($document,$window,$rootScope) {
-    return function(scope, elm, attr) {
-        var raw = elm[0];
-        $document.bind('scroll', function() {
-            //console.log(raw.scrollTop+":"+$document[0].body.scrollTop +"+"+ $window.innerHeight +">="+ 0.9 * $document[0].body.offsetHeight);
-            if(raw.scrollTop + $window.innerHeight >= 0.9 * $document[0].body.offsetHeight ||
-                $document[0].body.scrollTop + $window.innerHeight >= 0.9 * $document[0].body.offsetHeight) {
-                $rootScope.$emit('scrolled');
-            }
-        });
-    };
-});
-
-var inputModule = angular.module('tripdetails.input.app', ['ui.bootstrap','ngSlider','scrollLoad','ngJScrollPane','ngRestrictInput','duScroll','ngRoute']);
-
-inputModule.config(['$routeProvider',
-    function($routeProvider) {
-        $routeProvider.
-            when('/', {
-                templateUrl: 'templates/layouts/home/overviewPanel.html'
-                ,controller: 'KuberController'
-            }).
-            when('/setBudget', {
-                templateUrl: 'templates/layouts/home/detailsPanel.html'
-                ,controller: 'BrahmaController'
-            }).
-            when('/suggestions',{
-
-            }).
-            otherwise({
-                redirectTo: '/'
-            });
-    }]);
-
-inputModule.controller('form1Controller',  function($scope, $rootScope, $window, formData) {
+inputModule.controller('form1Controller',  function($scope, $rootScope, $window, $location, $timeout, formData) {
 
     var sessionData = $window.sessionStorage.getItem('formData');
     if(sessionData != null){
@@ -50,6 +16,26 @@ inputModule.controller('form1Controller',  function($scope, $rootScope, $window,
     $rootScope.$on('detailsLoad', function unCollapseEvents(event, data) {
         $scope.isFormPanelCollapsed = false;
     });
+
+    if($location.path() == '/suggestions'){
+        if(formData.getOrigin()){
+            $timeout(function(){
+                $rootScope.$emit('suggest');
+            }, 200);
+        }
+        else {
+            $location.path('/');
+        }
+    }
+
+    if(formData.getOrigin()){
+        $timeout(function(){
+            $rootScope.$emit('originSelected');
+            if(formData.getDestinations().length > 0){
+                $rootScope.$emit('destinationSelected');
+            }
+        }, 200);
+    }
 
     angular.element(document).ready(function onReady(){
         //mixpanel.time_event('Cities Input');

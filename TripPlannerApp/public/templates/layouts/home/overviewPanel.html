@@ -12,7 +12,7 @@
 
         <div class="form-group" ng-repeat="destination in destinationCityList">
             <div class="input-group">
-                <input readonly type="text" ng-model="destination.AlternateName+', '+destination.State" class="form-control" aria-describedby="inputError2Status">
+                <input readonly type="text" ng-model="destination.AlternateName" class="form-control" aria-describedby="inputError2Status">
                 <div title="Remove Destination" class="input-group-addon cursor-style" ng-click="destinationRemoved(destination)"><i
                     class="glyphicon glyphicon-remove"></i></div>
             </div>

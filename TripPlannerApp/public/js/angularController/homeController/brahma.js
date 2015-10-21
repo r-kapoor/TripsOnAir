@@ -11,6 +11,7 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
     //$scope.helpLabel="Help me choose destinations";
     $scope.numPerson = formData.getNumPersons();
     $scope.value1 = formData.getBudget();
+
     //$scope.value1 = 5000;
     $scope.options = {
         from: formData.getMinimumBudget(),
@@ -50,7 +51,7 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
         putDetailedData();
         if(formData.getSuggestDestinationOn())
         {
-            $rootScope.$emit('suggest');
+            $rootScope.$emit('suggest', itineraryID);
         }
         else
         {

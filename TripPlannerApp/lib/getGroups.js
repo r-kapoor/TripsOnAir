@@ -22,11 +22,11 @@ function getGroupList(conn,orgLat,orgLong,taste,range,start,batchsize,callback) 
 		+'AS distance FROM Groups WHERE (GroupCategory like '+subQuery+') HAVING distance < '+range+' ORDER BY GroupRating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+')'
 		+'AS a JOIN (SELECT * FROM GroupsCity) AS b ON (a.GroupID = b.GroupID)) AS c JOIN (SELECT CityID, CityName, Latitude, Longitude FROM City) AS d ON(c.CityID = d.CityID);';
 */
-	var queryString='SELECT GroupName, PopularName, GroupID, DistFactor, CityName, c.CityID, Latitude, Longitude,GroupRating as Rating,GroupImage as Image FROM'
+	var queryString='SELECT GroupName, PopularName, GroupID, DistFactor, CityName, CityName as AlternateName, c.CityID, Latitude, Longitude,GroupRating as Rating,GroupImage as Image FROM'
 		+ '(SELECT GroupName,PopularName,a.GroupID, DistFactor, b.CityID,GroupRating,GroupImage FROM'
 		+'(SELECT GroupName,PopularName,GroupID, DistFactor,GroupRating,GroupImage,(( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) )+('+DistScale+'*DistFactor))'
 		+'AS distance FROM Groups WHERE ('+subQuery+') HAVING distance < '+range+' ORDER BY GroupRating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+')'
-		+'AS a JOIN (SELECT * FROM GroupsCity) AS b ON (a.GroupID = b.GroupID)) AS c JOIN (SELECT CityID, CityName, Latitude, Longitude FROM City) AS d ON(c.CityID = d.CityID);';
+		+'AS a JOIN (SELECT * FROM GroupsCity) AS b ON (a.GroupID = b.GroupID)) AS c JOIN (SELECT CityID, CityName, Latitude, Longitude FROM City WHERE IsDestination = 1) AS d ON(c.CityID = d.CityID);';
 
 	//var queryString ='SELECT * FROM Groups;';
 

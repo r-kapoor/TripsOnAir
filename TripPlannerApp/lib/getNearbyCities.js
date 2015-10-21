@@ -22,21 +22,21 @@ function getNearbyCityList(conn,destinations,orgLat,orgLong,taste,distRemaining,
 	}*/
 	//subQuery+='(Category like "' +category[category.length-1]+ '%")';
 
-	subQuery='(Taste & '+connection.escape(taste.tasteInteger)+'!=0 ) AND (Taste & '+connection.escape(taste.familyFriendsInteger)+'!=0 )';
+	subQuery='(Taste & '+connection.escape(taste.tasteInteger)+'!=0 ) AND (Taste & '+connection.escape(taste.familyFriendsInteger)+'!=0 AND IsDestination = 1)';
 
 	for(var i=0;i<numDestinations-1;i++)
 	{
 		distanceFromSelectionsSubQuery += ' ( 6371 * acos( cos( radians('+destinations[i].Latitude+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+destinations[i].Longitude+') ) + sin( radians('+destinations[i].Latitude+') ) * sin( radians( Latitude ) ) ) ) AS distance'+i+',';
-		distanceMinHavingClause += ' (distance'+i+' > 10) AND ';
+		distanceMinHavingClause += ' (distance'+i+' > 20) AND ';
         distanceMaxHavingClause += ' (distance'+i+' < '+maxDistance+') OR ';
 	}
 	distanceFromSelectionsSubQuery += ' ( 6371 * acos( cos( radians('+destinations[numDestinations-1].Latitude+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+destinations[numDestinations-1].Longitude+') ) + sin( radians('+destinations[numDestinations-1].Latitude+') ) * sin( radians( Latitude ) ) ) ) AS distance'+(numDestinations-1);
-	distanceMinHavingClause += ' ( distance'+(numDestinations-1)+' > 10) ';
+	distanceMinHavingClause += ' ( distance'+(numDestinations-1)+' > 20) ';
     distanceMaxHavingClause += ' ( distance'+(numDestinations-1)+' < '+maxDistance+') ';
 
 	distanceFromOriginSubQuery += ' ( 6371 * acos( cos( radians('+orgLat+') ) * cos( radians( Latitude ) ) * cos( radians( Longitude ) - radians('+orgLong+') ) + sin( radians('+orgLat+') ) * sin( radians( Latitude ) ) ) ) AS distanceFromOrigin ';
 
-	distanceRemainingHavingClause += ' (distanceFromOrigin + distance'+(numDestinations-1)+' < '+distRemaining+' ) ';
+	distanceRemainingHavingClause += ' (distanceFromOrigin + distance'+(numDestinations-1)+' < '+distRemaining+' AND distanceFromOrigin > 20) ';
 
 	var queryString='SELECT CityName,CityID,Latitude,Longitude,'+ distanceFromSelectionsSubQuery +", "+ distanceFromOriginSubQuery+ ' FROM City WHERE '+subQuery+' HAVING ( ( '+distanceMinHavingClause+' ) AND ( '+distanceMaxHavingClause+' ) AND ( '+distanceRemainingHavingClause+' ) ) ORDER BY Rating DESC LIMIT '+ connection.escape(start) +', '+ connection.escape(batchsize)+';';
 

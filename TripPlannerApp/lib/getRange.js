@@ -27,8 +27,8 @@ function getRange(budget, startDate, startTime, endDate, endTime, callback){
     {
         totalTimeOfTrip=((endDate.getTime()-startDate.getTime())/(1000*60*60));
     }
-	var flightBudget=budget-(otherFgtFare*(totalTimeOfTrip/12));
-	var otherBudget=budget-(otherModeFare*(totalTimeOfTrip/12));
+	var flightBudget=budget-(otherFgtFare*(totalTimeOfTrip/24));
+	var otherBudget=budget-(otherModeFare*(totalTimeOfTrip/24));
 	console.log("flightBudget "+flightBudget);
 	if((5000<flightBudget)&&(flightBudget<=8000))
 	{

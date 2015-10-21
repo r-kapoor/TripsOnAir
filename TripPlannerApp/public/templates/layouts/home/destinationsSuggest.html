@@ -1,14 +1,28 @@
 <div collapse="isSuggestCollapsed" >
-        <div class="col-sm-12">
-                <div ng-repeat="destinationsData in destinations">
-                    <div class="{{getClassCol($index)}}" style="padding: 0;margin-bottom: 0;">
-                     <div class="wrapper">
-                        <a href="#" class="thumbnail {{getSelectedDataClass(destinationsData)}} {{getOutOfBudgetClass(destinationsData)}}" style="margin-bottom: 0;">
+    <div class="hidden-md hidden-lg">
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">Choose Destinations</div>
+            <div class="panel-body">
+                <div class="form-group" ng-repeat="destination in destinationCityList">
+                    <div class="input-group">
+                        <input readonly type="text" ng-model="destination.AlternateName" class="form-control" aria-describedby="inputError2Status">
+                        <div title="Remove Destination" class="input-group-addon cursor-style" ng-click="destinationRemoved(destination)"><i
+                            class="glyphicon glyphicon-remove"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div ng-repeat="destinationsData in destinations">
+            <div class="{{getClassCol($index)}}" style="padding: 0;margin-bottom: 0;">
+                <div class="wrapper">
+                    <a href="#" class="thumbnail {{getSelectedDataClass(destinationsData)}} {{getOutOfBudgetClass(destinationsData)}}" style="margin-bottom: 0;">
                         <img ng-src="{{destinationsData.Image}}" class="img-responsive" style="width: 100%"/>
-                        </a>
-                         <div class="btn btn-default add-button {{getSelectedDataDisabled(destinationsData)}}" ng-click="destinationSelected($index)">
-                             <i class="glyphicon glyphicon-plus"></i>
-                         </div>
+                    </a>
+                    <div class="btn btn-default add-button {{getSelectedDataDisabled(destinationsData)}}" ng-click="destinationSelected($index)">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </div>
                     <div class="name">
                         <p class="name_content">
                             {{destinationsData.CityName}}
@@ -18,6 +32,21 @@
                 </div>
                 <!--end of wrapper class-->
             </div>
-                </div><!--end of ng-repeat-->
-</div>
+        </div><!--end of ng-repeat-->
     </div>
+    <footer class="hidden-md hidden-lg sticky-footer text-center" ng-controller="indraController" style="padding-top: 0px">
+        <div class="bottom-bar">
+            <div class="container">
+                <div class="btn btn-primary" ng-click="submitPage()">Continue</div>
+                <!--<small class="copyright">Copyright @ 2015 <a href="" target="_blank">Tripsonair</a></small>-->
+            </div><!--//container-->
+        </div><!--//bottom-bar-->
+    </footer><!--//footer-->
+    <div class="hidden-md hidden-lg text-center" style="position: fixed;bottom: 30px;left:0;">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        <!--<div class="panel panel-danger">-->
+            <!--<div class="panel-heading">The destinations marked in red indicate you may go out of budget or spend less time in destination<i-->
+                <!--class="glyphicon glyphicon-remove"></i></div>-->
+        <!--</div>-->
+    </div>
+</div>

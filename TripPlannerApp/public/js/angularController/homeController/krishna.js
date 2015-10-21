@@ -1,8 +1,9 @@
 /**
  * Created by rkapoor on 15/12/14.
+ * For Suggest Destinations
  */
 
-inputModule.controller('KrishnaController', function($scope, $rootScope, $http, $q, formData,$location, cityData) {
+inputModule.controller('KrishnaController', function($scope, $rootScope, $http, $q, formData,$location, $timeout, cityData) {
 //	TODO:outer controller can't pic inner controllers scope variables-check
 //	$scope.originCity = null;
 //	$scope.destinationCity = null;
@@ -16,6 +17,8 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         $scope.isSuggestCollapsed = false;
         $scope.suggestAllDestinations();
     });
+
+    $scope.destinationCityList = formData.getDestinations();
 
     $rootScope.$on('detailsLoad', function collapseSuggestions() {
         $scope.isSuggestCollapsed = true;
@@ -37,7 +40,26 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     var completeDestinations = [];
     var remainderDestinations = [];
 
+    var outOfBudgetCitiesShown = false;
+
     $scope.userInputData=null;
+
+    $scope.alerts = [];
+
+    function addBudgetAlert(){
+        $scope.alerts.push({type: 'danger', msg: 'The destinations marked in red indicate you may go out of budget or spend less time in destination'});
+        $timeout(function (){
+            $scope.alerts = [];
+        }, 5000);
+    }
+
+    function addNoDestinationsAlert(){
+        $scope.alerts.push({type: 'danger', msg: 'You have not selected any destinations'});
+    }
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
 
     $scope.getClassCol = function(index) {
         //console.log(index);
@@ -51,6 +73,17 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             return 'col-md-4';
         }
         return 'col-md-6';
+    };
+
+    $scope.destinationRemoved = function(removedDestination) {
+        angular.forEach($scope.destinationCityList, function(destination, index) {
+            console.log(destination.CityName + " " + removedDestination.CityName);
+            if(destination.CityName.toLowerCase() === removedDestination.CityName.toLowerCase()) {
+                $scope.destinationCityList.splice(index, 1);
+                formData.setDestinations($scope.destinationCityList);
+            }
+        });
+        $rootScope.$emit('destinationRemoved');
     };
 
     $rootScope.$on('scrolled', function() {
@@ -109,6 +142,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 });
         }
     };
+
     $scope.singleCitiesData=function(data,status){
         //store origin latitude and longitude
         $scope.orgLat=data.orgLat;
@@ -173,6 +207,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 data.CityDataFromGroup = [];
                 data.CityDataFromGroup.push({
                     CityName:data.CityName,
+                    AlternateName:data.AlternateName,
                     CityID:data.CityID,
                     Latitude:data.Latitude,
                     Longitude:data.Longitude,
@@ -184,6 +219,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 delete data.Latitude;
                 delete data.Longitude;
                 delete data.Rating;
+                delete data.AlternateName;
                 data.CityName = data.PopularName;
                 delete data.PopularName;
                 groupsList.push(data);
@@ -191,6 +227,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             else {
                 groupsList[groupIDs.indexOf(data.GroupID)].CityDataFromGroup.push({
                     CityName:data.CityName,
+                    AlternateName:data.AlternateName,
                     CityID:data.CityID,
                     Latitude:data.Latitude,
                     Longitude:data.Longitude,
@@ -230,37 +267,37 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
 
     };
 
-        $scope.createQuery=function(data,status){
-    var origin=formData.getOrigin();
-    var destinations=formData.getDestinations();
-    var startDate=formData.getStartDate();
-    var endDate=formData.getEndDate();
-    //console.log(startDate+":"+endDate);
-    var startTime=formData.getTripStartTime();
-    var endTime=formData.getTripStartTime();
-    //console.log("stTime:"+JSON.stringify(startTime));
-    var budget=formData.getBudget();
-    var tastes=formData.getTastes();
-    //console.log(JSON.stringify(data));
-    var orgLat=data.results[0].geometry.location.lat;
-    var orgLong=data.results[0].geometry.location.lng;
+    $scope.createQuery=function(data,status){
+        var origin=formData.getOrigin();
+        var destinations=formData.getDestinations();
+        var startDate=formData.getStartDate();
+        var endDate=formData.getEndDate();
+        //console.log(startDate+":"+endDate);
+        var startTime=formData.getTripStartTime();
+        var endTime=formData.getTripStartTime();
+        //console.log("stTime:"+JSON.stringify(startTime));
+        var budget=formData.getBudget();
+        var tastes=formData.getTastes();
+        //console.log(JSON.stringify(data));
+        var orgLat=data.results[0].geometry.location.lat;
+        var orgLong=data.results[0].geometry.location.lng;
 
 
-    $scope.userInputData={
-        origin:origin,
-        destinations:destinations,
-        startDate:startDate,
-        endDate:endDate,
-        startTime:startTime,
-        endTime:endTime,
-        budget:budget,
-        tastes:tastes,
-        orgLat:orgLat,
-        orgLong:orgLong
-    };
-    $scope.sendQuery($scope.userInputData);
-    //var query="orgLat="+orgLat+"&"+"orgLong="+orgLong+"&"+"stDate="+startDate+"&endDate="+endDate+"&stTime="+startTime+"&endTime="+endTime+"&taste="+tastesArray+"&budget="+budget;
-    //console.log(query);
+        $scope.userInputData={
+            origin:origin,
+            destinations:destinations,
+            startDate:startDate,
+            endDate:endDate,
+            startTime:startTime,
+            endTime:endTime,
+            budget:budget,
+            tastes:tastes,
+            orgLat:orgLat,
+            orgLong:orgLong
+        };
+        $scope.sendQuery($scope.userInputData);
+        //var query="orgLat="+orgLat+"&"+"orgLong="+orgLong+"&"+"stDate="+startDate+"&endDate="+endDate+"&stTime="+startTime+"&endTime="+endTime+"&taste="+tastesArray+"&budget="+budget;
+        //console.log(query);
 };
     $scope.getLocation = function(queryString,callback) {
         $http.get(queryString)
@@ -280,6 +317,36 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         return 'http://maps.googleapis.com/maps/api/geocode/json?address='+city.CityName+'&sensor=true';
     };
 
+    $rootScope.$on('submitPage', putDetailedData);
+
+    function putDetailedData(){
+        console.log('In putdetailsData');
+        if(formData.getDestinations().length > 0){
+            var itineraryID = formData.getItineraryID();
+            var requestURL = "/putItineraryInputs/"+itineraryID;
+            var data  = formData.getAllData();
+
+            $http({
+                method: "PUT",
+                url: requestURL,
+                data: data
+            })
+                .then(
+                function success(response){
+                    console.log('RESPONSE:'+JSON.stringify(response.data));
+                },
+                function error(response){
+                }
+            );
+
+            console.log('Emiting Submit');
+            $rootScope.$emit('submit', itineraryID);//For selectedDestinationsPanel to handle
+        }
+        else {
+            addNoDestinationsAlert();
+        }
+    }
+
 
     $scope.destinationSelected = function(index){
         var destination = $scope.destinations[index];
@@ -288,8 +355,15 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             formData.appendDestination(destination);
         }
         else {
-            formData.concatDestinations(destination.CityDataFromGroup);
+            var groupCities = destination.CityDataFromGroup;
+            for(var i=0;i<groupCities.length;i++)
+            {
+                formData.appendDestination(groupCities[i]);
+            }
+            //formData.concatDestinations(groupCities);
+            console.log('Current destinations:'+JSON.stringify(formData.getDestinations()));
         }
+        $scope.destinationCityList = formData.getDestinations();
         $scope.markSelectedDestinations();
         $scope.markOutOfBudgetDestinations();
         formData.setOriginGeoCoordinates({
@@ -403,6 +477,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             var endLat = selectedDestinations[selectedDestinations.length - 1].Latitude;
             var endLong = selectedDestinations[selectedDestinations.length - 1].Longitude;
         }
+
         angular.forEach($scope.destinations, function(suggestedDestination, index) {
             if(isGroup(suggestedDestination)) {
                 var totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance +
@@ -416,6 +491,10 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 if(totalEstimatedDistance > $scope.range) {
                     //console.log("red");
                     suggestedDestination.outOfBudget = 'out-of-budget';
+                    if(!outOfBudgetCitiesShown){
+                        outOfBudgetCitiesShown = true;
+                        addBudgetAlert();
+                    }
                 }
                 else {
                     //console.log("not red");
@@ -428,12 +507,16 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 //console.log(suggestedDestination.CityName+":2totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
                 if(totalEstimatedDistance > $scope.range) {
                     suggestedDestination.outOfBudget = 'out-of-budget';
+                    if(!outOfBudgetCitiesShown){
+                        outOfBudgetCitiesShown = true;
+                        addBudgetAlert();
+                    }
                 }
                 else {
                     suggestedDestination.outOfBudget = null;
                 }
             }
-        })
+        });
     };
 
     $scope.getDistanceBySequence = function(startLat, startLong, selectedDestinations){
