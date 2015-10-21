@@ -42,11 +42,7 @@
             </div><!--//container-->
         </div><!--//bottom-bar-->
     </footer><!--//footer-->
-    <div class="hidden-md hidden-lg text-center" style="position: fixed;bottom: 30px;left:0;">
+    <div class="text-center" style="position: fixed;bottom: 30px;left:0;">
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-        <!--<div class="panel panel-danger">-->
-            <!--<div class="panel-heading">The destinations marked in red indicate you may go out of budget or spend less time in destination<i-->
-                <!--class="glyphicon glyphicon-remove"></i></div>-->
-        <!--</div>-->
     </div>
 </div>
