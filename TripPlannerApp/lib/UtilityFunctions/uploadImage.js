@@ -83,11 +83,21 @@ function uploadHotelImages()
 
 function uploadCityImages()
 {
+    /*
+        large = 1, image size is of suggestDestination panel
+        if large not passed, then image size would be of destination panel on left
+     */
     var folder = process.argv[3];
+    var large = process.argv[4];
     var path = "../../public/images/"+folder;
     var files = fs.readdirSync(path);
     var filePath;
     var encodedCityID;
+    if(large==undefined)
+    {
+        large = 0;
+    }
+
     for(var i in files)
     {
         filePath = path+"/"+files[i];
@@ -96,16 +106,60 @@ function uploadCityImages()
         if(files[i].indexOf("png")!=-1||files[i].indexOf("jpg")!=-1) {
             var hotelID = files[i];
             encodedCityID = encodeID.encodeCityID(parseInt(hotelID));
-
-            console.log("encodedCityID:"+encodedCityID);
-            cloudinary.uploader.upload(
-                filePath,
-                function(result) { console.log(result); },
-                {
+            if(parseInt(large)==1)
+            {
+                var cropImage = {
+                    public_id: encodedCityID
+                };
+            }
+            else
+            {
+                cropImage = {
                     public_id: encodedCityID,
                     eager: [
                         { width: 200, crop: 'limit', format: 'png' }
                     ]
+                };
+            }
+
+            console.log("encodedCityID:"+encodedCityID);
+            cloudinary.uploader.upload(
+                filePath,
+                function(result) { console.log(result); },cropImage
+            )
+        }
+    }
+}
+
+function uploadGroupImages()
+{
+    var folder = process.argv[3];
+    var path = "../../public/images/"+folder;
+    var files = fs.readdirSync(path);
+    var filePath;
+    var encodeGroupID;
+    for(var i in files)
+    {
+        filePath = path+"/"+files[i];
+        console.log(filePath);
+        //console.log(files[i]);
+        if(files[i].indexOf("png")!=-1||files[i].indexOf("jpg")!=-1) {
+
+            var idWithImageNumber = files[i].split("-");
+            var groupID = idWithImageNumber[0];
+            var imageNumber = idWithImageNumber[1].replace ( /[^\d]/g, '' );
+            console.log(groupID+","+imageNumber);
+            encodeGroupID = encodeID.encodeGroupID(parseInt(groupID))+"-"+imageNumber;
+
+            console.log("encodeGroupID:"+encodeGroupID);
+            cloudinary.uploader.upload(
+                filePath,
+                function(result) { console.log(result); },
+                {
+                    public_id: encodeGroupID
+                    //eager: [
+                    //    { width: 616, height:282, crop: 'limit', format: 'png' }
+                    //]
                 }
             )
         }
@@ -166,6 +220,10 @@ function onCommandLine()
     else if(functionName.toLowerCase() == 'uploadcityimages')
     {
         uploadCityImages();
+    }
+    else if(functionName.toLowerCase() == 'uploadgroupimages')
+    {
+        uploadGroupImages();
     }
 }
 
