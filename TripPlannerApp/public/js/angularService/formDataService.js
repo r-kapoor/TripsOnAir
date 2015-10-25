@@ -105,7 +105,8 @@ inputModule.service('formData', function () {
                     remainingDistance: remainingDistance,
                     numPersons: numPersons,
                     minimumBudget: minimumBudget,
-                    itineraryID: itineraryID
+                    itineraryID: itineraryID,
+                    suggestDestinationOn: suggestDestinationOn
                 };
             },
             setOrigin: function(origin) {
@@ -169,6 +170,7 @@ inputModule.service('formData', function () {
                 numPersons = allData.numPersons;
                 minimumBudget = allData.minimumBudget;
                 itineraryID = allData.itineraryID;
+                suggestDestinationOn = allData.suggestDestinationOn;
             },
             appendDestination: function(destination) {
                 destinationCities.push(destination);

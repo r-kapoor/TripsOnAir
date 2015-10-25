@@ -1,7 +1,7 @@
 inputModule.controller('KuberController', function($scope, $rootScope, $http, $q, $location, $window, $timeout, formData, cityData) {
     $scope.isDetailsCollapsed = false;
     $scope.isOverviewCollapsed = false;
-    $scope.isSuggestDestinationsOn = false;
+    $scope.isSuggestDestinationsOn = formData.getSuggestDestinationOn();
     $scope.destinationCityList = formData.getDestinations();
     $scope.helpLabel="Don't know where to go";
 

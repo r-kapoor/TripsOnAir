@@ -38,6 +38,13 @@
                 <!--end of wrapper class-->
             </div>
         </div><!--end of ng-repeat-->
+        <div ng-if="destinations.length==0 && gotData>1">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                   There are no destinations available to satisfy your requirements. Increase Your budget or change the duration.
+                </div>
+            </div>
+        </div>
     </div>
     <footer class="hidden-md hidden-lg sticky-footer text-center" ng-controller="indraController" style="padding-top: 0px">
         <div class="bottom-bar">

@@ -16,6 +16,23 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         $scope.formSubmitted = true;
         $scope.isSuggestCollapsed = false;
         $scope.suggestAllDestinations();
+        $scope.requestSemaphoreSingleCities = false;
+        $scope.requestSemaphoreMultiCities = false;
+        $scope.destinations=[];
+        completeDestinations = [];
+        remainderDestinations = [];
+        $scope.suggestDestCount = 0;
+        $scope.suggestGroupsCount = 0;
+        $scope.orgLat=0;
+        $scope.orgLong=0;
+        $scope.range=0;
+        $scope.gotData = 0;
+        $scope.singleCityCount = 0;
+        outOfBudgetCitiesShown = false;
+
+        $scope.userInputData=null;
+
+        $scope.alerts = [];
     });
 
     $scope.destinationCityList = formData.getDestinations();
@@ -24,6 +41,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         $scope.isSuggestCollapsed = true;
     });
 
+    $scope.gotData = 0;
     $scope.requestSemaphoreSingleCities = false;
     $scope.requestSemaphoreMultiCities = false;
     $scope.suggestDestCount = 0;
@@ -107,7 +125,9 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
 
     $scope.sendQuery=function(data)
     {
+        console.log("in send query"+$scope.requestSemaphoreSingleCities);
         if(!$scope.requestSemaphoreSingleCities) {
+            console.log("in IF");
             $scope.requestSemaphoreSingleCities = true;
             var suggestDestData = data;
             suggestDestData.next = $scope.suggestDestCount;
@@ -115,6 +135,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             $scope.suggestDestCount += cityBatchsize;
             $http.get('/suggestDest',{params:suggestDestData}).success(function(data,status){
                     $scope.requestSemaphoreSingleCities = false;
+                    $scope.gotData++;
                     //console.log("Success with data:"+JSON.stringify(data));
                     $scope.singleCitiesData(data,status);
                 }
@@ -132,6 +153,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             $scope.suggestGroupsCount += groupBatchSize;
             $http.get('/suggestGroups',{params:suggestGroupsData}).success(function(data,status){
                     $scope.requestSemaphoreMultiCities = false;
+                    $scope.gotData++;
                     console.log("Success");
                     $scope.multiCitiesData(data,status);
                 }
