@@ -22,6 +22,14 @@ function getDayWisePlaces(destinationAndStops) {
         //var numOfDays= arrivalTime.getDaysBetween(departureTime);
         var daysAndDatesInDestination=getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,checkOutTime,isHotelRequired);
 
+        var countOfNormalDays = 0;
+        for(var daysIterator = 0; daysIterator < daysAndDatesInDestination.length; daysIterator++){
+            if(daysAndDatesInDestination.typeOfDay == 1){
+                //Is a normal day
+                countOfNormalDays++;
+            }
+        }
+
         destinationAndStops.destinations[i].thingsToDoSelected.sort(comparePlaces);
         destinationAndStops.destinations[i].placesSelected.sort(comparePlaces);
         var thingsToDoSelected =destinationAndStops.destinations[i].thingsToDoSelected;
@@ -64,7 +72,7 @@ function getDayWisePlaces(destinationAndStops) {
             {
                 if(place2.Days=="0")
                 {
-                    return checkEstimatedDuration(place1,place2);
+                    return checkEstimatedDuration(place1,place2, countOfNormalDays);
                 }
                 else
                 {
@@ -310,21 +318,24 @@ function getNumOfDaysForWhichPlacesOpen(daysOfPlace,daysInDestination)
     return numOfDaysForWhichPlacesOpen;
 }
 
-function checkEstimatedDuration(place1,place2){
-
+function checkEstimatedDuration(place1,place2, countOfNormalDays){
+    var DAYS_IN_SHORT_TRIP = 2;
+    var returnValue = 0;
     if(place1.estimatedDurationOfPlace>place2.estimatedDurationOfPlace)
     {
-        return -1;
+        returnValue = -1;
     }
     else if(place1.estimatedDurationOfPlace<place2.estimatedDurationOfPlace)
     {
-        return 1;
+        returnValue = 1;
     }
-    else
-    {
-        return 0;
+    if(countOfNormalDays <= DAYS_IN_SHORT_TRIP){
+        //Is a short trip
+        return -returnValue;
     }
-
+    else {
+        return returnValue;
+    }
 }
 
 function combineDays(placeTimings) {
