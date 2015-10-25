@@ -2769,6 +2769,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
         for(var dateIndex in $scope.currentDestination.dateWiseItinerary) {
             var dateItinerary = $scope.currentDestination.dateWiseItinerary[dateIndex];
+            console.log('DATE ITINERARY:'+JSON.stringify(dateItinerary));
+            if(dateItinerary.permutation.length == 0){
+                //No places scheduled for this day. So no fix required
+                continue;
+            }
             var firstPlaceOfCurrentDay = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];
             var lastPlaceOfDay = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[dateItinerary.permutation.length-1]];
             var distanceToHotel;

@@ -5,6 +5,7 @@ require('date-utils');
 var getHotelList = require('../lib/getHotelListFromApi');
 var async  = require('async');
 var hashidEncoder =  require('../lib/hashEncoderDecoder');
+var getDistance = require('../lib/UtilityFunctions/getDistance');
 
 function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,hotelDataCallback) {
 
@@ -38,7 +39,6 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                 var arrivalDate = (arrDate.getMonth() + 1) + '/' + arrDate.getDate() + '/' +  arrDate.getFullYear();
                 var deptDate = new Date(citiesWhereHotelIsRequired[i].arrivalTime);
                 var departureDate = (deptDate.getMonth() + 1) + '/' + (deptDate.getDate()+1) + '/' +  deptDate.getFullYear();
-                console.log("testcity:"+JSON.stringify(citiesWhereHotelIsRequired[i]));
                 var latitude  = citiesWhereHotelIsRequired[i].LocationOfArrival.Latitude;
                 var longitude  = citiesWhereHotelIsRequired[i].LocationOfArrival.Longitude;
                 getHotelList.getHotelList(arrivalDate,departureDate,citiesWhereHotelIsRequired[i].name,citiesWhereHotelIsRequired[i].cityID,latitude,longitude,numOfPeople,connection,false,callback);
@@ -53,6 +53,66 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
         fns.push(funct);
     }
 
+    function getBetterHotelAndAdd(row, cityLatitude, cityLongitude, i) {
+        if (isHotelIsInDistanceLimit(row.Latitude, row.Longitude, cityLatitude, cityLongitude)) {
+            //Hotel within limits. Check the budget.
+            if (isHotelInBudget(row.Price, row.MaxPersons, perDayHotelBudget, numOfPeople)) {
+                //console.log("Hotel Is already there and is in budget");
+                //Checking the budget of the hotel now
+                if (row.Rating > hotelData[i].Rating) {
+                    //Current hotel's rating is better than selected one
+                    hotelData[i] = row;
+                    hotels[i].splice(0, 0, row);
+                }
+                else {
+                    //Selected one better. just add to list and continue
+                    hotels[i].push(row);
+                }
+            }
+            else {
+                if (row.Price < hotelData[i].Price) {
+                    hotelData[i] = row;
+                    hotels[i].splice(0, 0, row);
+                }
+                else {
+                    hotels[i].push(row);
+                }
+            }
+        }
+        else {
+            //The current hotel is outside the distance limit. Check if the selected hotel is within limit
+            if (!isHotelIsInDistanceLimit(hotelData[i].Latitude, hotelData[i].Longitude, cityLatitude, cityLongitude)) {
+                //Current hotel is also outside limits. Check the usual and select
+                if (isHotelInBudget(row.Price, row.MaxPersons, perDayHotelBudget, numOfPeople)) {
+                    //console.log("Hotel Is already there and is in budget");
+                    //Checking the budget of the hotel now
+                    if (row.Rating > hotelData[i].Rating) {
+                        //Current hotel's rating is better than selected one
+                        hotelData[i] = row;
+                        hotels[i].splice(0, 0, row);
+                    }
+                    else {
+                        //Selected one better. just add to list and continue
+                        hotels[i].push(row);
+                    }
+                }
+                else {
+                    if (row.Price < hotelData[i].Price) {
+                        hotelData[i] = row;
+                        hotels[i].splice(0, 0, row);
+                    }
+                    else {
+                        hotels[i].push(row);
+                    }
+                }
+            }
+            else {
+                //The selected is within limits. Just add to list and continue
+                hotels[i].push(row);
+            }
+        }
+    }
+
     async.parallel(
         fns,
         //callback
@@ -62,6 +122,12 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
             {
                 if(results[i].isFromApi)
                 {
+                    //Getting lat long for distance of hotel from city
+                    var cityLatitude = citiesWhereHotelIsRequired[i].pos.split(',')[0];
+                    var cityLongitude = citiesWhereHotelIsRequired[i].pos.split(',')[1];
+                    citiesWhereHotelIsRequired[i].latitude = cityLatitude;
+                    citiesWhereHotelIsRequired[i].longitude = cityLongitude;
+
                     var hotelLength = results[i].HotelListResponse.HotelList['@size'];
                     for(var j=0;j<hotelLength;j++)
                     {
@@ -97,7 +163,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                             HotelDeepLink:hotel.deepLink,
                             RoomType:room.roomDescription,
                             MaxPersons:room.quotedRoomOccupancy,
-                            Price:room.RateInfo.ChargeableRateInfo['@total'],
+                            Price:parseInt(room.RateInfo.ChargeableRateInfo['@total']),
                             isFromApi:true
                         };
 
@@ -115,29 +181,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                         }
                         else
                         {
-                            if(isHotelInBudget(row.Price,row.MaxPersons,perDayHotelBudget,numOfPeople))
-                            {
-                                //console.log("Hotel Is already there and is in budget");
-                                if(row.Rating>hotelData[i].Rating)
-                                {
-                                    hotelData[i]=row;
-                                    hotels[i].splice(0,0,row);
-                                }
-                                else {
-                                    hotels[i].push(row);
-                                }
-                            }
-                            else
-                            {
-                                if(row.Price<hotelData[i].Price)
-                                {
-                                    hotelData[i]=row;
-                                    hotels[i].splice(0,0,row);
-                                }
-                                else {
-                                    hotels[i].push(row);
-                                }
-                            }
+                            getBetterHotelAndAdd(row, cityLatitude, cityLongitude, i);
                         }
                     }
                 }
@@ -160,29 +204,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
                         }
                         else
                         {
-                            if(isHotelInBudget(row.Price,row.MaxPersons,perDayHotelBudget,numOfPeople))
-                            {
-                                //console.log("Hotel Is already there and is in budget");
-                                if(row.Rating>hotelData[i].Rating)
-                                {
-                                    hotelData[i]=row;
-                                    hotels[i].splice(0,0,row);
-                                }
-                                else {
-                                    hotels[i].push(row);
-                                }
-                            }
-                            else
-                            {
-                                if(row.Price<hotelData[i].Price)
-                                {
-                                    hotelData[i]=row;
-                                    hotels[i].splice(0,0,row);
-                                }
-                                else {
-                                    hotels[i].push(row);
-                                }
-                            }
+                            getBetterHotelAndAdd(row, cityLatitude, cityLongitude, i);
                         }
                     }
                 }
@@ -190,7 +212,7 @@ function getHotelData (destinationsAndStops,hotelBudget, numOfPeople,connection,
 
             for(var k=0;k<destinationsAndStops.destinations.length;k++)
             {
-                var destIndex=destinationsAndStops.destinations.indexOf(citiesWhereHotelIsRequired[k]);
+                destIndex=destinationsAndStops.destinations.indexOf(citiesWhereHotelIsRequired[k]);
                 console.log("DestIndex:"+destIndex);
                 console.log(JSON.stringify(hotelData[k]));
                 if(destIndex != -1){
@@ -237,6 +259,12 @@ function isHotelInBudget(price,maxPersons,perDayHotelBudget,numOfPeople)
             return false;
         }
     }
+}
+
+function isHotelIsInDistanceLimit(hotelLatitude, hotelLongitude, cityLatitude, cityLongitude){
+    var DISTANCE_LIMIT = 20;
+    var distance = getDistance.getDistance(hotelLatitude, hotelLongitude, cityLatitude, cityLongitude);
+    return (distance <= DISTANCE_LIMIT);
 }
 
 function setHotelIndices(hotels){

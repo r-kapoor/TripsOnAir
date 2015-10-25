@@ -684,6 +684,10 @@ function setStartSightSeeingTime(dateWisePlaceData, previousDaysDateWisePlaceDat
     else {
         dateWisePlaceData.startSightSeeingTime = previousDaysDateWisePlaceData.endSightSeeingTime.clone().addMinutes(REST_TIME);
     }
+    if(dateWisePlaceData.startSightSeeingTime.isBefore(dateWisePlaceData.currentDate)){
+        //Startsightseeingtime before currentdate(this can be possible if adding resttime to endtime is still in last day). Need to move to current day
+        dateWisePlaceData.startSightSeeingTime = dateWisePlaceData.currentDate.clone();
+    }
 }
 
 
