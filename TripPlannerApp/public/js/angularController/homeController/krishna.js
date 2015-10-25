@@ -149,7 +149,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         $scope.orgLong=data.orgLong;
         $scope.range=data.range;
 
-        console.log('LENGHT:'+data.CityList.length);
+        //console.log('LENGHT:'+data.CityList.length);
         angular.forEach(data.CityList, function(city, index) {
             city.CityCount = $scope.singleCityCount;
             $scope.singleCityCount += 1;
@@ -158,7 +158,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         var cityListLength = data.CityList.length;
         if(cityListLength < cityBatchsize) {
             //The number is less than expected. The data has finished
-            console.log('Data Cities:'+JSON.stringify(data.CityList));
+            //console.log('Data Cities:'+JSON.stringify(data.CityList));
             $scope.requestSemaphoreSingleCities = true;
             if(cityListLength % 5==0){
                 completeDestinations = completeDestinations.concat(data.CityList);
@@ -180,8 +180,8 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 completeDestinations = completeDestinations.concat(data.CityList);
                 remainderDestinations = remainderDestinations.concat(remainderCities);
                 $scope.destinations = completeDestinations.concat(remainderDestinations);
-                console.log('Remainder Cities:'+JSON.stringify(remainderCities));
-                console.log('Concat Cities:'+JSON.stringify(data.CityList));
+                //console.log('Remainder Cities:'+JSON.stringify(remainderCities));
+                //console.log('Concat Cities:'+JSON.stringify(data.CityList));
             }
         }
         else {
@@ -415,12 +415,12 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 }
                 //console.log("markFunc:"+JSON.stringify(suggestedDestination)+":"+isSelected);
                 if(isSelected) {
-                    suggestedDestination.selected = 'selected';
-                    suggestedDestination.disabled = 'disabled';
+                    suggestedDestination.selected = true;
+                    //suggestedDestination.disabled = 'disabled';
                 }
                 else {
-                    suggestedDestination.selected = null;
-                    suggestedDestination.disabled = null;
+                    suggestedDestination.selected = false;
+                    //suggestedDestination.disabled = null;
                 }
             }
             else {
@@ -433,12 +433,12 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                     }
                 }
                 if(isSelected) {
-                    suggestedDestination.selected = 'selected';
-                    suggestedDestination.disabled = 'disabled';
+                    suggestedDestination.selected = true;
+                    //suggestedDestination.disabled = 'disabled';
                 }
                 else {
-                    suggestedDestination.selected = null;
-                    suggestedDestination.disabled = null;
+                    suggestedDestination.selected = false;
+                    //suggestedDestination.disabled = null;
                 }
             }
         })
@@ -451,20 +451,24 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         return false;
     };
 
-    $scope.getSelectedDataClass=function(destination)
+    $scope.getSelectedData=function(destination)
     {
-        //console.log("inSelectedDataClass:"+destination);
+        //console.log("inSelectedDataClass:"+destination.selected);
+        if(destination==undefined || destination.selected==undefined)
+        {
+            return false;
+        }
         return destination.selected;
     };
 
-    $scope.getSelectedDataDisabled=function(destination)
-    {
-        //console.log("inSelectedDataClass:"+destination);
-        return destination.disabled;
-    };
+    //$scope.getSelectedDataDisabled=function(destination)
+    //{
+    //    //console.log("inSelectedDataClass:"+destination);
+    //    return destination.disabled;
+    //};
 
     $scope.getOutOfBudgetClass=function(destination) {
-        if(destination.selected !== 'selected') {
+        if(!destination.selected) {
             return destination.outOfBudget;
         }
         return null;

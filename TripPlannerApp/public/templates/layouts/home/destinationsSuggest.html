@@ -17,16 +17,19 @@
         <div ng-repeat="destinationsData in destinations">
             <div class="{{getClassCol($index)}}" style="padding: 0;margin-bottom: 0;">
                 <div class="wrapper">
-                    <a href="#" class="thumbnail {{getSelectedDataClass(destinationsData)}} {{getOutOfBudgetClass(destinationsData)}}" style="margin-bottom: 0;">
+                    <a class="thumbnail {{getOutOfBudgetClass(destinationsData)}}" style="margin-bottom: 0;">
                         <!--<img ng-src="{{destinationsData.Image}}" class="img-responsive" style="width: 100%"/>-->
                         <img ng-if="destinationsData.GroupID==undefined" ng-src="http://res.cloudinary.com/picsonair/image/upload/{{destinationsData.CityID}}.png" class="img-responsive" style="width: 616px;min-height: 282px"/>
                         <img ng-if="destinationsData.GroupID!=undefined" ng-src="http://res.cloudinary.com/picsonair/image/upload/{{destinationsData.GroupID}}-1.png" class="img-responsive" style="width: 616px;min-height: 282px"/>
                     </a>
-                    <div class="btn btn-default add-button {{getSelectedDataDisabled(destinationsData)}}" ng-click="destinationSelected($index)">
+                    <div ng-if="!getSelectedData(destinationsData)" class="btn btn-default add-button" ng-click="destinationSelected($index)">
                         <i class="glyphicon glyphicon-plus"></i>
                     </div>
+                    <div ng-if="getSelectedData(destinationsData)" class="btn btn-success add-button">
+                        <i class="glyphicon glyphicon-ok"></i>
+                    </div>
                     <div class="name">
-                        <p class="name_content">
+                        <p class="name_content text-center">
                             {{destinationsData.CityName}}
                         </p>
                     </div>

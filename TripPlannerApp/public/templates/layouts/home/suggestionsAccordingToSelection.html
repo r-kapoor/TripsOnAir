@@ -11,8 +11,11 @@
                     <div class="row">
                         <!--<div class="wrapper">-->
                         <div ng-repeat="suggestion in suggestionSet.suggestionArray">
-                        <div class="col-xs-3"><a href="#x"><img ng-src="images/agra.jpg" style="margin:auto" class="img-responsive"></a>
-                            <div class="btn btn-default add-button" ng-click="destinationSelected(suggestion)">
+                        <div class="col-xs-3">
+                            <!--<a href="#x"><img ng-src="images/agra.jpg" style="margin:auto" class="img-responsive">-->
+                            <!--</a>-->
+                            <a href="#x"><img ng-src="http://res.cloudinary.com/picsonair/image/upload/{{suggestion.CityID}}.png" class="img-responsive" style="margin:auto"/></a>
+                            <div class="btn btn-default add-button" ng-click="destinationSelected(suggestion)" style="right:15px !important;">
                                 <i class="glyphicon glyphicon-plus"></i>
                             </div>
                             <div class="name">

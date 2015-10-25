@@ -115,7 +115,7 @@ function uploadCityImages()
             else
             {
                 cropImage = {
-                    public_id: encodedCityID,
+                    public_id: encodedCityID+"_dp",
                     eager: [
                         { width: 200, crop: 'limit', format: 'png' }
                     ]

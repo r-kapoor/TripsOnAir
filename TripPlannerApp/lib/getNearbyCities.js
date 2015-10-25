@@ -3,9 +3,12 @@
  * Find the nearby cities from db batch wise according to the selected cities
  */
 'use strict';
-var Hashids=require('hashids');
-var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
-var hashidscity = new Hashids("encrypting the cityid", 8);
+//var Hashids=require('hashids');
+//var hashidsgroup = new Hashids("encrypting the groupid using hash", 8);
+//var hashidscity = new Hashids("encrypting the cityid", 8);
+
+var hashidEncoder =  require('../lib/hashEncoderDecoder');
+
 function getNearbyCityList(conn,destinations,orgLat,orgLong,taste,distRemaining,start,batchsize,callback) {
 
 	var maxDistance = 250;//The distance between the current and suggested city should not exceed the value
@@ -51,7 +54,7 @@ function getNearbyCityList(conn,destinations,orgLat,orgLong,taste,distRemaining,
 			console.log('Getting result');
 			for (var i in rows) {
 				console.log('Rows Returned Nearby');
-		        var id = hashidscity.encode(rows[i].CityID);
+		        var id = hashidEncoder.encodeCityID(rows[i].CityID);
 				rows[i].CityID = id;
 				console.log(rows[i]);
 	    	}
