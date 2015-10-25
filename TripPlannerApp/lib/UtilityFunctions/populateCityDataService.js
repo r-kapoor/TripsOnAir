@@ -4,7 +4,7 @@
 var conn = require('../../lib/database');
 var encodeCityID = require('../../lib/hashEncoderDecoder');
 
-function populateCityDataService(callback) {
+function populateCityDataService() {
     var connection=conn.conn();
     connection.connect();
     var queryString = "SELECT a.CityID, CityName, AlternateName, State, CityImage, tier, Latitude, Longitude, IsDestination FROM "
@@ -24,23 +24,23 @@ function populateCityDataService(callback) {
                 rows[i].CityID=encodeCityID.encodeCityID(rows[i].CityID);
             }
 
-            //var fs = require('fs');
-            //var writeContent = "inputModule.service('cityData', function () { var data = " + JSON.stringify(rows) + "; return {getProperty: function () {"
-            //+"return data;}};});";
-            //fs.writeFile("../../public/js/angularService/cityDataService.js", writeContent, function(err) {
-            //    if (err) {
-            //        console.log(err);
-            //    } else {
-            //        console.log("The file cityDataService was saved!");
-            //    }
-            //});
+            var fs = require('fs');
+            var path = require('path');
+            var writeContent = "inputModule.service('cityData', function () { var data = " + JSON.stringify(rows) + "; return {getProperty: function () {"
+                +"return data;}};});";
+            var filePath = path.join(__dirname, '../../public/js/angularService/cityDataService.js');
+            fs.writeFile(filePath, writeContent, function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("The file cityDataService was saved!");
+                }
+            });
+
         }
-        callback(rows);
+        //callback(rows);
     });
     connection.end();
 }
-
-module.exports.populateCityDataService = populateCityDataService;
 //populateCityDataService();
-
 
