@@ -5,6 +5,8 @@ require('date-utils');
 getDistance = require('../lib/UtilityFunctions/getDistance');
 getDirection = require('../lib/UtilityFunctions/getDirection');
 getCalendarDaysBetween = require('../lib/UtilityFunctions/getCalendarDaysBetween');
+
+var MAX_PLACES_IN_A_DAY = 6;
 function getDayWisePlaces(destinationAndStops) {
     console.log('Enters getDayWisePlaces');
     for(var i=0;i<destinationAndStops.destinations.length;i++)
@@ -387,18 +389,25 @@ function addPlacesToDates(datesInDestination,placesSelected, startLocationPositi
                     if(hasPlaces(datesInDestination[dateIndex])) {
                         //This day already has some places scheduled
                         console.log('This day already has some places scheduled');
-                        if(hasTimeLeftOnThisDay(placesSelected[placeIndex], datesInDestination[dateIndex])) {
-                            //There is time to put the destination on this day
-                            console.log('There is time to put the destination on this day');
-                            var minDistanceAndDirection = getMinDistanceAndDirectionFromExistingPlace(placesSelected[placeIndex], datesInDestination[dateIndex], startLocationPosition);
-                            if(isBetterDateToInsertPlace(bestDateAttributes, minDistanceAndDirection, datesInDestination.length)) {
-                                console.log('This day is better than last selected with attributes:'+JSON.stringify(minDistanceAndDirection));
-                                bestDateAttributes = minDistanceAndDirection;
-                                insertIntoDateIndex = dateIndex;
+                        if(!hasReachedMaxPlacesInADay(datesInDestination[dateIndex]))
+                        {
+                            if(hasTimeLeftOnThisDay(placesSelected[placeIndex], datesInDestination[dateIndex])) {
+                                //There is time to put the destination on this day
+                                console.log('There is time to put the destination on this day');
+                                var minDistanceAndDirection = getMinDistanceAndDirectionFromExistingPlace(placesSelected[placeIndex], datesInDestination[dateIndex], startLocationPosition);
+                                if(isBetterDateToInsertPlace(bestDateAttributes, minDistanceAndDirection, datesInDestination.length)) {
+                                    console.log('This day is better than last selected with attributes:'+JSON.stringify(minDistanceAndDirection));
+                                    bestDateAttributes = minDistanceAndDirection;
+                                    insertIntoDateIndex = dateIndex;
+                                }
+                            }
+                            else {
+                                console.log('No time on This day for the place');
                             }
                         }
-                        else {
-                            console.log('No time on This day for the place');
+                        else
+                        {
+                            console.log('Has reached max places on this day');
                         }
                     }
                     else {
@@ -654,7 +663,9 @@ function hasPlaces(dateObject) {
     return dateObject.placesData != undefined;
 }
 
-
+function hasReachedMaxPlacesInADay(dateObject){
+    return (dateObject.placesData.length>=MAX_PLACES_IN_A_DAY);
+}
 
 function test() {
     var d1 = new Date(2015, 0, 30, 8);
