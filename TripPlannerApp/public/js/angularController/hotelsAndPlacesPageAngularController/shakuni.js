@@ -151,7 +151,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.getItinerary = function(){
         itineraryID = $location.absUrl().split('/')[4].replace(/[^0-9a-z]/g,"");
 
-        $http.get('/planItinerary/'+itineraryID).success(function(data,status){
+        var randomString = Math.random(); //For forcing
+        var queryString = "/planItinerary/"+itineraryID+"?nocache="+randomString;
+
+        $http.get(queryString).success(function(data,status){
             //Mix Panel
             //mixpanel.time_event("CustomizePlaces");
             //mixpanel.time_event("CustomizeHotels");
