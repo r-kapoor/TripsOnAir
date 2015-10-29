@@ -22,14 +22,19 @@
                                 width:250px;min-height:128px"/>
                             </a>
                             <span class="label label-success rating">{{getPlaceRating(place)}}</span>
-                            <div du-smooth-scroll ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:14% !important;top:2%" ng-click="replaceLowerPanelPlace($event,$index);scrollToView()">
-                                <i class="glyphicon glyphicon-retweet"></i>
-                            </div>
-                            <div ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:27% !important;top:2%" ng-click="addPlace($event, place)">
-                                <i class="glyphicon glyphicon-plus"></i>
+                            <div ng-if="!replacePlaceOn">
+                                <div title="Click to replace a place" du-smooth-scroll ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:14% !important;top:2%" ng-click="replaceLowerPanelPlace($event,$index);scrollToView()">
+                                    <i class="glyphicon glyphicon-retweet"></i>
+                                </div>
+                                <div title="Click to add a place" ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:27% !important;top:2%" ng-click="addPlace($event, place)">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                </div>
                             </div>
                             <div ng-if="place.placeAdded" class="btn btn-success btn-sm add-button" style="right:14% !important;">
-                                <i class=" glyphicon glyphicon-ok"></i>
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </div>
+                            <div ng-if="!place.placeAdded && replacePlaceOn" title="Click to undo" class="btn btn-danger btn-sm add-button" style="right:14% !important;" ng-click="replaceLowerPanelPlace($event,$index)">
+                                <i class="glyphicon glyphicon-remove-circle"></i>
                             </div>
                         </div>
                         <div class="col-md-4" style="padding:0px">
@@ -127,7 +132,7 @@
                                     {{replaceLabel}}
                                 </div>
                             </div>
-                            <div ng-if="!place.placeAdded">
+                            <div ng-if="!place.placeAdded && !replacePlaceOn">
                                 <div class="btn btn-default" style="position:absolute;top:0;right:50%;z-index:100" ng-click="addPlace($event, place)">
                                     <!--<i class="glyphicon glyphicon-plus"></i>-->
                                     Add

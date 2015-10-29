@@ -108,7 +108,11 @@
                         </div>
                     </timeline-heading>
                     <timeline-content class="text-center">
-                        <div class="btn btn-primary" ng-click="replaceMe($event,$index, parentIndex)">Replace a place here</div>
+                        <div ng-if="!replacePlaceOn" style="cursor: pointer">Add a place here</div>
+                        <div ng-if="replacePlaceOn">
+                            <div class="btn btn-primary" style="top:20%;position: absolute;left:20%;z-index:102" ng-click="replaceMe($event,$index, parentIndex)">Click Here To Replace</div>
+                            <div style="position:absolute;top:0;height: 100%;width:100%;z-index:100;opacity: 0.6;background-color: grey;left: 0px"></div>
+                        </div>
                     </timeline-content>
                 </timeline-panel>
                 <timeline-panel id="place-{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}" ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">
