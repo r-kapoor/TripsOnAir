@@ -1,7 +1,7 @@
 /**
  * Created by rkapoor on 01/05/15.
  */
-itineraryModule.controller('ModalInstanceCtrl', function ($scope, $rootScope,$modalInstance) {
+itineraryModule.controller('ModalInstanceCtrl', ['$scope', '$rootScope','$modalInstance', function ($scope, $rootScope,$modalInstance) {
 
     $scope.permalink = "Getting Link..";
     $scope.isShareOn = false;
@@ -29,4 +29,4 @@ itineraryModule.controller('ModalInstanceCtrl', function ($scope, $rootScope,$mo
     $rootScope.$on('gotPermalink',function onGotPermalink(event,permalink){
         $scope.permalink = permalink;
     });
-});
+}]);

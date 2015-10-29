@@ -24,7 +24,7 @@ itineraryModule.directive('postRepeat', ['$timeout', function($timeout) {
     };
 }]);
 
-itineraryModule.controller('shakuniController',  function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData, $cookies, $location,$window) {
+itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http','$modal', '$timeout', '$document','$filter','mapData', '$cookies', '$location','$window', function($scope, $rootScope, $http,$modal, $timeout, $document,$filter,mapData, $cookies, $location,$window) {
 
     $scope.origin = null;
     $scope.destinations = null;
@@ -172,12 +172,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             $scope.currentDestination.isCurrent = true;
             $scope.currentDay = 0;
 
+            var stopIndex = 0, stop = null;
             //only for showCityPanel
             if($scope.stops[0]!=undefined)
             {
-                for(var stopIndex =0;stopIndex<$scope.stops[0].length;stopIndex++)
+                for(stopIndex =0;stopIndex<$scope.stops[0].length;stopIndex++)
                 {
-                    var stop = $scope.stops[0][stopIndex];
+                    stop = $scope.stops[0][stopIndex];
                     stop.isDestination = false;
                     $scope.destinationsWithStop.push(stop);
                 }
@@ -191,9 +192,9 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 $scope.destinationsWithStop.push(destination);
                 if($scope.stops[destinationIndex+1]!=undefined)
                 {
-                    for(var stopIndex =0;stopIndex<$scope.stops[destinationIndex+1].length;stopIndex++)
+                    for(stopIndex =0;stopIndex<$scope.stops[destinationIndex+1].length;stopIndex++)
                     {
-                        var stop = $scope.stops[destinationIndex+1][stopIndex];
+                        stop = $scope.stops[destinationIndex+1][stopIndex];
                         stop.isDestination = false;
                         $scope.destinationsWithStop.push(stop);
                     }
@@ -481,14 +482,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         else {
             //console.log('Not Inserted In Place Holder, Trying to insert elsewhere');
             var Time2Cover = place.Time2Cover;
-
+            var dateWiseItinerary = null, dateWisePlaceData = null;
             if(hasHotel) {
                 var placeAdditionCandidates = [];
                 for(var itineraryIndex in $scope.currentDestination.dateWiseItinerary){
                     //console.log(itineraryIndex);
                     itineraryIndex = parseInt(itineraryIndex);
-                    var dateWiseItinerary = $scope.currentDestination.dateWiseItinerary[itineraryIndex];
-                    var dateWisePlaceData = dateWiseItinerary.dateWisePlaceData;
+                    dateWiseItinerary = $scope.currentDestination.dateWiseItinerary[itineraryIndex];
+                    dateWisePlaceData = dateWiseItinerary.dateWisePlaceData;
 
 
                     if(dateWisePlaceData.typeOfDay == 0) {
@@ -555,7 +556,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                                     type: 'eveningCheckOut',
                                     dateWiseItinerary: dateWiseItinerary,
                                     dateWiseItineraryIndex:itineraryIndex
-                                })
+                                });
                             }
                         }
                     }
@@ -831,10 +832,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var placeClone = clone(place);
         var locationOfArrival = $scope.currentDestination.LocationOfArrival;
         var locationOfDeparture = $scope.currentDestination.LocationOfDeparture;
+        var currentPlace = null, currentPlaceClone = null;
         if(!data.isSwap) {
             //A new place has been dropped from places
-            var currentPlace = $scope.allPlaces[data.placeIndex];
-            var currentPlaceClone = clone(currentPlace);
+            currentPlace = $scope.allPlaces[data.placeIndex];
+            currentPlaceClone = clone(currentPlace);
             //console.log("replacePlace:"+replacePlace(currentPlaceClone,index,dateItineraryClone));
             if(replacePlace(currentPlaceClone,index,dateItineraryClone, locationOfArrival, locationOfDeparture))
             {
@@ -856,8 +858,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var currentDateItinerary = $scope.currentDestination.dateWiseItinerary[data.dateItineraryIndex];
             var currentDateItineraryClone = clone(currentDateItinerary);
             var currentIndex = data.permutationIndex;
-            var currentPlace = currentDateItinerary.dateWisePlaceData.placesData[currentDateItinerary.permutation[currentIndex]];
-            var currentPlaceClone = clone(currentPlace);
+            currentPlace = currentDateItinerary.dateWisePlaceData.placesData[currentDateItinerary.permutation[currentIndex]];
+            currentPlaceClone = clone(currentPlace);
 
             if(data.dateItineraryIndex==dateItineraryIndex)
             {//same Day
@@ -973,14 +975,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 name:"Hotel",
                 Latitude:$scope.currentDestination.hotelDetails.Latitude,
                 Longitude:$scope.currentDestination.hotelDetails.Longitude
-            }
+            };
         }
         else {
             originPosition = {
                 name: dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index - 1]].Name,
                 Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index - 1]].Latitude,
                 Longitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index - 1]].Longitude
-            }
+            };
         }
         var destinationPosition = {
             Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].Latitude,
@@ -1005,14 +1007,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 name:"Hotel",
                 Latitude:$scope.currentDestination.hotelDetails.Latitude,
                 Longitude:$scope.currentDestination.hotelDetails.Longitude
-            }
+            };
         }
         else {
             destinationPosition = {
                 name: dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index + 1]].Name,
                 Latitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index + 1]].Latitude,
                 Longitude:dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index + 1]].Longitude
-            }
+            };
         }
         var time = getTimeFromPlaces(originPosition, destinationPosition);
         var formattedTime = formatTime(time);
@@ -1270,6 +1272,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         //console.log("$scope.isFixItinerary:"+$scope.isFixItinerary.fix);
         if($scope.isFixItinerary.fix)
         {
+            var previousPlace = null;
             if(dateItinerary.permutation.length==1)
             {
                 //only one place
@@ -1303,7 +1306,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     isSufficientTimeInHotel(dateItinerary, dateItineraryIndex, 0);
                 }
 
-                var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];
+                previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];
                 if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
                     previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
                     previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
@@ -1325,7 +1328,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     }
                 }
                 if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime))) {
-                    var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+                    previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
                     previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
                     previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
                     fixPrePlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel, index);
@@ -1335,14 +1338,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             {
                 //normal place
                 if(getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeArrivalTime))) {
-                    var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+                    previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
                     previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
                     previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
                     fixPrePlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel,index);
                 }
 
                 if (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTimeClone) != (getTimeFromDate(dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]].placeDepartureTime))) {
-                    var previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+                    previousPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
                     previousPlace.placeArrivalTime = previousPlace.placeArrivalTimeClone;
                     previousPlace.placeDepartureTime = previousPlace.placeDepartureTimeClone;
                     fixPostPlaceItinerary(dateItinerary,previousPlace,dateItineraryIndex,hotel, index);
@@ -1540,12 +1543,16 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var timeToPlace1 = distanceToPlace1/SPEED;
         var timeToPlace2 = distanceToPlace2/SPEED;
 
+        var place3 = null, distFromPlace1 = null, timeFromPlace1 = null, place1DepartureTime = null, selectedTimeIndex = 0, place1ArrivalTime = null,
+            place2DepartureTime = null, selectedPlace2TimeIndex = null, place2ArrivalTime = null, place0 = null, distFromPlace2 = null, timeFromPlace2 = null;
+
+
         if(index1 == 0 && index2 == dateItinerary.permutation.length-1)
         {
             var place1TimingsArray = getDateArrayFromPlaceTimings(place1.PlaceTimings,place1.placeArrivalTime);
             var place2TimingsArray = getDateArrayFromPlaceTimings(place2.PlaceTimings,place2.placeArrivalTime);
             var placeTimingsFinalArray = [];
-            var place1DepartureTime = place1.placeDepartureTime;
+            place1DepartureTime = place1.placeDepartureTime;
             var finalPlace2DepartureTime;
             for(var timingIndex = 0;timingIndex<place1TimingsArray.length;timingIndex++)
             {
@@ -1594,7 +1601,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         placeTimingsFinalArray.push({
                             timeStart:maxTimeStart,
                             timeEnd: minTimeEnd
-                        })
+                        });
                     }
                 }
             }
@@ -1617,10 +1624,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     else
                     {
                         //console.log('In else');
+                        var timeDiff = null;
                         if(getTimeFromDate(timeStart)>getTimeFromDate(place1DepartureTime))
                         {
                             //console.log('In 2nd if');
-                            var timeDiff = getTimeFromDate(timeStart)-getTimeFromDate(place1DepartureTime);
+                            timeDiff = getTimeFromDate(timeStart)-getTimeFromDate(place1DepartureTime);
                             if(minTimeDifference==-1 || minTimeDifference>timeDiff)
                             {
                                 minTimeDifference= timeDiff;
@@ -1630,7 +1638,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                         else if(getTimeFromDate(timeEnd)<getTimeFromDate(place1DepartureTime))
                         {
                             //console.log('In 2nd else');
-                            var timeDiff = getTimeFromDate(place1DepartureTime)-getTimeFromDate(timeEnd);
+                            timeDiff = getTimeFromDate(place1DepartureTime)-getTimeFromDate(timeEnd);
                             if(minTimeDifference==-1 || minTimeDifference>timeDiff)
                             {
                                 minTimeDifference= timeDiff;
@@ -1665,18 +1673,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else if(index1 == 0)
         {
-            var place3 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index2+1]];
-            var distFromPlace1 = getDistance(place1.Latitude,place1.Longitude,place3.Latitude,place3.Longitude);
-            var timeFromPlace1 = distFromPlace1/SPEED;
-            var place1DepartureTime = new Date(getTimeFromDate(place3.placeArrivalTime) - timeFromPlace1*HOURS_TO_MILLISECONDS);
-            var selectedTimeIndex = getPlaceTimingsToSelect(place1DepartureTime,place1.PlaceTimings);
-            var place1ArrivalTime = new Date(getTimeFromDate(place1DepartureTime) - place1.Time2Cover*MINUTES_TO_MILLISECONDS);
+            place3 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index2+1]];
+            distFromPlace1 = getDistance(place1.Latitude,place1.Longitude,place3.Latitude,place3.Longitude);
+            timeFromPlace1 = distFromPlace1/SPEED;
+            place1DepartureTime = new Date(getTimeFromDate(place3.placeArrivalTime) - timeFromPlace1*HOURS_TO_MILLISECONDS);
+            selectedTimeIndex = getPlaceTimingsToSelect(place1DepartureTime,place1.PlaceTimings);
+            place1ArrivalTime = new Date(getTimeFromDate(place1DepartureTime) - place1.Time2Cover*MINUTES_TO_MILLISECONDS);
             place1.placeArrivalTime = place1ArrivalTime;
             place1.placeDepartureTime = place1DepartureTime;
 
-            var place2DepartureTime = new Date(getTimeFromDate(place1.placeArrivalTime) - timeBetweenPlaces*HOURS_TO_MILLISECONDS);
-            var selectedPlace2TimeIndex = getPlaceTimingsToSelect(place2DepartureTime,place2.PlaceTimings);
-            var place2ArrivalTime = new Date(getTimeFromDate(place2DepartureTime) - place2.Time2Cover*MINUTES_TO_MILLISECONDS);
+            place2DepartureTime = new Date(getTimeFromDate(place1.placeArrivalTime) - timeBetweenPlaces*HOURS_TO_MILLISECONDS);
+            selectedPlace2TimeIndex = getPlaceTimingsToSelect(place2DepartureTime,place2.PlaceTimings);
+            place2ArrivalTime = new Date(getTimeFromDate(place2DepartureTime) - place2.Time2Cover*MINUTES_TO_MILLISECONDS);
 
             place2.placeArrivalTime = place2ArrivalTime;
             place2.placeDepartureTime = place2DepartureTime;
@@ -1721,18 +1729,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else if(index2 == dateItinerary.permutation.length -1)
         {
-            var place0 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index1-1]];
-            var distFromPlace2 = getDistance(place2.Latitude,place2.Longitude,place0.Latitude,place0.Longitude);
-            var timeFromPlace2 = distFromPlace2/SPEED;
-            var place2ArrivalTime = new Date(getTimeFromDate(place0.placeDepartureTime) + timeFromPlace2*HOURS_TO_MILLISECONDS);
-            var selectedTimeIndex = getPlaceTimingsToSelect(place2ArrivalTime,place2.PlaceTimings);
-            var place2DepartureTime = new Date(getTimeFromDate(place2ArrivalTime) + place2.Time2Cover*MINUTES_TO_MILLISECONDS);
+            place0 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index1-1]];
+            distFromPlace2 = getDistance(place2.Latitude,place2.Longitude,place0.Latitude,place0.Longitude);
+            timeFromPlace2 = distFromPlace2/SPEED;
+            place2ArrivalTime = new Date(getTimeFromDate(place0.placeDepartureTime) + timeFromPlace2*HOURS_TO_MILLISECONDS);
+            selectedTimeIndex = getPlaceTimingsToSelect(place2ArrivalTime,place2.PlaceTimings);
+            place2DepartureTime = new Date(getTimeFromDate(place2ArrivalTime) + place2.Time2Cover*MINUTES_TO_MILLISECONDS);
             place2.placeArrivalTime = place2ArrivalTime;
             place2.placeDepartureTime = place2DepartureTime;
 
-            var place1ArrivalTime = new Date(getTimeFromDate(place2.placeDepartureTime) + timeBetweenPlaces*HOURS_TO_MILLISECONDS);
-            var selectedPlace1TimeIndex = getPlaceTimingsToSelect(place1ArrivalTime,place1.PlaceTimings);
-            var place1DepartureTime = new Date(getTimeFromDate(place1ArrivalTime) + place1.Time2Cover*MINUTES_TO_MILLISECONDS);
+            place1ArrivalTime = new Date(getTimeFromDate(place2.placeDepartureTime) + timeBetweenPlaces*HOURS_TO_MILLISECONDS);
+            selectedPlace1TimeIndex = getPlaceTimingsToSelect(place1ArrivalTime,place1.PlaceTimings);
+            place1DepartureTime = new Date(getTimeFromDate(place1ArrivalTime) + place1.Time2Cover*MINUTES_TO_MILLISECONDS);
             place1.placeArrivalTime = place1ArrivalTime;
             place1.placeDepartureTime = place1DepartureTime;
             dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index1]] = place2;
@@ -1777,20 +1785,20 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         else
         {
             //The places are in between places
-            var place0 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index1-1]];
-            var distFromPlace2 = getDistance(place2.Latitude,place2.Longitude,place0.Latitude,place0.Longitude);
-            var timeFromPlace2 = distFromPlace2/SPEED;
-            var place2ArrivalTime = new Date(getTimeFromDate(place0.placeDepartureTime) + timeFromPlace2*HOURS_TO_MILLISECONDS);
+            place0 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index1-1]];
+            distFromPlace2 = getDistance(place2.Latitude,place2.Longitude,place0.Latitude,place0.Longitude);
+            timeFromPlace2 = distFromPlace2/SPEED;
+            place2ArrivalTime = new Date(getTimeFromDate(place0.placeDepartureTime) + timeFromPlace2*HOURS_TO_MILLISECONDS);
 
-            var place3 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index2+1]];
-            var distFromPlace1 = getDistance(place1.Latitude,place1.Longitude,place3.Latitude,place3.Longitude);
-            var timeFromPlace1 = distFromPlace1/SPEED;
-            var place1DepartureTime = new Date(getTimeFromDate(place3.placeArrivalTime) - timeFromPlace1*HOURS_TO_MILLISECONDS);
+            place3 = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index2+1]];
+            distFromPlace1 = getDistance(place1.Latitude,place1.Longitude,place3.Latitude,place3.Longitude);
+            timeFromPlace1 = distFromPlace1/SPEED;
+            place1DepartureTime = new Date(getTimeFromDate(place3.placeArrivalTime) - timeFromPlace1*HOURS_TO_MILLISECONDS);
 
             //console.log(place1DepartureTime);
             //console.log(place2ArrivalTime);
 
-            var selectedPlace2TimeIndex = getPlaceTimingsToSelect(place2ArrivalTime,place2.PlaceTimings);
+            selectedPlace2TimeIndex = getPlaceTimingsToSelect(place2ArrivalTime,place2.PlaceTimings);
             var selectedPlace1TimeIndex = getPlaceTimingsToSelect(place1DepartureTime,place1.PlaceTimings);
             var minimumTimeNeeded = timeBetweenPlaces*HOURS_TO_MILLISECONDS + RATIO*place1.Time2Cover*MINUTES_TO_MILLISECONDS + RATIO*place2.Time2Cover*MINUTES_TO_MILLISECONDS;
             var time2CoverCombined = getTimeFromDate(place1DepartureTime) - getTimeFromDate(place2ArrivalTime) - timeBetweenPlaces*HOURS_TO_MILLISECONDS;
@@ -1798,8 +1806,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var time2CoverPlace2 = time2CoverCombined - time2CoverPlace1;
             //console.log(time2CoverCombined);
             //console.log(time2CoverPlace1 + " - "+ time2CoverPlace2);
-            var place2DepartureTime = new Date(getTimeFromDate(place2ArrivalTime) + time2CoverPlace2);
-            var place1ArrivalTime = new Date(getTimeFromDate(place1DepartureTime) - time2CoverPlace1);
+            place2DepartureTime = new Date(getTimeFromDate(place2ArrivalTime) + time2CoverPlace2);
+            place1ArrivalTime = new Date(getTimeFromDate(place1DepartureTime) - time2CoverPlace1);
 
             place2.placeArrivalTime = place2ArrivalTime;
             place2.placeDepartureTime = place2DepartureTime;
@@ -1877,20 +1885,25 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         var oldPlace = dateItinerary.dateWisePlaceData.placesData[permValue];
         var hasHotel = ($scope.currentDestination.isHotelRequired == 1);
         var hotel = $scope.currentDestination.hotelDetails;
-        var replacePlace = false;
+        var replacePlaceDone = false;
         if(place.Days == undefined) {
             place.Days = combineDays(place.PlaceTimings);
         }
         if(checkIfPlaceIsOpenOnDay(place.Days,dateItinerary.dateWisePlaceData.startSightSeeingTime)) {
             //The place is open
+            var timeToHotel = 0, distanceFromArrivalToPlace = 0, distanceFromPlaceToDeparture = 0, timeFromArrivalToPlace = 0, timeFromPlaceToDeparture = 0,
+                permValueNextPlace = 0, nextPlace = null, distanceToNextPlace = 0, TimeToNextPlace = 0, maxPlaceDepartureTime = 0, openingTimeIndexForArrival = 0,
+                openingTimeIndexForDeparture = 0;
+
             if(hasHotel){
                 var distanceToHotel = getDistance(place.Latitude, place.Longitude, hotel.Latitude, hotel.Longitude);
-                var timeToHotel = distanceToHotel/SPEED;
+                timeToHotel = distanceToHotel/SPEED;
             }
             if(dateItinerary.permutation.length == 1){
                 //This is the only place of the day
+                var timingIndex = -1;
                 if(hasHotel){
-                    var timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
+                    timingIndex = getPlaceTimingsToSelect(oldPlace.placeArrivalTime, place.PlaceTimings);
                     if(timingIndex!=-1){
                         var supposedDepartureTime = getPlaceDepartureTimeFromArrival(oldPlace.placeArrivalTime, place.Time2Cover);
                         var expectedTimingIndex = getPlaceTimingsToSelect(supposedDepartureTime, place.PlaceTimings);
@@ -1925,13 +1938,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                     dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(place.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
                 }
                 else {
-                    var distanceFromArrivalToPlace = getDistance(locationOfArrival.Latitude, locationOfArrival.Longitude, place.Latitude, place.Longitude);
-                    var distanceFromPlaceToDeparture = getDistance(place.Latitude, place.Longitude, locationOfDeparture.Latitude, locationOfDeparture.Longitude);
-                    var timeFromArrivalToPlace = distanceFromArrivalToPlace/SPEED;
-                    var timeFromPlaceToDeparture = distanceFromPlaceToDeparture/SPEED;
+                    distanceFromArrivalToPlace = getDistance(locationOfArrival.Latitude, locationOfArrival.Longitude, place.Latitude, place.Longitude);
+                    distanceFromPlaceToDeparture = getDistance(place.Latitude, place.Longitude, locationOfDeparture.Latitude, locationOfDeparture.Longitude);
+                    timeFromArrivalToPlace = distanceFromArrivalToPlace/SPEED;
+                    timeFromPlaceToDeparture = distanceFromPlaceToDeparture/SPEED;
 
                     var supposedPlaceArrivalTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.startSightSeeingTime) + timeFromArrivalToPlace*HOURS_TO_MILLISECONDS);
-                    var maxPlaceDepartureTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.endSightSeeingTime) - timeFromPlaceToDeparture*HOURS_TO_MILLISECONDS);
+                    maxPlaceDepartureTime = new Date(getTimeFromDate(dateItinerary.dateWisePlaceData.endSightSeeingTime) - timeFromPlaceToDeparture*HOURS_TO_MILLISECONDS);
                     timingIndex = getPlaceTimingsToSelect(supposedPlaceArrivalTime, place.PlaceTimings);
                     if(timingIndex != -1){
                         //The place is open when reached directly from the place of arrival
@@ -1997,15 +2010,16 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
             else if(index == 0){
                 //This is the first place of the day
-                var permValueNextPlace = dateItinerary.permutation[index+1];
-                var nextPlace = dateItinerary.dateWisePlaceData.placesData[permValueNextPlace];
-                var distanceToNextPlace = getDistance(place.Latitude,place.Longitude,nextPlace.Latitude,nextPlace.Longitude);
-                var TimeToNextPlace =   distanceToNextPlace/SPEED;
+                permValueNextPlace = dateItinerary.permutation[index+1];
+                nextPlace = dateItinerary.dateWisePlaceData.placesData[permValueNextPlace];
+                distanceToNextPlace = getDistance(place.Latitude,place.Longitude,nextPlace.Latitude,nextPlace.Longitude);
+                TimeToNextPlace =   distanceToNextPlace/SPEED;
 
                 place.placeDepartureTime = new Date(getTimeFromDate(nextPlace.placeArrivalTime) - TimeToNextPlace*HOURS_TO_MILLISECONDS);
                 place.placeArrivalTime = getPlaceArrivalTimeFromDeparture(place.placeDepartureTime,place.Time2Cover);
 
-                var openingTimeIndexForDeparture = -1, openingTimeIndexForArrival = -1;
+                openingTimeIndexForDeparture = -1;
+                openingTimeIndexForArrival = -1;
                 if(!hasHotel){
                     //If no hotel then will try to adjust the place arrival time
                     distanceFromArrivalToPlace = getDistance(locationOfArrival.Latitude, locationOfArrival.Longitude, place.Latitude, place.Longitude);
@@ -2040,10 +2054,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             else if(index == dateItinerary.permutation.length -1)
             {
                 //This is end place of the day
-                var permValueLastPlace = dateItinerary.permutation[index-1];
-                var lastPlace = dateItinerary.dateWisePlaceData.placesData[permValueLastPlace];
-                var distanceFromLastPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
-                var TimeFromLastPlace = distanceFromLastPlace/SPEED;
+                permValueLastPlace = dateItinerary.permutation[index-1];
+                lastPlace = dateItinerary.dateWisePlaceData.placesData[permValueLastPlace];
+                distanceFromLastPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
+                TimeFromLastPlace = distanceFromLastPlace/SPEED;
                 place.placeArrivalTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime) + TimeFromLastPlace*HOURS_TO_MILLISECONDS);
                 place.placeDepartureTime = getPlaceDepartureTimeFromArrival(place.placeArrivalTime, place.Time2Cover);
 
@@ -2076,10 +2090,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
             else {
                 //This place is in between some other places
-                var permValueNextPlace = dateItinerary.permutation[index+1];
-                var nextPlace = dateItinerary.dateWisePlaceData.placesData[permValueNextPlace];
-                var distanceToNextPlace = getDistance(place.Latitude,place.Longitude,nextPlace.Latitude,nextPlace.Longitude);
-                var TimeToNextPlace =   distanceToNextPlace/SPEED;
+                permValueNextPlace = dateItinerary.permutation[index+1];
+                nextPlace = dateItinerary.dateWisePlaceData.placesData[permValueNextPlace];
+                distanceToNextPlace = getDistance(place.Latitude,place.Longitude,nextPlace.Latitude,nextPlace.Longitude);
+                TimeToNextPlace =   distanceToNextPlace/SPEED;
                 var permValueLastPlace = dateItinerary.permutation[index-1];
                 var lastPlace = dateItinerary.dateWisePlaceData.placesData[permValueLastPlace];
                 var distanceFromLastPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
@@ -2098,13 +2112,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
             }
             dateItinerary.dateWisePlaceData.placesData[permValue] = place;
-            replacePlace = true;
+            replacePlaceDone = true;
         }
         else {
             //alert('Place closed on this day');//ALERT3
             createAlert('replaceAndClosedOnDay',place.Name);
         }
-        return replacePlace;
+        return replacePlaceDone;
     }
 
     function checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture)
@@ -2411,12 +2425,13 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     function chooseBestCandidate(candidates, place) {
         var selectedCandidateIndex = -1;
         var selectedPlaceTimingsIndex = -1;
+        var candidateIndex = 0, candidate = null;
         if(place.Days == undefined) {
             place.Days = combineDays(place.PlaceTimings);
         }
         if(place.Days != "0"){
-            for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
-                var candidate = candidates[candidateIndex];
+            for(candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
+                candidate = candidates[candidateIndex];
                 candidate.dateWiseItinerary.dateWisePlaceData.currentDate = new Date(candidate.dateWiseItinerary.dateWisePlaceData.currentDate);
                 if(candidate.type == 'morningCheckIn' || candidate.type == 'eveningCheckOut') {
                     if(!checkIfPlaceIsOpenOnDay(place.Days, candidate.dateWiseItinerary.dateWisePlaceData.currentDate)){
@@ -2450,19 +2465,19 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             }
         }
         else {
-            for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
-                var candidate = candidates[candidateIndex];
+            for(candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
+                candidate = candidates[candidateIndex];
                 candidate.isOpenOnDay = 3;
             }
         }
         if(candidates.length > 0){
             //Still some candidates left
-            for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
-                var candidate = candidates[candidateIndex];
+            for(candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
+                candidate = candidates[candidateIndex];
                 var freeTimingsArray = getFreeTimings(candidate, place);
                 for(var freeTimingsIndex =0;freeTimingsIndex<freeTimingsArray.length;freeTimingsIndex++)
                 {
-                    if(!((getTimeFromDate(freeTimingsArray[freeTimingsIndex].freeEndTime) - getTimeFromDate(freeTimingsArray[freeTimingsIndex].freeStartTime)>=place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)))
+                    if(getTimeFromDate(freeTimingsArray[freeTimingsIndex].freeEndTime) - getTimeFromDate(freeTimingsArray[freeTimingsIndex].freeStartTime)<place.Time2Cover*RATIO*MINUTES_TO_MILLISECONDS)
                     {
                        // console.log("Removing time :"+freeTimingsArray[freeTimingsIndex].freeEndTime +" - "+ freeTimingsArray[freeTimingsIndex].freeStartTime +" >= "+ place.Time2Cover*RATIO);
                         freeTimingsArray.splice(freeTimingsIndex,1);
@@ -2483,8 +2498,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         if(candidates.length > 0)
         {
-            for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
-                var candidate = candidates[candidateIndex];
+            for(candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
+                candidate = candidates[candidateIndex];
                 //console.log('For candidate:'+candidateIndex);
                 checkIfPlaceIsOpenOnFreeTimings(candidate,place);
                 if(candidate.freeTimingsArray.length==0){
@@ -2498,8 +2513,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         if(candidates.length > 0)
         {
             var duration=-1;
-            for(var candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
-                var candidate = candidates[candidateIndex];
+            for(candidateIndex = 0; candidateIndex < candidates.length; candidateIndex++){
+                candidate = candidates[candidateIndex];
                 for(var candidateTimingsIndex=0;candidateTimingsIndex<candidate.freeTimingsArray.length;candidateTimingsIndex++)
                 {
                     var freeDuration = getTimeFromDate(candidate.freeTimingsArray[candidateTimingsIndex].highestTime)-getTimeFromDate(candidate.freeTimingsArray[candidateTimingsIndex].lowestTime);
@@ -2572,8 +2587,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     function getFreeTimings(candidate, place){
         var freeTimingsArray = [];
         var hotel = $scope.currentDestination.hotelDetails;
+        var freeTimings = null, distanceToHotel = 0, time2Hotel = 0, nextDayFirstPlace = null, distanceFromHotel = 0, timeFromHotel = 0,
+            lastPlace = null, distanceToNewPlace = 0, timeToNewPlace = 0, nextDayWiseItinerary = null;
         if(candidate.type == 'morningCheckIn'){
-            var freeTimings = {
+            freeTimings = {
                 insertionDay: 0,//Same Day
                 freeStartTime:new Date(),
                 freeEndTime:new Date()
@@ -2582,8 +2599,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             nextPlace.placeArrivalTime=new Date(nextPlace.placeArrivalTime);
             var distanceToNextPlace = getDistance(place.Latitude, place.Longitude, nextPlace.Latitude, nextPlace.Longitude);
             var timeToNextPlace = distanceToNextPlace / SPEED;
-            var distanceFromHotel = getDistance(hotel.Latitude, hotel.Longitude, place.Latitude, place.Longitude);
-            var timeFromHotel = distanceFromHotel / SPEED;
+            distanceFromHotel = getDistance(hotel.Latitude, hotel.Longitude, place.Latitude, place.Longitude);
+            timeFromHotel = distanceFromHotel / SPEED;
             place.timeToHotel = timeFromHotel;
             freeTimings.freeEndTime = new Date(getTimeFromDate(nextPlace.placeArrivalTime) - timeToNextPlace * HOURS_TO_MILLISECONDS);
             freeTimings.freeStartTime = new Date(getTimeFromDate(hotel.checkInTime) + MORNING_CHECK_IN_DURATION * RATIO * HOURS_TO_MILLISECONDS + timeFromHotel * HOURS_TO_MILLISECONDS);
@@ -2591,36 +2608,36 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else if(candidate.type == 'nightMorning') {
 
-            var distanceToHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
-            var time2Hotel = distanceToHotel / SPEED;
+            distanceToHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
+            time2Hotel = distanceToHotel / SPEED;
             place.timeToHotel = time2Hotel;
-            var nextDayWiseItinerary = $scope.currentDestination.dateWiseItinerary[candidate.dateWiseItineraryIndex+1];
+            nextDayWiseItinerary = $scope.currentDestination.dateWiseItinerary[candidate.dateWiseItineraryIndex+1];
             if(candidate.isOpenOnDay == 1 || candidate.isOpenOnDay == 3)
             {
-                var freeTimings = {
+                freeTimings = {
                     insertionDay: 0,//Same Day
                     freeStartTime:new Date(),
                     freeEndTime:new Date()
                 };
-                var lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
+                lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
                 lastPlace.placeDepartureTime = new Date(lastPlace.placeDepartureTime);
-                var distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
-                var timeToNewPlace = distanceToNewPlace / SPEED;
+                distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
+                timeToNewPlace = distanceToNewPlace / SPEED;
                 freeTimings.freeStartTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime)+timeToNewPlace * HOURS_TO_MILLISECONDS);
                 freeTimings.freeEndTime=new Date(getTimeFromDate(nextDayWiseItinerary.dateWisePlaceData.startSightSeeingTime) - REST_TIME*HOURS_TO_MILLISECONDS*RATIO-time2Hotel*HOURS_TO_MILLISECONDS);
                 freeTimingsArray.push(freeTimings);
             }
             if(candidate.isOpenOnDay == 2 || candidate.isOpenOnDay == 3)
             {
-                var freeTimings = {
+                freeTimings = {
                     insertionDay: 1,//Next Day
                     freeStartTime:new Date(),
                     freeEndTime:new Date()
                 };
-                var nextDayFirstPlace = nextDayWiseItinerary.dateWisePlaceData.placesData[nextDayWiseItinerary.permutation[0]];
+                nextDayFirstPlace = nextDayWiseItinerary.dateWisePlaceData.placesData[nextDayWiseItinerary.permutation[0]];
                 nextDayFirstPlace.placeArrivalTime = new Date(nextDayFirstPlace.placeArrivalTime);
-                var distanceToNextDayFirstPlace = getDistance(place.Latitude,place.Longitude,nextDayFirstPlace.Latitude,nextDayFirstPlace.Longitude);
-                var timeToNextDayFirstPlace = distanceToNextDayFirstPlace / SPEED;
+                distanceToNextDayFirstPlace = getDistance(place.Latitude,place.Longitude,nextDayFirstPlace.Latitude,nextDayFirstPlace.Longitude);
+                timeToNextDayFirstPlace = distanceToNextDayFirstPlace / SPEED;
                 freeTimings.freeEndTime = new Date(getTimeFromDate(nextDayFirstPlace.placeArrivalTime) - timeToNextDayFirstPlace*HOURS_TO_MILLISECONDS);
                 freeTimings.freeStartTime = new Date(getTimeFromDate(candidate.dateWiseItinerary.dateWisePlaceData.endSightSeeingTime) + REST_TIME*HOURS_TO_MILLISECONDS*RATIO+time2Hotel*HOURS_TO_MILLISECONDS);
                 freeTimingsArray.push(freeTimings);
@@ -2630,14 +2647,14 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else if(candidate.type == 'checkIn'){
 
-            var distanceFromHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
-            var timeFromHotel = distanceFromHotel/SPEED;
+            distanceFromHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
+            timeFromHotel = distanceFromHotel/SPEED;
             place.timeToHotel = timeFromHotel;
-            var nextDayWiseItinerary = $scope.currentDestination.dateWiseItinerary[candidate.dateWiseItineraryIndex+1];
+            nextDayWiseItinerary = $scope.currentDestination.dateWiseItinerary[candidate.dateWiseItineraryIndex+1];
             var hotelCheckInTime = hotel.checkInTime;
             if(candidate.isOpenOnDay ==1 || candidate.isOpenOnDay ==3)
             {
-                var freeTimings = {
+                freeTimings = {
                     insertionDay: 0,//Same Day
                     freeStartTime:new Date(),
                     freeEndTime:new Date()
@@ -2649,12 +2666,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
             if(candidate.isOpenOnDay == 2 || candidate.isOpenOnDay == 3)
             {
-                var freeTimings = {
+                freeTimings = {
                     insertionDay: 1,//Next Day
                     freeStartTime:new Date(),
                     freeEndTime:new Date()
                 };
-                var nextDayFirstPlace = nextDayWiseItinerary.dateWisePlaceData.placesData[nextDayWiseItinerary.permutation[0]];
+                nextDayFirstPlace = nextDayWiseItinerary.dateWisePlaceData.placesData[nextDayWiseItinerary.permutation[0]];
                 nextDayFirstPlace.placeArrivalTime = new Date(nextDayFirstPlace.placeArrivalTime);
                 var distanceToNextDayFirstPlace = getDistance(place.Latitude,place.Longitude,nextDayFirstPlace.Latitude,nextDayFirstPlace.Longitude);
                 var timeToNextDayFirstPlace = distanceToNextDayFirstPlace / SPEED;
@@ -2667,18 +2684,18 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         else if(candidate.type == 'checkOut'){
 
             //console.log('Enters checkout');
-            var lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
+            lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
             lastPlace.placeDepartureTime = new Date(lastPlace.placeDepartureTime);
-            var distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
-            var timeToNewPlace = distanceToNewPlace / SPEED;
-            var distanceToHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
-            var time2Hotel = distanceToHotel / SPEED;
+            distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
+            timeToNewPlace = distanceToNewPlace / SPEED;
+            distanceToHotel = getDistance(place.Latitude, place.Longitude,hotel.Latitude,hotel.Longitude);
+            time2Hotel = distanceToHotel / SPEED;
             place.timeToHotel = time2Hotel;
             //console.log(candidate.isOpenOnDay);
             if(candidate.isOpenOnDay ==1 || candidate.isOpenOnDay ==3)
             {
                 //console.log('Open on 1st day');
-                var freeTimings = {
+                freeTimings = {
                     insertionDay: 0,//Same Day
                     freeStartTime:new Date(),
                     freeEndTime:new Date()
@@ -2691,7 +2708,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             if((candidate.isOpenOnDay == 2 || candidate.isOpenOnDay == 3))
             {
                 //console.log('Open on 2nd day');
-                var freeTimings = {
+                freeTimings = {
                     insertionDay: 1,//Next Day
                     freeStartTime:new Date(),
                     freeEndTime:new Date()
@@ -2705,17 +2722,17 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
         else if(candidate.type=='eveningCheckOut')
         {
-            var freeTimings = {
+            freeTimings = {
                 insertionDay: 0,//Same Day
                 freeStartTime:new Date(),
                 freeEndTime:new Date()
             };
-            var lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
+            lastPlace = candidate.dateWiseItinerary.dateWisePlaceData.placesData[candidate.dateWiseItinerary.permutation[candidate.dateWiseItinerary.permutation.length-1]];
             lastPlace.placeDepartureTime = new Date(lastPlace.placeDepartureTime);
-            var distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
-            var timeToNewPlace = distanceToNewPlace / SPEED;
-            var distanceFromHotel = getDistance(hotel.Latitude, hotel.Longitude, place.Latitude, place.Longitude);
-            var timeFromHotel = distanceFromHotel / SPEED;
+            distanceToNewPlace = getDistance(lastPlace.Latitude,lastPlace.Longitude,place.Latitude,place.Longitude);
+            timeToNewPlace = distanceToNewPlace / SPEED;
+            distanceFromHotel = getDistance(hotel.Latitude, hotel.Longitude, place.Latitude, place.Longitude);
+            timeFromHotel = distanceFromHotel / SPEED;
             place.timeToHotel = timeFromHotel;
             freeTimings.freeStartTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime)+timeToNewPlace * HOURS_TO_MILLISECONDS);
             freeTimings.freeEndTime = new Date(getTimeFromDate(hotel.checkOutTime)- CHECK_OUT_DURATION*RATIO*HOURS_TO_MILLISECONDS - timeFromHotel*HOURS_TO_MILLISECONDS);
@@ -2783,6 +2800,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             var timeToHotel;
             var distanceFromHotel;
             var timeFromHotel;
+            var hotelEntryTime = null, previousDay = null;
 
             if(firstPlaceOfCurrentDay!=undefined)
             {
@@ -2812,8 +2830,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
             {
                 //Normal Day
                 dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(firstPlaceOfCurrentDay.placeArrivalTime) - timeFromHotel*HOURS_TO_MILLISECONDS);
-                var previousDay = $scope.currentDestination.dateWiseItinerary[dateIndex-1];
-                var hotelEntryTime;
+                previousDay = $scope.currentDestination.dateWiseItinerary[dateIndex-1];
                 if(previousDay.dateWisePlaceData.endSightSeeingTime!=undefined)
                 {
                     hotelEntryTime = previousDay.dateWisePlaceData.endSightSeeingTime;
@@ -2832,10 +2849,11 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
             else if(dateItinerary.dateWisePlaceData.typeOfDay ==2|| dateItinerary.dateWisePlaceData.typeOfDay == 3){
                 //end day
+                previousDay = null;
                 if(dateItinerary.dateWisePlaceData.noPlacesVisited!=undefined && dateItinerary.dateWisePlaceData.noPlacesVisited==1)
                 {
                     //no place visited on this day
-                    var previousDay = $scope.currentDestination.dateWiseItinerary[dateIndex-1];
+                    previousDay = $scope.currentDestination.dateWiseItinerary[dateIndex-1];
                     if(previousDay!=undefined)
                     {
                         if(previousDay.dateWisePlaceData.endSightSeeingTime!=undefined)
@@ -2855,7 +2873,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
                 }
                 else
                 {
-                    var previousDay = $scope.currentDestination.dateWiseItinerary[dateIndex-1];
+                    previousDay = $scope.currentDestination.dateWiseItinerary[dateIndex-1];
                     if(previousDay!=undefined)
                     {
                         if(previousDay.dateWisePlaceData.endSightSeeingTime!=undefined)
@@ -3255,11 +3273,12 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
 
     function fixItineraryOnPlaceRemove(dateItinerary,index){
         var hotel = $scope.currentDestination.hotelDetails;
+        var nextPlace = null, lastPlace = null;
         //first place of the day
         if(index==0)
         {
             //increase time in hotel
-            var nextPlace=dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];//Now same index has next place
+            nextPlace=dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[0]];//Now same index has next place
             var hotelToNextPlaceDistance=getDistance(hotel.Latitude, hotel.Longitude, nextPlace.Latitude, nextPlace.Longitude);
             var time = hotelToNextPlaceDistance/SPEED;
             dateItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(nextPlace.placeArrivalTime) - time*HOURS_TO_MILLISECONDS);
@@ -3268,7 +3287,7 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         else if(index == dateItinerary.permutation.length)
         {
             //increase time in hotel
-            var lastPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[dateItinerary.permutation.length-1]];
+            lastPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[dateItinerary.permutation.length-1]];
             var lastPlaceToHotel = getDistance(lastPlace.Latitude,lastPlace.Longitude,hotel.Latitude,hotel.Longitude);
             var timeToHotel = lastPlaceToHotel/SPEED;
             dateItinerary.dateWisePlaceData.endSightSeeingTime = new Date(getTimeFromDate(lastPlace.placeDepartureTime) + timeToHotel*HOURS_TO_MILLISECONDS);
@@ -3276,8 +3295,8 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         else
         {
             //console.log('Neither 1st place or last place');
-            var lastPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index-1]];
-            var nextPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
+            lastPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index-1]];
+            nextPlace = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[index]];
             var lastPlaceTimings = getSelectedPlaceTimings(lastPlace);
             var lastPlaceEndTime = $scope.getDateFromString(lastPlaceTimings.TimeEnd,lastPlace.placeDepartureTime);
             var maxPlaceDepartureTime = new Date(getTimeFromDate(lastPlace.placeArrivalTime) + lastPlace.Time2Cover*MINUTES_TO_MILLISECONDS*MAX_RATIO);
@@ -3493,4 +3512,4 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
     }
     $scope.getItinerary();
-});
+}]);

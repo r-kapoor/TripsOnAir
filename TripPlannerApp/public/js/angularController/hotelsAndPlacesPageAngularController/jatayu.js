@@ -3,7 +3,7 @@
  */
 //var routesMapModule = angular.module('tripdetails.routes.map.app', []);
 //routesMapModule.controller('mapController',  function($scope, $window) {
-itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapData) {
+itineraryModule.controller('jatayuController', ['$scope','$rootScope','mapData', function($scope,$rootScope,mapData) {
     $scope.isMapInitialized = false;
     $scope.zoomConstants = {
         COUNTRY: 5,
@@ -33,7 +33,7 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
     var infowindows = [];
     var routePaths = [];
     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-    $scope.map;
+    $scope.map = null;
 
     $scope.zoom = $scope.zoomConstants.CITY;
     $scope.initializeMap = function(mapId) {
@@ -76,13 +76,14 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
         }
         if($scope.isMapInitialized)
         {
+            var markerIndex = 0, place = null;
             if(mapData.getRouteNthData(dateItineraryIndex))
             {
                 removeAllMarkers();
-                var markerIndex = 0;
+                markerIndex = 0;
                 $scope.addMarker(startLocationPosition, 'A');
                 for (var i = 0; i < dateItinerary.permutation.length; i++) {
-                    var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[i]];
+                    place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[i]];
                     if (!(place.isMeal != undefined && place.isMeal == 1) && !(place.isPlaceRemoved!=undefined && place.isPlaceRemoved==1)) {
                         $scope.addMarker(place, String.fromCharCode('A'.charCodeAt() + markerIndex + 1));
                         markerIndex++;
@@ -101,11 +102,11 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
             }
             else {
                 var waypoints = [];
-                var markerIndex = 0;
+                markerIndex = 0;
                 removeAllMarkers();
                 $scope.addMarker(startLocationPosition, 'A');
-                for (var i = 0; i < dateItinerary.permutation.length; i++) {
-                    var place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[i]];
+                for (var j = 0; j < dateItinerary.permutation.length; j++) {
+                    place = dateItinerary.dateWisePlaceData.placesData[dateItinerary.permutation[j]];
                     if (!(place.isMeal != undefined && place.isMeal == 1) && !(place.isPlaceRemoved!=undefined && place.isPlaceRemoved==1)) {
                         $scope.addMarker(place, String.fromCharCode('A'.charCodeAt() + markerIndex + 1));
                         markerIndex++;
@@ -140,8 +141,8 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
             infowindows[i].setMap(null);
         }
         infowindows = [];
-        for(var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
+        for(var j = 0; j < markers.length; j++) {
+            markers[j].setMap(null);
         }
         markers = [];
     }
@@ -325,4 +326,4 @@ itineraryModule.controller('jatayuController',  function($scope,$rootScope,mapDa
         removeRoutePaths();
     });
 
-});
+}]);

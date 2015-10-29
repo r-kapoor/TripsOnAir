@@ -5,7 +5,7 @@
 (function() {
     angular.module("ngScrollInView", []);
 
-    angular.module("ngScrollInView").directive('scrollView', function ($parse, $document, $window, $rootScope) {
+    angular.module("ngScrollInView").directive('scrollView', ['$parse', '$document', '$window', '$rootScope', function ($parse, $document, $window, $rootScope) {
         var _ = $window._;
         var verge = $window.verge;
         var visibleElements = [];
@@ -50,6 +50,6 @@
 
             }
         };
-    });
+    }]);
 }).call(this);
 

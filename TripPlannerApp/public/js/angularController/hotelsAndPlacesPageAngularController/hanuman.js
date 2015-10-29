@@ -2,7 +2,7 @@
  * Created by rkapoor on 28/04/15.
  */
 
-itineraryModule.controller('hanumanController', function($scope, $rootScope, $http, $q, $location, $timeout) {
+itineraryModule.controller('hanumanController', ['$scope', '$rootScope', '$http', '$q', '$location', '$timeout', function($scope, $rootScope, $http, $q, $location, $timeout) {
 
     $scope.alerts = [];
     $scope.currentAlert = null;
@@ -45,7 +45,7 @@ itineraryModule.controller('hanumanController', function($scope, $rootScope, $ht
         }
         $scope.alerts.push(alertClone);
         $scope.currentAlert = JSON.parse(JSON.stringify(alertClone));
-        $timeout(function(){$scope.currentAlert = null}, 2500);
+        $timeout(function(){$scope.currentAlert = null;}, 2500);
     });
 
     $rootScope.$on('hideRecommendation',function onHideRecommendation(event,kind){
@@ -59,4 +59,4 @@ itineraryModule.controller('hanumanController', function($scope, $rootScope, $ht
             }
         }
     };
-});
+}]);

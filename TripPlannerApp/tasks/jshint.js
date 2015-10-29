@@ -10,6 +10,7 @@ module.exports = function jshint(grunt) {
         //files: ['controllers/**/*.js', 'lib/**/*.js', 'models/**/*.js'],
         files: ['public/js/angularController/travelPageAngularController/*.js',
             'public/js/angularController/homeController/*.js',
+            'public/js/angularController/hotelsAndPlacesPageAngularController/*.js',
             'public/js/angularDirective/*.js',
             'public/js/angularFilter/*.js',
             'public/js/angularService/**/*js'
