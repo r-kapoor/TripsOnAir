@@ -151,7 +151,10 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $scope.getItinerary = function(){
         itineraryID = $location.absUrl().split('/')[4].replace(/[^0-9a-z]/g,"");
 
-        $http.get('/planItinerary/'+itineraryID).success(function(data,status){
+        var randomString = Math.random(); //For forcing
+        var queryString = "/planItinerary/"+itineraryID+"?nocache="+randomString;
+
+        $http.get(queryString).success(function(data,status){
             //Mix Panel
             //mixpanel.time_event("CustomizePlaces");
             //mixpanel.time_event("CustomizeHotels");
@@ -410,26 +413,26 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
     $rootScope.$on("downloadPDF",function(){
         var req = {
             method: 'POST',
-            url: '/downloadItinerary',
+            url: '/downloadItinerary/'+itineraryID,
             headers: {
                 'Content-Type': 'application/json'
             },
             data: { data: responseData }
         };
 
-        //$http.post('/downloadItinerary', {data:responsedata}).success(function(data,status) {
         $http(req).success(function(data,status) {
+            console.log("downloadedPDF");
             $rootScope.$emit('generatedPDF');
             if(data.success){
+                console.log("FILE:"+data.file);
                 var elem = jQuery('#download');
-                elem.attr('href',data.file);
+                elem.attr('href',"/"+data.file);
                 elem[0].click();
-                //window.open(data.file, 'Download');
             }
 
         }).error(
             function(data, status) {
-                //console.log(data || "Cannot Download. Backend Request failed");
+                console.log(data || "Cannot Download. Backend Request failed");
             });
 
     });

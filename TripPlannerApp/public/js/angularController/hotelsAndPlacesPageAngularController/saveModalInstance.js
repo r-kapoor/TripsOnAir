@@ -8,6 +8,7 @@ itineraryModule.controller('ModalInstanceCtrl', function ($scope, $rootScope,$mo
     $scope.generatingPDF = false;
     $scope.downloadPDF = function(){
         $scope.generatingPDF = true;
+        console.log("generate_pdf");
         $rootScope.$emit("downloadPDF");
     };
 

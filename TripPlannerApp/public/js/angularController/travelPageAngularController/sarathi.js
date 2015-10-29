@@ -147,6 +147,7 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
     };
 
     $scope.getDateDropdownOpenClassCab = function(){
+        console.log("in getDateDropdownOpenClassCab");
         if($scope.cabDate.opened){
             return "open";
         }
@@ -1238,7 +1239,8 @@ routesModule.controller('sarthiController', ['$scope', '$rootScope', '$http', '$
 
         var dateLimits = [];
         var currentDate = new Date(minDate.getTime());
-        while(currentDate.getDate() <= maxDate.getDate()){
+
+        while(currentDate.getTime() <= maxDate.getTime()){
             dateLimits.push(new Date(currentDate.getTime()));
             currentDate.setTime(currentDate.getTime() + DAYS_TO_MILLISECONDS);
         }

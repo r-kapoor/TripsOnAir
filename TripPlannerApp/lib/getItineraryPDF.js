@@ -741,16 +741,16 @@ function addFlightData(operator, flightNumber, departureTime, arrivalTime, hops,
 
 function getDefaultTrip(travelData){
     var travelDataSet = false;
-    if(travelData.withTaxiRome2rioData == undefined || travelData.withTaxiRome2rioData == null){
-        travelData = travelData.withoutTaxiRome2rioData;
-        travelDataSet = true;
-    }
-    else if(travelData.withoutTaxiRome2rioData == undefined || travelData.withoutTaxiRome2rioData == null){
+    if((travelData.withTaxiRome2rioData!= undefined || travelData.withTaxiRome2rioData!= null) && (travelData.withTaxiRome2rioData.isMajorDefault==1)){
         travelData = travelData.withTaxiRome2rioData;
         travelDataSet = true;
     }
+    else if((travelData.withoutTaxiRome2rioData != undefined || travelData.withoutTaxiRome2rioData != null) &&(travelData.withoutTaxiRome2rioData.isMajorDefault==1)){
+        travelData = travelData.withoutTaxiRome2rioData;
+        travelDataSet = true;
+    }
 
-    if((!travelDataSet) || travelData.isMajorDefault != 1){
+    if((!travelDataSet)){
         //There is some problem with the data
         console.log('There is some problem with the data. Aborting.');
         //tripNotPossibleResponse(res);
