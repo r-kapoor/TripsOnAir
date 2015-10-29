@@ -1,9 +1,9 @@
 
-inputModule.config(function($tooltipProvider){
+inputModule.config(['$tooltipProvider', function($tooltipProvider){
     $tooltipProvider.setTriggers({
         'xyz': 'abc'
     });
-});
+}]);
 
 inputModule.filter('filterByOrigin',function()
 {
@@ -29,7 +29,7 @@ inputModule.filter('filterDestinations', function() {
            }
        }
        return filtered;
-   }
+   };
 
 });
 
@@ -43,10 +43,10 @@ inputModule.filter('filterByCityAndState', function(){
             }
         }
         return filtered;
-    }
+    };
 });
 
-inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, cityData, formData) {
+inputModule.controller('AddCityCtrl', ['$scope', '$rootScope', '$timeout', 'cityData', 'formData', function ($scope, $rootScope, $timeout, cityData, formData) {
   $scope.originCity = formData.getOrigin();
   $scope.destinationCity = null;
   $scope.destinationCityList=formData.getDestinations();
@@ -149,7 +149,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
         return -10+city.tier;
       }
       return city.tier;
-    }
+    };
   };
 
 
@@ -159,7 +159,7 @@ inputModule.controller('AddCityCtrl', function ($scope, $rootScope, $timeout, ci
   });
 
 $scope.cities=cityData.getProperty();
-});
+}]);
 
 
 

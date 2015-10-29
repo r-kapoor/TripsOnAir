@@ -1,4 +1,4 @@
-inputModule.controller('BhishmaController', function($scope, $rootScope, $http, $q, formData, cityData) {
+inputModule.controller('BhishmaController', ['$scope', '$rootScope', '$http', '$q', 'formData', 'cityData', function($scope, $rootScope, $http, $q, formData, cityData) {
     $scope.isCarouselCollapsed = true;
     $scope.isSuggestionAccordingToSelectionCollapsed = false;
     $scope.suggestionsAccordingToSelection = [];
@@ -78,7 +78,7 @@ inputModule.controller('BhishmaController', function($scope, $rootScope, $http, 
             $scope.isCarouselCollapsed = false;
             if(data.NearbyCityList.length == 4) {
                 setTimeout(function () {
-                    $scope.createQuery()
+                    $scope.createQuery();
                 }, 1000);
             }
         }
@@ -93,7 +93,7 @@ inputModule.controller('BhishmaController', function($scope, $rootScope, $http, 
         formData.appendDestination(destination);
         $rootScope.$emit('destinationSelectedFromCarousel');
         onDestinationSelectedOrRemoved();
-    }
+    };
 
 
-});
+}]);

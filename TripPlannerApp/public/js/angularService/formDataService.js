@@ -46,7 +46,7 @@ inputModule.service('formData', function () {
                         i--;
                     }
                 }
-            })
+            });
         }
         return {
             getOrigin: function () {

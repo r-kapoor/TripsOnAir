@@ -3,7 +3,7 @@
  * For Suggest Destinations
  */
 
-inputModule.controller('KrishnaController', function($scope, $rootScope, $http, $q, formData,$location, $timeout, cityData) {
+inputModule.controller('KrishnaController', ['$scope', '$rootScope', '$http', '$q', 'formData','$location', '$timeout', 'cityData', function($scope, $rootScope, $http, $q, formData,$location, $timeout, cityData) {
 //	TODO:outer controller can't pic inner controllers scope variables-check
 //	$scope.originCity = null;
 //	$scope.destinationCity = null;
@@ -50,7 +50,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     $scope.orgLat=0;
     $scope.orgLong=0;
     $scope.range=0;
-    $scope.originToLastSelectedCityDistance;
+    $scope.originToLastSelectedCityDistance=0;
 
     var cityBatchsize = 10;
     var groupBatchSize = 4;
@@ -192,7 +192,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 if(remainder == 2){
                     //This will fit with no issues
                     toBeConcat += 2;
-                    remainder = 0
+                    remainder = 0;
                 }
                 else if(remainder == 3 || remainder == 4){
                     toBeConcat += 2; //2 will fit
@@ -419,8 +419,9 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
     $scope.markSelectedDestinations = function() {
         var selectedDestinations = formData.getDestinations();
         angular.forEach($scope.destinations, function(suggestedDestination, index) {
+            var isSelected = false;
             if(isGroup(suggestedDestination)) {
-                var isSelected = true;
+                isSelected = true;
                 for(var i = 0; i < suggestedDestination.CityDataFromGroup.length; i++) {
                     var isPresent = false;
                     for(var j = 0; j < selectedDestinations.length; j++) {
@@ -446,11 +447,11 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 }
             }
             else {
-                var isSelected = false;
-                for(var  i = 0; i < selectedDestinations.length; i++) {
+                isSelected = false;
+                for(var k = 0; k < selectedDestinations.length; k++) {
                     //console.log("selectedDestinations:"+JSON.stringify(selectedDestinations));
                     //console.log(i+": Suggested:"+JSON.stringify(suggestedDestination));
-                    if(selectedDestinations[i].CityName.toLowerCase() === suggestedDestination.CityName.toLowerCase()) {
+                    if(selectedDestinations[k].CityName.toLowerCase() === suggestedDestination.CityName.toLowerCase()) {
                         isSelected = true;
                     }
                 }
@@ -463,7 +464,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                     //suggestedDestination.disabled = null;
                 }
             }
-        })
+        });
     };
 
     function isGroup(destination) {
@@ -471,7 +472,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
             return true;
         }
         return false;
-    };
+    }
 
     $scope.getSelectedData=function(destination)
     {
@@ -505,8 +506,9 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
         }
 
         angular.forEach($scope.destinations, function(suggestedDestination, index) {
+            var totalEstimatedDistance = 0;
             if(isGroup(suggestedDestination)) {
-                var totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance +
+                totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance +
                 parseInt($scope.getDistanceBySequence(endLat, endLong, suggestedDestination.CityDataFromGroup) )+
                         parseInt(calcDist(
                             suggestedDestination.CityDataFromGroup[suggestedDestination.CityDataFromGroup.length - 1].Latitude,
@@ -528,7 +530,7 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
                 }
             }
             else {
-                var totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance + parseInt(calcDist(endLat, endLong, suggestedDestination.Latitude, suggestedDestination.Longitude)) +
+                totalEstimatedDistance = parseInt($scope.originToLastSelectedCityDistance + parseInt(calcDist(endLat, endLong, suggestedDestination.Latitude, suggestedDestination.Longitude)) +
                 parseInt(calcDist(suggestedDestination.Latitude, suggestedDestination.Longitude, $scope.orgLat, $scope.orgLong)));
                 //console.log(suggestedDestination.CityName+":2totalEstimatedDistance > $scope.range:"+totalEstimatedDistance +">"+ $scope.range);
                 if(totalEstimatedDistance > $scope.range) {
@@ -576,4 +578,4 @@ inputModule.controller('KrishnaController', function($scope, $rootScope, $http, 
 
 
 
-});
+}]);
