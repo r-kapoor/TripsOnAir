@@ -3419,6 +3419,15 @@ itineraryModule.controller('shakuniController',  function($scope, $rootScope, $h
         }
     };
 
+    $scope.scrollToView = function(){
+        //console.log("position at: "+$window.scrollY);
+        var viewPortHeight = $(window).height();
+        if($window.scrollY<viewPortHeight)
+        {
+            $document.duScrollTop(viewPortHeight,1000);
+        }
+    };
+
     function collapseDateBar(){
         $timeout(function(){
             $scope.isDateBarCollapsed = false;

@@ -22,7 +22,7 @@
                                 width:250px;min-height:128px"/>
                             </a>
                             <span class="label label-success rating">{{getPlaceRating(place)}}</span>
-                            <div ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:14% !important;top:2%" ng-click="replaceLowerPanelPlace($event,$index)">
+                            <div du-smooth-scroll ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:14% !important;top:2%" ng-click="replaceLowerPanelPlace($event,$index);scrollToView()">
                                 <i class="glyphicon glyphicon-retweet"></i>
                             </div>
                             <div ng-if="!place.placeAdded" class="btn btn-default btn-sm add-button"  style="right:27% !important;top:2%" ng-click="addPlace($event, place)">
@@ -122,7 +122,7 @@
                             <img ng-if="place.NumberOfImages==0" ng-click="showLeftPanelDetails(place)" ng-src="http://res.cloudinary.com/picsonair/image/upload/v1445451772/NA_vjx1ej.png" class="img-responsive" style="margin:auto;">
 
                             <div ng-if="!place.placeAdded">
-                                <div class="btn btn-default" style="position:absolute;top:0;left:50%;z-index:100" ng-click="replaceLowerPanelPlace($event,$index)">
+                                <div du-smooth-scroll class="btn btn-default" style="position:absolute;top:0;left:50%;z-index:100" ng-click="replaceLowerPanelPlace($event,$index);scrollToView()">
                                     <!--<i class="glyphicon glyphicon-plus"></i>-->
                                     {{replaceLabel}}
                                 </div>

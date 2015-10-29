@@ -113,8 +113,9 @@
                 </timeline-panel>
                 <timeline-panel id="place-{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}" ng-if="!(dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isPlaceRemoved == 1)">
                     <timeline-heading>
-                        <div ng-if="replacePlaceOn" style="position:absolute;top:0;height: 100%;width:100%;z-index:100;opacity: 0.6;background-color: grey;left: 0px">
-                            <div  class="btn btn-primary" style="top:50%;position: absolute;left:20%" ng-click="replaceMe($event,$index, parentIndex)">Replace Here</div>
+                        <div ng-if="replacePlaceOn">
+                            <div class="btn btn-primary" style="top:50%;position: absolute;left:20%;z-index:102" ng-click="replaceMe($event,$index, parentIndex)">Click Here To Replace</div>
+                            <div style="position:absolute;top:0;height: 100%;width:100%;z-index:100;opacity: 0.6;background-color: grey;left: 0px"></div>
                         </div>
                         <div class="row">
                             <div class="col-xs-10">
