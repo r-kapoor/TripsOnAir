@@ -2,7 +2,7 @@
  * Created by rkapoor on 21/12/14.
  */
 
-inputModule.directive('postRepeat', function($timeout) {
+inputModule.directive('postRepeat', ['$timeout', function($timeout) {
     return function($scope,$rootScope, element, $attrs) {
         console.log("element:"+element.class);
 
@@ -17,9 +17,9 @@ inputModule.directive('postRepeat', function($timeout) {
             },200);
         }
     };
-});
+}]);
 
-inputModule.controller('selectedDestinationsPanelController', function($scope, $rootScope, $http, $q, $window, formData, cityData) {
+inputModule.controller('selectedDestinationsPanelController', ['$scope', '$rootScope', '$http', '$q', '$window', 'formData', 'cityData', function($scope, $rootScope, $http, $q, $window, formData, cityData) {
     $scope.origin = null;
     $scope.destinationCityList = [];
     $scope.isSelectedPanelCollapsed = true;
@@ -150,6 +150,6 @@ inputModule.controller('selectedDestinationsPanelController', function($scope, $
                 orgLat:orgLat,
                 orgLong:orgLong,
                 numP:numP
-                }
+                };
             }
-});
+}]);

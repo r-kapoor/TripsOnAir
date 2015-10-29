@@ -2,7 +2,7 @@
  * Created by rkapoor on 01/05/15.
  */
 
-inputModule.controller('indraController', function($scope, $rootScope, formData) {
+inputModule.controller('indraController', ['$scope', '$rootScope', 'formData', function($scope, $rootScope, formData) {
 
     $scope.isHomeShown = false;
     $scope.isHowItWorksShown = true;
@@ -28,5 +28,5 @@ inputModule.controller('indraController', function($scope, $rootScope, formData)
         $scope.isHowItWorksShown = true;
         $scope.isSaveShown = false;
     });
-});
+}]);
 

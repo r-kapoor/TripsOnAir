@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="tripdetails.routes.app">
+<html>
 <head lang="en">
     <title>Travel Options</title>
     <meta charset="UTF-8">
@@ -17,30 +17,47 @@
     <!--<script src="js/angularJS/angular-intro.min.js"></script>-->
 
     <!--IN PRODUCTION-->
-    <!--<script src="/js/production/travelPage.min.js"></script>-->
+    <script src="/js/production/travelPage.min.js"></script>
+    <!--<script>-->
+        <!--var source = '/js/production/travelPage.min.js';-->
+        <!--if ( $(window).width() >= 992) {-->
+            <!--//for Large screens-->
+            <!--console.log('DESKTOP');-->
+            <!--source = '/js/production/travelPageDesktop.min.js';-->
+        <!--}-->
+        <!--console.log('ANYONE:'+source);-->
+        <!--var script = document.getElementById('test');-->
+        <!--var script = document.createElement('script');-->
+        <!--script.src = source;-->
+        <!--script.type='text/javascript';-->
+        <!--script.async = false;-->
+        <!--document.head.appendChild(script);-->
+    <!--</script>-->
     <!--END OF IN PRODUCTION-->
 
     <!--IN DEVELOPMENT-->
-    <script src="/js/angularController/travelPageAngularController/routesApp.js"></script>
-    <script src="/js/angularController/travelPageAngularController/shabari.js"></script>
-    <script src="/js/angularController/travelPageAngularController/sanjaya.js"></script>
-    <script src="/js/angularController/travelPageAngularController/sarathi.js"></script>
-    <script src="/js/angularController/travelPageAngularController/surya.js"></script>
-    <script src="/js/angularController/travelPageAngularController/indra.js"></script>
-    <script src="/js/angularService/travelPageAngularService/orderedCitiesService.js"></script>
-    <script src="/js/angularFilter/titleCase.js"></script>
-    <script src="/js/angularFilter/formatTime.js"></script>
-    <script src="/js/angularJS/angular-pageslide-directive.js"></script>
-    <script src="/js/angularJS/ngDraggable.js"></script>
-    <script type="text/javascript" src="/js/angularController/travelPageAngularController/balarama.js"></script>
-    <script type="text/javascript" src="/js/jscrollPaneJS/jquery.mousewheel.js"></script>
-    <script type="text/javascript" src="/js/jscrollPaneJS/jquery.jscrollpane.min.js"></script>
-    <script src="/js/angularJS/angular-jscrollpane.js"></script>
-    <script src="/js/angularJS/intro.min.js"></script>
-    <script src="/js/angularJS/angular-intro.min.js"></script>
+    <!--<script src="/js/angularController/travelPageAngularController/routesApp.js"></script>-->
+    <!--<script src="/js/angularController/travelPageAngularController/shabari.js"></script>-->
+    <!--<script src="/js/angularController/travelPageAngularController/sanjaya.js"></script>-->
+    <!--<script src="/js/angularController/travelPageAngularController/sarathi.js"></script>-->
+    <!--<script src="/js/angularController/travelPageAngularController/surya.js"></script>-->
+    <!--<script src="/js/angularController/travelPageAngularController/indra.js"></script>-->
+    <!--<script src="/js/angularService/travelPageAngularService/orderedCitiesService.js"></script>-->
+    <!--<script src="/js/angularFilter/titleCase.js"></script>-->
+    <!--<script src="/js/angularFilter/formatTime.js"></script>-->
+    <!--<script src="/js/angularJS/angular-pageslide-directive.js"></script>-->
+    <!--<script src="/js/angularJS/ngDraggable.js"></script>-->
+    <!--<script type="text/javascript" src="/js/angularController/travelPageAngularController/balarama.js"></script>-->
+    <!--<script type="text/javascript" src="/js/jscrollPaneJS/jquery.mousewheel.js"></script>-->
+    <!--<script type="text/javascript" src="/js/jscrollPaneJS/jquery.jscrollpane.min.js"></script>-->
+    <!--<script src="/js/angularJS/angular-jscrollpane.js"></script>-->
+    <!--<script src="/js/angularJS/intro.min.js"></script>-->
+    <!--<script src="/js/angularJS/angular-intro.min.js"></script>-->
     <!--END OF IN DEVELOPMENT-->
 
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
+
+
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/travelPage/surya.css">
     <link rel="stylesheet" type="text/css" href="/css/travelPage/sarathi.css">
@@ -71,7 +88,7 @@
     }</script>
     <!-- end Mixpanel -->
 </head>
-<body>
+<body ng-app="tripdetails.routes.app">
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5RM4BW"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

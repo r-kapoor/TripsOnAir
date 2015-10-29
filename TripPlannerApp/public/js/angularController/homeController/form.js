@@ -1,4 +1,4 @@
-inputModule.controller('form1Controller',  function($scope, $rootScope, $window, $location, $timeout, formData) {
+inputModule.controller('form1Controller', ['$scope', '$rootScope', '$window', '$location', '$timeout', 'formData', function($scope, $rootScope, $window, $location, $timeout, formData) {
 
     var sessionData = $window.sessionStorage.getItem('formData');
     if(sessionData != null){
@@ -41,7 +41,7 @@ inputModule.controller('form1Controller',  function($scope, $rootScope, $window,
         //mixpanel.time_event('Cities Input');
         mixPanelTimeEvent('Cities Input');
     });
-  });
+  }]);
 
 function Main($scope) {
     $scope.items = [];

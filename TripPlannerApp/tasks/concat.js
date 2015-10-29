@@ -9,7 +9,7 @@ module.exports = function concat(grunt) {
 
     // Options
     return {
-        dist : {
+        travelPage : {
             src : [
                 'public/js/angularController/travelPageAngularController/routesApp.js',
                 'public/js/angularController/travelPageAngularController/shabari.js',
@@ -28,9 +28,32 @@ module.exports = function concat(grunt) {
                 'public/js/angularJS/angular-jscrollpane.js',
                 'public/js/angularJS/intro.min.js',
                 'public/js/angularJS/angular-intro.min.js'
-
             ],
             dest : 'public/js/production/travelPage.js'
+        },
+        homePage : {
+            src : [
+                'public/js/angularJS/angular-scroll.min.js',
+                'public/js/angularController/homeController/inputApp.js',
+                'public/js/angularController/homeController/indra.js',
+                'public/js/angularController/homeController/form.js',
+                'public/js/angularController/homeController/datePicker.js',
+                'public/js/angularJS/ng-slider.min.js',
+                'public/js/angularDirective/restrictInput.js',
+                'public/js/angularController/homeController/addCity.js',
+                'public/js/angularService/cityDataService.js',
+                'public/js/angularService/formDataService.js',
+                'public/js/angularJS/slider.js',
+                'public/js/angularController/homeController/kuber.js',
+                'public/js/angularController/homeController/brahma.js',
+                'public/js/jscrollPaneJS/jquery.mousewheel.js',
+                'public/js/jscrollPaneJS/jquery.jscrollpane.min.js',
+                'public/js/angularJS/angular-jscrollpane.js',
+                'public/js/angularController/homeController/selectedDestinationsPanel.js',
+                'public/js/angularController/homeController/krishna.js',
+                'public/js/angularController/homeController/bhishma.js'
+            ],
+            dest : 'public/js/production/homePage.js'
         }
     };
 };

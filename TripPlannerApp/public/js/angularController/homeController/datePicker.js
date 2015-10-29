@@ -1,4 +1,4 @@
-inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData) {
+inputModule.controller('DatepickerCtrl', ['$scope', '$rootScope', 'formData', function ($scope, $rootScope, formData) {
     $scope.today = function() {
         $scope.dt1 = new Date();
         formData.setStartDate($scope.dt1);
@@ -46,7 +46,7 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
             startEveningTimeId.removeClass("active");
             $scope.tripStartTime.evening=false;
         }
-        removeErrorHighlightStartTime()
+        removeErrorHighlightStartTime();
     };
 
     $scope.startEveningTime = function(){
@@ -106,13 +106,13 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
         else if(opened === 'opened2')
         {
             $scope.opened1 = false;
-        };
+        }
         if ($scope[opened]) {
             $scope[opened] = false;
         }
         else {
             $scope[opened] = true;
-        };
+        }
     };
 
     $scope.dateOptions = {
@@ -151,4 +151,4 @@ inputModule.controller('DatepickerCtrl', function ($scope, $rootScope, formData)
         }
     }
 
-});
+}]);

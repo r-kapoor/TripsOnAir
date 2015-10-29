@@ -19,5 +19,5 @@ itineraryModule.service('mapData', function () {
         setRouteNthData: function(N,updatedData){
             routeDataUpdated[N] = updatedData;
         }
-    }
+    };
 });

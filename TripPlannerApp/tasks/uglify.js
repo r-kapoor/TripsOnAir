@@ -9,9 +9,13 @@ module.exports = function uglify(grunt) {
 
     // Options
     return {
-        build : {
-            src : 'public/js/production/travelPage.js',
-            dest : 'public/js/production/travelPage.min.js'
+        travelPage : {
+            src: 'public/js/production/travelPage.js',
+            dest: 'public/js/production/travelPage.min.js'
+        },
+        homePage : {
+            src : 'public/js/production/homePage.js',
+            dest : 'public/js/production/homePage.min.js'
         }
     };
 };

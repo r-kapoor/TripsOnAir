@@ -1,4 +1,4 @@
-inputModule.controller('KuberController', function($scope, $rootScope, $http, $q, $location, $window, $timeout, formData, cityData) {
+inputModule.controller('KuberController', ['$scope', '$rootScope', '$http', '$q', '$location', '$window', '$timeout', 'formData', 'cityData', function($scope, $rootScope, $http, $q, $location, $window, $timeout, formData, cityData) {
     $scope.isDetailsCollapsed = false;
     $scope.isOverviewCollapsed = false;
     $scope.isSuggestDestinationsOn = formData.getSuggestDestinationOn();
@@ -324,7 +324,7 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
                     function onQueryFailure(result) {
                         console.log('At least one request for location failed');
                     }
-                )
+                );
             }
             else {
                 console.log('Some Problem with the inputs. Opening the upper part to fix them');
@@ -337,4 +337,4 @@ inputModule.controller('KuberController', function($scope, $rootScope, $http, $q
             console.log('Will suggest destinations');
         }
     };
-});
+}]);

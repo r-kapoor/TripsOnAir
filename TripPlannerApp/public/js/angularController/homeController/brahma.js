@@ -1,7 +1,7 @@
 /**
  * Created by rkapoor on 23/08/15.
  */
-inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $q, $location, $window, formData, cityData) {
+inputModule.controller('BrahmaController', ['$scope', '$rootScope', '$http', '$q', '$location', '$window', 'formData', 'cityData', function($scope, $rootScope, $http, $q, $location, $window, formData, cityData) {
 
     var itineraryID = formData.getItineraryID();
     $scope.isDetailsCollapsed = false;
@@ -149,13 +149,13 @@ inputModule.controller('BrahmaController', function($scope, $rootScope, $http, $
             },
             function error(response){
             }
-        )
+        );
     }
 
     $scope.$on('$destroy', function onBrahmaDestroy(){
         //Saving the values set by user to service
         formData.setNumPersons($scope.numPerson);
         formData.setTastes($scope.checkModel);
-    })
-});
+    });
+}]);
 
