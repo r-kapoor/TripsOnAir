@@ -16,6 +16,10 @@ module.exports = function uglify(grunt) {
         homePage : {
             src : 'public/js/production/homePage.js',
             dest : 'public/js/production/homePage.min.js'
+        },
+        hotelsAndPlacesPage : {
+            src : 'public/js/production/hotelsAndPlacesPage.js',
+            dest : 'public/js/production/hotelsAndPlacesPage.min.js'
         }
     };
 };

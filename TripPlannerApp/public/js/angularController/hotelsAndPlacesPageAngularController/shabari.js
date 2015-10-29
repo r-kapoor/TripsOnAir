@@ -1,7 +1,7 @@
 /**
  * Created by rajat on 5/18/2015.
  */
-itineraryModule.controller('shabariController',  function($scope,$rootScope) {
+itineraryModule.controller('shabariController',  ['$scope','$rootScope', function($scope,$rootScope) {
 
     $scope.isLoaderShown = true;
     $rootScope.$on("dataLoaded",function onItineraryPlanned(event, data){
@@ -11,4 +11,4 @@ itineraryModule.controller('shabariController',  function($scope,$rootScope) {
         $scope.isLoaderShown = true;
     });
 
-});
+}]);

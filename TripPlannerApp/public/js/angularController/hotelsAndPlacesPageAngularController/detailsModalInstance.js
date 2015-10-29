@@ -2,7 +2,7 @@
  * Created by rajat on 6/5/2015.
  */
 
-itineraryModule.controller('detailModalInstanceCtrl', function ($scope, $rootScope,$modalInstance,itemDetails) {
+itineraryModule.controller('detailModalInstanceCtrl', ['$scope', '$rootScope','$modalInstance','itemDetails', function ($scope, $rootScope,$modalInstance,itemDetails) {
 
     $scope.itemDetails = itemDetails;
     var slides = $scope.slides = [];
@@ -42,4 +42,4 @@ itineraryModule.controller('detailModalInstanceCtrl', function ($scope, $rootSco
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
-});
+}]);

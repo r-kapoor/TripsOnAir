@@ -2,7 +2,7 @@
  * Created by rkapoor on 01/05/15.
  */
 
-itineraryModule.controller('indraController', function($scope, $rootScope, $http, $q, $location, $timeout) {
+itineraryModule.controller('indraController', ['$scope', '$rootScope', function($scope, $rootScope) {
     $scope.isSaveShown = true;
     $scope.isBudgetPercentShown = true;
     $scope.saveText = "SAVE";
@@ -33,4 +33,4 @@ itineraryModule.controller('indraController', function($scope, $rootScope, $http
     $scope.guideMe = function(){
         $rootScope.$emit("guide");
     };
-});
+}]);

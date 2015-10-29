@@ -54,6 +54,31 @@ module.exports = function concat(grunt) {
                 'public/js/angularController/homeController/bhishma.js'
             ],
             dest : 'public/js/production/homePage.js'
+        },
+        hotelsAndPlacesPage : {
+            src : [
+                'public/js/angularJS/angular-scroll.min.js',
+                'public/js/angularDirective/fixToTop.js',
+                'public/js/angularJS/angular-timeline.js',
+                'public/js/angularDirective/scrollInview.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/page3Main.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/shabari.js',
+                'public/js/angularService/hotelsAndPlacesPageAngularService/mapDataService.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/jatayu.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/shakuni.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/hanuman.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/indra.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/saveModalInstance.js',
+                'public/js/angularController/hotelsAndPlacesPageAngularController/detailsModalInstance.js',
+                'public/js/angularJS/verge.min.js',
+                'public/js/angularJS/lodash.min.js',
+                'public/js/angularJS/intro.min.js',
+                'public/js/angularJS/angular-intro.min.js',
+                'public/js/jscrollPaneJS/jquery.mousewheel.js',
+                'public/js/jscrollPaneJS/jquery.jscrollpane.min.js',
+                'public/js/angularJS/angular-jscrollpane.js'
+            ],
+            dest : 'public/js/production/hotelsAndPlacesPage.js'
         }
     };
 };
