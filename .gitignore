@@ -12,6 +12,7 @@ TripPlannerApp/.settings
 TripPlannerApp/.idea/
 #Production Files
 TripPlannerApp/public/js/production/**
+TripPlannerApp/public/css/production/**
 #database file
 TripPlannerApp/lib/database.js
 #Downloaded Itineraries

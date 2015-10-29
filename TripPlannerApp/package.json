@@ -22,6 +22,7 @@
     "dustjs-helpers": "~1.7.1",
     "dustjs-linkedin": "~2.7.1",
     "ejson": "~2.0.1",
+    "grunt-contrib-cssmin": "^0.14.0",
     "hashids": "~1.0.1",
     "kraken-js": "~0.7.5",
     "less": "~2.5.1",
