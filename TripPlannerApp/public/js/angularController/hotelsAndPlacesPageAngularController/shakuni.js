@@ -62,6 +62,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     $scope.isMobileAlertPanelShown = false;
     $scope.isItineraryPanelOpen = true;
     $scope.totalBudgetText = "Budget";
+    $scope.totalExpensesText = "Total Expenses";
     $scope.travelBudgetText = "Travel Expenses";
     $scope.otherCitiesBudgetText = "Other Destination(s) Expenses";
     $scope.cityBudgetText = "";
@@ -76,6 +77,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     $scope.placesExpenses = 0;
     $scope.cityExpenses = 0;
     $scope.otherCitiesExpenses = 0;
+    $scope.totalExpenses = 0;
 
     $scope.isHover = true;
 
@@ -202,8 +204,8 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
             }
             $scope.travelBudget = parseInt(data.travelBudget) + parseInt(data.minorTravelBudget);
 
-            setBudgetModels();
             $scope.totalBudget = parseInt(data.userTotalbudget);
+            setBudgetModels();
             setDestinationSpecificModels();
 
             $scope.isItineraryPlanned=true;
@@ -212,6 +214,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                 Latitude:parseFloat($scope.currentDestination.pos.split(',')[0]),
                 Longitude:parseFloat($scope.currentDestination.pos.split(',')[1])
             };
+            //console.log('Data Loaded');
             calculatePlacesExpenses();
             calculateCityExpenses();
             $rootScope.$emit('dataLoaded');
@@ -422,10 +425,10 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         };
 
         $http(req).success(function(data,status) {
-            console.log("downloadedPDF");
+            //console.log("downloadedPDF");
             $rootScope.$emit('generatedPDF');
             if(data.success){
-                console.log("FILE:"+data.file);
+                //console.log("FILE:"+data.file);
                 var elem = jQuery('#download');
                 elem.attr('href',"/"+data.file);
                 elem[0].click();
@@ -935,6 +938,13 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         if($scope.isDataLoaded)
         {
             $rootScope.$emit('dataLoaded');
+        }
+    });
+
+    $rootScope.$on('checkIfBudgetSet',function onCheckBudgetSet(){
+        if($scope.isDataLoaded)
+        {
+            calculateBudgetPercent();
         }
     });
 
@@ -2296,16 +2306,17 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     }
 
     function calculateCityExpenses(){
-        //.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
+        //console.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
         $scope.cityExpenses = $scope.hotelExpenses + $scope.placesExpenses + $scope.localTravelAndFoodExpenses;
         calculateBudgetPercent();
     }
 
     function calculateBudgetPercent(){
-        var totalExpenses = $scope.travelBudget + $scope.cityExpenses + $scope.otherCitiesExpenses;
-        var percent = parseInt((totalExpenses * 100)/ $scope.totalBudget);
+        $scope.totalExpenses = $scope.travelBudget + $scope.cityExpenses + $scope.otherCitiesExpenses;
+        //console.log($scope.totalBudget);
+        var percent = parseInt(($scope.totalExpenses * 100)/ $scope.totalBudget);
         $rootScope.$emit('budgetChanged', percent);
-        //console.log('budgetChanged');
+        //console.log('budgetChanged:'+percent);
     }
 
     function calculateOtherCitiesExpenses() {

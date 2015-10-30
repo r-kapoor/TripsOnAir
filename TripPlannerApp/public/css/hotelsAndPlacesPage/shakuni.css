@@ -169,3 +169,13 @@
 .sprite1{
     background:url(http://res.cloudinary.com/picsonair/image/upload/v1443893055/sprite_obiwjm.png);
 }
+
+.budgetPanelMajor{
+    background-color: #f89d29;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.budgetPanelMinor{
+    font-size: small;
+}

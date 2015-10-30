@@ -1,19 +1,25 @@
 <div ng-if="isBudgetPanelOpen" class="panel panel-default">
         <ul class="list-group">
-            <li class="list-group-item" ng-if="totalBudget > 0">
+            <li class="list-group-item budgetPanelMajor" ng-if="totalBudget > 0">
                 <div class="row">
                     <div class="col-md-6 col-xs-6">{{totalBudgetText}}</div>
                     <div class="col-md-4 col-xs-6">{{totalBudget | currency:"&#8377;":0}}</div>
                     <div class="hidden-xs hidden-sm col-md-2" ng-click="closeBudgetPanel()" style="cursor: pointer"><i class="glyphicon glyphicon-remove"></i></div>
                 </div>
             </li>
-            <li class="list-group-item" ng-if="travelBudget > 0">
+            <li class="list-group-item budgetPanelMajor" ng-if="totalExpenses > 0">
+                <div class="row">
+                    <div class="col-xs-6">{{totalExpensesText}}</div>
+                    <div class="col-xs-4">{{totalExpenses | currency:"&#8377;":0}}</div>
+                </div>
+            </li>
+            <li class="list-group-item budgetPanelMinor" ng-if="travelBudget > 0">
                 <div class="row">
                     <div class="col-xs-6">{{travelBudgetText}}</div>
                     <div class="col-xs-4">{{travelBudget | currency:"&#8377;":0}}</div>
                 </div>
             </li>
-            <li class="list-group-item" ng-mouseover="isHover = false" ng-mouseleave="isHover = true" ng-hide="!(cityExpenses > 0)">
+            <li class="list-group-item budgetPanelMinor" ng-mouseover="isHover = false" ng-mouseleave="isHover = true" ng-hide="!(cityExpenses > 0)">
                 <div class="row" style="cursor: pointer">
                     <div class="col-xs-6">{{cityBudgetText}}</div>
                     <div class="col-xs-4">{{cityExpenses | currency:"&#8377;":0}}</div>
@@ -22,25 +28,25 @@
                     <i class="glyphicon glyphicon-chevron-down"></i>
                 </div>
             </li>
-            <li class="list-group-item sub-expense" ng-hide="isHover" ng-if="hotelExpenses > 0">
+            <li class="list-group-item sub-expense budgetPanelMinor" ng-hide="isHover" ng-if="hotelExpenses > 0">
                 <div class="row">
                     <div class="col-xs-6">{{hotelExpensesText}}</div>
                     <div class="col-xs-4">{{hotelExpenses | currency:"&#8377;":0}}</div>
                 </div>
             </li>
-            <li class="list-group-item sub-expense" ng-hide="isHover" ng-if="localTravelAndFoodExpenses > 0">
+            <li class="list-group-item sub-expense budgetPanelMinor" ng-hide="isHover" ng-if="localTravelAndFoodExpenses > 0">
                 <div class="row">
                     <div class="col-xs-6">{{localTravelAndFoodText}}</div>
                     <div class="col-xs-4">{{localTravelAndFoodExpenses | currency:"&#8377;":0}}</div>
                 </div>
             </li>
-            <li class="list-group-item sub-expense" ng-hide="isHover" ng-if="placesExpenses > 0">
+            <li class="list-group-item sub-expense budgetPanelMinor" ng-hide="isHover" ng-if="placesExpenses > 0">
                 <div class="row">
                     <div class="col-xs-6">{{placesExpensesText}}</div>
                     <div class="col-xs-4">{{placesExpenses | currency:"&#8377;":0}}</div>
                 </div>
             </li>
-            <li class="list-group-item" ng-if="otherCitiesExpenses > 0">
+            <li class="list-group-item budgetPanelMinor" ng-if="otherCitiesExpenses > 0">
                 <div class="row">
                     <div class="col-xs-6">{{otherCitiesBudgetText}}</div>
                     <div class="col-xs-4">{{otherCitiesExpenses | currency:"&#8377;":0}}</div>
