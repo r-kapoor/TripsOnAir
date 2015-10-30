@@ -448,7 +448,6 @@ function getValidPermutation(placesPermutation, dateWisePlaceData, destination, 
         if(err != undefined){
             return err;
         }
-        dateWisePlaceData.startSightSeeingTime = previousDaysDateWisePlaceData.endSightSeeingTime.clone().addMinutes(REST_TIME);
         startSightSeeingTime = dateWisePlaceData.startSightSeeingTime;
         makeItinerary(true);
         //}
