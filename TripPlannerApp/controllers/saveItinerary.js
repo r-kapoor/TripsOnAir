@@ -25,7 +25,7 @@ module.exports=function (app){
             }
             else {
                 var saveObject = JSON.parse(itinerary);
-                saveObject.state = 5;
+                saveObject.state = 6;
                 saveObject.itineraryData = itineraryData;
 
                 var connection=conn.conn('UserInteraction');

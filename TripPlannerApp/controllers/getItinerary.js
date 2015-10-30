@@ -39,8 +39,9 @@ module.exports = function(app) {
                 var saveObject = JSON.parse(itinerary);
 
                 var state = saveObject.state;
-                if(state > 4){
+                if(state >4){
                     res.json(saveObject.itineraryData);
+                    saveObject.state = 5;
                 }
                 else {
                     var connection=conn.conn();
@@ -135,7 +136,7 @@ module.exports = function(app) {
                                 res.json(destinationAndStops);
 
                                 //Updating and saving the saveObject
-                                saveObject.state = 4;
+                                saveObject.state = 5;
                                 saveObject.itineraryData = destinationAndStops;
                                 redisClient.set(itineraryID, JSON.stringify(saveObject), function(err){
                                     if (err){
