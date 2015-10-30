@@ -990,10 +990,14 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     $scope.getTimeToPlaceText = function(dateItinerary, index){
         var originPosition;
         if(index == 0){
+            var name = "Hotel";
+            if($scope.hotelDetails == undefined){
+                name = "Arrival Location";
+            }
             originPosition = {
-                name:"Hotel",
-                Latitude:$scope.currentDestination.hotelDetails.Latitude,
-                Longitude:$scope.currentDestination.hotelDetails.Longitude
+                name:name,
+                Latitude:$scope.currentDestination.LocationOfArrival.Latitude,
+                Longitude:$scope.currentDestination.LocationOfArrival.Longitude
             };
         }
         else {
@@ -1022,10 +1026,14 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         };
         var destinationPosition;
         if(index == dateItinerary.permutation.length - 1){
+            var name = "Hotel";
+            if($scope.hotelDetails == undefined){
+                name = "Departure Location";
+            }
             destinationPosition = {
-                name:"Hotel",
-                Latitude:$scope.currentDestination.hotelDetails.Latitude,
-                Longitude:$scope.currentDestination.hotelDetails.Longitude
+                name:name,
+                Latitude:$scope.currentDestination.LocationOfArrival.Latitude,
+                Longitude:$scope.currentDestination.LocationOfArrival.Longitude
             };
         }
         else {
