@@ -115,18 +115,21 @@ mixpanel.init("a431d4f9df736a613fac228545d188ad");
                                 <div class="row">
                                     <div class="col-sm-12"><h5>Origin:</h5></div>
                                     <div class="col-sm-12">
-                                        <div class="wrapper">
-                                            <a href="#" class="thumbnail" style="margin-bottom: 0;">
-                                                <img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>
-                                            </a>
-
-                                            <div class="name">
-                                                <p class="text-center">
-                                                    {{origin.CityName}}
-                                                </p>
-                                            </div>
-                                            <!--end of description class-->
+                                        <div class="well text-center" style="font-weight: bold">
+                                            {{origin.CityName}}
                                         </div>
+                                        <!--<div class="wrapper">-->
+                                            <!--<a href="#" class="thumbnail" style="margin-bottom: 0;">-->
+                                                <!--<img src="images/agra.jpg" class="img-responsive" style="width: 100%"/>-->
+                                            <!--</a>-->
+
+                                            <!--<div class="name">-->
+                                                <!--<p class="text-center">-->
+                                                    <!--{{origin.CityName}}-->
+                                                <!--</p>-->
+                                            <!--</div>-->
+                                            <!--&lt;!&ndash;end of description class&ndash;&gt;-->
+                                        <!--</div>-->
                                     </div>
                                     <div class="col-sm-12" ng-hide="destinationLabel"><h5>Destination(s):</h5>
                                         <div scroll-pane scroll-config="paneConfig" id="destinationsPanel" style="width:100%;height: 45vh">
