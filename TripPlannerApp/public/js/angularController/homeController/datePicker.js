@@ -1,4 +1,8 @@
 inputModule.controller('DatepickerCtrl', ['$scope', '$rootScope', 'formData', function ($scope, $rootScope, formData) {
+    var MINUTES_TO_MILLISECONDS = 60*1000;
+    var HOURS_TO_MILLISECONDS = MINUTES_TO_MILLISECONDS*60;
+    var DAYS_TO_MILLISECONDS = HOURS_TO_MILLISECONDS*24;
+
     $scope.today = function() {
         $scope.dt1 = new Date();
         formData.setStartDate($scope.dt1);
@@ -23,11 +27,9 @@ inputModule.controller('DatepickerCtrl', ['$scope', '$rootScope', 'formData', fu
     };
 
     $scope.startDateSelected = function() {
-        if($scope.dt2 !== null) {
-            $scope.dt2 = $scope.dt1;
-            formData.setEndDate($scope.dt2);
-            removeErrorHighlightEndDate();
-        }
+        $scope.dt2 = new Date($scope.dt1.getTime() + 2*DAYS_TO_MILLISECONDS);
+        formData.setEndDate($scope.dt2);
+        removeErrorHighlightEndDate();
         formData.setStartDate($scope.dt1);
         removeErrorHighlightStartDate();
     };
