@@ -497,6 +497,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
 
                     if(dateWisePlaceData.typeOfDay == 0) {
                         //Is 1st Day
+                        //console.log('dateWisePlaceData:'+JSON.stringify(dateWisePlaceData));
                         if (dateWiseItinerary.hasMorningCheckIn != undefined && dateWiseItinerary.hasMorningCheckIn) {
                             if (timeDifferenceGreaterThan($scope.currentDestination.hotelDetails.checkInTime, dateWisePlaceData.startSightSeeingTime, MORNING_CHECK_IN_DURATION * 60 + Time2Cover)) {
                                 placeAdditionCandidates.push({
@@ -536,7 +537,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                             }
                         }
                         else {
-                            if(dateWisePlaceData.typeOfDay == 0){
+                            if(dateWisePlaceData.typeOfDay == 0 && dateWisePlaceData.noPlacesVisited == 1){
                                 //console.log("TYPE OF DAY:0");
                                 if(timeDifferenceGreaterThan($scope.currentDestination.hotelDetails.checkInTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover)){
                                     //console.log("timeDifference Greater");
@@ -2380,6 +2381,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                 //console.log("dateWiseItinerary.endSightSeeingTime:"+dateWiseItinerary.dateWisePlaceData.endSightSeeingTime);
                 if(candidate.type == "checkIn") {
                     dateWiseItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - place.timeToHotel * HOURS_TO_MILLISECONDS);
+                    dateWiseItinerary.hasMorningCheckIn = true;
                 }
                 if( dateWiseItinerary.dateWisePlaceData.noPlacesVisited!=undefined && dateWiseItinerary.dateWisePlaceData.noPlacesVisited==1)
                 {
