@@ -929,6 +929,15 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         setMapData(dateItineraryIndex);
     };
 
+
+    $rootScope.$on('checkIfDataLoaded',function onCheckDataLoaded(){
+
+        if($scope.isDataLoaded)
+        {
+            $rootScope.$emit('dataLoaded');
+        }
+    });
+
     $scope.showLowerPanel = function(content){
         //console.log("content:"+content);
         if(content=='places')
