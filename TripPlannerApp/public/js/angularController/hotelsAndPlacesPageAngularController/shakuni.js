@@ -1913,7 +1913,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         var oldPlace = dateItinerary.dateWisePlaceData.placesData[permValue];
         var hasHotel = ($scope.currentDestination.isHotelRequired == 1);
         var hotel = $scope.currentDestination.hotelDetails;
-        var replacePlaceDone = false;
+        var replacePlaceDone = true;
         if(place.Days == undefined) {
             place.Days = combineDays(place.PlaceTimings);
         }
@@ -2132,19 +2132,28 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                 openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
                 openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
 
-                if((openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
+                if(timeDifferenceGreaterThan(place.placeArrivalTime, place.placeDepartureTime, 0) && (openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
                     setSelectedPlaceTimingIndex(place.PlaceTimings, openingTimeIndexForArrival);
                 }
                 //console.log("openingTimeIndexForArrival:"+openingTimeIndexForArrival+",openingTimeIndexForDeparture:"+openingTimeIndexForDeparture);
-                checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
+                if(timeDifferenceGreaterThan(place.placeDepartureTime, place.placeArrivalTime, 0)){
+                    //Arriving at place after Departure time. Cannot replace
+                    createAlert('replaceAndNoTime', place.Name);
+                    replacePlaceDone = false;
+                }
+                else {
+                    checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
+                }
 
             }
-            dateItinerary.dateWisePlaceData.placesData[permValue] = place;
-            replacePlaceDone = true;
+            if(replacePlaceDone){
+                dateItinerary.dateWisePlaceData.placesData[permValue] = place;
+            }
         }
         else {
             //alert('Place closed on this day');//ALERT3
             createAlert('replaceAndClosedOnDay',place.Name);
+            replacePlaceDone = false;
         }
         return replacePlaceDone;
     }

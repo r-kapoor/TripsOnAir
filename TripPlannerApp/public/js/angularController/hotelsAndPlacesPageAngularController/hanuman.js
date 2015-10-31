@@ -25,7 +25,8 @@ itineraryModule.controller('hanumanController', ['$scope', '$rootScope', '$http'
         timingChangeInvalid:{kind:'place',type:'danger',msg:'Arrival time cannot be ahead of departure time'},
         hotelAndLessTime:{kind:'hotel',type:'danger',msg:'You have less time in hotel'},
         replaceHotelLessTimeOnDate:{kind:'hotel',type:'danger',msg:'You have less time in hotel on ?'},
-        replaceHotelLessTimeInMorning:{kind:'hotel',type:'danger',msg:'You have less time in hotel in morning of ?'}
+        replaceHotelLessTimeInMorning:{kind:'hotel',type:'danger',msg:'You have less time in hotel in morning of ?'},
+        replaceAndNoTime:{kind:'place', type:'danger', msg:'There is not enough time to visit ? by replacing the place'}
     };
 
     $scope.closeAlert = function(index) {
