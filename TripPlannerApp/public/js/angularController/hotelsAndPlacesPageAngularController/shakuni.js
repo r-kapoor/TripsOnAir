@@ -992,7 +992,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         var originPosition;
         if(index == 0){
             var name = "Hotel";
-            if($scope.hotelDetails == undefined){
+            if($scope.currentDestination.hotelDetails == undefined || $scope.currentDestination.hotelDetails == null){
                 name = "Arrival Location";
             }
             originPosition = {
@@ -1028,7 +1028,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         var destinationPosition;
         if(index == dateItinerary.permutation.length - 1){
             var name = "Hotel";
-            if($scope.hotelDetails == undefined){
+            if($scope.currentDestination.hotelDetails == undefined || $scope.currentDestination.hotelDetails == null){
                 name = "Departure Location";
             }
             destinationPosition = {
