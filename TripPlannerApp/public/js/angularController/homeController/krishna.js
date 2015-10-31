@@ -431,10 +431,11 @@ inputModule.controller('KrishnaController', ['$scope', '$rootScope', '$http', '$
                     }
                     if(!isPresent) {
                         //This destination is not selected
-                        isSelected = false;
-                        break;
+                        if(suggestedDestination.CityDataFromGroup[i].CityName.toLowerCase() !== formData.getOrigin().CityName.toLowerCase()){
+                            isSelected = false;
+                            break;
+                        }
                     }
-
                 }
                 //console.log("markFunc:"+JSON.stringify(suggestedDestination)+":"+isSelected);
                 if(isSelected) {

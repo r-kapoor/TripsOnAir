@@ -173,8 +173,11 @@ inputModule.service('formData', function () {
                 suggestDestinationOn = allData.suggestDestinationOn;
             },
             appendDestination: function(destination) {
-                destinationCities.push(destination);
-                removeDuplicates();
+                if(destination.CityName.toLowerCase() != originCity.CityName.toLowerCase()){
+                    //Not same as origin
+                    destinationCities.push(destination);
+                    removeDuplicates();
+                }
             },
             concatDestinations: function(destinations) {
                 destinationCities = destinationCities.concat(destinations);
