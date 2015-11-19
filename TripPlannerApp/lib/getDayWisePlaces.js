@@ -25,8 +25,8 @@ function getDayWisePlaces(destinationAndStops) {
         var daysAndDatesInDestination=getDaysAndDatesInDestination(arrivalTime,departureTime,checkInTime,checkOutTime,isHotelRequired);
 
         var countOfNormalDays = 0;
-        for(var daysIterator = 0; daysIterator < daysAndDatesInDestination.length; daysIterator++){
-            if(daysAndDatesInDestination.typeOfDay == 1){
+        for(var daysIterator = 0; daysIterator < daysAndDatesInDestination.datesInDestination.length; daysIterator++){
+            if(daysAndDatesInDestination.datesInDestination[daysIterator].typeOfDay == 1){
                 //Is a normal day
                 countOfNormalDays++;
             }
