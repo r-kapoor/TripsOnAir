@@ -193,12 +193,12 @@
                     </timeline-heading>
 
                     <timeline-content ng-if="!dateItinerary.dateWisePlaceData.placesData[permValue].isChangeTiming">
-                        <div class="col-md-6 col-xs-12 col-sm-12">
+                        <div class="col-md-5 col-xs-12 col-sm-12">
                             <!--<img class="img-responsive" src="http://www.freeimages.com/assets/183333/1833326510/wood-weel-1444183-m.jpg">-->
                             <img ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].NumberOfImages>0" class="img-responsive" ng-src="http://res.cloudinary.com/picsonair/image/upload/c_limit,h_150,w_300/{{dateItinerary.dateWisePlaceData.placesData[permValue].PlaceID}}-1.png">
                             <img ng-if="dateItinerary.dateWisePlaceData.placesData[permValue].NumberOfImages==0" class="img-responsive" ng-src="http://res.cloudinary.com/picsonair/image/upload/v1445451772/NA_vjx1ej.png">
                         </div>
-                        <div class="col-md-6 description-wrap hidden-xs hidden-sm">
+                        <div class="col-md-7 hidden-xs hidden-sm" ng-class="{descriptionwrap: !(dateItinerary.dateWisePlaceData.placesData[permValue].isMeal != undefined && dateItinerary.dateWisePlaceData.placesData[permValue].isMeal == 1)}">
                             <p>{{dateItinerary.dateWisePlaceData.placesData[permValue].Description}}</p>
                         </div>
                     </timeline-content>

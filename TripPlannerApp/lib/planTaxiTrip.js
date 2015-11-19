@@ -585,16 +585,19 @@ function taxiModifiedRome2RioData(rome2RioData,carRouteDetails, carLegDetails)
                                 {
                                     if(carRouteDetails[l].ddpDetailsUpdated==0)
                                     {
-                                        var speed=40;//km per hour
+                                        var speed=38;//km per hour
                                         if(carRouteDetails[l].oldKind=="flight")
                                         {
-                                            speed= 25;
+                                            speed= 28;
                                         }
                                         else if(carRouteDetails[l].oldKind=="train")
                                         {
-                                            speed=35;
+                                            speed=33;
                                         }
                                         carRouteDetails[l].duration = (carRouteDetails[l].distance/speed)*60;//in minutes
+                                    }
+                                    else {
+                                        carRouteDetails[l].duration = carRouteDetails[l].duration * 1.3;
                                     }
                                     if(lastSegmentWasCab){
                                         //Need to combine this segment with previous one

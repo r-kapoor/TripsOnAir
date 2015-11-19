@@ -2,7 +2,7 @@
  * Created by rkapoor on 01/05/15.
  */
 
-itineraryModule.controller('indraController', ['$scope', '$rootScope', function($scope, $rootScope) {
+itineraryModule.controller('indraController', ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout) {
     $scope.isSaveShown = true;
     $scope.isBudgetPercentShown = true;
     $scope.saveText = "SAVE";
@@ -10,7 +10,7 @@ itineraryModule.controller('indraController', ['$scope', '$rootScope', function(
     $scope.budgetPercent = 0;
 
     $rootScope.$on('budgetChanged',  function onBudgetChanged(event, percent) {
-        //console.log('budgetChanged:'+percent);
+        console.log('budgetChanged:'+percent);
         $scope.budgetPercent = percent;
     });
 
@@ -33,4 +33,13 @@ itineraryModule.controller('indraController', ['$scope', '$rootScope', function(
     $scope.guideMe = function(){
         $rootScope.$emit("guide");
     };
+
+    function checkIfBudgetSet(){
+        if($scope.budgetPercent == 0)
+        {
+            //$rootScope.$emit("checkIfBudgetSet");
+            $timeout(checkIfBudgetSet,2000);
+        }
+    }
+    checkIfBudgetSet();
 }]);

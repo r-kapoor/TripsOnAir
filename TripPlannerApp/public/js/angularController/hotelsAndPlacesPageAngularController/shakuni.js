@@ -62,6 +62,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     $scope.isMobileAlertPanelShown = false;
     $scope.isItineraryPanelOpen = true;
     $scope.totalBudgetText = "Budget";
+    $scope.totalExpensesText = "Total Expenses";
     $scope.travelBudgetText = "Travel Expenses";
     $scope.otherCitiesBudgetText = "Other Destination(s) Expenses";
     $scope.cityBudgetText = "";
@@ -76,6 +77,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     $scope.placesExpenses = 0;
     $scope.cityExpenses = 0;
     $scope.otherCitiesExpenses = 0;
+    $scope.totalExpenses = 0;
 
     $scope.isHover = true;
 
@@ -202,8 +204,8 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
             }
             $scope.travelBudget = parseInt(data.travelBudget) + parseInt(data.minorTravelBudget);
 
-            setBudgetModels();
             $scope.totalBudget = parseInt(data.userTotalbudget);
+            setBudgetModels();
             setDestinationSpecificModels();
 
             $scope.isItineraryPlanned=true;
@@ -212,6 +214,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                 Latitude:parseFloat($scope.currentDestination.pos.split(',')[0]),
                 Longitude:parseFloat($scope.currentDestination.pos.split(',')[1])
             };
+            //console.log('Data Loaded');
             calculatePlacesExpenses();
             calculateCityExpenses();
             $rootScope.$emit('dataLoaded');
@@ -422,10 +425,10 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         };
 
         $http(req).success(function(data,status) {
-            console.log("downloadedPDF");
+            //console.log("downloadedPDF");
             $rootScope.$emit('generatedPDF');
             if(data.success){
-                console.log("FILE:"+data.file);
+                //console.log("FILE:"+data.file);
                 var elem = jQuery('#download');
                 elem.attr('href',"/"+data.file);
                 elem[0].click();
@@ -494,6 +497,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
 
                     if(dateWisePlaceData.typeOfDay == 0) {
                         //Is 1st Day
+                        //console.log('dateWisePlaceData:'+JSON.stringify(dateWisePlaceData));
                         if (dateWiseItinerary.hasMorningCheckIn != undefined && dateWiseItinerary.hasMorningCheckIn) {
                             if (timeDifferenceGreaterThan($scope.currentDestination.hotelDetails.checkInTime, dateWisePlaceData.startSightSeeingTime, MORNING_CHECK_IN_DURATION * 60 + Time2Cover)) {
                                 placeAdditionCandidates.push({
@@ -533,7 +537,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                             }
                         }
                         else {
-                            if(dateWisePlaceData.typeOfDay == 0){
+                            if(dateWisePlaceData.typeOfDay == 0 && dateWisePlaceData.noPlacesVisited == 1){
                                 //console.log("TYPE OF DAY:0");
                                 if(timeDifferenceGreaterThan($scope.currentDestination.hotelDetails.checkInTime, $scope.currentDestination.dateWiseItinerary[itineraryIndex + 1].dateWisePlaceData.startSightSeeingTime, REST_TIME * 60 + Time2Cover)){
                                     //console.log("timeDifference Greater");
@@ -938,6 +942,13 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         }
     });
 
+    $rootScope.$on('checkIfBudgetSet',function onCheckBudgetSet(){
+        if($scope.isDataLoaded)
+        {
+            calculateBudgetPercent();
+        }
+    });
+
     $scope.showLowerPanel = function(content){
         //console.log("content:"+content);
         if(content=='places')
@@ -980,10 +991,14 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     $scope.getTimeToPlaceText = function(dateItinerary, index){
         var originPosition;
         if(index == 0){
+            var name = "Hotel";
+            if($scope.currentDestination.hotelDetails == undefined || $scope.currentDestination.hotelDetails == null){
+                name = "Arrival Location";
+            }
             originPosition = {
-                name:"Hotel",
-                Latitude:$scope.currentDestination.hotelDetails.Latitude,
-                Longitude:$scope.currentDestination.hotelDetails.Longitude
+                name:name,
+                Latitude:$scope.currentDestination.LocationOfArrival.Latitude,
+                Longitude:$scope.currentDestination.LocationOfArrival.Longitude
             };
         }
         else {
@@ -1012,10 +1027,14 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         };
         var destinationPosition;
         if(index == dateItinerary.permutation.length - 1){
+            var name = "Hotel";
+            if($scope.currentDestination.hotelDetails == undefined || $scope.currentDestination.hotelDetails == null){
+                name = "Departure Location";
+            }
             destinationPosition = {
-                name:"Hotel",
-                Latitude:$scope.currentDestination.hotelDetails.Latitude,
-                Longitude:$scope.currentDestination.hotelDetails.Longitude
+                name:name,
+                Latitude:$scope.currentDestination.LocationOfArrival.Latitude,
+                Longitude:$scope.currentDestination.LocationOfArrival.Longitude
             };
         }
         else {
@@ -1894,7 +1913,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
         var oldPlace = dateItinerary.dateWisePlaceData.placesData[permValue];
         var hasHotel = ($scope.currentDestination.isHotelRequired == 1);
         var hotel = $scope.currentDestination.hotelDetails;
-        var replacePlaceDone = false;
+        var replacePlaceDone = true;
         if(place.Days == undefined) {
             place.Days = combineDays(place.PlaceTimings);
         }
@@ -2113,19 +2132,28 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                 openingTimeIndexForDeparture = getPlaceTimingsToSelect(place.placeDepartureTime,place.PlaceTimings);
                 openingTimeIndexForArrival = getPlaceTimingsToSelect(place.placeArrivalTime, place.PlaceTimings);
 
-                if((openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
+                if(timeDifferenceGreaterThan(place.placeArrivalTime, place.placeDepartureTime, 0) && (openingTimeIndexForArrival != -1) && (openingTimeIndexForArrival == openingTimeIndexForDeparture)){
                     setSelectedPlaceTimingIndex(place.PlaceTimings, openingTimeIndexForArrival);
                 }
                 //console.log("openingTimeIndexForArrival:"+openingTimeIndexForArrival+",openingTimeIndexForDeparture:"+openingTimeIndexForDeparture);
-                checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
+                if(timeDifferenceGreaterThan(place.placeDepartureTime, place.placeArrivalTime, 0)){
+                    //Arriving at place after Departure time. Cannot replace
+                    createAlert('replaceAndNoTime', place.Name);
+                    replacePlaceDone = false;
+                }
+                else {
+                    checkAndAlertOnPlaceReplace(place,openingTimeIndexForArrival,openingTimeIndexForDeparture);
+                }
 
             }
-            dateItinerary.dateWisePlaceData.placesData[permValue] = place;
-            replacePlaceDone = true;
+            if(replacePlaceDone){
+                dateItinerary.dateWisePlaceData.placesData[permValue] = place;
+            }
         }
         else {
             //alert('Place closed on this day');//ALERT3
             createAlert('replaceAndClosedOnDay',place.Name);
+            replacePlaceDone = false;
         }
         return replacePlaceDone;
     }
@@ -2296,16 +2324,17 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
     }
 
     function calculateCityExpenses(){
-        //.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
+        //console.log($scope.hotelExpenses +","+$scope.placesExpenses +","+$scope.localTravelAndFoodExpenses);
         $scope.cityExpenses = $scope.hotelExpenses + $scope.placesExpenses + $scope.localTravelAndFoodExpenses;
         calculateBudgetPercent();
     }
 
     function calculateBudgetPercent(){
-        var totalExpenses = $scope.travelBudget + $scope.cityExpenses + $scope.otherCitiesExpenses;
-        var percent = parseInt((totalExpenses * 100)/ $scope.totalBudget);
+        $scope.totalExpenses = $scope.travelBudget + $scope.cityExpenses + $scope.otherCitiesExpenses;
+        //console.log($scope.totalBudget);
+        var percent = parseInt(($scope.totalExpenses * 100)/ $scope.totalBudget);
         $rootScope.$emit('budgetChanged', percent);
-        //console.log('budgetChanged');
+        //console.log('budgetChanged:'+percent);
     }
 
     function calculateOtherCitiesExpenses() {
@@ -2361,6 +2390,7 @@ itineraryModule.controller('shakuniController', ['$scope', '$rootScope', '$http'
                 //console.log("dateWiseItinerary.endSightSeeingTime:"+dateWiseItinerary.dateWisePlaceData.endSightSeeingTime);
                 if(candidate.type == "checkIn") {
                     dateWiseItinerary.dateWisePlaceData.startSightSeeingTime = new Date(getTimeFromDate(place.placeArrivalTime) - place.timeToHotel * HOURS_TO_MILLISECONDS);
+                    dateWiseItinerary.hasMorningCheckIn = true;
                 }
                 if( dateWiseItinerary.dateWisePlaceData.noPlacesVisited!=undefined && dateWiseItinerary.dateWisePlaceData.noPlacesVisited==1)
                 {

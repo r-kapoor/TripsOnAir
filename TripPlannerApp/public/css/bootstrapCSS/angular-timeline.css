@@ -211,9 +211,8 @@ li.drag-enter > .timeline-panel{
   background-color: #2e6da4;
 }
 
-.description-wrap{
-    height: 12vh;
-    width: inherit;
+.descriptionwrap{
+    height: 18vh;
     text-overflow: ellipsis;
     white-space:normal;
     overflow: hidden;
@@ -222,7 +221,7 @@ li.drag-enter > .timeline-panel{
     -webkit-box-orient: vertical;
 }
 
-.description-wrap:hover{
+.descriptionwrap:hover{
     overflow: visible;
     height: inherit;
     display: inherit;

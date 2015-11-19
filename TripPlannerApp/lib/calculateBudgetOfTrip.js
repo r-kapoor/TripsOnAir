@@ -144,11 +144,14 @@ function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
     var fareDetails = cabFareDetailsClone.FareDetails;
     var minimumKmPerDay = cabFareDetailsClone.MinimumKmPerDay;
     var driver = cabFareDetailsClone.Driver;
+    var isFinalSelected = false;
+    var minActualCabPrice = -1, minActualCabPriceIndex = -1;
     for(var fareDetailIndex in fareDetails) {
         var fareDetail = fareDetails[fareDetailIndex];
         if(fareDetail.Seats <= Math.max(1.5*numPeople, 4)) {
             if(fareDetail.SegmentType == carOfPreference) {
                 fareDetail.isFinal = 1;
+                isFinalSelected = true;
             }
             fareDetail.NumberOfCabs = Math.max(parseInt(numPeople / fareDetail.Seats), 1);
             for(var operatorIndex in fareDetail.OperatorPrices) {
@@ -159,6 +162,10 @@ function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
                 operatorDetails.DistanceForPriceComputation = Math.max(numOfDaysOfCab * operatorDetails.MinimumKmPerDay, distanceByCab + localTravelKm*numOfDaysOfCab);
                 operatorDetails.ActualTotalCabPrice = (operatorDetails.DistanceForPriceComputation * operatorDetails.PricePerKm + numOfDaysOfCab * operatorDetails.Driver) * fareDetail.NumberOfCabs;
                 operatorDetails.ActualCabPrice = parseInt(operatorDetails.ActualTotalCabPrice / numPeople);
+                if(operatorDetails.ActualCabPrice < minActualCabPrice || minActualCabPrice == -1){
+                    minActualCabPriceIndex = carSegmentArray.length;
+                    minActualCabPrice = operatorDetails.ActualCabPrice;
+                }
             }
             carSegmentArray.push(fareDetail);
         }
@@ -166,6 +173,10 @@ function calculateCabBudget(numOfDaysOfCab, numPeople, distanceByCab, segment)
 
 	var minimumCabPrice = -1;
 	var minOperator = null;
+
+    if(!isFinalSelected){
+        carSegmentArray[minActualCabPriceIndex].isFinal = 1;
+    }
 
     for(var fareDetailIndex in carSegmentArray) {
         var fareDetail = fareDetails[fareDetailIndex];
