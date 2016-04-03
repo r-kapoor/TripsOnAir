@@ -4,11 +4,11 @@
 var conn = require('../../lib/database');
 var encodeCityID = require('../../lib/hashEncoderDecoder');
 
-function populateCityDataService() {
+function populateCityDataService(callback) {
     var connection=conn.conn();
     connection.connect();
-    var queryString = "SELECT a.CityID, CityName, AlternateName, State, CityImage, tier, Latitude, Longitude, IsDestination FROM "
-        +"(SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude, IsDestination FROM City) a "
+    var queryString = "SELECT a.CityID, CityName, AlternateName, State FROM "
+        +"(SELECT CityID, CityName, State, CityImage, Tier as tier, Latitude, Longitude, IsDestination FROM City WHERE  IsDestination =1 ) a "
         +"JOIN "
         +"(SELECT CityID, AlternateName FROM City_Alternate_Name) b "
         +"ON (a.CityID = b.CityID);";
@@ -24,7 +24,7 @@ function populateCityDataService() {
                 rows[i].CityID=encodeCityID.encodeCityID(rows[i].CityID);
             }
 
-            var fs = require('fs');
+            /*var fs = require('fs');
             var path = require('path');
             var writeContent = "inputModule.service('cityData', function () { var data = " + JSON.stringify(rows) + "; return {getProperty: function () {"
                 +"return data;}};});";
@@ -36,11 +36,12 @@ function populateCityDataService() {
                     console.log("The file cityDataService was saved!");
                 }
             });
-
+*/
         }
-        //callback(rows);
+        callback(rows);
     });
     connection.end();
 }
 //populateCityDataService();
 
+module.exports.populateCityDataService = populateCityDataService;
