@@ -1,0 +1,6 @@
+{
+  "name": "TripsOnAir",
+  "tagline": "Plan Trips Your Way",
+  "body": "### Welcome to TripsOnAir Project\r\n\r\n### Crawlers\r\nCrawlers for different travel websites\r\n\r\n### TripPlannerApp\r\nNode (KrakenJS) + AngularJS website for planning travel\r\n\r\n### Authors and Contributors\r\nRahul Kapoor (@r-kapoor) and Rajat Gupta(@rajat246)\r\n\r\n### Website\r\nCheck out our [website](https://www.tripsonair.com)",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
