@@ -21,7 +21,7 @@ Tripsonair is an online end to end automated itinerary planner
 /TripPlannerApp : NodeJS AngularJS web app which forms the UI for planning trips
 
 ## Tools/Tech Used
-=============
+
 JAVA - HTMLUnit - Hibernate : For crawling
 
 NodeJS - Server Side of webapp
