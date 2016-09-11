@@ -39,7 +39,7 @@ BootStrap : Designing the UI of web pages
 
 [TripsOnAir](http://www.tripsonair.com) : *the website is currently down due to lack of funds for AWS hosting*
 
-[Project Website]{https://r-kapoor.github.io/TripsOnAir/}
+[Project Website](https://r-kapoor.github.io/TripsOnAir/)
 
 ## Set up project
 
