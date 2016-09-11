@@ -16,7 +16,7 @@ Tripsonair is an online end to end automated itinerary planner
 
 ## Project Organisation
 
-/Crawlers :  Crawlers for getting data from multitude of websited
+/Crawlers :  Crawlers for getting data from multitude of websites
 
 /TripPlannerApp : NodeJS AngularJS web app which forms the UI for planning trips
 
@@ -24,20 +24,22 @@ Tripsonair is an online end to end automated itinerary planner
 
 JAVA - HTMLUnit - Hibernate : For crawling
 
-NodeJS - Server Side of webapp
+NodeJS : Server Side of webapp
 
-AngularJS - Client Side of webapp
+AngularJS : Client Side of webapp
 
-redis - Cache for the server
+redis : Cache for the server
 
-KrakenJS - For setting up boiled plate code of project
+KrakenJS : For setting up boiled plate code of project
 
-BootStrap - Designing the UI of web pages
+BootStrap : Designing the UI of web pages
 
 
 ## Website
 
 [TripsOnAir](http://www.tripsonair.com) : *the website is currently down due to lack of funds for AWS hosting*
+
+[Project Website]{https://r-kapoor.github.io/TripsOnAir/}
 
 ## Set up project
 
