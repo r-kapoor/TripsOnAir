@@ -1,11 +1,11 @@
 TripsOnAir
 ==============
 
-A website which enables travellers to plan trips automatically.
+Tripsonair is an online end to end automated itinerary planner.
 
 ## About
 
-Tripsonair is an online end to end automated itinerary planner
+Save your time and effort in planning trips through an automated trip planner. Our state-of-the-art algorithms analyze the available travel options, accommodation and attractions to plan a perfect holiday for you in real-time, which can be further customized and personalized.
 * Long gone are the days when travelers used to book packages or contact travel agents
 * People want to plan trips on their own. In doing this they have to visit multiple websites to gather information that is fragmented in nature.
 * This leads to spending a lot of time and frustration ultimately leading to either planning a substandard trip or dropping the plan altogether
